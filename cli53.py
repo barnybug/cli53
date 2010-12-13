@@ -104,7 +104,7 @@ class BindToR53Formatter(object):
                 rrs = et.SubElement(rrset, 'ResourceRecords')
                 for rdtype in rdataset.items:
                     rr = et.SubElement(rrs, 'ResourceRecord')
-                    text_element(rr, 'Value', rdtype.to_text())
+                    text_element(rr, 'Value', rdtype.to_text(origin=zone.origin, relativize=False))
                     
         out = StringIO()
         et.ElementTree(root).write(out)
