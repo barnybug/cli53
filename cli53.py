@@ -22,7 +22,8 @@ import xml.etree.ElementTree as et
 
 try:
     import dns.zone, dns.rdataset, dns.node, dns.rdtypes, dns.rdataclass
-    import dns.rdtypes.ANY.CNAME, dns.rdtypes.ANY.SOA, dns.rdtypes.ANY.MX, dns.rdtypes.ANY.NS, dns.rdtypes.IN.A
+    import dns.rdtypes.ANY.CNAME, dns.rdtypes.ANY.SOA, dns.rdtypes.ANY.MX, dns.rdtypes.ANY.SPF
+    import dns.rdtypes.ANY.TXT, dns.rdtypes.ANY.NS, dns.rdtypes.ANY.PTR, dns.rdtypes.IN.A, dns.rdtypes.IN.AAAA, dns.rdtypes.IN.SRV
 except ImportError:
     print "Please install dnspython:"
     print "easy_install dnspython"
@@ -137,6 +138,8 @@ def _create_rdataset(rtype, ttl, values):
         rdtype = None
         if rtype == 'A':
             rdtype = dns.rdtypes.IN.A.A(dns.rdataclass.IN, dns.rdatatype.A, value)
+        elif rtype == 'AAAA':
+            rdtype = dns.rdtypes.IN.AAAA.AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, value)
         elif rtype == 'CNAME':
             rdtype = dns.rdtypes.ANY.CNAME.CNAME(dns.rdataclass.ANY,
                                                  dns.rdatatype.CNAME, dns.name.from_text(value))
@@ -155,7 +158,20 @@ def _create_rdataset(rtype, ttl, values):
         elif rtype == 'MX':
             pref, ex = value.split()
             pref = int(pref)
-            rdtype = dns.rdtypes.ANY.MX.MX(dns.rdataclass.ANY, dns.rdatatype.SOA, pref, dns.name.from_text(ex))
+            rdtype = dns.rdtypes.ANY.MX.MX(dns.rdataclass.ANY, dns.rdatatype.MX, pref, dns.name.from_text(ex))
+        elif rtype == 'PTR':
+            rdtype = dns.rdtypes.ANY.PTR.PTR(dns.rdataclass.ANY, dns.rdatatype.PTR, value)
+        elif rtype == 'SPF':
+            rdtype = dns.rdtypes.ANY.SPF.SPF(dns.rdataclass.ANY, dns.rdatatype.SPF, value)
+        elif rtype == 'SRV':
+            priority, weight, port, target = value.split()
+            priority = int(priority)
+            weight = int(weight)
+            port = int(port)
+            target = dns.name.from_text(target)
+            rdtype = dns.rdtypes.IN.SRV.SRV(dns.rdataclass.IN, dns.rdatatype.SRV, priority, weight, port, target)
+        elif rtype == 'TXT':
+            rdtype = dns.rdtypes.ANY.TXT.TXT(dns.rdataclass.ANY, dns.rdatatype.TXT, value)
         else:
             raise ValueError, 'record type %s not handled' % rtype
         rdataset.items.append(rdtype)
@@ -270,7 +286,7 @@ def main():
     parser = argparse.ArgumentParser(description='route53 command line tool')
     subparsers = parser.add_subparsers(help='sub-command help')
     
-    supported_rtypes = ('A', 'CNAME', 'SOA', 'NS', 'MX')
+    supported_rtypes = ('A', 'AAAA', 'CNAME', 'SOA', 'NS', 'MX', 'PTR', 'SPF', 'SRV', 'TXT')
     
     parser_list = subparsers.add_parser('list', help='list hosted zones')
     parser_list.set_defaults(func=cmd_list)
