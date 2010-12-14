@@ -80,20 +80,24 @@ def text_element(parent, name, text):
     el = et.SubElement(parent, name)
     el.text = text
     
+def is_root_soa_or_ns(name, rdataset):
+    rt = dns.rdatatype.to_text(rdataset.rdtype)
+    return (rt in ('SOA', 'NS') and name.to_text() == '@')
+    
 class BindToR53Formatter(object):
-    def create_all(self, zone, exclude=()):
+    def create_all(self, zone, exclude=None):
         creates = []
         for name, node in zone.items():
             for rdataset in node.rdatasets:
-                if dns.rdatatype.to_text(rdataset.rdtype) not in exclude:
+                if not exclude or not exclude(name, rdataset):
                     creates.append((name, rdataset))
         return self._xml_changes(zone, creates=creates)
 
-    def delete_all(self, zone, exclude=()):
+    def delete_all(self, zone, exclude=None):
         deletes = []
         for name, node in zone.items():
             for rdataset in node.rdatasets:
-                if dns.rdatatype.to_text(rdataset.rdtype) not in exclude:
+                if not exclude or not exclude(name, rdataset):
                     deletes.append((name, rdataset))
         return self._xml_changes(zone, deletes=deletes)
         
@@ -221,7 +225,7 @@ def cmd_import(args):
     
     zone = dns.zone.from_text(text, origin=origin, check_origin=True)
     f = BindToR53Formatter()
-    xml = f.create_all(zone, exclude=('SOA','NS'))
+    xml = f.create_all(zone, exclude=is_root_soa_or_ns)
 
     ret = r53.change_rrsets(args.zone, xml)
     pprint(ret.ChangeResourceRecordSetsResponse)
@@ -252,7 +256,10 @@ def cmd_create(args):
     
 def cmd_delete(args):
     ret = r53.delete_hosted_zone(args.zone)
-    pprint(ret.DeleteHostedZoneResponse)
+    if hasattr(ret, 'ErrorResponse'):
+        pprint(ret.ErrorResponse)
+    else:
+        pprint(ret.DeleteHostedZoneResponse)
     
 def cmd_rrcreate(args):
     zone = _get_records(args)
@@ -307,7 +314,7 @@ def cmd_rrdelete(args):
 def cmd_rrpurge(args):
     zone = _get_records(args)
     f = BindToR53Formatter()
-    xml = f.delete_all(zone, exclude=('SOA','NS'))
+    xml = f.delete_all(zone, exclude=is_root_soa_or_ns)
     print xml
     ret = r53.change_rrsets(args.zone, xml)
     pprint(ret.ChangeResourceRecordSetsResponse)
