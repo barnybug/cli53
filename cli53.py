@@ -8,6 +8,7 @@ import re
 from cStringIO import StringIO
 
 # needs patched boto from github: http://github.com/barnybug/boto
+# git clone git://github.com/barnybug/boto 
 try:
     import boto.route53, boto.jsonresponse
 except ImportError:
