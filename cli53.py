@@ -35,6 +35,16 @@ if not (os.getenv('AWS_ACCESS_KEY_ID') and os.getenv('AWS_SECRET_ACCESS_KEY')):
     print 'export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
     sys.exit(-1)
 
+# Custom MX class to prevent changing values
+class MX(dns.rdtypes.mxbase.MXBase):
+    def to_text(self, **kw):
+        return '%d %s' % (self.preference, self.exchange)
+
+# Custom CNAME class to prevent changing values
+class CNAME(dns.rdtypes.nsbase.NSBase):
+    def to_text(self, **kw):
+        return self.target
+
 r53 = boto.route53.Route53Connection()
 
 def pprint(obj, findent='', indent=''):
@@ -78,6 +88,14 @@ class BindToR53Formatter(object):
                 if dns.rdatatype.to_text(rdataset.rdtype) not in exclude:
                     creates.append((name, rdataset))
         return self._xml_changes(zone, creates=creates)
+
+    def delete_all(self, zone, exclude=()):
+        deletes = []
+        for name, node in zone.items():
+            for rdataset in node.rdatasets:
+                if dns.rdatatype.to_text(rdataset.rdtype) not in exclude:
+                    deletes.append((name, rdataset))
+        return self._xml_changes(zone, deletes=deletes)
         
     def create_record(self, zone, name, rdataset):
         return self._xml_changes(zone, creates=[(name,rdataset)])
@@ -121,6 +139,9 @@ class R53ToBindFormatter(object):
         for rrsets in tree.findall("{%s}ResourceRecordSets" % ns):
             for rrset in rrsets.findall("{%s}ResourceRecordSet" % ns):
                 name = rrset.find('{%s}Name' % ns).text
+                if '\\052' in name:
+                    # * char seems to confuse Amazon and is returned as \\052
+                    name = name.replace('\\052', '*')
                 rtype = rrset.find('{%s}Type' % ns).text
                 ttl = int(rrset.find('{%s}TTL' % ns).text)
                 
@@ -131,6 +152,7 @@ class R53ToBindFormatter(object):
         
         return z
     
+re_quoted = re.compile(r'^".*"$')
 def _create_rdataset(rtype, ttl, values):
     rdataset = dns.rdataset.Rdataset(dns.rdataclass.IN, dns.rdatatype.from_text(rtype))
     rdataset.ttl = ttl
@@ -141,8 +163,7 @@ def _create_rdataset(rtype, ttl, values):
         elif rtype == 'AAAA':
             rdtype = dns.rdtypes.IN.AAAA.AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, value)
         elif rtype == 'CNAME':
-            rdtype = dns.rdtypes.ANY.CNAME.CNAME(dns.rdataclass.ANY,
-                                                 dns.rdatatype.CNAME, dns.name.from_text(value))
+            rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value)
         elif rtype == 'SOA':
             mname, rname, serial, refresh, retry, expire, minimum = value.split()
             mname = dns.name.from_text(mname)
@@ -158,7 +179,7 @@ def _create_rdataset(rtype, ttl, values):
         elif rtype == 'MX':
             pref, ex = value.split()
             pref = int(pref)
-            rdtype = dns.rdtypes.ANY.MX.MX(dns.rdataclass.ANY, dns.rdatatype.MX, pref, dns.name.from_text(ex))
+            rdtype = MX(dns.rdataclass.ANY, dns.rdatatype.MX, pref, ex)
         elif rtype == 'PTR':
             rdtype = dns.rdtypes.ANY.PTR.PTR(dns.rdataclass.ANY, dns.rdatatype.PTR, value)
         elif rtype == 'SPF':
@@ -171,6 +192,8 @@ def _create_rdataset(rtype, ttl, values):
             target = dns.name.from_text(target)
             rdtype = dns.rdtypes.IN.SRV.SRV(dns.rdataclass.IN, dns.rdatatype.SRV, priority, weight, port, target)
         elif rtype == 'TXT':
+            if re_quoted.match(value):
+                value = value[1:-1]
             rdtype = dns.rdtypes.ANY.TXT.TXT(dns.rdataclass.ANY, dns.rdatatype.TXT, value)
         else:
             raise ValueError, 'record type %s not handled' % rtype
@@ -281,6 +304,14 @@ def cmd_rrdelete(args):
     else:
         print 'Record not found: %s' % args.rr
     
+def cmd_rrpurge(args):
+    zone = _get_records(args)
+    f = BindToR53Formatter()
+    xml = f.delete_all(zone, exclude=('SOA','NS'))
+    print xml
+    ret = r53.change_rrsets(args.zone, xml)
+    pprint(ret.ChangeResourceRecordSetsResponse)
+    
 def main():
     connection = boto.route53.Route53Connection()
     parser = argparse.ArgumentParser(description='route53 command line tool')
@@ -330,6 +361,11 @@ def main():
     parser_rrdelete.add_argument('rr', help='resource record')
     parser_rrdelete.add_argument('type', nargs='?', choices=supported_rtypes, help='resource record type')
     parser_rrdelete.set_defaults(func=cmd_rrdelete)
+    
+    parser_rrpurge = subparsers.add_parser('rrpurge', help='purge all resource records')
+    parser_rrpurge.add_argument('zone', type=Zone, help='zone name')
+    parser_rrpurge.add_argument('--confirm', required=True, action='store_true', help='confirm you definitely want to do this!')
+    parser_rrpurge.set_defaults(func=cmd_rrpurge)
     
     args = parser.parse_args()
     args.func(args)
