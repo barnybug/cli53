@@ -7,8 +7,8 @@ import os, sys
 import re
 from cStringIO import StringIO
 
-# needs patched boto from github: http://github.com/barnybug/boto
-# git clone git://github.com/barnybug/boto 
+# needs latest boto from github: http://github.com/boto/boto
+# git clone git://github.com/boto/boto 
 try:
     import boto.route53, boto.jsonresponse
 except ImportError:

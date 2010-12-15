@@ -50,9 +50,9 @@ Further documentation is available, e.g.:
 
 Installation
 ------------
-There is no need to install, but you will need python, the latest boto library (from my git branch) and dnspython:
+There is no need to install, but you will need python, the latest boto library (from git) and dnspython:
 
-    $ git clone git://github.com/barnybug/boto && cd boto && python setup.py install
+    $ git clone git://github.com/boto/boto && cd boto && python setup.py install
     $ easy_install dnspython
 
 You need to set your Amazon credentials in the environment as AWS_ACCESS_KEY_ID
