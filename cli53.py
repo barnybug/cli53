@@ -316,7 +316,6 @@ def cmd_rrpurge(args):
     zone = _get_records(args)
     f = BindToR53Formatter()
     xml = f.delete_all(zone, exclude=is_root_soa_or_ns)
-    print xml
     ret = r53.change_rrsets(args.zone, xml)
     pprint(ret.ChangeResourceRecordSetsResponse)
     
