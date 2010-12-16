@@ -300,6 +300,7 @@ def cmd_rrcreate(args):
     zone = _get_records(args)
     name = dns.name.from_text(args.rr, zone.origin)
     rdataset = _create_rdataset(args.type, args.ttl, args.values)
+
     rdataset_old = None
     node = zone.get_node(args.rr)
     if node:
@@ -365,7 +366,6 @@ def main():
     connection = boto.route53.Route53Connection()
     parser = argparse.ArgumentParser(description='route53 command line tool')
     subparsers = parser.add_subparsers(help='sub-command help')
-
 	
     supported_rtypes = ('A', 'AAAA', 'CNAME', 'SOA', 'NS', 'MX', 'PTR', 'SPF', 'SRV', 'TXT')
     
