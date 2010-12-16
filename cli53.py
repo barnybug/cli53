@@ -6,6 +6,7 @@
 import os, sys
 import re
 from cStringIO import StringIO
+from time import sleep
 
 # needs latest boto from github: http://github.com/boto/boto
 # git clone git://github.com/boto/boto 
@@ -253,20 +254,52 @@ def cmd_export(args):
     
 def cmd_create(args):
     ret = r53.create_hosted_zone(args.zone)
-    pprint(ret.CreateHostedZoneResponse)
+    if args.wait:
+	    wait_for_sync(ret)
+    else:
+        pprint(ret.CreateHostedZoneResponse)
     
 def cmd_delete(args):
     ret = r53.delete_hosted_zone(args.zone)
     if hasattr(ret, 'ErrorResponse'):
         pprint(ret.ErrorResponse)
+    elif args.wait:
+        wait_for_sync(ret)
     else:
         pprint(ret.DeleteHostedZoneResponse)
-    
+
+def find_key_nonrecursive(adict, key):
+	stack = [adict]
+	while stack:
+		d = stack.pop()
+		if key in d:
+			return d[key]
+		for k, v in d.iteritems():
+			if isinstance(v, dict):
+				stack.append(v)
+	
+def wait_for_sync(obj):
+	waiting = 1
+	id = find_key_nonrecursive(obj, 'Id')
+	id = id.replace('/change/', '')
+	sys.stdout.write("Waiting for change to sync")
+	ret = ''
+	while waiting:
+		ret = r53.get_change(id)
+		status = find_key_nonrecursive(ret, 'Status')
+		if status == 'INSYNC':
+			waiting = 0
+		else:
+			sys.stdout.write('.')
+			sys.stdout.flush()
+			sleep(1)
+	print "completed"
+	pprint(ret.GetChangeResponse)
+	
 def cmd_rrcreate(args):
     zone = _get_records(args)
     name = dns.name.from_text(args.rr, zone.origin)
     rdataset = _create_rdataset(args.type, args.ttl, args.values)
-
     rdataset_old = None
     node = zone.get_node(args.rr)
     if node:
@@ -280,8 +313,11 @@ def cmd_rrcreate(args):
     else:
         xml = BindToR53Formatter().create_record(zone, name, rdataset)
     ret = r53.change_rrsets(args.zone, xml)
-    print 'Success'
-    pprint(ret.ChangeResourceRecordSetsResponse)
+    if args.wait:
+        wait_for_sync(ret)
+    else:
+        print 'Success'
+        pprint(ret.ChangeResourceRecordSetsResponse)
 
 def cmd_rrdelete(args):
     zone = _get_records(args)
@@ -307,8 +343,11 @@ def cmd_rrdelete(args):
             
             xml = BindToR53Formatter().delete_record(zone, name, rdataset)
             ret = r53.change_rrsets(args.zone, xml)
-            print 'Success'
-            pprint(ret.ChangeResourceRecordSetsResponse)
+            if args.wait:
+	            wait_for_sync(ret)
+            else:
+                print 'Success'
+                pprint(ret.ChangeResourceRecordSetsResponse)
     else:
         print 'Record not found: %s' % args.rr
     
@@ -317,13 +356,17 @@ def cmd_rrpurge(args):
     f = BindToR53Formatter()
     xml = f.delete_all(zone, exclude=is_root_soa_or_ns)
     ret = r53.change_rrsets(args.zone, xml)
-    pprint(ret.ChangeResourceRecordSetsResponse)
+    if args.wait:
+	    wait_for_sync(ret)
+    else:
+        pprint(ret.ChangeResourceRecordSetsResponse)
     
 def main():
     connection = boto.route53.Route53Connection()
     parser = argparse.ArgumentParser(description='route53 command line tool')
     subparsers = parser.add_subparsers(help='sub-command help')
-    
+
+	
     supported_rtypes = ('A', 'AAAA', 'CNAME', 'SOA', 'NS', 'MX', 'PTR', 'SPF', 'SRV', 'TXT')
     
     parser_list = subparsers.add_parser('list', help='list hosted zones')
@@ -344,14 +387,17 @@ def main():
     parser_describe = subparsers.add_parser('import', help='import dns in bind format')
     parser_describe.add_argument('zone', type=Zone, help='zone name')
     parser_describe.add_argument('-f', '--file', type=argparse.FileType('r'), help='bind file')
+    parser_describe.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
     parser_describe.set_defaults(func=cmd_import)
     
     parser_create = subparsers.add_parser('create', help='create a hosted zone')
     parser_create.add_argument('zone', help='zone name')
+    parser_create.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
     parser_create.set_defaults(func=cmd_create)
     
     parser_delete = subparsers.add_parser('delete', help='delete a hosted zone')
     parser_delete.add_argument('zone', type=Zone, help='zone name')
+    parser_delete.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
     parser_delete.set_defaults(func=cmd_delete)
     
     parser_rrcreate = subparsers.add_parser('rrcreate', help='create a resource record')
@@ -361,17 +407,20 @@ def main():
     parser_rrcreate.add_argument('values', nargs='+', help='resource record values')
     parser_rrcreate.add_argument('-x', '--ttl', type=int, default=86400, help='resource record ttl')
     parser_rrcreate.add_argument('-r', '--replace', action='store_true', help='replace any existing record')
+    parser_rrcreate.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
     parser_rrcreate.set_defaults(func=cmd_rrcreate)
     
     parser_rrdelete = subparsers.add_parser('rrdelete', help='delete a resource record')
     parser_rrdelete.add_argument('zone', type=Zone, help='zone name')
     parser_rrdelete.add_argument('rr', help='resource record')
     parser_rrdelete.add_argument('type', nargs='?', choices=supported_rtypes, help='resource record type')
+    parser_rrdelete.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
     parser_rrdelete.set_defaults(func=cmd_rrdelete)
     
     parser_rrpurge = subparsers.add_parser('rrpurge', help='purge all resource records')
     parser_rrpurge.add_argument('zone', type=Zone, help='zone name')
     parser_rrpurge.add_argument('--confirm', required=True, action='store_true', help='confirm you definitely want to do this!')
+    parser_rrpurge.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
     parser_rrpurge.set_defaults(func=cmd_rrpurge)
     
     args = parser.parse_args()
