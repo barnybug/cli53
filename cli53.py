@@ -18,7 +18,7 @@ except ImportError:
     sys.exit(-1)
 
 import argparse
-from argparse import ArgumentError
+from argparse import ArgumentTypeError
 from types import StringTypes
 import xml.etree.ElementTree as et
 
@@ -244,10 +244,14 @@ def Zone(zone):
     if re_zone_id.match(zone):
         return zone
     ret = r53.get_all_hosted_zones()
-    for hz in ret.ListHostedZonesResponse.HostedZones:
-        if hz.Name == zone or hz.Name == zone+'.':
-            return hz.Id.replace('/hostedzone/', '')
-    raise ArgumentError, 'Zone %s not found' % zone
+
+    hzs = [ hz.Id.replace('/hostedzone/', '') for hz in ret.ListHostedZonesResponse.HostedZones if hz.Name == zone or hz.Name == zone+'.' ]
+    if len(hzs) == 1:
+        return hzs[0]
+    elif len(hzs) > 1:
+        raise ArgumentTypeError, 'Zone %r is ambiguous (matches: %s), please specify ID' % (zone, ', '.join(hzs))
+    else:
+        raise ArgumentTypeError, 'Zone %r not found' % zone
     
 def _get_records(args):
     info = r53.get_hosted_zone(args.zone)
