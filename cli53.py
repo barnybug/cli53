@@ -230,7 +230,10 @@ def cmd_import(args):
     xml = f.create_all(zone, exclude=is_root_soa_or_ns)
 
     ret = r53.change_rrsets(args.zone, xml)
-    pprint(ret.ChangeResourceRecordSetsResponse)
+    if args.wait:
+        wait_for_sync(ret)
+    else:
+        pprint(ret.ChangeResourceRecordSetsResponse)
     
 re_zone_id = re.compile('^[A-Z0-9]{14}$')
 def Zone(zone):
