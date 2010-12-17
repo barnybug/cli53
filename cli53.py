@@ -262,7 +262,7 @@ def _get_records(args):
 def cmd_export(args):
     zone = _get_records(args)
     print '$ORIGIN %s' % zone.origin.to_text()
-    zone.to_file(sys.stdout)
+    zone.to_file(sys.stdout, relativize=not args.full)
     
 def cmd_create(args):
     ret = r53.create_hosted_zone(args.zone)
@@ -394,6 +394,7 @@ def main():
     
     parser_describe = subparsers.add_parser('export', help='export dns in bind format')
     parser_describe.add_argument('zone', type=Zone, help='zone name')
+    parser_describe.add_argument('--full', action='store_true', help='export prefixes as full names')
     parser_describe.set_defaults(func=cmd_export)
     
     parser_import = subparsers.add_parser('import', help='import dns in bind format')
