@@ -87,21 +87,23 @@ def is_root_soa_or_ns(name, rdataset):
     return (rt in ('SOA', 'NS') and name.to_text() == '@')
     
 class BindToR53Formatter(object):
-    def create_all(self, zone, exclude=None):
-        creates = []
+    def _build_list(self, zone, exclude=None):
+        li = []
         for name, node in zone.items():
             for rdataset in node.rdatasets:
                 if not exclude or not exclude(name, rdataset):
-                    creates.append((name, rdataset))
-        return self._xml_changes(zone, creates=creates)
+                    li.append((name, rdataset))
+        return li
+    
+    def create_all(self, zone, old_zone=None, exclude=None):
+        creates = self._build_list(zone, exclude)
+        deletes = []
+        if old_zone:
+            deletes = self._build_list(old_zone, exclude)
+        return self._xml_changes(zone, creates=creates, deletes=deletes)
 
     def delete_all(self, zone, exclude=None):
-        deletes = []
-        for name, node in zone.items():
-            for rdataset in node.rdatasets:
-                if not exclude or not exclude(name, rdataset):
-                    deletes.append((name, rdataset))
-        return self._xml_changes(zone, deletes=deletes)
+        return self._xml_changes(zone, deletes=self._build_list(zone, exclude))
         
     def create_record(self, zone, name, rdataset):
         return self._xml_changes(zone, creates=[(name,rdataset)])
@@ -210,7 +212,6 @@ def cmd_xml(args):
     xml = r53.get_all_rrsets(args.zone)
     print xml
     
-re_comment = re.compile('\S*;.*$')
 re_dos = re.compile('\r\n$')
 re_origin = re.compile(r'\$ORIGIN (\S+)')
 def cmd_import(args):
@@ -226,9 +227,12 @@ def cmd_import(args):
     origin = m.group(1)
     
     zone = dns.zone.from_text(text, origin=origin, check_origin=True)
+    old_zone = None
+    if args.replace:
+        old_zone = _get_records(args)
+        
     f = BindToR53Formatter()
-    xml = f.create_all(zone, exclude=is_root_soa_or_ns)
-
+    xml = f.create_all(zone, old_zone=old_zone, exclude=is_root_soa_or_ns)
     ret = r53.change_rrsets(args.zone, xml)
     if args.wait:
         wait_for_sync(ret)
@@ -253,6 +257,7 @@ def _get_records(args):
 
 def cmd_export(args):
     zone = _get_records(args)
+    print '$ORIGIN %s' % zone.origin.to_text()
     zone.to_file(sys.stdout)
     
 def cmd_create(args):
@@ -387,11 +392,12 @@ def main():
     parser_describe.add_argument('zone', type=Zone, help='zone name')
     parser_describe.set_defaults(func=cmd_export)
     
-    parser_describe = subparsers.add_parser('import', help='import dns in bind format')
-    parser_describe.add_argument('zone', type=Zone, help='zone name')
-    parser_describe.add_argument('-f', '--file', type=argparse.FileType('r'), help='bind file')
-    parser_describe.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
-    parser_describe.set_defaults(func=cmd_import)
+    parser_import = subparsers.add_parser('import', help='import dns in bind format')
+    parser_import.add_argument('zone', type=Zone, help='zone name')
+    parser_import.add_argument('-r', '--replace', action='store_true', help='replace all existing records (use with care!)')
+    parser_import.add_argument('-f', '--file', type=argparse.FileType('r'), help='bind file')
+    parser_import.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
+    parser_import.set_defaults(func=cmd_import)
     
     parser_create = subparsers.add_parser('create', help='create a hosted zone')
     parser_create.add_argument('zone', help='zone name')
