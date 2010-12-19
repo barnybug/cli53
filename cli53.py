@@ -24,8 +24,9 @@ import xml.etree.ElementTree as et
 
 try:
     import dns.zone, dns.rdataset, dns.node, dns.rdtypes, dns.rdataclass
-    import dns.rdtypes.ANY.CNAME, dns.rdtypes.ANY.SOA, dns.rdtypes.ANY.MX, dns.rdtypes.ANY.SPF
-    import dns.rdtypes.ANY.TXT, dns.rdtypes.ANY.NS, dns.rdtypes.ANY.PTR, dns.rdtypes.IN.A, dns.rdtypes.IN.AAAA, dns.rdtypes.IN.SRV
+    import dns.rdtypes.ANY.SOA, dns.rdtypes.ANY.SPF
+    import dns.rdtypes.ANY.TXT, dns.rdtypes.IN.A, dns.rdtypes.IN.AAAA
+    import dns.rdtypes.mxbase, dns.rdtypes.nsbase
 except ImportError:
     print "Please install dnspython:"
     print "easy_install dnspython"
@@ -37,15 +38,25 @@ if not (os.getenv('AWS_ACCESS_KEY_ID') and os.getenv('AWS_SECRET_ACCESS_KEY')):
     print 'export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
     sys.exit(-1)
 
+
 # Custom MX class to prevent changing values
 class MX(dns.rdtypes.mxbase.MXBase):
     def to_text(self, **kw):
         return '%d %s' % (self.preference, self.exchange)
 
-# Custom CNAME class to prevent changing values
-class CNAME(dns.rdtypes.nsbase.NSBase):
+# Custom base class to prevent changing values
+class CustomBase(dns.rdtypes.nsbase.NSBase):
     def to_text(self, **kw):
         return self.target
+
+class CNAME(CustomBase):
+    pass
+class NS(CustomBase):
+    pass
+class SRV(CustomBase):
+    pass
+class PTR(CustomBase):
+    pass
 
 r53 = boto.route53.Route53Connection()
 
@@ -183,22 +194,17 @@ def _create_rdataset(rtype, ttl, values):
             minimum = int(minimum)
             rdtype = dns.rdtypes.ANY.SOA.SOA(dns.rdataclass.ANY, dns.rdatatype.SOA, mname, rname, serial, refresh, retry, expire, minimum)
         elif rtype == 'NS':
-            rdtype = dns.rdtypes.ANY.NS.NS(dns.rdataclass.ANY, dns.rdatatype.SOA, dns.name.from_text(value))
+            rdtype = NS(dns.rdataclass.ANY, dns.rdatatype.NS, value)
         elif rtype == 'MX':
             pref, ex = value.split()
             pref = int(pref)
             rdtype = MX(dns.rdataclass.ANY, dns.rdatatype.MX, pref, ex)
         elif rtype == 'PTR':
-            rdtype = dns.rdtypes.ANY.PTR.PTR(dns.rdataclass.ANY, dns.rdatatype.PTR, value)
+            rdtype = PTR(dns.rdataclass.ANY, dns.rdatatype.PTR, value)
         elif rtype == 'SPF':
             rdtype = dns.rdtypes.ANY.SPF.SPF(dns.rdataclass.ANY, dns.rdatatype.SPF, value)
         elif rtype == 'SRV':
-            priority, weight, port, target = value.split()
-            priority = int(priority)
-            weight = int(weight)
-            port = int(port)
-            target = dns.name.from_text(target)
-            rdtype = dns.rdtypes.IN.SRV.SRV(dns.rdataclass.IN, dns.rdatatype.SRV, priority, weight, port, target)
+            rdtype = SRV(dns.rdataclass.IN, dns.rdatatype.SRV, value)
         elif rtype == 'TXT':
             if re_quoted.match(value):
                 value = value[1:-1]
@@ -340,7 +346,7 @@ def cmd_rrdelete(args):
     if node:
         if len(node.rdatasets) > 1 and not args.type:
             rtypes = [ dns.rdatatype.to_text(rds.rdtype) for rds in node.rdatasets ]
-            print 'Ambigious record - several resource types for record %s found: %s' % (args.rr, ', '.join(rtypes))
+            print 'Ambigious record - several resource types for record %r found: %s' % (args.rr, ', '.join(rtypes))
         else:
             rdataset = None
             for rds in node.rdatasets:
