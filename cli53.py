@@ -239,7 +239,7 @@ def cmd_import(args):
     else:
         pprint(ret.ChangeResourceRecordSetsResponse)
     
-re_zone_id = re.compile('^[A-Z0-9]{14}$')
+re_zone_id = re.compile('^[A-Z0-9]+$')
 def Zone(zone):
     if re_zone_id.match(zone):
         return zone
