@@ -5,6 +5,7 @@
 
 import os, sys
 import re
+import itertools
 from cStringIO import StringIO
 from time import sleep
 
@@ -96,6 +97,13 @@ def text_element(parent, name, text):
 def is_root_soa_or_ns(name, rdataset):
     rt = dns.rdatatype.to_text(rdataset.rdtype)
     return (rt in ('SOA', 'NS') and name.to_text() == '@')
+
+def paginate(iterable, size):
+  it = iter(iterable)
+  item = list(itertools.islice(it, size))
+  while item:
+    yield item
+    item = list(itertools.islice(it, size))
     
 class BindToR53Formatter(object):
     def _build_list(self, zone, exclude=None):
@@ -126,34 +134,57 @@ class BindToR53Formatter(object):
         return self._xml_changes(zone, creates=[(name,rdataset_new)], deletes=[(name,rdataset_old)])
         
     def _xml_changes(self, zone, creates=[], deletes=[]):
+        for page in paginate(self._iter_changes(creates, deletes), 100):
+            yield self._batch_change(zone, page)
+    
+    def _iter_changes(self, creates, deletes):
+        for chg, rdatasets in (('DELETE', deletes), ('CREATE', creates)):
+            for name, rdataset in rdatasets:
+                yield chg, name, rdataset
+        
+    def _batch_change(self, zone, chgs):
         root = et.Element('ChangeResourceRecordSetsRequest', xmlns=boto.route53.Route53Connection.XMLNameSpace)
         change_batch = et.SubElement(root, 'ChangeBatch')
         changes = et.SubElement(change_batch, 'Changes')
         
-        for chg, rdatasets in (('DELETE', deletes), ('CREATE', creates)):
-            for name, rdataset in rdatasets:
-                change = et.SubElement(changes, 'Change')
-                text_element(change, 'Action', chg)
-                rrset = et.SubElement(change, 'ResourceRecordSet')
-                text_element(rrset, 'Name', name.derelativize(zone.origin).to_text())
-                text_element(rrset, 'Type', dns.rdatatype.to_text(rdataset.rdtype))
-                text_element(rrset, 'TTL', str(rdataset.ttl))
-                rrs = et.SubElement(rrset, 'ResourceRecords')
-                for rdtype in rdataset.items:
-                    rr = et.SubElement(rrs, 'ResourceRecord')
-                    text_element(rr, 'Value', rdtype.to_text(origin=zone.origin, relativize=False))
+        for chg, name, rdataset in chgs:
+            change = et.SubElement(changes, 'Change')
+            text_element(change, 'Action', chg)
+            rrset = et.SubElement(change, 'ResourceRecordSet')
+            text_element(rrset, 'Name', name.derelativize(zone.origin).to_text())
+            text_element(rrset, 'Type', dns.rdatatype.to_text(rdataset.rdtype))
+            text_element(rrset, 'TTL', str(rdataset.ttl))
+            rrs = et.SubElement(rrset, 'ResourceRecords')
+            for rdtype in rdataset.items:
+                rr = et.SubElement(rrs, 'ResourceRecord')
+                text_element(rr, 'Value', rdtype.to_text(origin=zone.origin, relativize=False))
                     
         out = StringIO()
         et.ElementTree(root).write(out)
         return out.getvalue()
         
 class R53ToBindFormatter(object):
-    def convert(self, info, xml):
-        origin = info.HostedZone.Name
-        z = dns.zone.Zone(dns.name.from_text(origin))
+    def get_all_rrsets(self, r53, ghz, zone):
+        xml = r53.get_all_rrsets(zone)
+        ret, nextname, nexttype = self.convert(ghz, xml)
+        while nextname:
+            xml = r53.get_all_rrsets(zone, name=nextname, type=nexttype)
+            ret, nextname, nexttype = self.convert(ghz, xml, ret)
+        return ret
+    
+    def convert(self, info, xml, z=None):
+        if not z:
+            origin = info.HostedZone.Name
+            z = dns.zone.Zone(dns.name.from_text(origin))
         
         ns = boto.route53.Route53Connection.XMLNameSpace
         tree = et.fromstring(xml)
+        
+        nextname = None
+        nexttype = None
+        if tree.find('{%s}IsTruncated' % ns).text == 'true':
+            nextname = tree.find('{%s}NextRecordName' % ns).text
+            nexttype = tree.find('{%s}NextRecordType' % ns).text
         
         for rrsets in tree.findall("{%s}ResourceRecordSets" % ns):
             for rrset in rrsets.findall("{%s}ResourceRecordSet" % ns):
@@ -169,7 +200,7 @@ class R53ToBindFormatter(object):
                 node = z.get_node(name, create=True)
                 node.replace_rdataset(rdataset)
         
-        return z
+        return z, nextname, nexttype
     
 re_quoted = re.compile(r'^".*"$')
 def _create_rdataset(rtype, ttl, values):
@@ -238,12 +269,12 @@ def cmd_import(args):
         old_zone = _get_records(args)
         
     f = BindToR53Formatter()
-    xml = f.create_all(zone, old_zone=old_zone, exclude=is_root_soa_or_ns)
-    ret = r53.change_rrsets(args.zone, xml)
-    if args.wait:
-        wait_for_sync(ret)
-    else:
-        pprint(ret.ChangeResourceRecordSetsResponse)
+    for xml in f.create_all(zone, old_zone=old_zone, exclude=is_root_soa_or_ns):
+        ret = r53.change_rrsets(args.zone, xml)
+        if args.wait:
+            wait_for_sync(ret)
+        else:
+            pprint(ret.ChangeResourceRecordSetsResponse)
     
 re_zone_id = re.compile('^[A-Z0-9]+$')
 def Zone(zone):
@@ -261,9 +292,8 @@ def Zone(zone):
     
 def _get_records(args):
     info = r53.get_hosted_zone(args.zone)
-    xml = r53.get_all_rrsets(args.zone)
     f = R53ToBindFormatter()
-    return f.convert(info.GetHostedZoneResponse, xml)
+    return f.get_all_rrsets(r53, info.GetHostedZoneResponse, args.zone)
 
 def cmd_export(args):
     zone = _get_records(args)
@@ -327,16 +357,18 @@ def cmd_rrcreate(args):
                 rdataset_old = rds
                 break
 
+    f = BindToR53Formatter()
     if args.replace and rdataset_old:
-        xml = BindToR53Formatter().replace_record(zone, name, rdataset_old, rdataset)
+        parts = f.replace_record(zone, name, rdataset_old, rdataset)
     else:
-        xml = BindToR53Formatter().create_record(zone, name, rdataset)
-    ret = r53.change_rrsets(args.zone, xml)
-    if args.wait:
-        wait_for_sync(ret)
-    else:
-        print 'Success'
-        pprint(ret.ChangeResourceRecordSetsResponse)
+        parts = f.create_record(zone, name, rdataset)
+    for xml in parts:
+        ret = r53.change_rrsets(args.zone, xml)
+        if args.wait:
+            wait_for_sync(ret)
+        else:
+            print 'Success'
+            pprint(ret.ChangeResourceRecordSetsResponse)
 
 def cmd_rrdelete(args):
     zone = _get_records(args)
@@ -359,26 +391,27 @@ def cmd_rrdelete(args):
                 return
                 
             print 'Deleting %s %s...' % (args.rr, dns.rdatatype.to_text(rds.rdtype))
-            
-            xml = BindToR53Formatter().delete_record(zone, name, rdataset)
-            ret = r53.change_rrsets(args.zone, xml)
-            if args.wait:
-                wait_for_sync(ret)
-            else:
-                print 'Success'
-                pprint(ret.ChangeResourceRecordSetsResponse)
+
+            f = BindToR53Formatter()
+            for xml in f.delete_record(zone, name, rdataset):
+                ret = r53.change_rrsets(args.zone, xml)
+                if args.wait:
+                    wait_for_sync(ret)
+                else:
+                    print 'Success'
+                    pprint(ret.ChangeResourceRecordSetsResponse)
     else:
         print 'Record not found: %s' % args.rr
     
 def cmd_rrpurge(args):
     zone = _get_records(args)
     f = BindToR53Formatter()
-    xml = f.delete_all(zone, exclude=is_root_soa_or_ns)
-    ret = r53.change_rrsets(args.zone, xml)
-    if args.wait:
-        wait_for_sync(ret)
-    else:
-        pprint(ret.ChangeResourceRecordSetsResponse)
+    for xml in f.delete_all(zone, exclude=is_root_soa_or_ns):
+        ret = r53.change_rrsets(args.zone, xml)
+        if args.wait:
+            wait_for_sync(ret)
+        else:
+            pprint(ret.ChangeResourceRecordSetsResponse)
     
 def main():
     connection = boto.route53.Route53Connection()
