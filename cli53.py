@@ -273,7 +273,7 @@ def cmd_export(args):
 def cmd_create(args):
     ret = r53.create_hosted_zone(args.zone)
     if args.wait:
-	    wait_for_sync(ret)
+        wait_for_sync(ret)
     else:
         pprint(ret.CreateHostedZoneResponse)
     
@@ -287,33 +287,33 @@ def cmd_delete(args):
         pprint(ret.DeleteHostedZoneResponse)
 
 def find_key_nonrecursive(adict, key):
-	stack = [adict]
-	while stack:
-		d = stack.pop()
-		if key in d:
-			return d[key]
-		for k, v in d.iteritems():
-			if isinstance(v, dict):
-				stack.append(v)
-	
+    stack = [adict]
+    while stack:
+        d = stack.pop()
+        if key in d:
+            return d[key]
+        for k, v in d.iteritems():
+            if isinstance(v, dict):
+                stack.append(v)
+    
 def wait_for_sync(obj):
-	waiting = 1
-	id = find_key_nonrecursive(obj, 'Id')
-	id = id.replace('/change/', '')
-	sys.stdout.write("Waiting for change to sync")
-	ret = ''
-	while waiting:
-		ret = r53.get_change(id)
-		status = find_key_nonrecursive(ret, 'Status')
-		if status == 'INSYNC':
-			waiting = 0
-		else:
-			sys.stdout.write('.')
-			sys.stdout.flush()
-			sleep(1)
-	print "completed"
-	pprint(ret.GetChangeResponse)
-	
+    waiting = 1
+    id = find_key_nonrecursive(obj, 'Id')
+    id = id.replace('/change/', '')
+    sys.stdout.write("Waiting for change to sync")
+    ret = ''
+    while waiting:
+        ret = r53.get_change(id)
+        status = find_key_nonrecursive(ret, 'Status')
+        if status == 'INSYNC':
+            waiting = 0
+        else:
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            sleep(1)
+    print "completed"
+    pprint(ret.GetChangeResponse)
+    
 def cmd_rrcreate(args):
     zone = _get_records(args)
     name = dns.name.from_text(args.rr, zone.origin)
@@ -363,7 +363,7 @@ def cmd_rrdelete(args):
             xml = BindToR53Formatter().delete_record(zone, name, rdataset)
             ret = r53.change_rrsets(args.zone, xml)
             if args.wait:
-	            wait_for_sync(ret)
+                wait_for_sync(ret)
             else:
                 print 'Success'
                 pprint(ret.ChangeResourceRecordSetsResponse)
@@ -376,7 +376,7 @@ def cmd_rrpurge(args):
     xml = f.delete_all(zone, exclude=is_root_soa_or_ns)
     ret = r53.change_rrsets(args.zone, xml)
     if args.wait:
-	    wait_for_sync(ret)
+        wait_for_sync(ret)
     else:
         pprint(ret.ChangeResourceRecordSetsResponse)
     
@@ -384,7 +384,7 @@ def main():
     connection = boto.route53.Route53Connection()
     parser = argparse.ArgumentParser(description='route53 command line tool')
     subparsers = parser.add_subparsers(help='sub-command help')
-	
+    
     supported_rtypes = ('A', 'AAAA', 'CNAME', 'SOA', 'NS', 'MX', 'PTR', 'SPF', 'SRV', 'TXT')
     
     parser_list = subparsers.add_parser('list', help='list hosted zones')
