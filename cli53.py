@@ -227,8 +227,11 @@ def _create_rdataset(rtype, ttl, values):
         elif rtype == 'NS':
             rdtype = NS(dns.rdataclass.ANY, dns.rdatatype.NS, value)
         elif rtype == 'MX':
-            pref, ex = value.split()
-            pref = int(pref)
+            try:
+                pref, ex = value.split()
+                pref = int(pref)
+            except ValueError:
+                raise ValueError, 'mx records required two parts: priority name'
             rdtype = MX(dns.rdataclass.ANY, dns.rdatatype.MX, pref, ex)
         elif rtype == 'PTR':
             rdtype = PTR(dns.rdataclass.ANY, dns.rdatatype.PTR, value)
