@@ -56,8 +56,19 @@ Installation
 ------------
 There is no need to install, but you will need python, the latest boto library (from git) and dnspython:
 
-    $ git clone git://github.com/boto/boto && cd boto && python setup.py install
-    $ easy_install dnspython
+### Ubuntu
+
+    $ git clone git://github.com/boto/boto && cd boto && sudo python setup.py install
+    $ sudo easy_install dnspython
+
+### CentOS 5.x
+
+There are a couple of extra requirements as CentOS has the older python 2.4:
+
+    $ git clone git://github.com/boto/boto && cd boto && sudo python setup.py install
+    $ sudo yum install python-elementtree
+    $ sudo easy_install uuid
+    $ sudo easy_install dnspython
 
 You need to set your Amazon credentials in the environment as AWS_ACCESS_KEY_ID
 and AWS_SECRET_ACCESS_KEY.

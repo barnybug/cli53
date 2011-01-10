@@ -21,7 +21,10 @@ except ImportError:
 import argparse
 from argparse import ArgumentTypeError
 from types import StringTypes
-import xml.etree.ElementTree as et
+try:
+    import xml.etree.ElementTree as et
+except ImportError:
+    import elementtree.ElementTree as et
 
 try:
     import dns.zone, dns.rdataset, dns.node, dns.rdtypes, dns.rdataclass
