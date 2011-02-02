@@ -168,42 +168,38 @@ class BindToR53Formatter(object):
         
 class R53ToBindFormatter(object):
     def get_all_rrsets(self, r53, ghz, zone):
-        xml = r53.get_all_rrsets(zone)
-        ret, nextname, nexttype = self.convert(ghz, xml)
+        rrsets = r53.get_all_rrsets(zone)
+        ret, nextname, nexttype = self.convert(ghz, rrsets)
         while nextname:
-            xml = r53.get_all_rrsets(zone, name=nextname, type=nexttype)
-            ret, nextname, nexttype = self.convert(ghz, xml, ret)
+            rrsets = r53.get_all_rrsets(zone, name=nextname, type=nexttype)
+            ret, nextname, nexttype = self.convert(ghz, rrsets, ret)
         return ret
     
-    def convert(self, info, xml, z=None):
+    def convert(self, info, rrsets, z=None):
         if not z:
             origin = info.HostedZone.Name
             z = dns.zone.Zone(dns.name.from_text(origin))
         
-        ns = boto.route53.Route53Connection.XMLNameSpace
-        tree = et.fromstring(xml)
+        # boto has lost this information in an interface change :-(
+#         nextname = None
+#         nexttype = None
+#         if tree.find('{%s}IsTruncated' % ns).text == 'true':
+#             nextname = tree.find('{%s}NextRecordName' % ns).text
+#             nexttype = tree.find('{%s}NextRecordType' % ns).text
         
-        nextname = None
-        nexttype = None
-        if tree.find('{%s}IsTruncated' % ns).text == 'true':
-            nextname = tree.find('{%s}NextRecordName' % ns).text
-            nexttype = tree.find('{%s}NextRecordType' % ns).text
+        for rrset in rrsets:
+            name = rrset.name
+            if '\\052' in name:
+                # * char seems to confuse Amazon and is returned as \\052
+                name = name.replace('\\052', '*')
+            rtype = rrset.type
+            ttl = int(rrset.ttl)
+
+            rdataset = _create_rdataset(rtype, ttl, rrset.resource_records)
+            node = z.get_node(name, create=True)
+            node.replace_rdataset(rdataset)
         
-        for rrsets in tree.findall("{%s}ResourceRecordSets" % ns):
-            for rrset in rrsets.findall("{%s}ResourceRecordSet" % ns):
-                name = rrset.find('{%s}Name' % ns).text
-                if '\\052' in name:
-                    # * char seems to confuse Amazon and is returned as \\052
-                    name = name.replace('\\052', '*')
-                rtype = rrset.find('{%s}Type' % ns).text
-                ttl = int(rrset.find('{%s}TTL' % ns).text)
-                
-                values = [ rr.text for rr in rrset.findall('{%(ns)s}ResourceRecords/{%(ns)s}ResourceRecord/{%(ns)s}Value' % {'ns':ns}) ]
-                rdataset = _create_rdataset(rtype, ttl, values)
-                node = z.get_node(name, create=True)
-                node.replace_rdataset(rdataset)
-        
-        return z, nextname, nexttype
+        return z, None, None
     
 re_quoted = re.compile(r'^".*"$')
 def _create_rdataset(rtype, ttl, values):
@@ -245,15 +241,14 @@ def _create_rdataset(rtype, ttl, values):
         elif rtype == 'TXT':
             if re_quoted.match(value):
                 value = value[1:-1]
-            rdtype = dns.rdtypes.ANY.TXT.TXT(dns.rdataclass.ANY, dns.rdatatype.TXT, value)
+            rdtype = dns.rdtypes.ANY.TXT.TXT(dns.rdataclass.ANY, dns.rdatatype.TXT, [value])
         else:
             raise ValueError, 'record type %s not handled' % rtype
         rdataset.items.append(rdtype)
     return rdataset
     
 def cmd_xml(args):
-    xml = r53.get_all_rrsets(args.zone)
-    print xml
+    print 'This functionality is no longer available due to changes in the boto library.'
     
 re_dos = re.compile('\r\n$')
 re_origin = re.compile(r'\$ORIGIN (\S+)')
