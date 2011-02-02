@@ -168,24 +168,13 @@ class BindToR53Formatter(object):
         
 class R53ToBindFormatter(object):
     def get_all_rrsets(self, r53, ghz, zone):
-        rrsets = r53.get_all_rrsets(zone)
-        ret, nextname, nexttype = self.convert(ghz, rrsets)
-        while nextname:
-            rrsets = r53.get_all_rrsets(zone, name=nextname, type=nexttype)
-            ret, nextname, nexttype = self.convert(ghz, rrsets, ret)
-        return ret
+        rrsets = r53.get_all_rrsets(zone, maxitems=10)
+        return self.convert(ghz, rrsets)
     
     def convert(self, info, rrsets, z=None):
         if not z:
             origin = info.HostedZone.Name
             z = dns.zone.Zone(dns.name.from_text(origin))
-        
-        # boto has lost this information in an interface change :-(
-#         nextname = None
-#         nexttype = None
-#         if tree.find('{%s}IsTruncated' % ns).text == 'true':
-#             nextname = tree.find('{%s}NextRecordName' % ns).text
-#             nexttype = tree.find('{%s}NextRecordType' % ns).text
         
         for rrset in rrsets:
             name = rrset.name
@@ -199,7 +188,7 @@ class R53ToBindFormatter(object):
             node = z.get_node(name, create=True)
             node.replace_rdataset(rdataset)
         
-        return z, None, None
+        return z
     
 re_quoted = re.compile(r'^".*"$')
 def _create_rdataset(rtype, ttl, values):
