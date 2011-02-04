@@ -417,7 +417,7 @@ def main():
     parser_list.add_argument('zone', type=Zone, help='zone name')
     parser_list.set_defaults(func=cmd_info)
     
-    parser_describe = subparsers.add_parser('xml', help='get the rrsets xml of a hosted zone')
+    parser_describe = subparsers.add_parser('xml')
     parser_describe.add_argument('zone', type=Zone, help='zone name')
     parser_describe.set_defaults(func=cmd_xml)
     
