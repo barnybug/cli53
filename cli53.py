@@ -61,6 +61,8 @@ class SRV(CustomBase):
     pass
 class PTR(CustomBase):
     pass
+class SPF(CustomBase):
+    pass
 
 r53 = boto.route53.Route53Connection()
 
@@ -224,7 +226,7 @@ def _create_rdataset(rtype, ttl, values):
         elif rtype == 'PTR':
             rdtype = PTR(dns.rdataclass.ANY, dns.rdatatype.PTR, value)
         elif rtype == 'SPF':
-            rdtype = dns.rdtypes.ANY.SPF.SPF(dns.rdataclass.ANY, dns.rdatatype.SPF, value)
+            rdtype = SPF(dns.rdataclass.ANY, dns.rdatatype.SPF, value)
         elif rtype == 'SRV':
             rdtype = SRV(dns.rdataclass.IN, dns.rdatatype.SRV, value)
         elif rtype == 'TXT':
