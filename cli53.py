@@ -405,6 +405,12 @@ def cmd_rrpurge(args):
         else:
             pprint(ret.ChangeResourceRecordSetsResponse)
     
+def cmd_rrlist(args):
+    zone = _get_records(args)
+    print '\t'.join(["host","ttl","cls","type","data"])
+    for record_name, record_value in zone.iteritems():
+        print '\t'.join(record_value.to_text(record_name).split(' '))
+
 def main():
     connection = boto.route53.Route53Connection()
     parser = argparse.ArgumentParser(description='route53 command line tool')
@@ -468,6 +474,10 @@ def main():
     parser_rrpurge.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
     parser_rrpurge.set_defaults(func=cmd_rrpurge)
     
+    parser_rrlist = subparsers.add_parser('rrlist', help='list all resource records')
+    parser_rrlist.add_argument('zone', type=Zone, help='zone name')
+    parser_rrlist.set_defaults(func=cmd_rrlist)
+
     args = parser.parse_args()
     args.func(args)
     
