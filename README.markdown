@@ -54,21 +54,14 @@ Further documentation is available, e.g.:
 
 Installation
 ------------
-There is no need to install, but you will need python, the latest boto library (from git) and dnspython:
 
-### Ubuntu
+### Buildout Install
+Buildout will download all the dependencies needed in order to run cli53.
+$ python bootstrap.py
+$ bin/buildout
 
-    $ git clone git://github.com/boto/boto && cd boto && sudo python setup.py install
-    $ sudo easy_install dnspython
-
-### CentOS 5.x
-
-There are a couple of extra requirements as CentOS has the older python 2.4:
-
-    $ git clone git://github.com/boto/boto && cd boto && sudo python setup.py install
-    $ sudo yum install python-elementtree
-    $ sudo easy_install uuid
-    $ sudo easy_install dnspython
+Once the dependencies downloaded, run cli53
+$ bin/cli53
 
 You need to set your Amazon credentials in the environment as AWS_ACCESS_KEY_ID
 and AWS_SECRET_ACCESS_KEY.
