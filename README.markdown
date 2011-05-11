@@ -57,11 +57,15 @@ Installation
 
 ### Buildout Install
 Buildout will download all the dependencies needed in order to run cli53.
-    $ python bootstrap.py
-    $ bin/buildout
+
+	$ python bootstrap.py
+	$ bin/buildout
+
 
 Once the dependencies downloaded, run cli53
-    $ bin/cli53
+
+	$ bin/cli53
+ 
 
 You need to set your Amazon credentials in the environment as AWS_ACCESS_KEY_ID
 and AWS_SECRET_ACCESS_KEY.
