@@ -61,14 +61,20 @@ Buildout will download all the dependencies needed in order to run cli53.
 	$ python bootstrap.py
 	$ bin/buildout
 
-
 Once the dependencies downloaded, run cli53
 
 	$ bin/cli53
  
+If the step bin/buildout fails with the cryptic error message
+'pkg_resources.DistributionNotFound: distribute', then you might try
+bootstrap.py with distribute instead of setuptools:
+
+	$ python bootstrap.py --distribute
+	$ bin/buildout
 
 You need to set your Amazon credentials in the environment as AWS_ACCESS_KEY_ID
-and AWS_SECRET_ACCESS_KEY.
+and AWS_SECRET_ACCESS_KEY or configure them in ~/.boto. For more information see:
+http://code.google.com/p/boto/wiki/BotoConfig
 
 Caveats
 -------
