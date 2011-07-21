@@ -12,7 +12,7 @@ from time import sleep
 # needs latest boto from github: http://github.com/boto/boto
 # git clone git://github.com/boto/boto 
 try:
-    import boto.route53, boto.jsonresponse
+    import boto.route53, boto.jsonresponse, boto.exception
 except ImportError:
     print "Please install latest boto:"
     print "git clone boto && cd boto && python setup.py install"
@@ -36,13 +36,6 @@ except ImportError:
     print "easy_install dnspython"
     sys.exit(-1)
 
-if not (os.getenv('AWS_ACCESS_KEY_ID') and os.getenv('AWS_SECRET_ACCESS_KEY')):
-    print 'Please set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY, e.g.:'
-    print 'export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX'
-    print 'export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-    sys.exit(-1)
-
-
 # Custom MX class to prevent changing values
 class MX(dns.rdtypes.mxbase.MXBase):
     def to_text(self, **kw):
@@ -64,7 +57,21 @@ class PTR(CustomBase):
 class SPF(CustomBase):
     pass
 
-r53 = boto.route53.Route53Connection()
+try:
+    r53 = boto.route53.Route53Connection()
+except boto.exception.NoAuthHandlerFound:
+    print 'Please configure your AWS credentials, either through environment variables or'
+    print '~/.boto config file.'
+    print 'e.g.'
+    print 'export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX'
+    print 'export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+    print 'or in ~/.boto:'
+    print '[Credentials]'
+    print 'aws_access_key_id = XXXXXXXXXXXXXX'
+    print 'aws_secret_access_key = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+    print
+    print  'See: http://code.google.com/p/boto/wiki/BotoConfig'
+    sys.exit(-1)
 
 def pprint(obj, findent='', indent=''):
     if isinstance(obj, StringTypes):
