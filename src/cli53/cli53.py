@@ -193,14 +193,14 @@ class R53ToBindFormatter(object):
             rtype = rrset.type
             ttl = int(rrset.ttl)
 
-            rdataset = _create_rdataset(rtype, ttl, rrset.resource_records)
+            rdataset = _create_rdataset(rtype, ttl, rrset.resource_records, bindoutput=True)
             node = z.get_node(name, create=True)
             node.replace_rdataset(rdataset)
         
         return z
     
 re_quoted = re.compile(r'^".*"$')
-def _create_rdataset(rtype, ttl, values):
+def _create_rdataset(rtype, ttl, values, bindoutput):
     rdataset = dns.rdataset.Rdataset(dns.rdataclass.IN, dns.rdatatype.from_text(rtype))
     rdataset.ttl = ttl
     for value in values:
@@ -210,7 +210,10 @@ def _create_rdataset(rtype, ttl, values):
         elif rtype == 'AAAA':
             rdtype = dns.rdtypes.IN.AAAA.AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, value)
         elif rtype == 'CNAME':
-            rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value)
+            if bindoutput == True:
+                rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value + ".")
+            else:
+                rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value)
         elif rtype == 'SOA':
             mname, rname, serial, refresh, retry, expire, minimum = value.split()
             mname = dns.name.from_text(mname)
@@ -346,7 +349,7 @@ def wait_for_sync(obj):
 def cmd_rrcreate(args):
     zone = _get_records(args)
     name = dns.name.from_text(args.rr, zone.origin)
-    rdataset = _create_rdataset(args.type, args.ttl, args.values)
+    rdataset = _create_rdataset(args.type, args.ttl, args.values, bindoutput=False)
 
     rdataset_old = None
     node = zone.get_node(args.rr)
