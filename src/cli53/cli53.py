@@ -216,7 +216,7 @@ def _create_rdataset(rtype, ttl, values):
         elif rtype == 'AAAA':
             rdtype = dns.rdtypes.IN.AAAA.AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, value)
         elif rtype == 'CNAME':
-            rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value)
+            rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value.rstrip('.')+'.')
         elif rtype == 'SOA':
             mname, rname, serial, refresh, retry, expire, minimum = value.split()
             mname = dns.name.from_text(mname)
