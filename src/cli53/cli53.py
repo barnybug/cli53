@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # cli53
 # Command line script to administer the Amazon Route 53 dns service
