@@ -256,23 +256,35 @@ def cmd_xml(args):
     
 re_dos = re.compile('\r\n$')
 re_origin = re.compile(r'\$ORIGIN (\S+)')
+re_include = re.compile(r'\$INCLUDE (\S+)')
 def cmd_import(args):
     text = []
-    for line in args.file:
-        line = re_dos.sub('\n', line)
-        text.append(line)
+
+    def file_parse(zonefile):
+        for line in zonefile:
+            line = re_dos.sub('\n', line)
+            inc = re_include.search(line)
+            if inc:
+                incfile = open(inc.group(1))
+                file_parse(incfile)
+                incfile.close()
+            else:
+                text.append(line)
+
+    file_parse(args.file)
+
     text = ''.join(text)
-    
+
     m = re_origin.search(text)
     if not m:
         raise Exception, 'Could not find origin'
     origin = m.group(1)
-    
+
     zone = dns.zone.from_text(text, origin=origin, check_origin=True)
     old_zone = None
     if args.replace:
         old_zone = _get_records(args)
-        
+
     f = BindToR53Formatter()
     for xml in f.create_all(zone, old_zone=old_zone, exclude=is_root_soa_or_ns):
         ret = r53.change_rrsets(args.zone, xml)
@@ -280,7 +292,7 @@ def cmd_import(args):
             wait_for_sync(ret)
         else:
             pprint(ret.ChangeResourceRecordSetsResponse)
-    
+
 re_zone_id = re.compile('^[A-Z0-9]+$')
 def Zone(zone):
     if re_zone_id.match(zone):
