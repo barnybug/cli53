@@ -287,11 +287,14 @@ def cmd_import(args):
 
     f = BindToR53Formatter()
     for xml in f.create_all(zone, old_zone=old_zone, exclude=is_root_soa_or_ns):
-        ret = r53.change_rrsets(args.zone, xml)
-        if args.wait:
-            wait_for_sync(ret)
+        if args.dump:
+            print xml
         else:
-            pprint(ret.ChangeResourceRecordSetsResponse)
+            ret = r53.change_rrsets(args.zone, xml)
+            if args.wait:
+                wait_for_sync(ret)
+            else:
+                pprint(ret.ChangeResourceRecordSetsResponse)
 
 re_zone_id = re.compile('^[A-Z0-9]+$')
 def Zone(zone):
@@ -464,6 +467,7 @@ def main():
     parser_import.add_argument('-r', '--replace', action='store_true', help='replace all existing records (use with care!)')
     parser_import.add_argument('-f', '--file', type=argparse.FileType('r'), help='bind file')
     parser_import.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
+    parser_import.add_argument('--dump', action='store_true', help='dump xml to stdout')
     parser_import.set_defaults(func=cmd_import)
     
     parser_create = subparsers.add_parser('create', help='create a hosted zone')
