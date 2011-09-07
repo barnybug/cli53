@@ -476,9 +476,9 @@ def main():
     parser_list = subparsers.add_parser('list', help='list hosted zones')
     parser_list.set_defaults(func=cmd_list)
 
-    parser_list = subparsers.add_parser('info', help='get details of a hosted zone')
-    parser_list.add_argument('zone', type=Zone, help='zone name')
-    parser_list.set_defaults(func=cmd_info)
+    parser_info = subparsers.add_parser('info', help='get details of a hosted zone')
+    parser_info.add_argument('zone', type=Zone, help='zone name')
+    parser_info.set_defaults(func=cmd_info)
 
     parser_describe = subparsers.add_parser('xml')
     parser_describe.add_argument('zone', type=Zone, help='zone name')
