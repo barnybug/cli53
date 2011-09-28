@@ -274,7 +274,13 @@ def cmd_import(args):
         old_zone = _get_records(args)
         
     f = BindToR53Formatter()
-    for xml in f.create_all(zone, old_zone=old_zone, exclude=is_root_soa_or_ns):
+
+    if args.editauth:
+        exclude_rr = None
+    else:
+        exclude_rr = is_root_soa_or_ns
+
+    for xml in f.create_all(zone, old_zone=old_zone, exclude=exclude_rr):
         ret = r53.change_rrsets(args.zone, xml)
         if args.wait:
             wait_for_sync(ret)
@@ -452,6 +458,7 @@ def main():
     parser_import.add_argument('-r', '--replace', action='store_true', help='replace all existing records (use with care!)')
     parser_import.add_argument('-f', '--file', type=argparse.FileType('r'), help='bind file')
     parser_import.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
+    parser_import.add_argument('--editauth', action='store_true', default=False, help='include SOA and NS records from zone file')
     parser_import.set_defaults(func=cmd_import)
     
     parser_create = subparsers.add_parser('create', help='create a hosted zone')
