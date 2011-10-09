@@ -146,21 +146,21 @@ class BindToR53Formatter(object):
                 rr_type = dns.rdatatype.to_text(rdataset.rdtype)
                 rr_data[rr_name][rr_type] = {}
                 rr_data[rr_name][rr_type]['TTL'] = str(rdataset.ttl)
-                rr_data[rr_name][rr_type]['RRS'] = set()
+                rr_data[rr_name][rr_type]['RRS'] = []
                 for rdtype in rdataset.items:
-                    rr_data[rr_name][rr_type]['RRS'].add(rdtype.to_text(origin=zone.origin,
+                    rr_data[rr_name][rr_type]['RRS'].append(rdtype.to_text(origin=zone.origin,
                         relativize=False))
 
         # now deal with the ugliness of aws alias records
         for rr_name in rr_data:
             # first, convert any AWSALIAS txt records into A records
             if 'TXT' in rr_data[rr_name]:
-                rr_vals_to_delete = set()
+                rr_vals_to_delete = []
                 for rr_value in rr_data[rr_name]['TXT']['RRS']:
                     if re_awsalias.search(unquote(rr_value)):
                         (_, hosted_zone_id, dns_name) = unquote(rr_value).split(':')
                         # remove the awsalias from the TXT record set
-                        rr_vals_to_delete.add(rr_value)
+                        rr_vals_to_delete.append(rr_value)
                         # add as an A record with an alias target
                         if 'A' not in rr_data[rr_name]:
                             rr_data[rr_name]['A'] = {}
@@ -168,7 +168,8 @@ class BindToR53Formatter(object):
                         rr_data[rr_name]['A']['AliasTarget']['HostedZoneId'] = hosted_zone_id
                         rr_data[rr_name]['A']['AliasTarget']['DNSName'] = dns_name
                 for rr_value in rr_vals_to_delete:
-                    rr_data[rr_name]['TXT']['RRS'].remove(rr_value)
+                    del(rr_data[rr_name]['TXT']['RRS'][
+                        rr_data[rr_name]['TXT']['RRS'].index(rr_value)])
                 # if we've emptied the TXT set, delete it
                 if not rr_data[rr_name]['TXT']['RRS']:
                     del rr_data[rr_name]['TXT']
