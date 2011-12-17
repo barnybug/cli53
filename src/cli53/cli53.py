@@ -290,7 +290,7 @@ def _create_rdataset(rtype, ttl, values):
         elif rtype == 'AAAA':
             rdtype = dns.rdtypes.IN.AAAA.AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, value)
         elif rtype == 'CNAME':
-            rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value.rstrip('.')+'.')
+            rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value)
         elif rtype == 'SOA':
             mname, rname, serial, refresh, retry, expire, minimum = value.split()
             mname = dns.name.from_text(mname)
@@ -380,11 +380,7 @@ def cmd_import(args):
         if args.wait:
             wait_for_sync(ret)
         else:
-            ret = r53.change_rrsets(args.zone, xml)
-            if args.wait:
-                wait_for_sync(ret)
-            else:
-                pprint(ret.ChangeResourceRecordSetsResponse)
+            pprint(ret.ChangeResourceRecordSetsResponse)
 
 re_zone_id = re.compile('^[A-Z0-9]+$')
 def Zone(zone):
