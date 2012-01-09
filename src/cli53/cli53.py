@@ -317,9 +317,7 @@ def _create_rdataset(rtype, ttl, values):
         elif rtype == 'SRV':
             rdtype = SRV(dns.rdataclass.IN, dns.rdatatype.SRV, value)
         elif rtype == 'TXT':
-            if re_quoted.match(value):
-                value = unquote(value)
-            rdtype = dns.rdtypes.ANY.TXT.TXT(dns.rdataclass.ANY, dns.rdatatype.TXT, [value])
+            rdtype = dns.rdtypes.ANY.TXT.TXT(dns.rdataclass.ANY, dns.rdatatype.TXT, [x for x in value.split('"') if x not in ('', ' ')])
         else:
             raise ValueError, 'record type %s not handled' % rtype
         rdataset.items.append(rdtype)
