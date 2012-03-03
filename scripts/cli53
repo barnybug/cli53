@@ -15,7 +15,7 @@ try:
     import boto.route53, boto.jsonresponse, boto.exception
 except ImportError:
     print "Please install latest boto:"
-    print "git clone boto && cd boto && python setup.py install"
+    print "pip install boto"
     sys.exit(-1)
 
 import argparse
@@ -33,7 +33,7 @@ try:
     import dns.rdtypes.mxbase, dns.rdtypes.nsbase
 except ImportError:
     print "Please install dnspython:"
-    print "easy_install dnspython"
+    print "pip install dnspython"
     sys.exit(-1)
 
 # Custom MX class to prevent changing values
