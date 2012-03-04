@@ -59,10 +59,10 @@ class BindTest(unittest.TestCase):
                 "@ 86400 IN MX 10 mail.cli53.example.com.cli53.example.com.",
                 "@ 86400 IN MX 20 mail2.cli53.example.com.cli53.example.com.",
                 "@ 86400 IN TXT \"v=spf1 a mx a:cli53.example.com mx:mail.cli53.example.com ip4:10.0.0.0/24 ~all\"",
-                "@ 900 IN SOA ns-1148.awsdns-15.org. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400",
+                RegexEqual('^@ 900 IN SOA'),
                 "mail 86400 IN A 10.0.0.2",
                 "mail2 86400 IN A 10.0.0.3",
-                'test 86400 IN TXT "test \\" \\" text"',
+                'test 86400 IN TXT "multivalued" " txt record"',
                 "www 86400 IN A 10.0.0.1",
             ],
             output

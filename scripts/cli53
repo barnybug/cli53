@@ -274,11 +274,17 @@ class R53ToBindFormatter(object):
         return z
 
 re_quoted = re.compile(r'^".*"$')
+re_quotepair = re.compile(r'"(.*?)"')
 re_backslash = re.compile(r'\\(.)')
+def unquote_list(v):
+    if not re_quoted.match(v):
+        return [v]
+    return [ re_backslash.sub('\\1', s) for s in re_quotepair.findall(v) ]
+
 def unquote(v):
-    v = v[1:-1]
-    v = re_backslash.sub('\\1', v)
-    return v
+    if not re_quoted.match(v):
+        return v
+    return re_backslash.sub('\\1', s[1:-1])
 
 def _create_rdataset(rtype, ttl, values):
     rdataset = dns.rdataset.Rdataset(dns.rdataclass.IN, dns.rdatatype.from_text(rtype))
@@ -317,9 +323,8 @@ def _create_rdataset(rtype, ttl, values):
         elif rtype == 'SRV':
             rdtype = SRV(dns.rdataclass.IN, dns.rdatatype.SRV, value)
         elif rtype == 'TXT':
-            if re_quoted.match(value):
-                value = unquote(value)
-            rdtype = dns.rdtypes.ANY.TXT.TXT(dns.rdataclass.ANY, dns.rdatatype.TXT, [value])
+            values = unquote_list(value)
+            rdtype = dns.rdtypes.ANY.TXT.TXT(dns.rdataclass.ANY, dns.rdatatype.TXT, values)
         else:
             raise ValueError, 'record type %s not handled' % rtype
         rdataset.items.append(rdtype)

@@ -6,7 +6,7 @@ $ORIGIN cli53.example.com.
 @ 172800 IN NS ns1.somenameserver.com.
 @ 172800 IN NS ns2.somenameserver.com.
 @ 86400 IN TXT "v=spf1 a mx a:cli53.example.com mx:mail.cli53.example.com ip4:10.0.0.0/24 ~all"
-test 86400 IN TXT "test \" \" text"
+test 86400 IN TXT "multivalued" " txt record"
 www 86400 IN A 10.0.0.1
 mail 86400 IN A 10.0.0.2
 mail2 86400 IN A 10.0.0.3
