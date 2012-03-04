@@ -329,8 +329,8 @@ def cmd_xml(args):
     print 'This functionality is no longer available due to changes in the boto library.'
 
 re_dos = re.compile('\r\n$')
-re_origin = re.compile(r'\$ORIGIN (\S+)')
-re_include = re.compile(r'\$INCLUDE (\S+)')
+re_origin = re.compile(r'\$ORIGIN[ \t](\S+)')
+re_include = re.compile(r'\$INCLUDE[ \t](\S+)')
 def cmd_import(args):
     text = []
 
