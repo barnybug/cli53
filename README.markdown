@@ -3,8 +3,8 @@ cli53 - Command line script to administer the Amazon Route 53 DNS service
 
 Introduction
 ------------
-The latest Amazon service Route 53 is a great addition, but only has a rudimentary set of tools
-available at the time of release. This script fills that gap until things have caught up.
+cli53 provides import and export from BIND format and simple command line management of
+Route 53 domains.
 
 Features:
 
