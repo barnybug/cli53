@@ -62,7 +62,7 @@ class BindTest(unittest.TestCase):
                 RegexEqual('^@ 900 IN SOA'),
                 "mail 86400 IN A 10.0.0.2",
                 "mail2 86400 IN A 10.0.0.3",
-                'test 86400 IN TXT "multivalued" " txt record"',
+                'test 86400 IN TXT "multivalued" " txt \\"quoted\\" record"',
                 "www 86400 IN A 10.0.0.1",
             ],
             output

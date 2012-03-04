@@ -274,12 +274,12 @@ class R53ToBindFormatter(object):
         return z
 
 re_quoted = re.compile(r'^".*"$')
-re_quotepair = re.compile(r'"(.*?)"')
+re_quotepair = re.compile(r'"\s*"')
 re_backslash = re.compile(r'\\(.)')
 def unquote_list(v):
     if not re_quoted.match(v):
         return [v]
-    return [ re_backslash.sub('\\1', s) for s in re_quotepair.findall(v) ]
+    return [ re_backslash.sub('\\1', s) for s in re_quotepair.split(v[1:-1]) ]
 
 def unquote(v):
     if not re_quoted.match(v):
