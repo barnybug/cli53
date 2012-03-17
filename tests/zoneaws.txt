@@ -1,0 +1,4 @@
+$ORIGIN cli53.example.com.
+test 86400 AWS A 10 127.0.0.1 abc
+test 86400 AWS A 20 127.0.0.2 def
+test2 600 AWS ALIAS Z3NF1Z3NOM5OY2 test-212960849.eu-west-1.elb.amazonaws.com.

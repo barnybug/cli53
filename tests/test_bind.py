@@ -95,3 +95,27 @@ class BindTest(unittest.TestCase):
             ],
             output
         )
+        
+    def test_aws_extensions(self):
+        fname = _f('zoneaws.txt')
+        self._cmd('import', '--file', fname, self.zone)
+        
+        output = self._cmd('export', self.zone)
+        output = [ x for x in output.split('\n') if x ]
+        output.sort()
+        print output
+        
+        self.assertEqual(
+            [
+                "$ORIGIN cli53.example.com.",
+                RegexEqual('^@ 172800 IN NS'),
+                RegexEqual('^@ 172800 IN NS'),
+                RegexEqual('^@ 172800 IN NS'),
+                RegexEqual('^@ 172800 IN NS'),
+                RegexEqual('^@ 900 IN SOA'),
+                "test 86400 AWS A 10 127.0.0.1 abc",
+                "test 86400 AWS A 20 127.0.0.2 def",
+                "test2 600 AWS ALIAS Z3NF1Z3NOM5OY2 test-212960849.eu-west-1.elb.amazonaws.com.",
+            ],
+            output
+        )

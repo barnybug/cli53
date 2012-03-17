@@ -31,10 +31,67 @@ try:
     import dns.rdtypes.ANY.SOA, dns.rdtypes.ANY.SPF
     import dns.rdtypes.ANY.TXT, dns.rdtypes.IN.A, dns.rdtypes.IN.AAAA
     import dns.rdtypes.mxbase, dns.rdtypes.nsbase
+    from dns.rdata import _escapify
 except ImportError:
     print "Please install dnspython:"
     print "pip install dnspython"
     sys.exit(-1)
+
+class AWS:
+    RDCLASS = 127
+    class _MULTICLASS(int):
+        def __eq__(self, x):
+            # this is a hack so dns-python is happy mixing AWS and IN classes
+            return x == AWS.RDCLASS or x == dns.rdataclass.IN
+        
+        def __ne__(self, x):
+            return not self == x
+    MULTICLASS = _MULTICLASS(RDCLASS)
+    dns.rdataclass._by_text['AWS'] = MULTICLASS
+    dns.rdataclass._by_value[RDCLASS] = 'AWS'
+    
+    class A(dns.rdtypes.IN.A.A):
+        def __init__(self, rdclass, rdtype, address, weight, identifier):
+            super(dns.rdtypes.IN.A.A, self).__init__(rdclass, rdtype)
+            self.address = address
+            self.weight = weight
+            self.identifier = identifier
+            
+        def to_text(self, **kw):
+            if kw.get('relativize') and self.weight is not None:
+                return '%s %s %s' % (self.weight, self.address, self.identifier)
+            return self.address
+            
+        @classmethod
+        def from_text(cls, rdclass, rdtype, tok, origin, relativize):
+            weight = tok.get_string()
+            address = tok.get_identifier()
+            identifier = tok.get_string()
+            return cls(rdclass, rdtype, address, weight, identifier)
+
+    class ALIAS(dns.rdata.Rdata):
+        def __init__(self, rdclass, rdtype, hosted_zone_id, dns_name):
+            super(AWS.ALIAS, self).__init__(rdclass, rdtype)
+            self.alias_hosted_zone_id = hosted_zone_id
+            self.alias_dns_name = dns_name
+            
+        def to_text(self, **kw):
+            return '%s %s' % (self.alias_hosted_zone_id, self.alias_dns_name)
+            
+        @classmethod
+        def from_text(cls, rdclass, rdtype, tok, origin, relativize):
+            hosted_zone_id = tok.get_identifier()
+            dns_name = tok.get_identifier()
+            tok.get_eol()
+            return cls(rdclass, rdtype, hosted_zone_id, dns_name)
+            
+    RDTYPE_ALIAS = 65535
+    dns.rdatatype._by_text['ALIAS'] = RDTYPE_ALIAS
+    dns.rdatatype._by_value[RDTYPE_ALIAS] = 'ALIAS'
+
+# hook this into the parsing
+dns.rdata._rdata_modules[(127, dns.rdatatype.A)] = AWS
+dns.rdata._rdata_modules[(127, AWS.RDTYPE_ALIAS)] = AWS
 
 # Custom MX class to prevent changing values
 class MX(dns.rdtypes.mxbase.MXBase):
@@ -46,6 +103,8 @@ class CustomBase(dns.rdtypes.nsbase.NSBase):
     def to_text(self, **kw):
         return self.target
 
+class AAAA(dns.rdtypes.IN.AAAA.AAAA):
+    pass
 class CNAME(CustomBase):
     pass
 class NS(CustomBase):
@@ -133,80 +192,6 @@ class BindToR53Formatter(object):
             deletes = self._build_list(old_zone, exclude)
         return self._xml_changes(zone, creates=creates, deletes=deletes)
 
-    def dump_xml(self, zone, exclude=None):
-
-        re_awsalias = re.compile(r'^AWSALIAS')
-        # preprocess; this is annoying but necessary to support our little
-        # TXT record shim: doing it inside dnspython is just painful
-        rr_data = {}
-        for rrname in zone.keys():
-            rr_name = rrname.derelativize(zone.origin).to_text()
-            rr_data[rr_name] = {}
-            for rdataset in zone[rrname].rdatasets:
-                rr_type = dns.rdatatype.to_text(rdataset.rdtype)
-                rr_data[rr_name][rr_type] = {}
-                rr_data[rr_name][rr_type]['TTL'] = str(rdataset.ttl)
-                rr_data[rr_name][rr_type]['RRS'] = []
-                for rdtype in rdataset.items:
-                    rr_data[rr_name][rr_type]['RRS'].append(rdtype.to_text(origin=zone.origin,
-                        relativize=False))
-
-        # now deal with the ugliness of aws alias records
-        for rr_name in rr_data:
-            # first, convert any AWSALIAS txt records into A records
-            if 'TXT' in rr_data[rr_name]:
-                rr_vals_to_delete = []
-                for rr_value in rr_data[rr_name]['TXT']['RRS']:
-                    if re_awsalias.search(unquote(rr_value)):
-                        (_, hosted_zone_id, dns_name) = unquote(rr_value).split(':')
-                        # remove the awsalias from the TXT record set
-                        rr_vals_to_delete.append(rr_value)
-                        # add as an A record with an alias target
-                        if 'A' not in rr_data[rr_name]:
-                            rr_data[rr_name]['A'] = {}
-                        rr_data[rr_name]['A']['AliasTarget'] = {}
-                        rr_data[rr_name]['A']['AliasTarget']['HostedZoneId'] = hosted_zone_id
-                        rr_data[rr_name]['A']['AliasTarget']['DNSName'] = dns_name
-                for rr_value in rr_vals_to_delete:
-                    del(rr_data[rr_name]['TXT']['RRS'][
-                        rr_data[rr_name]['TXT']['RRS'].index(rr_value)])
-                # if we've emptied the TXT set, delete it
-                if not rr_data[rr_name]['TXT']['RRS']:
-                    del rr_data[rr_name]['TXT']
-            # now make sure there's no existing A record for that RR
-            if 'A' in rr_data[rr_name]:
-                if 'RRS' in rr_data[rr_name]['A'] and 'AliasTarget' in rr_data[rr_name]['A']:
-                    raise ValueError(
-                        'You cannot have both a static A record and an AWSALIAS'
-                        ' at the same RR node: %s' % rr_name)
-
-        # now spit it all back out as XML
-        resource_record_sets = et.Element('ResourceRecordSets',
-                xmlns=boto.route53.Route53Connection.XMLNameSpace)
-
-        for rr_name in rr_data:
-            for rr_type in rr_data[rr_name]:
-                resource_record_set = et.SubElement(resource_record_sets, 'ResourceRecordSet')
-                text_element(resource_record_set, 'Name', rr_name)
-                text_element(resource_record_set, 'Type', rr_type)
-                if 'AliasTarget' in rr_data[rr_name][rr_type]:
-                    alias_target = et.SubElement(resource_record_set, 'AliasTarget')
-                    text_element(alias_target, 'HostedZoneId',
-                            rr_data[rr_name][rr_type]['AliasTarget']['HostedZoneId'])
-                    text_element(alias_target, 'DNSName',
-                            rr_data[rr_name][rr_type]['AliasTarget']['DNSName'])
-                else:
-                    text_element(resource_record_set, 'TTL', rr_data[rr_name][rr_type]['TTL'])
-                    resource_records = et.SubElement(resource_record_set, 'ResourceRecords')
-                    for rr_value in rr_data[rr_name][rr_type]['RRS']:
-                        resource_record = et.SubElement(resource_records, 'ResourceRecord')
-                        text_element(resource_record, 'Value', rr_value)
-
-        out = StringIO()
-        et.ElementTree(resource_record_sets).write(out)
-        return out.getvalue()
-
-
     def delete_all(self, zone, exclude=None):
         return self._xml_changes(zone, deletes=self._build_list(zone, exclude))
 
@@ -234,20 +219,45 @@ class BindToR53Formatter(object):
         changes = et.SubElement(change_batch, 'Changes')
 
         for chg, name, rdataset in chgs:
-            change = et.SubElement(changes, 'Change')
-            text_element(change, 'Action', chg)
-            rrset = et.SubElement(change, 'ResourceRecordSet')
-            text_element(rrset, 'Name', name.derelativize(zone.origin).to_text())
-            text_element(rrset, 'Type', dns.rdatatype.to_text(rdataset.rdtype))
-            text_element(rrset, 'TTL', str(rdataset.ttl))
-            rrs = et.SubElement(rrset, 'ResourceRecords')
-            for rdtype in rdataset.items:
-                rr = et.SubElement(rrs, 'ResourceRecord')
-                text_element(rr, 'Value', rdtype.to_text(origin=zone.origin, relativize=False))
+            
+            if rdataset.rdclass == AWS.RDCLASS:
+                if rdataset.rdtype == AWS.RDTYPE_ALIAS:
+                    rrset = self._change(changes, chg, zone, name)
+                    text_element(rrset, 'Type', 'A')
+                    for rdtype in rdataset.items:
+                        at = et.SubElement(rrset, 'AliasTarget')
+                        text_element(at, 'HostedZoneId', rdtype.alias_hosted_zone_id)
+                        text_element(at, 'DNSName', rdtype.alias_dns_name)
+                elif rdataset.rdtype == dns.rdatatype.A:
+                    # Weighted A expands into multiple records (as each can have its own weighting/identifier)
+                    for rdtype in rdataset.items:
+                        rrset = self._change(changes, chg, zone, name)
+                        text_element(rrset, 'Type', dns.rdatatype.to_text(rdataset.rdtype))
+                        text_element(rrset, 'SetIdentifier', rdtype.identifier)
+                        text_element(rrset, 'Weight', str(rdtype.weight))
+                        text_element(rrset, 'TTL', str(rdataset.ttl))
+                        rrs = et.SubElement(rrset, 'ResourceRecords')
+                        rr = et.SubElement(rrs, 'ResourceRecord')
+                        text_element(rr, 'Value', rdtype.to_text(origin=zone.origin, relativize=False))
+            else:
+                rrset = self._change(changes, chg, zone, name)
+                text_element(rrset, 'Type', dns.rdatatype.to_text(rdataset.rdtype))
+                text_element(rrset, 'TTL', str(rdataset.ttl))
+                rrs = et.SubElement(rrset, 'ResourceRecords')
+                for rdtype in rdataset.items:
+                    rr = et.SubElement(rrs, 'ResourceRecord')
+                    text_element(rr, 'Value', rdtype.to_text(origin=zone.origin, relativize=False))
 
         out = StringIO()
         et.ElementTree(root).write(out)
         return out.getvalue()
+        
+    def _change(self, changes, chg, zone, name):
+        change = et.SubElement(changes, 'Change')
+        text_element(change, 'Action', chg)
+        rrset = et.SubElement(change, 'ResourceRecordSet')
+        text_element(rrset, 'Name', name.derelativize(zone.origin).to_text())
+        return rrset
 
 class R53ToBindFormatter(object):
     def get_all_rrsets(self, r53, ghz, zone):
@@ -266,10 +276,15 @@ class R53ToBindFormatter(object):
                 name = name.replace('\\052', '*')
             rtype = rrset.type
             ttl = int(rrset.ttl)
+            values = rrset.resource_records
+            
+            if rrset.alias_dns_name is not None:
+                rtype = 'ALIAS'
+                values = ['%s %s' % (rrset.alias_hosted_zone_id, rrset.alias_dns_name)]
 
-            rdataset = _create_rdataset(rtype, ttl, rrset.resource_records)
+            rdataset = _create_rdataset(rtype, ttl, values, rrset.weight, rrset.identifier)
             node = z.get_node(name, create=True)
-            node.replace_rdataset(rdataset)
+            node.rdatasets.append(rdataset)
 
         return z
 
@@ -286,15 +301,19 @@ def unquote(v):
         return v
     return re_backslash.sub('\\1', s[1:-1])
 
-def _create_rdataset(rtype, ttl, values):
+def _create_rdataset(rtype, ttl, values, weight, identifier):
     rdataset = dns.rdataset.Rdataset(dns.rdataclass.IN, dns.rdatatype.from_text(rtype))
     rdataset.ttl = ttl
     for value in values:
         rdtype = None
         if rtype == 'A':
-            rdtype = dns.rdtypes.IN.A.A(dns.rdataclass.IN, dns.rdatatype.A, value)
+            if weight is None:
+                rdtype = dns.rdtypes.IN.A.A(dns.rdataclass.IN, dns.rdatatype.A, value)
+            else:
+                rdataset.rdclass = AWS.RDCLASS
+                rdtype = AWS.A(AWS.RDCLASS, dns.rdatatype.A, value, weight, identifier)
         elif rtype == 'AAAA':
-            rdtype = dns.rdtypes.IN.AAAA.AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, value)
+            rdtype = AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, value)
         elif rtype == 'CNAME':
             rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value)
         elif rtype == 'SOA':
@@ -325,6 +344,13 @@ def _create_rdataset(rtype, ttl, values):
         elif rtype == 'TXT':
             values = unquote_list(value)
             rdtype = dns.rdtypes.ANY.TXT.TXT(dns.rdataclass.ANY, dns.rdatatype.TXT, values)
+        elif rtype == 'ALIAS':
+            rdataset.rdclass = AWS.RDCLASS
+            try:
+                hosted_zone_id, dns_name = value.split()
+            except ValueError:
+                raise ValueError, 'ALIAS records require two parts: hosted zone id and dns name of ELB'
+            rdtype = AWS.ALIAS(AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name)
         else:
             raise ValueError, 'record type %s not handled' % rtype
         rdataset.items.append(rdtype)
@@ -361,12 +387,6 @@ def cmd_import(args):
 
     zone = dns.zone.from_text(text, origin=origin, check_origin=False)
 
-    if args.dump:
-        f = BindToR53Formatter()
-        xml = f.dump_xml(zone)
-        print xml
-        return
-
     old_zone = None
     if args.replace:
         old_zone = _get_records(args)
@@ -379,7 +399,7 @@ def cmd_import(args):
         exclude_rr = is_root_soa_or_ns
 
     for xml in f.create_all(zone, old_zone=old_zone, exclude=exclude_rr):
-        if args.dumpchg:
+        if args.dump:
             print xml
         ret = r53.change_rrsets(args.zone, xml)
         if args.wait:
@@ -458,7 +478,7 @@ def wait_for_sync(obj):
 def cmd_rrcreate(args):
     zone = _get_records(args)
     name = dns.name.from_text(args.rr, zone.origin)
-    rdataset = _create_rdataset(args.type, args.ttl, args.values)
+    rdataset = _create_rdataset(args.type, args.ttl, args.values, args.weight, args.identifier)
 
     rdataset_old = None
     node = zone.get_node(args.rr)
@@ -535,7 +555,7 @@ def main():
     parser = argparse.ArgumentParser(description='route53 command line tool')
     subparsers = parser.add_subparsers(help='sub-command help')
 
-    supported_rtypes = ('A', 'AAAA', 'CNAME', 'SOA', 'NS', 'MX', 'PTR', 'SPF', 'SRV', 'TXT')
+    supported_rtypes = ('A', 'AAAA', 'CNAME', 'SOA', 'NS', 'MX', 'PTR', 'SPF', 'SRV', 'TXT', 'ALIAS')
 
     parser_list = subparsers.add_parser('list', help='list hosted zones')
     parser_list.set_defaults(func=cmd_list)
@@ -559,8 +579,7 @@ def main():
     parser_import.add_argument('-f', '--file', type=argparse.FileType('r'), help='bind file')
     parser_import.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
     parser_import.add_argument('--editauth', action='store_true', default=False, help='include SOA and NS records from zone file')
-    parser_import.add_argument('--dump', action='store_true', help='dump zone file in xml format to stdout')
-    parser_import.add_argument('--dumpchg', action='store_true', help='dump xml change request to stdout')
+    parser_import.add_argument('--dump', action='store_true', help='dump xml format to stdout')
     parser_import.set_defaults(func=cmd_import)
 
     parser_create = subparsers.add_parser('create', help='create a hosted zone')
@@ -579,6 +598,8 @@ def main():
     parser_rrcreate.add_argument('type', choices=supported_rtypes, help='resource record type')
     parser_rrcreate.add_argument('values', nargs='+', help='resource record values')
     parser_rrcreate.add_argument('-x', '--ttl', type=int, default=86400, help='resource record ttl')
+    parser_rrcreate.add_argument('-w', '--weight', type=int, help='record weight')
+    parser_rrcreate.add_argument('-i', '--identifier', help='record set identifier')
     parser_rrcreate.add_argument('-r', '--replace', action='store_true', help='replace any existing record')
     parser_rrcreate.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
     parser_rrcreate.set_defaults(func=cmd_rrcreate)
