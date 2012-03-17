@@ -24,37 +24,50 @@ Features:
 
 - works with BIND format zone files we all know and love - no need to edit
   &lt;ChangeResourceRecordSetsRequest&gt; XML!
+  
+- create AWS weighted records
+
+- create AWS Alias records to ELB
 
 Getting Started
 ---------------
 
-Create a hosted zone:
+Create a hosted zone::
 
 	$ cli53 create example.com
 
-Check what we've done:
+Check what we've done::
 
 	$ cli53 list
 
-Import a BIND zone file:
+Import a BIND zone file::
 
 	$ cli53 import example.com --file zonefile.txt
 
-Replace with an imported zone, waiting for completion:
+Replace with an imported zone, waiting for completion::
 
 	$ cli53 import example.com --file zonefile.txt --replace --wait
 
-Manually create some records:
+Manually create some records::
 
 	$ cli53 rrcreate example.com www A 192.168.0.1 --ttl 3600
 	$ cli53 rrcreate example.com www A 192.168.0.2 --ttl 3600 --replace
 	$ cli53 rrcreate example.com '' MX '10 192.168.0.1' '20 192.168.0.2'
 
-Export as a BIND zone file (useful for checking):
+Export as a BIND zone file (useful for checking)::
 
 	$ cli53 export example.com
 
-Further documentation is available, e.g.:
+Create some weighted records::
+
+	$ cli53 rrcreate example.com www A 192.168.0.1 --weight 10 --identifier server1
+	$ cli53 rrcreate example.com www A 192.168.0.2 --weight 20 --identifier server2
+
+Create an alias to ELB::
+
+	$ cli53 rrcreate example.com www ALIAS ABCDEFABCDE dns-name.elb.amazonaws.com.
+
+Further documentation is available, e.g.::
 
 	$ cli53 --help
 	$ cli53 rrcreate --help
@@ -80,3 +93,7 @@ perform a large operation that changes over 100 resource records it
 will be split. An operation that involves deletes, followed by updates
 such as an import with --replace will very briefly leave the domain
 inconsistent. You have been warned!
+
+Changelog
+---------
+0.3.0 - Added support for AWS extensions: weighted records and aliased records.
