@@ -359,7 +359,7 @@ def cmd_import(args):
         raise Exception, 'Could not find origin'
     origin = m.group(1)
 
-    zone = dns.zone.from_text(text, origin=origin, check_origin=True)
+    zone = dns.zone.from_text(text, origin=origin, check_origin=False)
 
     if args.dump:
         f = BindToR53Formatter()

@@ -67,3 +67,31 @@ class BindTest(unittest.TestCase):
             ],
             output
         )
+
+    def test_import2(self):
+        fname = _f('zone2.txt')
+        self._cmd('import', '--file', fname, self.zone)
+        
+        output = self._cmd('export', self.zone)
+        output = [ x for x in output.split('\n') if x ]
+        output.sort()
+        
+        self.assertEqual(
+            [
+                "$ORIGIN cli53.example.com.",
+                RegexEqual('^@ 172800 IN NS'),
+                RegexEqual('^@ 172800 IN NS'),
+                RegexEqual('^@ 172800 IN NS'),
+                RegexEqual('^@ 172800 IN NS'),
+                "@ 86400 IN A 10.0.0.1",
+                "@ 86400 IN MX 10 mail.cli53.example.com.cli53.example.com.",
+                "@ 86400 IN MX 20 mail2.cli53.example.com.cli53.example.com.",
+                "@ 86400 IN TXT \"v=spf1 a mx a:cli53.example.com mx:mail.cli53.example.com ip4:10.0.0.0/24 ~all\"",
+                RegexEqual('^@ 900 IN SOA'),
+                "mail 86400 IN A 10.0.0.2",
+                "mail2 86400 IN A 10.0.0.3",
+                'test 86400 IN TXT "multivalued" " txt \\"quoted\\" record"',
+                "www 86400 IN A 10.0.0.1",
+            ],
+            output
+        )
