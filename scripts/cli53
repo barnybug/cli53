@@ -37,6 +37,11 @@ except ImportError:
     print "pip install dnspython"
     sys.exit(-1)
 
+# Custom base class to prevent changing values
+class CustomBase(dns.rdtypes.nsbase.NSBase):
+    def to_text(self, **kw):
+        return self.target
+
 class AWS:
     RDCLASS = 127
     class _MULTICLASS(int):
@@ -51,23 +56,61 @@ class AWS:
     dns.rdataclass._by_value[RDCLASS] = 'AWS'
     
     class A(dns.rdtypes.IN.A.A):
-        def __init__(self, rdclass, rdtype, address, weight, identifier):
+        def __init__(self, rdclass, rdtype, address, weight, identifier, region):
             super(dns.rdtypes.IN.A.A, self).__init__(rdclass, rdtype)
             self.address = address
             self.weight = weight
             self.identifier = identifier
+            self.region = region
             
         def to_text(self, **kw):
-            if kw.get('relativize') and self.weight is not None:
-                return '%s %s %s' % (self.weight, self.address, self.identifier)
+            if kw.get('relativize'):
+                if self.weight is not None:
+                    return '%s %s %s' % (self.weight, self.address, self.identifier)
+                elif self.region is not None:
+                    return 'region:%s %s %s' % (self.region, self.address, self.identifier)
             return self.address
             
         @classmethod
         def from_text(cls, rdclass, rdtype, tok, origin, relativize):
-            weight = tok.get_string()
+            fst = tok.get_string()
+            weight = None
+            region = None
+            if fst.startswith('region:'):
+                region = fst[7:]
+            else:
+                weight = fst
             address = tok.get_identifier()
             identifier = tok.get_string()
-            return cls(rdclass, rdtype, address, weight, identifier)
+            return cls(rdclass, rdtype, address, weight, identifier, region)
+
+    class CNAME(CustomBase):
+        def __init__(self, rdclass, rdtype, target, weight, identifier, region):
+            super(CustomBase, self).__init__(rdclass, rdtype, target)
+            self.weight = weight
+            self.identifier = identifier
+            self.region = region
+            
+        def to_text(self, **kw):
+            if kw.get('relativize'):
+                if self.weight is not None:
+                    return '%s %s %s' % (self.weight, self.target, self.identifier)
+                elif self.region is not None:
+                    return 'region:%s %s %s' % (self.region, self.target, self.identifier)
+            return self.target
+            
+        @classmethod
+        def from_text(cls, rdclass, rdtype, tok, origin, relativize):
+            fst = tok.get_string()
+            weight = None
+            region = None
+            if fst.startswith('region:'):
+                region = fst[7:]
+            else:
+                weight = fst
+            target = tok.get_string()
+            identifier = tok.get_string()
+            return cls(rdclass, rdtype, target, weight, identifier, region)
 
     class ALIAS(dns.rdata.Rdata):
         def __init__(self, rdclass, rdtype, hosted_zone_id, dns_name):
@@ -90,18 +133,14 @@ class AWS:
     dns.rdatatype._by_value[RDTYPE_ALIAS] = 'ALIAS'
 
 # hook this into the parsing
-dns.rdata._rdata_modules[(127, dns.rdatatype.A)] = AWS
-dns.rdata._rdata_modules[(127, AWS.RDTYPE_ALIAS)] = AWS
+dns.rdata._rdata_modules[(AWS.RDCLASS, dns.rdatatype.A)] = AWS
+dns.rdata._rdata_modules[(AWS.RDCLASS, dns.rdatatype.CNAME)] = AWS
+dns.rdata._rdata_modules[(AWS.RDCLASS, AWS.RDTYPE_ALIAS)] = AWS
 
 # Custom MX class to prevent changing values
 class MX(dns.rdtypes.mxbase.MXBase):
     def to_text(self, **kw):
         return '%d %s' % (self.preference, self.exchange)
-
-# Custom base class to prevent changing values
-class CustomBase(dns.rdtypes.nsbase.NSBase):
-    def to_text(self, **kw):
-        return self.target
 
 class AAAA(dns.rdtypes.IN.AAAA.AAAA):
     pass
@@ -228,13 +267,16 @@ class BindToR53Formatter(object):
                         at = et.SubElement(rrset, 'AliasTarget')
                         text_element(at, 'HostedZoneId', rdtype.alias_hosted_zone_id)
                         text_element(at, 'DNSName', rdtype.alias_dns_name)
-                elif rdataset.rdtype == dns.rdatatype.A:
+                elif rdataset.rdtype in (dns.rdatatype.A, dns.rdatatype.CNAME):
                     # Weighted A expands into multiple records (as each can have its own weighting/identifier)
                     for rdtype in rdataset.items:
                         rrset = self._change(changes, chg, zone, name)
                         text_element(rrset, 'Type', dns.rdatatype.to_text(rdataset.rdtype))
                         text_element(rrset, 'SetIdentifier', rdtype.identifier)
-                        text_element(rrset, 'Weight', str(rdtype.weight))
+                        if rdtype.weight:
+                            text_element(rrset, 'Weight', str(rdtype.weight))
+                        elif rdtype.region:
+                            text_element(rrset, 'Region', str(rdtype.region))
                         text_element(rrset, 'TTL', str(rdataset.ttl))
                         rrs = et.SubElement(rrset, 'ResourceRecords')
                         rr = et.SubElement(rrs, 'ResourceRecord')
@@ -282,7 +324,7 @@ class R53ToBindFormatter(object):
                 rtype = 'ALIAS'
                 values = ['%s %s' % (rrset.alias_hosted_zone_id, rrset.alias_dns_name)]
 
-            rdataset = _create_rdataset(rtype, ttl, values, rrset.weight, rrset.identifier)
+            rdataset = _create_rdataset(rtype, ttl, values, rrset.weight, rrset.identifier, getattr(rrset, 'region', None))
             node = z.get_node(name, create=True)
             node.rdatasets.append(rdataset)
 
@@ -301,21 +343,31 @@ def unquote(v):
         return v
     return re_backslash.sub('\\1', s[1:-1])
 
-def _create_rdataset(rtype, ttl, values, weight, identifier):
+def _create_rdataset(rtype, ttl, values, weight, identifier, region):
     rdataset = dns.rdataset.Rdataset(dns.rdataclass.IN, dns.rdatatype.from_text(rtype))
     rdataset.ttl = ttl
     for value in values:
         rdtype = None
         if rtype == 'A':
-            if weight is None:
+            if identifier is None:
                 rdtype = dns.rdtypes.IN.A.A(dns.rdataclass.IN, dns.rdatatype.A, value)
             else:
                 rdataset.rdclass = AWS.RDCLASS
-                rdtype = AWS.A(AWS.RDCLASS, dns.rdatatype.A, value, weight, identifier)
+                if weight is not None:
+                    rdtype = AWS.A(AWS.RDCLASS, dns.rdatatype.A, value, weight, identifier, None)
+                elif region is not None:
+                    rdtype = AWS.A(AWS.RDCLASS, dns.rdatatype.A, value, None, identifier, region)
         elif rtype == 'AAAA':
             rdtype = AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, value)
         elif rtype == 'CNAME':
-            rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value)
+            if identifier is None:
+                rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value)
+            else:
+                rdataset.rdclass = AWS.RDCLASS
+                if weight is not None:
+                    rdtype = AWS.CNAME(AWS.RDCLASS, dns.rdatatype.CNAME, value, weight, identifier, None)
+                elif region is not None:
+                    rdtype = AWS.CNAME(AWS.RDCLASS, dns.rdatatype.CNAME, value, None, identifier, region)
         elif rtype == 'SOA':
             mname, rname, serial, refresh, retry, expire, minimum = value.split()
             mname = dns.name.from_text(mname)
@@ -478,7 +530,7 @@ def wait_for_sync(obj):
 def cmd_rrcreate(args):
     zone = _get_records(args)
     name = dns.name.from_text(args.rr, zone.origin)
-    rdataset = _create_rdataset(args.type, args.ttl, args.values, args.weight, args.identifier)
+    rdataset = _create_rdataset(args.type, args.ttl, args.values, args.weight, args.identifier, args.region)
 
     rdataset_old = None
     node = zone.get_node(args.rr)
@@ -494,6 +546,8 @@ def cmd_rrcreate(args):
     else:
         parts = f.create_record(zone, name, rdataset)
     for xml in parts:
+        if args.dump:
+            print xml
         ret = r53.change_rrsets(args.zone, xml)
         if args.wait:
             wait_for_sync(ret)
@@ -600,8 +654,10 @@ def main():
     parser_rrcreate.add_argument('-x', '--ttl', type=int, default=86400, help='resource record ttl')
     parser_rrcreate.add_argument('-w', '--weight', type=int, help='record weight')
     parser_rrcreate.add_argument('-i', '--identifier', help='record set identifier')
+    parser_rrcreate.add_argument('--region', help='region for latency-based routing')
     parser_rrcreate.add_argument('-r', '--replace', action='store_true', help='replace any existing record')
     parser_rrcreate.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
+    parser_rrcreate.add_argument('--dump', action='store_true', help='dump xml format to stdout')
     parser_rrcreate.set_defaults(func=cmd_rrcreate)
 
     parser_rrdelete = subparsers.add_parser('rrdelete', help='delete a resource record')
