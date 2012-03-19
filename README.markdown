@@ -65,7 +65,7 @@ Create some weighted records::
 
 Create an alias to ELB::
 
-	$ cli53 rrcreate example.com www ALIAS ABCDEFABCDE dns-name.elb.amazonaws.com.
+	$ cli53 rrcreate example.com www ALIAS 'ABCDEFABCDE dns-name.elb.amazonaws.com.'
 
 Further documentation is available, e.g.::
 
