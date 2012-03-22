@@ -101,4 +101,5 @@ Changelog
 0.3.1 - Added support for Latency-based routing. For the moment to use this you'll need the
       boto develop branch:
       pip install https://github.com/boto/boto/tarball/develop
+
 0.3.0 - Added support for AWS extensions: weighted records and aliased records.
