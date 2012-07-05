@@ -113,20 +113,42 @@ class AWS:
             return cls(rdclass, rdtype, target, weight, identifier, region)
 
     class ALIAS(dns.rdata.Rdata):
-        def __init__(self, rdclass, rdtype, hosted_zone_id, dns_name):
+        def __init__(self, rdclass, rdtype, hosted_zone_id, dns_name, weight, identifier, region):
             super(AWS.ALIAS, self).__init__(rdclass, rdtype)
             self.alias_hosted_zone_id = hosted_zone_id
             self.alias_dns_name = dns_name
+            self.weight = weight
+            self.identifier = identifier
+            self.region = region
             
         def to_text(self, **kw):
+            if kw.get('relativize'):
+                if self.weight is not None:
+                    return '%s %s %s %s' % (self.weight, self.alias_hosted_zone_id, self.alias_dns_name, self.identifier)
+                elif self.region is not None:
+                    return 'region:%s %s %s %s' % (self.region, self.alias_hosted_zone_id, self.alias_dns_name, self.identifier)
             return '%s %s' % (self.alias_hosted_zone_id, self.alias_dns_name)
             
         @classmethod
         def from_text(cls, rdclass, rdtype, tok, origin, relativize):
-            hosted_zone_id = tok.get_identifier()
+            weight_pattern = re.compile("[0-9]{1,3}$")
+            fst = tok.get_string()
+            weight = None
+            region = None
+            identifier = None
+            if fst.startswith('region:'):
+                region = fst[7:]
+                hosted_zone_id = tok.get_identifier()
+            elif re.match(weight_pattern, fst):
+                weight = int(fst)
+                hosted_zone_id = tok.get_identifier()
+            else:
+                hosted_zone_id = fst
             dns_name = tok.get_identifier()
+            if region or weight:
+                identifier = tok.get_string()
             tok.get_eol()
-            return cls(rdclass, rdtype, hosted_zone_id, dns_name)
+            return cls(rdclass, rdtype, hosted_zone_id, dns_name, weight, identifier, region)
             
     RDTYPE_ALIAS = 65535
     dns.rdatatype._by_text['ALIAS'] = RDTYPE_ALIAS
@@ -276,9 +298,15 @@ class BindToR53Formatter(object):
             
             if rdataset.rdclass == AWS.RDCLASS:
                 if rdataset.rdtype == AWS.RDTYPE_ALIAS:
-                    rrset = self._change(changes, chg, zone, name)
-                    text_element(rrset, 'Type', 'A')
                     for rdtype in rdataset.items:
+                        rrset = self._change(changes, chg, zone, name)
+                        text_element(rrset, 'Type', 'A')
+                        if rdtype.weight:
+                            text_element(rrset, 'SetIdentifier', rdtype.identifier)
+                            text_element(rrset, 'Weight', str(rdtype.weight))
+                        elif rdtype.region:
+                            text_element(rrset, 'SetIdentifier', rdtype.identifier)
+                            text_element(rrset, 'Region', str(rdtype.region))
                         at = et.SubElement(rrset, 'AliasTarget')
                         text_element(at, 'HostedZoneId', rdtype.alias_hosted_zone_id)
                         text_element(at, 'DNSName', rdtype.alias_dns_name)
@@ -417,7 +445,14 @@ def _create_rdataset(rtype, ttl, values, weight, identifier, region):
                 hosted_zone_id, dns_name = value.split()
             except ValueError:
                 raise ValueError, 'ALIAS records require two parts: hosted zone id and dns name of ELB'
-            rdtype = AWS.ALIAS(AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name)
+            if identifier is None:
+                rdtype = AWS.ALIAS(AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, None, identifier,None)
+            else:
+                if weight is not None:
+                    rdtype = AWS.ALIAS(AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, weight, identifier, None)
+                elif region is not None:
+                    rdtype = AWS.ALIAS(AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, None, identifier, region)
+
         else:
             raise ValueError, 'record type %s not handled' % rtype
         rdataset.items.append(rdtype)
