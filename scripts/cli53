@@ -13,9 +13,10 @@ from time import sleep
 # git clone git://github.com/boto/boto
 try:
     import boto.route53, boto.jsonresponse, boto.exception
-except ImportError:
+except ImportError, ex:
     print "Please install latest boto:"
     print "pip install boto"
+    print "(error was: %s)" % ex
     sys.exit(-1)
 
 import argparse
