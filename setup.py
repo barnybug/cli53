@@ -1,6 +1,6 @@
 from setuptools import setup
 
-__version__ = '0.3.1'
+__version__ = '0.3.2'
 long_description = file('README','r').read()
 
 setup(name='cli53',

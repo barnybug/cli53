@@ -98,8 +98,21 @@ inconsistent. You have been warned!
 
 Changelog
 ---------
-0.3.1 - Added support for Latency-based routing. For the moment to use this you'll need the
-      boto develop branch:
-      pip install https://github.com/boto/boto/tarball/develop
+0.3.2
 
-0.3.0 - Added support for AWS extensions: weighted records and aliased records.
+- Added functionality to rrlist, rrcreate, import and export so that
+  they're able to work with Alias records that have an identifier and
+  a latency based or weighted routing policy. (xbe)
+
+- Improve error message when boto fails to import
+
+0.3.1
+
+- Added support for Latency-based routing. For the moment to use this
+      you'll need the boto develop branch: pip install
+      https://github.com/boto/boto/tarball/develop
+
+0.3.0
+
+- Added support for AWS extensions: weighted records and aliased
+  records.
