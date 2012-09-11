@@ -88,6 +88,18 @@ You need to set your Amazon credentials in the environment as AWS_ACCESS_KEY_ID
 and AWS_SECRET_ACCESS_KEY or configure them in ~/.boto. For more information see:
 http://code.google.com/p/boto/wiki/BotoConfig
 
+Broken CNAME exports (GoDaddy)
+------------------------------
+Some DNS providers export broken bind files, without the trailing '.'
+on CNAME records. This is a requirement for absolute records
+(i.e. ones outside of the qualifying domain).
+
+If you see CNAME records being imported to route53 with an extra
+mydomain.com on the end (e.g. ghs.google.com.mydomain.com), then you
+need to fix your zone file before importing:
+
+        $ perl -pe 's/(CNAME .+)(?!.)$/$1./i' broken.txt > fixed.txt
+
 Caveats
 -------
 As Amazon limits operations to a maximum of 100 changes, if you
