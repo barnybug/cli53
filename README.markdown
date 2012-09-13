@@ -110,6 +110,10 @@ inconsistent. You have been warned!
 
 Changelog
 ---------
+0.3.3
+
+- Check boto version
+
 0.3.2
 
 - Added functionality to rrlist, rrcreate, import and export so that
