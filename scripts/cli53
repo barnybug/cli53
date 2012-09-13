@@ -3,7 +3,7 @@
 # cli53
 # Command line script to administer the Amazon Route 53 dns service
 
-import os, sys
+import sys
 import re
 import itertools
 from cStringIO import StringIO
@@ -281,12 +281,12 @@ class BindToR53Formatter(object):
     def replace_record(self, zone, name, rdataset_old, rdataset_new):
         return self._xml_changes(zone, creates=[(name,rdataset_new)], deletes=[(name,rdataset_old)])
 
-    def _xml_changes(self, zone, creates=[], deletes=[]):
+    def _xml_changes(self, zone, creates, deletes):
         for page in paginate(self._iter_changes(creates, deletes), 100):
             yield self._batch_change(zone, page)
 
     def _iter_changes(self, creates, deletes):
-        for chg, rdatasets in (('DELETE', deletes), ('CREATE', creates)):
+        for chg, rdatasets in (('DELETE', deletes or []), ('CREATE', creates or [])):
             for name, rdataset in rdatasets:
                 yield chg, name, rdataset
 
@@ -382,11 +382,6 @@ def unquote_list(v):
         return [v]
     return [ re_backslash.sub('\\1', s) for s in re_quotepair.split(v[1:-1]) ]
 
-def unquote(v):
-    if not re_quoted.match(v):
-        return v
-    return re_backslash.sub('\\1', s[1:-1])
-
 def _create_rdataset(rtype, ttl, values, weight, identifier, region):
     rdataset = dns.rdataset.Rdataset(dns.rdataclass.IN, dns.rdatatype.from_text(rtype))
     rdataset.ttl = ttl
@@ -459,7 +454,7 @@ def _create_rdataset(rtype, ttl, values, weight, identifier, region):
         rdataset.items.append(rdtype)
     return rdataset
 
-def cmd_xml(args):
+def cmd_xml(_):
     print 'This functionality is no longer available due to changes in the boto library.'
 
 re_dos = re.compile('\r\n$')
@@ -656,7 +651,6 @@ def cmd_rrlist(args):
         print '\t'.join(record_value.to_text(record_name).split(' '))
 
 def main():
-    connection = boto.route53.Route53Connection()
     parser = argparse.ArgumentParser(description='route53 command line tool')
     subparsers = parser.add_subparsers(help='sub-command help')
 
