@@ -290,7 +290,7 @@ class BindToR53Formatter(object):
     def replace_record(self, zone, name, rdataset_old, rdataset_new):
         return self._xml_changes(zone, creates=[(name,rdataset_new)], deletes=[(name,rdataset_old)])
 
-    def _xml_changes(self, zone, creates, deletes):
+    def _xml_changes(self, zone, creates=[], deletes=[]):
         for page in paginate(self._iter_changes(creates, deletes), 100):
             yield self._batch_change(zone, page)
 
