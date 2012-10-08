@@ -3,6 +3,7 @@ import subprocess
 import sys
 import os
 import re
+import random
 
 class NonZeroExit(Exception):
     pass
@@ -17,12 +18,8 @@ class RegexEqual(object):
 class CommandsTest(unittest.TestCase):
     def setUp(self):
         # re-use if already created
-        self.zone = 'cli53.example.com'
-        try:
-            self._cmd('rrpurge', '--confirm', self.zone)
-        except NonZeroExit:
-            # domain does not exist
-            self._cmd('create', self.zone)
+        self.zone = '%d.example.com' % random.randint(0, sys.maxint)
+        self._cmd('create', self.zone)
             
     def tearDown(self):
         # clear up
@@ -40,7 +37,7 @@ class CommandsTest(unittest.TestCase):
         
     def test_rrcreate(self):
         self._cmd('rrcreate', self.zone, '', 'A', '10.0.0.1')
-        self._cmd('rrcreate', self.zone, 'www', 'CNAME', 'cli53.example.com.', '-x 3600')
+        self._cmd('rrcreate', self.zone, 'www', 'CNAME', self.zone+'.', '-x 3600')
         self._cmd('rrcreate', self.zone, 'info', 'TXT', 'this is a "test"')
         
         output = self._cmd('export', self.zone)
@@ -50,7 +47,7 @@ class CommandsTest(unittest.TestCase):
             [
                 "@ 86400 IN A 10.0.0.1",
                 'info 86400 IN TXT "this is a \\"test\\""',
-                "www 3600 IN CNAME cli53.example.com.",
+                "www 3600 IN CNAME %s." % self.zone,
             ],
             output
         )

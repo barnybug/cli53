@@ -1,8 +1,7 @@
-$ORIGIN cli53.example.com.
 @ 86400 IN A 10.0.0.1
-@ 86400 IN MX 10 mail.cli53.example.com
-@ 86400 IN MX 20 mail2.cli53.example.com
-@ 86400 IN TXT "v=spf1 a mx a:cli53.example.com mx:mail.cli53.example.com ip4:10.0.0.0/24 ~all"
+@ 86400 IN MX 10 mail.example.com.
+@ 86400 IN MX 20 mail2.example.com.
+@ 86400 IN TXT "v=spf1 a mx a:cli53.example.com mx:mail.example.com ip4:10.0.0.0/24 ~all"
 test 86400 IN TXT "multivalued" " txt \"quoted\" record"
 www 86400 IN A 10.0.0.1
 mail 86400 IN A 10.0.0.2

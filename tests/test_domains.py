@@ -22,7 +22,7 @@ class DomainsTest(unittest.TestCase):
         return check_output(pargs, stderr=subprocess.STDOUT)
         
     def _unique_name(self):
-        return 'temp%d.com' % random.randint(0, 65535)
+        return 'temp%d.com' % random.randint(0, sys.maxint)
         
     def test_usage(self):
         assert 'usage' in self._cmd('-h')        
