@@ -27,6 +27,7 @@ class CommandsTest(unittest.TestCase):
     def tearDown(self):
         # clear up
         self._cmd('rrpurge', '--confirm', self.zone)
+        self._cmd('delete', self.zone)
         
     def _cmd(self, cmd, *args):
         pargs = ('scripts/cli53', cmd) + args
