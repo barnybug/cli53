@@ -489,8 +489,10 @@ def cmd_import(args):
 
     m = re_origin.search(text)
     if not m:
-        raise Exception, 'Could not find origin'
+        raise Exception, 'Could not find $ORIGIN'
     origin = m.group(1)
+    if not origin.endswith('.'):
+        raise Exception, '$ORIGIN must end with a period (.)'
 
     zone = dns.zone.from_text(text, origin=origin, check_origin=False)
 
