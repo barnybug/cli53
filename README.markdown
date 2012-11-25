@@ -1,3 +1,5 @@
+[![Build status](https://secure.travis-ci.org/barnybug/cli53.png?branch=master)](https://secure.travis-ci.org/barnybug/cli53)
+
 cli53 - Command line script to administer the Amazon Route 53 DNS service
 =========================================================================
 
