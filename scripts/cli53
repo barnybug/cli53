@@ -594,8 +594,16 @@ def cmd_rrcreate(args):
     if node:
         for rds in node.rdatasets:
             if args.type == dns.rdatatype.to_text(rds.rdtype):
-                rdataset_old = rds
-                break
+                # find the rds in the requested region only
+                if args.region is not None:
+                    for rdtype in rds.items:
+                        if hasattr(rdtype, 'region') and rdtype.region == args.region:
+                            rdataset_old = rds
+                            break
+                else:
+                    rdataset_old = rds
+                    break
+
 
     f = BindToR53Formatter()
     if args.replace and rdataset_old:
