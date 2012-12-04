@@ -56,3 +56,7 @@ class CommandsTest(unittest.TestCase):
         self._cmd('rrcreate', self.zone, '', 'A', '10.0.0.1')
         self._cmd('rrdelete', self.zone, '', 'A')
         
+    def test_rrcreate_replace_latency(self):
+        self._cmd('rrcreate', '-i', 'asiacdn', '--region', 'ap-southeast-1', self.zone, 'cdn', 'CNAME', 'asiacdn.com.')
+        self._cmd('rrcreate', '-i', 'statescdn', '--region', 'us-west-1', self.zone, 'cdn', 'CNAME', 'uscdn.com.')
+        self._cmd('rrcreate', '-i', 'newuscdn', '--region', 'us-west-1', self.zone, 'cdn', 'CNAME', 'newuscdn.com.', '-r')
