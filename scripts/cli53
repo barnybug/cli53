@@ -326,7 +326,7 @@ class BindToR53Formatter(object):
                         rrset = self._change(changes, chg, zone, name)
                         text_element(rrset, 'Type', dns.rdatatype.to_text(rdataset.rdtype))
                         text_element(rrset, 'SetIdentifier', rdtype.identifier)
-                        if rdtype.weight:
+                        if rdtype.weight is not None:
                             text_element(rrset, 'Weight', str(rdtype.weight))
                         elif rdtype.region:
                             text_element(rrset, 'Region', str(rdtype.region))
