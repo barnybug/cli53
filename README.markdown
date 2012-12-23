@@ -38,7 +38,7 @@ Getting Started
 
 Create a hosted zone::
 
-	$ cli53 create example.com
+	$ cli53 create example.com --comment 'my first zone'
 
 Check what we've done::
 
