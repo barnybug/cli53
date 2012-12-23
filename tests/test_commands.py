@@ -1,7 +1,6 @@
 import unittest
 import subprocess
 import sys
-import os
 import re
 import random
 
@@ -19,7 +18,7 @@ class CommandsTest(unittest.TestCase):
     def setUp(self):
         # re-use if already created
         self.zone = '%d.example.com' % random.randint(0, sys.maxint)
-        self._cmd('create', self.zone)
+        self._cmd('create', self.zone, '--comment', 'unittests')
             
     def tearDown(self):
         # clear up

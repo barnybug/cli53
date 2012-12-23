@@ -541,7 +541,7 @@ def cmd_export(args):
     zone.to_file(sys.stdout, relativize=not args.full)
 
 def cmd_create(args):
-    ret = r53.create_hosted_zone(args.zone)
+    ret = r53.create_hosted_zone(args.zone, comment=args.comment)
     if args.wait:
         wait_for_sync(ret)
     else:
@@ -703,6 +703,7 @@ def main():
     parser_create = subparsers.add_parser('create', help='create a hosted zone')
     parser_create.add_argument('zone', help='zone name')
     parser_create.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
+    parser_create.add_argument('--comment', help='add a comment to the zone')
     parser_create.set_defaults(func=cmd_create)
 
     parser_delete = subparsers.add_parser('delete', help='delete a hosted zone')
