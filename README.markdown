@@ -112,6 +112,10 @@ inconsistent. You have been warned!
 
 Changelog
 ---------
+0.3.6
+
+- Support for zone comments
+
 0.3.5
 
 - Fix for zero weighted records
