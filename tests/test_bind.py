@@ -20,8 +20,6 @@ class RegexEqual(object):
 
 class BindTest(unittest.TestCase):
     def setUp(self):
-        # re-use if already created
-        self.zone = '%d.example.com' % random.randint(0, sys.maxint)
         self._cmd('create', self.zone)
             
     def tearDown(self):
@@ -38,6 +36,9 @@ class BindTest(unittest.TestCase):
             raise NonZeroExit
         return p.stdout.read()
         
+class ZoneTest(BindTest):
+    zone = '%d.example.com' % random.randint(0, sys.maxint)
+
     def _zonefile(self, fname):
         with file('temp.txt', 'w') as fout:
             print >>fout, "$ORIGIN %s." % self.zone
@@ -102,7 +103,7 @@ class BindTest(unittest.TestCase):
             ],
             output
         )
-        
+
     def test_aws_extensions(self):
         fname = self._zonefile('zoneaws.txt')
         self._cmd('import', '--file', fname, self.zone)
@@ -133,3 +134,26 @@ class BindTest(unittest.TestCase):
         fname = self._zonefile('invalid1.txt')
         self.assertRaises(NonZeroExit,
             self._cmd, 'import', '--file', fname, self.zone)
+
+class ArpaTest(BindTest):
+    zone = '0/25.0.1.10.in-addr.arpa'
+
+    def test_import_arpa(self):
+        self._cmd('import', '--file', _f('zone3.txt'), self.zone)
+        
+        output = self._cmd('export', self.zone)
+        output = [ x for x in output.split('\n') if x ]
+        output.sort()
+        
+        self.assertEqual(
+            [
+                "$ORIGIN %s." % self.zone,
+                "98 0 IN PTR blah.foo.com.",
+                RegexEqual('^@ 172800 IN NS'),
+                RegexEqual('^@ 172800 IN NS'),
+                RegexEqual('^@ 172800 IN NS'),
+                RegexEqual('^@ 172800 IN NS'),
+                RegexEqual('^@ 900 IN SOA'),
+            ],
+            output
+        )

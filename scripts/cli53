@@ -425,6 +425,7 @@ class R53ToBindFormatter(object):
     def convert(self, info, rrsets, z=None):
         if not z:
             origin = info.HostedZone.Name
+            origin = origin.replace('\\057', '/')
             z = dns.zone.Zone(dns.name.from_text(origin))
 
         for rrset in rrsets:
@@ -432,6 +433,7 @@ class R53ToBindFormatter(object):
             if '\\052' in name:
                 # * char seems to confuse Amazon and is returned as \\052
                 name = name.replace('\\052', '*')
+            name = name.replace('\\057', '/')
             rtype = rrset.type
             ttl = int(rrset.ttl)
             values = rrset.resource_records
@@ -603,6 +605,7 @@ def Zone(zone):
         return zone
     ret = r53.get_all_hosted_zones()
 
+    zone = zone.replace('/', '\\057')
     hzs = [ hz.Id.replace('/hostedzone/', '') for hz in ret.ListHostedZonesResponse.HostedZones if hz.Name == zone or hz.Name == zone+'.' ]
     if len(hzs) == 1:
         return hzs[0]
