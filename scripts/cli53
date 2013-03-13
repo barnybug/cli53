@@ -58,6 +58,9 @@ except ImportError:
     sys.exit(-1)
 
 
+class ParseException(Exception):
+    pass
+
 # Custom base class to prevent changing values
 class CustomBase(dns.rdtypes.nsbase.NSBase):
     def to_text(self, **kw):
@@ -564,12 +567,15 @@ def cmd_import(args):
 
     m = re_origin.search(text)
     if not m:
-        raise Exception('Could not find $ORIGIN')
+        raise ParseException('%s: Could not find $ORIGIN' % args.file.name)
     origin = m.group(1)
     if not origin.endswith('.'):
-        raise Exception('$ORIGIN must end with a period (.)')
+        raise ParseException('%s: $ORIGIN must end with a period (.)' % args.file.name)
 
-    zone = dns.zone.from_text(text, origin=origin, check_origin=False)
+    try:
+        zone = dns.zone.from_text(text, origin=origin, check_origin=False)
+    except dns.exception.SyntaxError as ex:
+        raise ParseException('%s: %s' % (args.file.name, ex))
 
     old_zone = None
     if args.replace:
@@ -818,7 +824,10 @@ def main():
     parser_rrlist.set_defaults(func=cmd_rrlist)
 
     args = parser.parse_args()
-    args.func(args)
+    try:
+        args.func(args)
+    except ParseException as ex:
+        raise SystemExit("Parse error: %s" % ex)
 
 if __name__=='__main__':
     main()

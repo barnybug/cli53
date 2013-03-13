@@ -128,3 +128,8 @@ class BindTest(unittest.TestCase):
             ],
             output
         )
+
+    def test_invalid1(self):
+        fname = self._zonefile('invalid1.txt')
+        self.assertRaises(NonZeroExit,
+            self._cmd, 'import', '--file', fname, self.zone)

@@ -1,0 +1,2 @@
+@ 900 IN SOA ns1.somenameserver.com. blah.example.com. 1 7200 900 1209600 86400
+XYZ
