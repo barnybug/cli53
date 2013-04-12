@@ -270,7 +270,11 @@ def pprint(obj, findent='', indent=''):
 
 def cmd_list(args):
     ret = r53.get_all_hosted_zones()
-    pprint(ret.ListHostedZonesResponse)
+    if args.bare:
+        for zone in ret['ListHostedZonesResponse']['HostedZones']:
+            print "%s\t%s" % (zone["Id"].split('/')[-1],zone["Name"])
+    else:
+        pprint(ret.ListHostedZonesResponse)
 
 
 def cmd_info(args):
@@ -760,6 +764,7 @@ def main():
     supported_rtypes = ('A', 'AAAA', 'CNAME', 'SOA', 'NS', 'MX', 'PTR', 'SPF', 'SRV', 'TXT', 'ALIAS')
 
     parser_list = subparsers.add_parser('list', help='list hosted zones')
+    parser_list.add_argument('-b', '--bare', action='store_true', help='Bare output format')
     parser_list.set_defaults(func=cmd_list)
 
     parser_info = subparsers.add_parser('info', help='get details of a hosted zone')
