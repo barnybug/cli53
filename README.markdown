@@ -101,7 +101,7 @@ If you see CNAME records being imported to route53 with an extra
 mydomain.com on the end (e.g. ghs.google.com.mydomain.com), then you
 need to fix your zone file before importing:
 
-        $ perl -pe 's/(CNAME\s+[a-zA-Z0-9.-_]+)(?!.)$/$1./i' broken.txt > fixed.txt
+        $ perl -pe 's/(CNAME\s+[-a-zA-Z0-9.-_]+)(?!.)$/$1./i' broken.txt > fixed.txt
 
 Caveats
 -------
