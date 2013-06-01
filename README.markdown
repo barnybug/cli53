@@ -17,7 +17,7 @@ Features:
 
 - list hosted zones
 
-- import to BIND format
+- import from BIND format
 
 - export to BIND format
 
