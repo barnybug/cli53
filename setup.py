@@ -42,4 +42,7 @@ setup(name='cli53',
         "Topic :: Utilities",
         "License :: OSI Approved :: MIT License",
         ],
+      cmdclass={
+          'tag': tag,
+      },
       )
