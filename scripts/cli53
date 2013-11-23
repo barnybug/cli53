@@ -486,12 +486,8 @@ def _create_rdataset(rtype, ttl, values, weight, identifier, region):
                 rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value)
             else:
                 rdataset.rdclass = AWS.RDCLASS
-                if weight is not None:
-                    rdtype = AWS.CNAME(AWS.RDCLASS, dns.rdatatype.CNAME, value,
-                        weight, identifier, None)
-                elif region is not None:
-                    rdtype = AWS.CNAME(AWS.RDCLASS, dns.rdatatype.CNAME, value,
-                        None, identifier, region)
+                rdtype = AWS.CNAME(AWS.RDCLASS, dns.rdatatype.CNAME, value,
+                    weight, identifier, region)
         elif rtype == 'SOA':
             mname, rname, serial, refresh, retry, expire, minimum = value.split()
             mname = dns.name.from_text(mname)
