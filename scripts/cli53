@@ -6,13 +6,16 @@
 import sys
 import re
 import itertools
+import os
 from cStringIO import StringIO
 from time import sleep
+import logging
 
 try:
     import boto.route53
     import boto.jsonresponse
     import boto.exception
+    import boto.ec2
 except ImportError, ex:
     print "Please install latest boto:"
     print "pip install boto"
@@ -341,6 +344,9 @@ class BindToR53Formatter(object):
         return self._xml_changes(zone, creates=[(name, rdataset_new)],
             deletes=[(name, rdataset_old)])
 
+    def replace_records(self, zone, creates=None, deletes=None):
+        return self._xml_changes(zone, creates=creates, deletes=deletes)
+
     def _xml_changes(self, zone, creates=None, deletes=None):
         for page in paginate(self._iter_changes(creates, deletes), 100):
             yield self._batch_change(zone, page)
@@ -620,6 +626,110 @@ def cmd_export(args):
     print '$ORIGIN %s' % zone.origin.to_text()
     zone.to_file(sys.stdout, relativize=not args.full)
 
+def _read_aws_cfg(filename):
+    import ConfigParser
+    config = ConfigParser.RawConfigParser()
+    config.read(filename)
+    for section in config.sections():
+        if section.startswith('profile '):
+            logging.debug('Scanning account: %s' % section)
+            aws_access_key_id = config.get(section, 'aws_access_key_id')
+            aws_secret_access_key = config.get(section, 'aws_secret_access_key')
+            region = config.get(section, 'region')
+
+            try:
+                yield boto.ec2.connect_to_region(region,
+                    aws_access_key_id= aws_access_key_id,
+                    aws_secret_access_key=aws_secret_access_key)
+            except:
+                logging.exception('Failed connecting to account: %s' % section)
+
+def cmd_instances(args):
+    logging.info('Getting DNS records')
+    zone = _get_records(args)
+    if args.off:
+        filters = {}
+    else:
+        filters = {'instance-state-name': 'running'}
+
+    if args.credentials:
+        connections = _read_aws_cfg(args.credentials)
+    else:
+        connections = [boto.ec2.connect_to_region(region) for region in args.regions.split(',')]
+
+    def get_instances():
+        for conn in connections:
+            for r in conn.get_all_instances(filters=filters):
+                for i in r.instances:
+                    yield i
+
+    suffix = '.' + zone.origin.to_text().strip('.')
+    creates = []
+    deletes = []
+    instances = get_instances()
+    # limit to instances with a Name tag
+    instances = (i for i in instances if i.tags.get('Name'))
+    if args.match:
+        instances = (i for i in instances if re.search(args.match, i.tags['Name']))
+    logging.info('Getting EC2 instances')
+    for inst in instances:
+        name = inst.tags.get('Name')
+        if name:
+            # strip domain suffix if present
+            if name.endswith(suffix):
+                name = name[0:-len(suffix)]
+            name = dns.name.from_text(name, zone.origin)
+
+            node = zone.get_node(name)
+            if node and node.rdatasets and node.rdatasets[0].rdtype != dns.rdatatype.CNAME:
+                # don't replace/update existing non-CNAME records
+                logging.warning("Not overwriting record for %s as it appears to have been manually created" % name)
+                continue
+
+            newvalue = None
+            if inst.state == 'running':
+                newvalue = inst.public_dns_name
+            elif args.off == 'delete':
+                newvalue = None
+            elif args.off:
+                newvalue = args.off
+
+            if node:
+                oldvalue = node.rdatasets[0].items[0].target.strip('.')
+                if oldvalue != newvalue:
+                    if newvalue:
+                        logging.info('Updating record for %s: %s -> %s' % (name, oldvalue, newvalue))
+                    else:
+                        logging.info('Deleting record for %s: %s' % (name, oldvalue))
+                    deletes.append((name, node.rdatasets[0]))
+                else:
+                    logging.debug('Record %s unchanged' % name)
+                    continue
+            else:
+                logging.info('Creating record for %s: %s' % (name, newvalue))
+
+            if newvalue:
+                rd = _create_rdataset('CNAME', args.ttl, [newvalue], None, None, None)
+                creates.append((name, rd))
+
+    if not deletes and not creates:
+        logging.info('No changes')
+        return
+
+    if args.dry_run:
+        logging.info('Dry run - not making changes')
+        return
+
+    f = BindToR53Formatter()
+    parts = f.replace_records(zone, creates, deletes)
+    for xml in parts:
+        ret = r53.change_rrsets(args.zone, xml)
+        if args.wait:
+            wait_for_sync(ret)
+        else:
+            print 'Success'
+            pprint(ret.ChangeResourceRecordSetsResponse)
+
 def cmd_create(args):
     ret = r53.create_hosted_zone(args.zone, comment=args.comment)
     if args.wait:
@@ -751,6 +861,8 @@ def cmd_rrlist(args):
 
 def main():
     parser = argparse.ArgumentParser(description='route53 command line tool')
+    parser.add_argument('-d', '--debug', action='store_true', help='Turn on debugging')
+    parser.add_argument('--logging', help='Specify logging configuration')
     subparsers = parser.add_subparsers(help='sub-command help')
 
     supported_rtypes = ('A', 'AAAA', 'CNAME', 'SOA', 'NS', 'MX', 'PTR', 'SPF', 'SRV', 'TXT', 'ALIAS')
@@ -779,6 +891,17 @@ def main():
     parser_import.add_argument('--editauth', action='store_true', default=False, help='include SOA and NS records from zone file')
     parser_import.add_argument('--dump', action='store_true', help='dump xml format to stdout')
     parser_import.set_defaults(func=cmd_import)
+
+    parser_instances = subparsers.add_parser('instances', help='dynamically update your dns with instance names')
+    parser_instances.add_argument('zone', type=Zone, help='zone name')
+    parser_instances.add_argument('--off', default=False, help='if provided, then records for stopped instances will be updated. If set to "delete", they are removed, otherwise this option gives the dns name the CNAME should revert to')
+    parser_instances.add_argument('--regions', default=os.getenv('EC2_REGION', 'us-east-1'), help='a comma-separated list of regions to check (default: environment variable EC2_REGION, or otherwise "us-east-1")')
+    parser_instances.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
+    parser_instances.add_argument('-x', '--ttl', type=int, default=60, help='resource record ttl')
+    parser_instances.add_argument('--match', help='regular expression to select which Name tags will be qualify')
+    parser_instances.add_argument('--credentials', help='separate credentials file containing account(s) to check for instances')
+    parser_instances.add_argument('-n', '--dry-run', action='store_true', help='dry run - don\'t make any changes')
+    parser_instances.set_defaults(func=cmd_instances)
 
     parser_create = subparsers.add_parser('create', help='create a hosted zone')
     parser_create.add_argument('zone', help='zone name')
@@ -823,6 +946,16 @@ def main():
     parser_rrlist.set_defaults(func=cmd_rrlist)
 
     args = parser.parse_args()
+    if args.logging:
+        logging.config.fileConfig(args.logging)
+    else:
+        if args.debug:
+            level = logging.DEBUG
+        else:
+            level = logging.INFO
+        logging.basicConfig(level=level, format="%(levelname)-8s %(message)s")
+        logging.getLogger('boto').setLevel(logging.WARNING)
+
     try:
         args.func(args)
     except ParseException as ex:

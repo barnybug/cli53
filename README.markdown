@@ -34,6 +34,8 @@ Features:
 
 - create AWS latency-based routing records
 
+- dynamic record creation for EC2 instances
+
 Getting Started
 ---------------
 
@@ -102,6 +104,54 @@ mydomain.com on the end (e.g. ghs.google.com.mydomain.com), then you
 need to fix your zone file before importing:
 
         $ perl -pe 's/(CNAME\s+[-a-zA-Z0-9.-_]+)(?!.)$/$1./i' broken.txt > fixed.txt
+
+Dynamic records for EC2 instances
+---------------------------------
+This functionality allows you to give your EC2 instances memorable DNS names
+under your domain. The name will be taken from the 'Name' tag on the instance,
+if present, and a CNAME record created pointing to the instance's public DNS
+name (ec2-...).
+
+In the instance Name tag, you can either use a partial host name 'app01.prd' or
+'app01.prd.mydomain.com' - either creates the correct record.
+
+The CNAME will resolve to the external IP address outside EC2 and to the
+internal IP address from another instance inside EC2.
+
+Another feature supported is whilst an instance is stopped, if you specify the
+parameter '--off fallback.mydomain.com' you can have the dns name fallback to
+another host. As an example, a holding page could be served up from this
+indicating the system is off currently.
+
+You can use the '--match' parameter (regular expression) to select a subset of
+the instances in the account to apply to.
+
+Generally you'll configure cli53 to run regularly from your crontab like so::
+
+    */5 * * * cli53 instances example.com
+
+This runs every 5 minutes to ensure the records are up to date. When there no
+changes, this will purely consist of a call to list the domain and the describe
+instances API.
+
+If the account the EC2 instances are in differs from the account the route53
+domain is managed under, you can configure the EC2 credentials in a separate
+file and pass the parameter '--credentials aws.cfg' in. The credentials file is
+of the format::
+
+    [profile prd]
+    aws_access_key_id=...
+    aws_secret_access_key=...
+    region=eu-west-1
+
+    [profile qa]
+    aws_access_key_id=...
+    aws_secret_access_key=...
+    region=eu-west-1
+
+As illustrated above, this also allows you to discover instances from multiple
+accounts - for example if you split prd and qa. cli53 will scan all '[profile
+...]' sections.
 
 Caveats
 -------
