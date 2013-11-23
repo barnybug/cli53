@@ -250,16 +250,16 @@ except boto.exception.NoAuthHandlerFound:
 
 def pprint(obj, findent='', indent=''):
     if isinstance(obj, StringTypes):
-        print '%s%s' % (findent, obj)
+        logging.info('%s%s' % (findent, obj))
     elif isinstance(obj, boto.jsonresponse.Element):
         i = findent
         for k, v in obj.iteritems():
             if k in ('IsTruncated', 'MaxItems'):
                 continue
             if isinstance(v, StringTypes):
-                print '%s%s: %s' % (i, k, v)
+                logging.info('%s%s: %s' % (i, k, v))
             else:
-                print '%s%s:' % (i, k)
+                logging.info('%s%s:' % (i, k))
                 pprint(v, indent + '  ', indent + '  ')
             i = indent
     elif isinstance(obj, (boto.jsonresponse.ListElement, list)):
@@ -594,7 +594,7 @@ def cmd_import(args):
 
     for xml in f.create_all(zone, old_zone=old_zone, exclude=exclude_rr):
         if args.dump:
-            print xml
+            logging.debug(xml)
         ret = r53.change_rrsets(args.zone, xml)
         if args.wait:
             wait_for_sync(ret)
@@ -727,7 +727,7 @@ def cmd_instances(args):
         if args.wait:
             wait_for_sync(ret)
         else:
-            print 'Success'
+            logging.info('Success')
             pprint(ret.ChangeResourceRecordSetsResponse)
 
 def cmd_create(args):
@@ -771,7 +771,7 @@ def wait_for_sync(obj):
             sys.stdout.write('.')
             sys.stdout.flush()
             sleep(1)
-    print "completed"
+    logging.info("Completed")
     pprint(ret.GetChangeResponse)
 
 def cmd_rrcreate(args):
@@ -802,12 +802,12 @@ def cmd_rrcreate(args):
         parts = f.create_record(zone, name, rdataset)
     for xml in parts:
         if args.dump:
-            print xml
+            logging.debug(xml)
         ret = r53.change_rrsets(args.zone, xml)
         if args.wait:
             wait_for_sync(ret)
         else:
-            print 'Success'
+            logging.info('Success')
             pprint(ret.ChangeResourceRecordSetsResponse)
 
 def cmd_rrdelete(args):
@@ -818,7 +818,7 @@ def cmd_rrdelete(args):
     if node:
         if len(node.rdatasets) > 1 and not args.type:
             rtypes = [ dns.rdatatype.to_text(rds.rdtype) for rds in node.rdatasets ]
-            print 'Ambigious record - several resource types for record %r found: %s' % (args.rr, ', '.join(rtypes))
+            logging.warning('Ambigious record - several resource types for record %r found: %s' % (args.rr, ', '.join(rtypes)))
         else:
             rdataset = None
             for rds in node.rdatasets:
@@ -827,10 +827,10 @@ def cmd_rrdelete(args):
                     break
 
             if not rdataset:
-                print 'Record not found: %s, type: %s' % (args.rr, args.type)
+                logging.warning('Record not found: %s, type: %s' % (args.rr, args.type))
                 return
 
-            print 'Deleting %s %s...' % (args.rr, dns.rdatatype.to_text(rds.rdtype))
+            logging.info('Deleting %s %s...' % (args.rr, dns.rdatatype.to_text(rds.rdtype)))
 
             f = BindToR53Formatter()
             for xml in f.delete_record(zone, name, rdataset):
@@ -838,10 +838,10 @@ def cmd_rrdelete(args):
                 if args.wait:
                     wait_for_sync(ret)
                 else:
-                    print 'Success'
+                    logging.info('Success')
                     pprint(ret.ChangeResourceRecordSetsResponse)
     else:
-        print 'Record not found: %s' % args.rr
+        logging.warning('Record not found: %s' % args.rr)
 
 def cmd_rrpurge(args):
     zone = _get_records(args)
