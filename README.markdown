@@ -163,6 +163,20 @@ inconsistent. You have been warned!
 
 Changelog
 ---------
+0.4.0
+
+- Improve logging
+
+- Add dynamic EC2 instance registration
+
+- Fix exception on unsupported attributes
+
+- Handle / in zone names for arpa domains. fixes #61.
+
+- Nicer error messages on invalid zone files
+
+- pep8/code formatting
+
 0.3.6
 
 - Support for zone comments
