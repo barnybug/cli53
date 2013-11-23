@@ -17,10 +17,8 @@ class tag(Command):
         pass
 
     def run(self):
-        import versiontools
         import subprocess
-        version = versiontools.format_version(__version__)
-        ret = subprocess.call(['git', 'tag', '-a', version, '-m', version])
+        ret = subprocess.call(['git', 'tag', '-a', __version__, '-m', __version__])
         if ret:
             raise SystemExit("git tag failed")
         ret = subprocess.call(['git', 'push', '--tags'])
