@@ -382,6 +382,7 @@ class BindToR53Formatter(object):
                         text_element(at, 'HostedZoneId',
                             rdtype.alias_hosted_zone_id)
                         text_element(at, 'DNSName', rdtype.alias_dns_name)
+                        text_element(at, 'EvaluateTargetHealth', 'false')
                 elif rdataset.rdtype in (dns.rdatatype.A, dns.rdatatype.CNAME):
                     # Weighted A expands into multiple records (as each can
                     # have its own weighting/identifier)
