@@ -322,10 +322,10 @@ class BindToR53Formatter(object):
         createshash = dict ()
         deleteshash = dict ()
         for c in creates:
-            createshash[c[0]] = c
+            createshash[c[0],c[1].rdtype] = c
 
         for c in deletes:
-            deleteshash[c[0]] = c
+            deleteshash[c[0],c[1].rdtype] = c
         
         common = []
         for a in createshash:
