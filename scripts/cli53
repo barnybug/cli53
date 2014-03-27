@@ -321,8 +321,8 @@ class BindToR53Formatter(object):
         for c in creates:
             for c2 in deletes:
                 if c[0] == c2[0]:
-                    if (c[1].to_text(origin=origin, relativize=False) ==
-                        c2[1].to_text(origin=origin, relativize=False)):
+                    if (sorted(c[1].to_text(origin=origin, relativize=False).split('\n')) ==
+                        sorted(c2[1].to_text(origin=origin, relativize=False).split('\n')) ):
                         common.append((c, c2))
 
         for c in common:
