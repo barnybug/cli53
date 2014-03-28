@@ -306,7 +306,7 @@ class BindToR53Formatter(object):
             for rdataset in node.rdatasets:
                 if not exclude or not exclude(name, rdataset):
                     li.append((name, rdataset))
-        return li
+        return li 
 
     def create_all(self, zone, old_zone=None, exclude=None):
         origin = zone.origin
@@ -317,17 +317,37 @@ class BindToR53Formatter(object):
             deletes = self._build_list(old_zone, exclude)
 
         # remove duplicate entries from deletes and creates
-        common = []
-        for c in creates:
-            for c2 in deletes:
-                if c[0] == c2[0]:
-                    if (c[1].to_text(origin=origin, relativize=False) ==
-                        c2[1].to_text(origin=origin, relativize=False)):
-                        common.append((c, c2))
 
-        for c in common:
-            creates.remove(c[0])
-            deletes.remove(c[1])
+        # Right then, time to build hash tables
+        createshash = dict ()
+        deleteshash = dict ()
+        for c in creates:
+            createshash[c[0],c[1].rdtype] = c
+
+        for c in deletes:
+            deleteshash[c[0],c[1].rdtype] = c
+        
+        common = []
+        for a in createshash:
+            if a in deleteshash:
+                c = createshash[a]
+                c2 = deleteshash[a]
+                if c[0] == c2[0]:
+                    if (sorted(c[1].to_text(origin=origin, relativize=False).split('\n')) ==
+                        sorted(c2[1].to_text(origin=origin, relativize=False).split('\n')) ):
+                        common.append(a)
+
+	creates = []
+	deletes = []
+
+        for a in common:
+                        del createshash[a]
+                        del deleteshash[a]
+
+	for c in createshash:
+		creates.append(createshash[c])
+	for c in deleteshash:
+		deletes.append(deleteshash[c])
 
         return self._xml_changes(zone, creates=creates, deletes=deletes)
 
