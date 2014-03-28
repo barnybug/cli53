@@ -335,11 +335,19 @@ class BindToR53Formatter(object):
                 if c[0] == c2[0]:
                     if (sorted(c[1].to_text(origin=origin, relativize=False).split('\n')) ==
                         sorted(c2[1].to_text(origin=origin, relativize=False).split('\n')) ):
-                        common.append((c, c2))
+                        common.append(a)
 
-        for c in common:
-            creates.remove(c[0])
-            deletes.remove(c[1])
+	creates = []
+	deletes = []
+
+        for a in common:
+                        del createshash[a]
+                        del deleteshash[a]
+
+	for c in createshash:
+		creates.append(createshash[c])
+	for c in deleteshash:
+		deletes.append(deleteshash[c])
 
         return self._xml_changes(zone, creates=creates, deletes=deletes)
 
