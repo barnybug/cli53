@@ -316,19 +316,21 @@ class BindToR53Formatter(object):
         if old_zone:
             deletes = self._build_list(old_zone, exclude)
 
-        # remove duplicate entries from deletes and creates
-        common = []
+        createshash = {}
         for c in creates:
-            for c2 in deletes:
-                if c[0] == c2[0]:
-                    if (c[1].to_text(origin=origin, relativize=False) ==
-                        c2[1].to_text(origin=origin, relativize=False)):
-                        common.append((c, c2))
+            k = (c[0], c[1].rdtype, tuple(sorted(c[1].to_text(origin=origin, relativize=False).split('\n'))))
+            createshash[k] = c
 
-        for c in common:
-            creates.remove(c[0])
-            deletes.remove(c[1])
+        newdeletes = []
+        for c in deletes:
+            k = (c[0], c[1].rdtype, tuple(sorted(c[1].to_text(origin=origin, relativize=False).split('\n'))))
+            if k in createshash:
+                del createshash[k]
+            else:
+                newdeletes.append(c)
 
+        creates = createshash.values()
+        deletes = newdeletes
         return self._xml_changes(zone, creates=creates, deletes=deletes)
 
     def delete_all(self, zone, exclude=None):
