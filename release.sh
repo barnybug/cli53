@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-sublime -w setup.py:4
+subl -w setup.py:4
 VERSION=$(python setup.py --version)
 
 # make changelog
 echo -e "$VERSION\n" > /tmp/changelog
 git log --format='- %s%n' $(git describe --abbrev=0).. >> /tmp/changelog
-sublime -w README.markdown:166 /tmp/changelog
+subl -w README.markdown:166 /tmp/changelog
 rm /tmp/changelog
 
 git add README.markdown setup.py

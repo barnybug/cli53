@@ -27,6 +27,13 @@ class BindTest(unittest.TestCase):
         self._cmd('rrpurge', '--confirm', self.zone)
         self._cmd('delete', self.zone)
         
+    def _zonefile(self, fname):
+        with file('temp.txt', 'w') as fout:
+            print >>fout, "$ORIGIN %s." % self.zone
+            with file(_f(fname), 'r') as fin:
+                fout.write(fin.read())
+        return 'temp.txt'
+        
     def _cmd(self, cmd, *args):
         pargs = ('scripts/cli53', cmd) + args
         p = subprocess.Popen(pargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -39,13 +46,6 @@ class BindTest(unittest.TestCase):
 class ZoneTest(BindTest):
     zone = '%d.example.com' % random.randint(0, sys.maxint)
 
-    def _zonefile(self, fname):
-        with file('temp.txt', 'w') as fout:
-            print >>fout, "$ORIGIN %s." % self.zone
-            with file(_f(fname), 'r') as fin:
-                fout.write(fin.read())
-        return 'temp.txt'
-        
     def test_import(self):
         fname = self._zonefile('zone1.txt')
         self._cmd('import', '--file', fname, self.zone)
@@ -133,11 +133,16 @@ class ZoneTest(BindTest):
         self.assertRaises(NonZeroExit,
             self._cmd, 'import', '--file', fname, self.zone)
 
+def random_arpa_address():
+    p = tuple(random.randint(0, 255) for x in range(3))
+    return '0/%d.%d.%d.10.in-addr.arpa' % p
+
 class ArpaTest(BindTest):
-    zone = '0/25.0.1.10.in-addr.arpa'
+    zone = random_arpa_address()
 
     def test_import_arpa(self):
-        self._cmd('import', '--file', _f('zone3.txt'), self.zone)
+        fname = self._zonefile('zone3.txt')
+        self._cmd('import', '--file', fname, self.zone)
         
         output = self._cmd('export', self.zone)
         output = [ x for x in output.split('\n') if x ]
