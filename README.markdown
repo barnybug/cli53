@@ -163,6 +163,14 @@ inconsistent. You have been warned!
 
 Changelog
 ---------
+0.4.1
+
+- Support failover record types (thanks @leezen)
+
+- Optimize comparisons for speed up 'import --replace'. Thanks to @goekesmi. Fixes #75.
+
+- add required EvaluateTargetHealth element for Alias records (thanks @fitt)
+
 0.4.0
 
 - Improve logging
