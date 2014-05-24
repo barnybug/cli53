@@ -163,6 +163,10 @@ inconsistent. You have been warned!
 
 Changelog
 ---------
+0.4.2
+
+- Revert "Support failover record types" ref #79
+
 0.4.1
 
 - Support failover record types (thanks @leezen)
