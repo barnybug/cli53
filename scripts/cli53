@@ -675,45 +675,53 @@ def cmd_instances(args):
     if args.match:
         instances = (i for i in instances if re.search(args.match, i.tags['Name']))
     logging.info('Getting EC2 instances')
+    instances_by_name = {}
     for inst in instances:
         name = inst.tags.get('Name')
-        if name:
-            # strip domain suffix if present
-            if name.endswith(suffix):
-                name = name[0:-len(suffix)]
-            name = dns.name.from_text(name, zone.origin)
+        if not name:
+            continue
 
-            node = zone.get_node(name)
-            if node and node.rdatasets and node.rdatasets[0].rdtype != dns.rdatatype.CNAME:
-                # don't replace/update existing non-CNAME records
-                logging.warning("Not overwriting record for %s as it appears to have been manually created" % name)
-                continue
+        # strip domain suffix if present
+        if name.endswith(suffix):
+            name = name[0:-len(suffix)]
+        name = dns.name.from_text(name, zone.origin)
 
+        if name not in instances_by_name or inst.state == 'running':
+            # on duplicate named instances, running takes priority
+            instances_by_name[name] = inst
+
+    for name, inst in instances_by_name.iteritems():
+        node = zone.get_node(name)
+        if node and node.rdatasets and node.rdatasets[0].rdtype != dns.rdatatype.CNAME:
+            # don't replace/update existing non-CNAME records
+            logging.warning("Not overwriting record for %s as it appears to have been manually created" % name)
+            continue
+
+        newvalue = None
+        if inst.state == 'running':
+            newvalue = inst.public_dns_name
+        elif args.off == 'delete':
             newvalue = None
-            if inst.state == 'running':
-                newvalue = inst.public_dns_name
-            elif args.off == 'delete':
-                newvalue = None
-            elif args.off:
-                newvalue = args.off
+        elif args.off and name not in creates:
+            newvalue = args.off
 
-            if node:
-                oldvalue = node.rdatasets[0].items[0].target.strip('.')
-                if oldvalue != newvalue:
-                    if newvalue:
-                        logging.info('Updating record for %s: %s -> %s' % (name, oldvalue, newvalue))
-                    else:
-                        logging.info('Deleting record for %s: %s' % (name, oldvalue))
-                    deletes.append((name, node.rdatasets[0]))
+        if node:
+            oldvalue = node.rdatasets[0].items[0].target.strip('.')
+            if oldvalue != newvalue:
+                if newvalue:
+                    logging.info('Updating record for %s: %s -> %s' % (name, oldvalue, newvalue))
                 else:
-                    logging.debug('Record %s unchanged' % name)
-                    continue
+                    logging.info('Deleting record for %s: %s' % (name, oldvalue))
+                deletes.append((name, node.rdatasets[0]))
             else:
-                logging.info('Creating record for %s: %s' % (name, newvalue))
+                logging.debug('Record %s unchanged' % name)
+                continue
+        else:
+            logging.info('Creating record for %s: %s' % (name, newvalue))
 
-            if newvalue:
-                rd = _create_rdataset('CNAME', args.ttl, [newvalue], None, None, None)
-                creates.append((name, rd))
+        if newvalue:
+            rd = _create_rdataset('CNAME', args.ttl, [newvalue], None, None, None)
+            creates.append((name, rd))
 
     if not deletes and not creates:
         logging.info('No changes')
