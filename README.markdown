@@ -163,6 +163,10 @@ inconsistent. You have been warned!
 
 Changelog
 ---------
+0.4.3
+
+- Handle duplicate named instances. Fixes #81
+
 0.4.2
 
 - Revert "Support failover record types" ref #79

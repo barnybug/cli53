@@ -1,7 +1,7 @@
 from setuptools import setup
 from setuptools import Command
 
-__version__ = '0.4.2'
+__version__ = '0.4.3'
 long_description = file('README.markdown','r').read()
 
 class tag(Command):
