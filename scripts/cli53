@@ -699,7 +699,10 @@ def cmd_instances(args):
 
         newvalue = None
         if inst.state == 'running':
-            newvalue = inst.public_dns_name
+            if inst.public_dns_name != "":
+               	newvalue = inst.public_dns_name
+            else:
+                newvalue = inst.private_dns_name
         elif args.off == 'delete':
             newvalue = None
         elif args.off and name not in creates:
