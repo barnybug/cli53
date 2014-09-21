@@ -446,7 +446,7 @@ class R53ToBindFormatter(object):
             rtype = rrset.type
             ttl = int(rrset.ttl)
             values = rrset.resource_records
-            
+
             if rrset.alias_dns_name is not None:
                 rtype = 'ALIAS'
                 values = ['%s %s' % (rrset.alias_hosted_zone_id,
@@ -699,7 +699,10 @@ def cmd_instances(args):
 
         newvalue = None
         if inst.state == 'running':
-            newvalue = inst.public_dns_name
+            if inst.public_dns_name:
+                newvalue = inst.public_dns_name
+            else:
+                newvalue = inst.private_dns_name
         elif args.off == 'delete':
             newvalue = None
         elif args.off and name not in creates:
