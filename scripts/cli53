@@ -700,9 +700,15 @@ def cmd_instances(args):
         newvalue = None
         if inst.state == 'running':
             if not inst.public_dns_name or args.internal:
-                newvalue = inst.private_dns_name
+                if args.write_a_record:
+                    newvalue = inst.private_ip_address
+                else:
+                    newvalue = inst.private_dns_name
             else:
-                newvalue = inst.public_dns_name
+                if args.write_a_record:
+                    newvalue = inst.ip_address
+                else:
+                    newvalue = inst.public_dns_name
         elif args.off == 'delete':
             newvalue = None
         elif args.off and name not in creates:
@@ -723,7 +729,10 @@ def cmd_instances(args):
             logging.info('Creating record for %s: %s' % (name, newvalue))
 
         if newvalue:
-            rd = _create_rdataset('CNAME', args.ttl, [newvalue], None, None, None)
+            if args.write_a_record:
+                rd = _create_rdataset('A', args.ttl, [newvalue], None, None, None)
+            else:
+                rd = _create_rdataset('CNAME', args.ttl, [newvalue], None, None, None)
             creates.append((name, rd))
 
     if not deletes and not creates:
@@ -915,6 +924,7 @@ def main():
     parser_instances.add_argument('--match', help='regular expression to select which Name tags will be qualify')
     parser_instances.add_argument('--credentials', help='separate credentials file containing account(s) to check for instances')
     parser_instances.add_argument('-i', '--internal', action='store_true', default=False, help='set internal hostname even if an external hostname exists')
+    parser_instances.add_argument('-a', '--write-a-record', action='store_true', default=False, help='write an A record (IP) instead of CNAME')
     parser_instances.add_argument('-n', '--dry-run', action='store_true', help='dry run - don\'t make any changes')
     parser_instances.set_defaults(func=cmd_instances)
 
