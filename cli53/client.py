@@ -225,23 +225,6 @@ class PTR(CustomBase):
 class SPF(CustomBase):
     pass
 
-try:
-    r53 = boto.route53.Route53Connection()
-except boto.exception.NoAuthHandlerFound:
-    print 'Please configure your AWS credentials, either through environment '\
-          'variables or'
-    print '~/.boto config file.'
-    print 'e.g.'
-    print 'export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX'
-    print 'export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-    print 'or in ~/.boto:'
-    print '[Credentials]'
-    print 'aws_access_key_id = XXXXXXXXXXXXXX'
-    print 'aws_secret_access_key = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-    print
-    print 'See: http://code.google.com/p/boto/wiki/BotoConfig'
-    sys.exit(-1)
-
 
 def pprint(obj, findent='', indent=''):
     if isinstance(obj, StringTypes):
@@ -266,12 +249,12 @@ def pprint(obj, findent='', indent=''):
         raise ValueError('Cannot pprint type %s' % type(obj))
 
 
-def cmd_list(args):
+def cmd_list(args, r53):
     ret = r53.get_all_hosted_zones()
     pprint(ret.ListHostedZonesResponse)
 
 
-def cmd_info(args):
+def cmd_info(args, r53):
     ret = r53.get_hosted_zone(args.zone)
     pprint(ret.GetHostedZoneResponse)
 
@@ -549,7 +532,7 @@ def cmd_xml(_):
 re_dos = re.compile('\r\n$')
 re_origin = re.compile(r'\$ORIGIN[ \t](\S+)')
 re_include = re.compile(r'\$INCLUDE[ \t](\S+)')
-def cmd_import(args):
+def cmd_import(args, r53):
     text = []
 
     def file_parse(zonefile):
@@ -581,7 +564,7 @@ def cmd_import(args):
 
     old_zone = None
     if args.replace:
-        old_zone = _get_records(args)
+        old_zone = _get_records(args, r53)
 
     f = BindToR53Formatter()
 
@@ -595,32 +578,34 @@ def cmd_import(args):
             logging.debug(xml)
         ret = r53.change_rrsets(args.zone, xml)
         if args.wait:
-            wait_for_sync(ret)
+            wait_for_sync(ret, r53)
         else:
             pprint(ret.ChangeResourceRecordSetsResponse)
 
 re_zone_id = re.compile('^[A-Z0-9]+$')
-def Zone(zone):
-    if re_zone_id.match(zone):
-        return zone
-    ret = r53.get_all_hosted_zones()
+def ZoneFactory(r53):
+    def Zone(zone):
+        if re_zone_id.match(zone):
+            return zone
+        ret = r53.get_all_hosted_zones()
 
-    zone = zone.replace('/', '\\057')
-    hzs = [ hz.Id.replace('/hostedzone/', '') for hz in ret.ListHostedZonesResponse.HostedZones if hz.Name == zone or hz.Name == zone+'.' ]
-    if len(hzs) == 1:
-        return hzs[0]
-    elif len(hzs) > 1:
-        raise ArgumentTypeError('Zone %r is ambiguous (matches: %s), please specify ID' % (zone, ', '.join(hzs)))
-    else:
-        raise ArgumentTypeError('Zone %r not found' % zone)
+        zone = zone.replace('/', '\\057')
+        hzs = [ hz.Id.replace('/hostedzone/', '') for hz in ret.ListHostedZonesResponse.HostedZones if hz.Name == zone or hz.Name == zone+'.' ]
+        if len(hzs) == 1:
+            return hzs[0]
+        elif len(hzs) > 1:
+            raise ArgumentTypeError('Zone %r is ambiguous (matches: %s), please specify ID' % (zone, ', '.join(hzs)))
+        else:
+            raise ArgumentTypeError('Zone %r not found' % zone)
+    return Zone
 
-def _get_records(args):
+def _get_records(args, r53):
     info = r53.get_hosted_zone(args.zone)
     f = R53ToBindFormatter()
     return f.get_all_rrsets(r53, info.GetHostedZoneResponse, args.zone)
 
-def cmd_export(args):
-    zone = _get_records(args)
+def cmd_export(args, r53):
+    zone = _get_records(args, r53)
     print '$ORIGIN %s' % zone.origin.to_text()
     zone.to_file(sys.stdout, relativize=not args.full)
 
@@ -642,9 +627,9 @@ def _read_aws_cfg(filename):
             except:
                 logging.exception('Failed connecting to account: %s' % section)
 
-def cmd_instances(args):
+def cmd_instances(args, r53):
     logging.info('Getting DNS records')
-    zone = _get_records(args)
+    zone = _get_records(args, r53)
     if args.off:
         filters = {}
     else:
@@ -734,24 +719,24 @@ def cmd_instances(args):
     for xml in parts:
         ret = r53.change_rrsets(args.zone, xml)
         if args.wait:
-            wait_for_sync(ret)
+            wait_for_sync(ret, r53)
         else:
             logging.info('Success')
             pprint(ret.ChangeResourceRecordSetsResponse)
 
-def cmd_create(args):
+def cmd_create(args, r53):
     ret = r53.create_hosted_zone(args.zone, comment=args.comment)
     if args.wait:
-        wait_for_sync(ret)
+        wait_for_sync(ret, r53)
     else:
         pprint(ret.CreateHostedZoneResponse)
 
-def cmd_delete(args):
+def cmd_delete(args, r53):
     ret = r53.delete_hosted_zone(args.zone)
     if hasattr(ret, 'ErrorResponse'):
         pprint(ret.ErrorResponse)
     elif args.wait:
-        wait_for_sync(ret)
+        wait_for_sync(ret, r53)
     else:
         pprint(ret.DeleteHostedZoneResponse)
 
@@ -765,7 +750,7 @@ def find_key_nonrecursive(adict, key):
             if isinstance(v, dict):
                 stack.append(v)
 
-def wait_for_sync(obj):
+def wait_for_sync(obj, r53):
     waiting = 1
     id = find_key_nonrecursive(obj, 'Id')
     id = id.replace('/change/', '')
@@ -783,8 +768,8 @@ def wait_for_sync(obj):
     logging.info("Completed")
     pprint(ret.GetChangeResponse)
 
-def cmd_rrcreate(args):
-    zone = _get_records(args)
+def cmd_rrcreate(args, r53):
+    zone = _get_records(args, r53)
     name = dns.name.from_text(args.rr, zone.origin)
     rdataset = _create_rdataset(args.type, args.ttl, args.values, args.weight, args.identifier, args.region)
 
@@ -814,13 +799,13 @@ def cmd_rrcreate(args):
             logging.debug(xml)
         ret = r53.change_rrsets(args.zone, xml)
         if args.wait:
-            wait_for_sync(ret)
+            wait_for_sync(ret, r53)
         else:
             logging.info('Success')
             pprint(ret.ChangeResourceRecordSetsResponse)
 
-def cmd_rrdelete(args):
-    zone = _get_records(args)
+def cmd_rrdelete(args, r53):
+    zone = _get_records(args, r53)
     name = dns.name.from_text(args.rr, zone.origin)
 
     node = zone.get_node(args.rr)
@@ -845,30 +830,53 @@ def cmd_rrdelete(args):
             for xml in f.delete_record(zone, name, rdataset):
                 ret = r53.change_rrsets(args.zone, xml)
                 if args.wait:
-                    wait_for_sync(ret)
+                    wait_for_sync(ret, r53)
                 else:
                     logging.info('Success')
                     pprint(ret.ChangeResourceRecordSetsResponse)
     else:
         logging.warning('Record not found: %s' % args.rr)
 
-def cmd_rrpurge(args):
-    zone = _get_records(args)
+def cmd_rrpurge(args, r53):
+    zone = _get_records(args, r53)
     f = BindToR53Formatter()
     for xml in f.delete_all(zone, exclude=is_root_soa_or_ns):
         ret = r53.change_rrsets(args.zone, xml)
         if args.wait:
-            wait_for_sync(ret)
+            wait_for_sync(ret, r53)
         else:
             pprint(ret.ChangeResourceRecordSetsResponse)
 
-def cmd_rrlist(args):
-    zone = _get_records(args)
+def cmd_rrlist(args, r53):
+    zone = _get_records(args, r53)
     print '\t'.join(["host", "ttl", "cls", "type", "data"])
     for record_name, record_value in zone.iteritems():
         print '\t'.join(record_value.to_text(record_name).split(' '))
 
-def main():
+def get_route53_connection():
+    try:
+        return boto.route53.Route53Connection()
+    except boto.exception.NoAuthHandlerFound:
+        print 'Please configure your AWS credentials, either through environment '\
+              'variables or'
+        print '~/.boto config file.'
+        print 'e.g.'
+        print 'export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX'
+        print 'export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+        print 'or in ~/.boto:'
+        print '[Credentials]'
+        print 'aws_access_key_id = XXXXXXXXXXXXXX'
+        print 'aws_secret_access_key = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+        print
+        print 'See: http://code.google.com/p/boto/wiki/BotoConfig'
+        sys.exit(-1)
+
+def main(connection=None):
+    if not connection:
+        connection = get_route53_connection()
+
+    Zone = ZoneFactory(connection)
+
     parser = argparse.ArgumentParser(description='route53 command line tool')
     parser.add_argument('-d', '--debug', action='store_true', help='Turn on debugging')
     parser.add_argument('--logging', help='Specify logging configuration')
@@ -966,7 +974,7 @@ def main():
         logging.getLogger('boto').setLevel(logging.WARNING)
 
     try:
-        args.func(args)
+        args.func(args, r53=connection)
     except ParseException as ex:
         raise SystemExit("Parse error: %s" % ex)
 
