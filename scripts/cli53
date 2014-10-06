@@ -692,7 +692,11 @@ def cmd_instances(args):
 
     for name, inst in instances_by_name.iteritems():
         node = zone.get_node(name)
-        if node and node.rdatasets and node.rdatasets[0].rdtype != dns.rdatatype.CNAME:
+        if args.write_a_record:
+            rtype = dns.rdatatype.A
+        else:
+            rtype = dns.rdatatype.CNAME
+        if node and node.rdatasets and node.rdatasets[0].rdtype != rtype:
             # don't replace/update existing non-CNAME records
             logging.warning("Not overwriting record for %s as it appears to have been manually created" % name)
             continue
@@ -715,7 +719,10 @@ def cmd_instances(args):
             newvalue = args.off
 
         if node:
-            oldvalue = node.rdatasets[0].items[0].target.strip('.')
+            if args.write_a_record:
+                oldvalue = node.rdatasets[0].items[0].address
+            else:
+                oldvalue = node.rdatasets[0].items[0].target.strip('.')
             if oldvalue != newvalue:
                 if newvalue:
                     logging.info('Updating record for %s: %s -> %s' % (name, oldvalue, newvalue))
