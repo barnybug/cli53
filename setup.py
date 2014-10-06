@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from setuptools import Command
 
 __version__ = '0.4.3'
@@ -35,6 +35,7 @@ setup(name='cli53',
       url='http://loads.pickle.me.uk/cli53/',
       install_requires=['boto', 'argparse', 'dnspython'],
       scripts=['scripts/cli53'],
+      packages=find_packages(),
       classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
