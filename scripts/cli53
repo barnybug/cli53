@@ -699,10 +699,10 @@ def cmd_instances(args):
 
         newvalue = None
         if inst.state == 'running':
-            if inst.public_dns_name:
-                newvalue = inst.public_dns_name
-            else:
+            if not inst.public_dns_name or args.internal:
                 newvalue = inst.private_dns_name
+            else:
+                newvalue = inst.public_dns_name
         elif args.off == 'delete':
             newvalue = None
         elif args.off and name not in creates:
@@ -914,6 +914,7 @@ def main():
     parser_instances.add_argument('-x', '--ttl', type=int, default=60, help='resource record ttl')
     parser_instances.add_argument('--match', help='regular expression to select which Name tags will be qualify')
     parser_instances.add_argument('--credentials', help='separate credentials file containing account(s) to check for instances')
+    parser_instances.add_argument('-i', '--internal', action='store_true', default=False, help='set internal hostname even if an external hostname exists')
     parser_instances.add_argument('-n', '--dry-run', action='store_true', help='dry run - don\'t make any changes')
     parser_instances.set_defaults(func=cmd_instances)
 
