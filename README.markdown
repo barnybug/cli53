@@ -27,7 +27,7 @@ Features:
 
 - works with BIND format zone files we all know and love - no need to edit
   &lt;ChangeResourceRecordSetsRequest&gt; XML!
-  
+
 - create AWS weighted records
 
 - create AWS Alias records to ELB
@@ -88,7 +88,7 @@ Installation
 You can then run cli53 from your path:
 
 	$ cli53
- 
+
 You need to set your Amazon credentials in the environment as AWS_ACCESS_KEY_ID
 and AWS_SECRET_ACCESS_KEY or configure them in ~/.boto. For more information see:
 http://code.google.com/p/boto/wiki/BotoConfig
@@ -163,6 +163,16 @@ inconsistent. You have been warned!
 
 Changelog
 ---------
+0.4.4
+
+- instances option (-i) to create internal records (@asmap)
+
+- instances option (-a) to create A records (@asmap)
+
+- Making cli53 importable as python module (@aleszoulek)
+
+- Create DNS records for instances without public addresses (@andrewklau)
+
 0.4.3
 
 - Handle duplicate named instances. Fixes #81
