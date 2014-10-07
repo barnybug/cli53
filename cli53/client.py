@@ -670,26 +670,34 @@ def cmd_instances(args, r53):
             # on duplicate named instances, running takes priority
             instances_by_name[name] = inst
 
+    if args.write_a_record:
+        rtype = dns.rdatatype.A
+    else:
+        rtype = dns.rdatatype.CNAME
+
     for name, inst in instances_by_name.iteritems():
         node = zone.get_node(name)
-        if node and node.rdatasets and node.rdatasets[0].rdtype != dns.rdatatype.CNAME:
-            # don't replace/update existing non-CNAME records
+        if node and node.rdatasets and node.rdatasets[0].rdtype != rtype:
+            # don't replace/update existing manually created records
             logging.warning("Not overwriting record for %s as it appears to have been manually created" % name)
             continue
 
         newvalue = None
         if inst.state == 'running':
-            if inst.public_dns_name:
-                newvalue = inst.public_dns_name
+            if inst.public_dns_name and not args.internal:
+                newvalue = inst.ip_address if args.write_a_record else inst.public_dns_name
             else:
-                newvalue = inst.private_dns_name
+                newvalue = inst.private_ip_address if args.write_a_record else inst.private_dns_name
         elif args.off == 'delete':
             newvalue = None
         elif args.off and name not in creates:
             newvalue = args.off
 
         if node:
-            oldvalue = node.rdatasets[0].items[0].target.strip('.')
+            if args.write_a_record:
+                oldvalue = node.rdatasets[0].items[0].address
+            else:
+                oldvalue = node.rdatasets[0].items[0].target.strip('.')
             if oldvalue != newvalue:
                 if newvalue:
                     logging.info('Updating record for %s: %s -> %s' % (name, oldvalue, newvalue))
@@ -703,7 +711,10 @@ def cmd_instances(args, r53):
             logging.info('Creating record for %s: %s' % (name, newvalue))
 
         if newvalue:
-            rd = _create_rdataset('CNAME', args.ttl, [newvalue], None, None, None)
+            if args.write_a_record:
+                rd = _create_rdataset('A', args.ttl, [newvalue], None, None, None)
+            else:
+                rd = _create_rdataset('CNAME', args.ttl, [newvalue], None, None, None)
             creates.append((name, rd))
 
     if not deletes and not creates:
@@ -917,6 +928,8 @@ def main(connection=None):
     parser_instances.add_argument('-x', '--ttl', type=int, default=60, help='resource record ttl')
     parser_instances.add_argument('--match', help='regular expression to select which Name tags will be qualify')
     parser_instances.add_argument('--credentials', help='separate credentials file containing account(s) to check for instances')
+    parser_instances.add_argument('-i', '--internal', action='store_true', default=False, help='always use the internal hostname')
+    parser_instances.add_argument('-a', '--write-a-record', action='store_true', default=False, help='write an A record (IP) instead of CNAME')
     parser_instances.add_argument('-n', '--dry-run', action='store_true', help='dry run - don\'t make any changes')
     parser_instances.set_defaults(func=cmd_instances)
 
