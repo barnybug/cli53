@@ -227,7 +227,7 @@ class SPF(CustomBase):
 
 
 def pprint(obj, findent='', indent=''):
-    if isinstance(obj, StringTypes):
+    if isinstance(obj, basestring):
         logging.info('%s%s' % (findent, obj))
     elif isinstance(obj, boto.jsonresponse.Element):
         i = findent
@@ -879,7 +879,7 @@ def main(connection=None):
 
     parser = argparse.ArgumentParser(description='route53 command line tool')
     parser.add_argument('-d', '--debug', action='store_true', help='Turn on debugging')
-    parser.add_argument('--logging', help='Specify logging configuration')
+    parser.add_argument('--logconfig', help='Specify logging configuration')
     subparsers = parser.add_subparsers(help='sub-command help')
 
     supported_rtypes = ('A', 'AAAA', 'CNAME', 'SOA', 'NS', 'MX', 'PTR', 'SPF', 'SRV', 'TXT', 'ALIAS')
@@ -963,14 +963,16 @@ def main(connection=None):
     parser_rrlist.set_defaults(func=cmd_rrlist)
 
     args = parser.parse_args()
-    if args.logging:
-        logging.config.fileConfig(args.logging)
+    if args.logconfig:
+        logging.config.fileConfig(args.logconfig)
     else:
         if args.debug:
             level = logging.DEBUG
         else:
             level = logging.INFO
-        logging.basicConfig(level=level, format="%(levelname)-8s %(message)s")
+        logging.basicConfig(
+            level=level, format="%(message)s",
+            stream=sys.stdout)
         logging.getLogger('boto').setLevel(logging.WARNING)
 
     try:

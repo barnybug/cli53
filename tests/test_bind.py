@@ -4,56 +4,46 @@ import sys
 import os
 import re
 import random
+from common import cli53_cmd, NonZeroExit
 
 def _f(x):
     return os.path.join(os.path.dirname(__file__), x)
 
-class NonZeroExit(Exception):
-    pass
-
 class RegexEqual(object):
     def __init__(self, r):
         self.re = re.compile(r)
-    
+
     def __eq__(self, x):
         return bool(self.re.search(x))
 
 class BindTest(unittest.TestCase):
     def setUp(self):
-        self._cmd('create', self.zone)
-            
+        cli53_cmd('create', self.zone)
+
     def tearDown(self):
         # clear up
-        self._cmd('rrpurge', '--confirm', self.zone)
-        self._cmd('delete', self.zone)
-        
+        cli53_cmd('rrpurge', '--confirm', self.zone)
+        cli53_cmd('delete', self.zone)
+        os.unlink('temp.txt')
+
     def _zonefile(self, fname):
         with file('temp.txt', 'w') as fout:
             print >>fout, "$ORIGIN %s." % self.zone
             with file(_f(fname), 'r') as fin:
                 fout.write(fin.read())
         return 'temp.txt'
-        
-    def _cmd(self, cmd, *args):
-        pargs = ('scripts/cli53', cmd) + args
-        p = subprocess.Popen(pargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        p.wait()
-        if p.returncode:
-            # print >> sys.stderr, p.stderr.read()
-            raise NonZeroExit
-        return p.stdout.read()
-        
+
 class ZoneTest(BindTest):
     zone = '%d.example.com' % random.randint(0, sys.maxint)
 
     def test_import(self):
         fname = self._zonefile('zone1.txt')
-        self._cmd('import', '--file', fname, self.zone)
-        
-        output = self._cmd('export', self.zone)
+        cli53_cmd('import', '--file', fname, self.zone)
+
+        output = cli53_cmd('export', self.zone)
         output = [ x for x in output.split('\n') if x ]
         output.sort()
-        
+
         self.assertEqual(
             [
                 "$ORIGIN %s." % self.zone,
@@ -76,12 +66,12 @@ class ZoneTest(BindTest):
 
     def test_import2(self):
         fname = self._zonefile('zone2.txt')
-        self._cmd('import', '--file', fname, self.zone)
-        
-        output = self._cmd('export', self.zone)
+        cli53_cmd('import', '--file', fname, self.zone)
+
+        output = cli53_cmd('export', self.zone)
         output = [ x for x in output.split('\n') if x ]
         output.sort()
-        
+
         self.assertEqual(
             [
                 "$ORIGIN %s." % self.zone,
@@ -105,12 +95,12 @@ class ZoneTest(BindTest):
     def disabled_aws_extensions(self):
         # disabled - they require a valid ELB to point to
         fname = self._zonefile('zoneaws.txt')
-        self._cmd('import', '--file', fname, self.zone)
-        
-        output = self._cmd('export', self.zone)
+        cli53_cmd('import', '--file', fname, self.zone)
+
+        output = cli53_cmd('export', self.zone)
         output = [ x for x in output.split('\n') if x ]
         output.sort()
-        
+
         self.assertEqual(
             [
                 "$ORIGIN %s." % self.zone,
@@ -131,7 +121,7 @@ class ZoneTest(BindTest):
     def test_invalid1(self):
         fname = self._zonefile('invalid1.txt')
         self.assertRaises(NonZeroExit,
-            self._cmd, 'import', '--file', fname, self.zone)
+            cli53_cmd, 'import', '--file', fname, self.zone)
 
 def random_arpa_address():
     p = tuple(random.randint(0, 255) for x in range(3))
@@ -142,12 +132,12 @@ class ArpaTest(BindTest):
 
     def test_import_arpa(self):
         fname = self._zonefile('zone3.txt')
-        self._cmd('import', '--file', fname, self.zone)
-        
-        output = self._cmd('export', self.zone)
+        cli53_cmd('import', '--file', fname, self.zone)
+
+        output = cli53_cmd('export', self.zone)
         output = [ x for x in output.split('\n') if x ]
         output.sort()
-        
+
         self.assertEqual(
             [
                 "$ORIGIN %s." % self.zone,
