@@ -1,9 +1,10 @@
 from setuptools import setup, find_packages
 from setuptools import Command
+import sys
 
 __version__ = '0.4.4'
 
-long_description = open('README.markdown', 'rb').read()
+long_description = open('README.markdown', 'rb').read().decode('utf8')
 
 
 class tag(Command):
@@ -37,7 +38,9 @@ setup(name='cli53',
       author='Barnaby Gray',
       author_email='barnaby@pickle.me.uk',
       url='http://loads.pickle.me.uk/cli53/',
-      install_requires=['boto>=2.1.0', 'argparse', 'dnspython', 'six'],
+      install_requires=[
+          'boto>=2.1.0', 'argparse',
+          'dnspython3' if sys.version_info[0] > 2 else 'dnspython', 'six'],
       scripts=['scripts/cli53'],
       packages=find_packages(),
       classifiers=[

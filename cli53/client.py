@@ -2,20 +2,23 @@ import sys
 import re
 import itertools
 import os
-from cStringIO import StringIO
+import six
+try:
+    from six.moves import cStringIO as StringIO
+except ImportError:
+    from six.moves import StringIO as StringIO
+
 from time import sleep
 import logging
 import boto.route53
 import boto.jsonresponse
 import boto.exception
 import boto.ec2
-import six
 
 import argparse
 from argparse import ArgumentTypeError
 try:
     import xml.etree.ElementTree as et
-    et  # silence warning
 except ImportError:
     import elementtree.ElementTree as et
 
@@ -216,7 +219,7 @@ def pprint(obj, findent='', indent=''):
         logging.info('%s%s' % (findent, obj))
     elif isinstance(obj, boto.jsonresponse.Element):
         i = findent
-        for k, v in obj.iteritems():
+        for k, v in six.iteritems(obj):
             if k in ('IsTruncated', 'MaxItems'):
                 continue
             if isinstance(v, six.string_types + (six.binary_type,)):
@@ -710,7 +713,7 @@ def cmd_instances(args, r53):
     else:
         rtype = dns.rdatatype.CNAME
 
-    for name, inst in instances_by_name.iteritems():
+    for name, inst in six.iteritems(instances_by_name):
         node = zone.get_node(name)
         if node and node.rdatasets and node.rdatasets[0].rdtype != rtype:
             # don't replace/update existing manually created records
@@ -804,7 +807,7 @@ def find_key_nonrecursive(adict, key):
         d = stack.pop()
         if key in d:
             return d[key]
-        for k, v in d.iteritems():
+        for k, v in six.iteritems(d):
             if isinstance(v, dict):
                 stack.append(v)
 
@@ -922,7 +925,7 @@ def cmd_rrpurge(args, r53):
 def cmd_rrlist(args, r53):
     zone = _get_records(args, r53)
     print('\t'.join(["host", "ttl", "cls", "type", "data"]))
-    for record_name, record_value in zone.iteritems():
+    for record_name, record_value in six.iteritems(zone):
         print('\t'.join(record_value.to_text(record_name).split(' ')))
 
 
@@ -1116,7 +1119,10 @@ def main(connection=None):
             stream=sys.stdout)
         logging.getLogger('boto').setLevel(logging.WARNING)
 
-    try:
-        args.func(args, r53=connection)
-    except ParseException as ex:
-        raise SystemExit("Parse error: %s" % ex)
+    if not 'func' in args:
+        parser.print_usage()
+    else:
+        try:
+            args.func(args, r53=connection)
+        except ParseException as ex:
+            raise SystemExit("Parse error: %s" % ex)
