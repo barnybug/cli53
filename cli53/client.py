@@ -5,58 +5,37 @@ import os
 from cStringIO import StringIO
 from time import sleep
 import logging
-
-try:
-    import boto.route53
-    import boto.jsonresponse
-    import boto.exception
-    import boto.ec2
-except ImportError, ex:
-    print "Please install latest boto:"
-    print "pip install boto"
-    print "(error was: %s)" % ex
-    sys.exit(-1)
-
-# check boto version
-m = re.match('(\d+)\.(\d+)(?:\.(\d+)|b\d+)', boto.__version__)
-if m:
-    major, minor, other = m.groups()
-    major = int(major)
-    minor = int(minor)
-    if major < 2 or minor < 1:
-        print "Please update boto %s >= 2.1.0" % boto.__version__
-        print "pip install --upgrade boto"
-        sys.exit(-1)
+import boto.route53
+import boto.jsonresponse
+import boto.exception
+import boto.ec2
+import six
 
 import argparse
 from argparse import ArgumentTypeError
 try:
     import xml.etree.ElementTree as et
-    assert et  # silence warning
+    et  # silence warning
 except ImportError:
     import elementtree.ElementTree as et
 
-try:
-    import dns.zone
-    import dns.rdataset
-    import dns.node
-    import dns.rdtypes
-    import dns.rdataclass
-    import dns.rdtypes.ANY.SOA
-    import dns.rdtypes.ANY.SPF
-    import dns.rdtypes.ANY.TXT
-    import dns.rdtypes.IN.A
-    import dns.rdtypes.IN.AAAA
-    import dns.rdtypes.mxbase
-    import dns.rdtypes.nsbase
-except ImportError:
-    print "Please install dnspython:"
-    print "pip install dnspython"
-    sys.exit(-1)
+import dns.zone
+import dns.rdataset
+import dns.node
+import dns.rdtypes
+import dns.rdataclass
+import dns.rdtypes.ANY.SOA
+import dns.rdtypes.ANY.SPF
+import dns.rdtypes.ANY.TXT
+import dns.rdtypes.IN.A
+import dns.rdtypes.IN.AAAA
+import dns.rdtypes.mxbase
+import dns.rdtypes.nsbase
 
 
 class ParseException(Exception):
     pass
+
 
 # Custom base class to prevent changing values
 class CustomBase(dns.rdtypes.nsbase.NSBase):
@@ -90,11 +69,13 @@ class AWS:
         def to_text(self, **kw):
             if kw.get('relativize'):
                 if self.weight is not None:
-                    return '%s %s %s' % (self.weight, self.address,
-                        self.identifier)
+                    return '%s %s %s' % \
+                        (self.weight, self.address,
+                         self.identifier)
                 elif self.region is not None:
-                    return 'region:%s %s %s' % (self.region, self.address,
-                        self.identifier)
+                    return 'region:%s %s %s' % \
+                        (self.region, self.address,
+                         self.identifier)
             return self.address
 
         @classmethod
@@ -121,11 +102,13 @@ class AWS:
         def to_text(self, **kw):
             if kw.get('relativize'):
                 if self.weight is not None:
-                    return '%s %s %s' % (self.weight, self.target,
-                        self.identifier)
+                    return '%s %s %s' % \
+                        (self.weight, self.target,
+                         self.identifier)
                 elif self.region is not None:
-                    return 'region:%s %s %s' % (self.region, self.target,
-                        self.identifier)
+                    return 'region:%s %s %s' % \
+                        (self.region, self.target,
+                         self.identifier)
             return self.target
 
         @classmethod
@@ -154,13 +137,15 @@ class AWS:
         def to_text(self, **kw):
             if kw.get('relativize'):
                 if self.weight is not None:
-                    return '%s %s %s %s' % (self.weight,
-                        self.alias_hosted_zone_id, self.alias_dns_name,
-                        self.identifier)
+                    return '%s %s %s %s' % \
+                        (self.weight,
+                         self.alias_hosted_zone_id, self.alias_dns_name,
+                         self.identifier)
                 elif self.region is not None:
-                    return 'region:%s %s %s %s' % (self.region,
-                        self.alias_hosted_zone_id, self.alias_dns_name,
-                        self.identifier)
+                    return 'region:%s %s %s %s' % \
+                        (self.region,
+                         self.alias_hosted_zone_id, self.alias_dns_name,
+                         self.identifier)
             return '%s %s' % (self.alias_hosted_zone_id, self.alias_dns_name)
 
         @classmethod
@@ -182,7 +167,8 @@ class AWS:
             if region or weight:
                 identifier = tok.get_string()
             tok.get_eol()
-            return cls(rdclass, rdtype, hosted_zone_id, dns_name, weight,
+            return cls(
+                rdclass, rdtype, hosted_zone_id, dns_name, weight,
                 identifier, region)
 
     RDTYPE_ALIAS = 65535
@@ -226,14 +212,14 @@ class SPF(CustomBase):
 
 
 def pprint(obj, findent='', indent=''):
-    if isinstance(obj, basestring):
+    if isinstance(obj, six.string_types + (six.binary_type,)):
         logging.info('%s%s' % (findent, obj))
     elif isinstance(obj, boto.jsonresponse.Element):
         i = findent
         for k, v in obj.iteritems():
             if k in ('IsTruncated', 'MaxItems'):
                 continue
-            if isinstance(v, (str, unicode)):
+            if isinstance(v, six.string_types + (six.binary_type,)):
                 logging.info('%s%s: %s' % (i, k, v))
             else:
                 logging.info('%s%s:' % (i, k))
@@ -295,12 +281,18 @@ class BindToR53Formatter(object):
 
         createshash = {}
         for c in creates:
-            k = (c[0], c[1].rdtype, tuple(sorted(c[1].to_text(origin=origin, relativize=False).split('\n'))))
+            k = (c[0], c[1].rdtype,
+                 tuple(
+                     sorted(c[1].to_text(
+                         origin=origin, relativize=False).split('\n'))))
             createshash[k] = c
 
         newdeletes = []
         for c in deletes:
-            k = (c[0], c[1].rdtype, tuple(sorted(c[1].to_text(origin=origin, relativize=False).split('\n'))))
+            k = (c[0], c[1].rdtype,
+                 tuple(
+                     sorted(c[1].to_text(
+                         origin=origin, relativize=False).split('\n'))))
             if k in createshash:
                 del createshash[k]
             else:
@@ -320,7 +312,8 @@ class BindToR53Formatter(object):
         return self._xml_changes(zone, deletes=[(name, rdataset)])
 
     def replace_record(self, zone, name, rdataset_old, rdataset_new):
-        return self._xml_changes(zone, creates=[(name, rdataset_new)],
+        return self._xml_changes(
+            zone, creates=[(name, rdataset_new)],
             deletes=[(name, rdataset_old)])
 
     def replace_records(self, zone, creates=None, deletes=None):
@@ -332,12 +325,13 @@ class BindToR53Formatter(object):
 
     def _iter_changes(self, creates, deletes):
         for chg, rdatasets in (('DELETE', deletes or []),
-            ('CREATE', creates or [])):
+                               ('CREATE', creates or [])):
             for name, rdataset in rdatasets:
                 yield chg, name, rdataset
 
     def _batch_change(self, zone, chgs):
-        root = et.Element('ChangeResourceRecordSetsRequest',
+        root = et.Element(
+            'ChangeResourceRecordSetsRequest',
             xmlns=boto.route53.Route53Connection.XMLNameSpace)
         change_batch = et.SubElement(root, 'ChangeBatch')
         changes = et.SubElement(change_batch, 'Changes')
@@ -350,15 +344,18 @@ class BindToR53Formatter(object):
                         rrset = self._change(changes, chg, zone, name)
                         text_element(rrset, 'Type', 'A')
                         if rdtype.weight:
-                            text_element(rrset, 'SetIdentifier',
+                            text_element(
+                                rrset, 'SetIdentifier',
                                 rdtype.identifier)
                             text_element(rrset, 'Weight', str(rdtype.weight))
                         elif rdtype.region:
-                            text_element(rrset, 'SetIdentifier',
+                            text_element(
+                                rrset, 'SetIdentifier',
                                 rdtype.identifier)
                             text_element(rrset, 'Region', str(rdtype.region))
                         at = et.SubElement(rrset, 'AliasTarget')
-                        text_element(at, 'HostedZoneId',
+                        text_element(
+                            at, 'HostedZoneId',
                             rdtype.alias_hosted_zone_id)
                         text_element(at, 'DNSName', rdtype.alias_dns_name)
                         text_element(at, 'EvaluateTargetHealth', 'false')
@@ -367,7 +364,8 @@ class BindToR53Formatter(object):
                     # have its own weighting/identifier)
                     for rdtype in rdataset.items:
                         rrset = self._change(changes, chg, zone, name)
-                        text_element(rrset, 'Type',
+                        text_element(
+                            rrset, 'Type',
                             dns.rdatatype.to_text(rdataset.rdtype))
                         text_element(rrset, 'SetIdentifier', rdtype.identifier)
                         if rdtype.weight is not None:
@@ -377,18 +375,21 @@ class BindToR53Formatter(object):
                         text_element(rrset, 'TTL', str(rdataset.ttl))
                         rrs = et.SubElement(rrset, 'ResourceRecords')
                         rr = et.SubElement(rrs, 'ResourceRecord')
-                        text_element(rr, 'Value',
+                        text_element(
+                            rr, 'Value',
                             rdtype.to_text(origin=zone.origin,
                                 relativize=False))
             else:
                 rrset = self._change(changes, chg, zone, name)
-                text_element(rrset, 'Type',
+                text_element(
+                    rrset, 'Type',
                     dns.rdatatype.to_text(rdataset.rdtype))
                 text_element(rrset, 'TTL', str(rdataset.ttl))
                 rrs = et.SubElement(rrset, 'ResourceRecords')
                 for rdtype in rdataset.items:
                     rr = et.SubElement(rrs, 'ResourceRecord')
-                    text_element(rr, 'Value',
+                    text_element(
+                        rr, 'Value',
                         rdtype.to_text(origin=zone.origin, relativize=False))
 
         out = StringIO()
@@ -426,10 +427,12 @@ class R53ToBindFormatter(object):
 
             if rrset.alias_dns_name is not None:
                 rtype = 'ALIAS'
-                values = ['%s %s' % (rrset.alias_hosted_zone_id,
+                values = ['%s %s' % (
+                    rrset.alias_hosted_zone_id,
                     rrset.alias_dns_name)]
 
-            rdataset = _create_rdataset(rtype, ttl, values, rrset.weight,
+            rdataset = _create_rdataset(
+                rtype, ttl, values, rrset.weight,
                 rrset.identifier, getattr(rrset, 'region', None))
             node = z.get_node(name, create=True)
             node.rdatasets.append(rdataset)
@@ -448,22 +451,24 @@ def unquote_list(v):
 
 
 def _create_rdataset(rtype, ttl, values, weight, identifier, region):
-    rdataset = dns.rdataset.Rdataset(dns.rdataclass.IN,
-        dns.rdatatype.from_text(rtype))
+    rdataset = dns.rdataset.Rdataset(
+        dns.rdataclass.IN, dns.rdatatype.from_text(rtype))
     rdataset.ttl = ttl
     for value in values:
         rdtype = None
         if rtype == 'A':
             if identifier is None:
-                rdtype = dns.rdtypes.IN.A.A(dns.rdataclass.IN, dns.rdatatype.A,
-                    value)
+                rdtype = dns.rdtypes.IN.A.A(
+                    dns.rdataclass.IN, dns.rdatatype.A, value)
             else:
                 rdataset.rdclass = AWS.RDCLASS
                 if weight is not None:
-                    rdtype = AWS.A(AWS.RDCLASS, dns.rdatatype.A, value, weight,
+                    rdtype = AWS.A(
+                        AWS.RDCLASS, dns.rdatatype.A, value, weight,
                         identifier, None)
                 elif region is not None:
-                    rdtype = AWS.A(AWS.RDCLASS, dns.rdatatype.A, value, None,
+                    rdtype = AWS.A(
+                        AWS.RDCLASS, dns.rdatatype.A, value, None,
                         identifier, region)
         elif rtype == 'AAAA':
             rdtype = AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, value)
@@ -472,10 +477,12 @@ def _create_rdataset(rtype, ttl, values, weight, identifier, region):
                 rdtype = CNAME(dns.rdataclass.ANY, dns.rdatatype.CNAME, value)
             else:
                 rdataset.rdclass = AWS.RDCLASS
-                rdtype = AWS.CNAME(AWS.RDCLASS, dns.rdatatype.CNAME, value,
+                rdtype = AWS.CNAME(
+                    AWS.RDCLASS, dns.rdatatype.CNAME, value,
                     weight, identifier, region)
         elif rtype == 'SOA':
-            mname, rname, serial, refresh, retry, expire, minimum = value.split()
+            mname, rname, serial, refresh, retry, expire, minimum = \
+                value.split()
             mname = dns.name.from_text(mname)
             rname = dns.name.from_text(rname)
             serial = int(serial)
@@ -483,7 +490,8 @@ def _create_rdataset(rtype, ttl, values, weight, identifier, region):
             retry = int(retry)
             expire = int(expire)
             minimum = int(minimum)
-            rdtype = dns.rdtypes.ANY.SOA.SOA(dns.rdataclass.ANY,
+            rdtype = dns.rdtypes.ANY.SOA.SOA(
+                dns.rdataclass.ANY,
                 dns.rdatatype.SOA, mname, rname, serial, refresh, retry,
                 expire, minimum)
         elif rtype == 'NS':
@@ -503,34 +511,46 @@ def _create_rdataset(rtype, ttl, values, weight, identifier, region):
             rdtype = SRV(dns.rdataclass.IN, dns.rdatatype.SRV, value)
         elif rtype == 'TXT':
             values = unquote_list(value)
-            rdtype = dns.rdtypes.ANY.TXT.TXT(dns.rdataclass.ANY,
+            rdtype = dns.rdtypes.ANY.TXT.TXT(
+                dns.rdataclass.ANY,
                 dns.rdatatype.TXT, values)
         elif rtype == 'ALIAS':
             rdataset.rdclass = AWS.RDCLASS
             try:
                 hosted_zone_id, dns_name = value.split()
             except ValueError:
-                raise ValueError('ALIAS records require two parts: hosted zone id and dns name of ELB')
+                raise ValueError(
+                    ('ALIAS records require two parts: hosted zone id and '
+                     'dns name of ELB'))
             if identifier is None:
-                rdtype = AWS.ALIAS(AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, None, identifier, None)
+                rdtype = AWS.ALIAS(
+                    AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name,
+                    None, identifier, None)
             else:
                 if weight is not None:
-                    rdtype = AWS.ALIAS(AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, weight, identifier, None)
+                    rdtype = AWS.ALIAS(
+                        AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id,
+                        dns_name, weight, identifier, None)
                 elif region is not None:
-                    rdtype = AWS.ALIAS(AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, None, identifier, region)
+                    rdtype = AWS.ALIAS(
+                        AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id,
+                        dns_name, None, identifier, region)
 
         else:
             raise ValueError('record type %s not handled' % rtype)
         rdataset.items.append(rdtype)
     return rdataset
 
+
 def cmd_xml(_):
-    print 'This functionality is no longer available due to changes in the '\
-          'boto library.'
+    print(('This functionality is no longer available due to changes in the '
+           'boto library.'))
 
 re_dos = re.compile('\r\n$')
 re_origin = re.compile(r'\$ORIGIN[ \t](\S+)')
 re_include = re.compile(r'\$INCLUDE[ \t](\S+)')
+
+
 def cmd_import(args, r53):
     text = []
 
@@ -554,7 +574,8 @@ def cmd_import(args, r53):
         raise ParseException('%s: Could not find $ORIGIN' % args.file.name)
     origin = m.group(1)
     if not origin.endswith('.'):
-        raise ParseException('%s: $ORIGIN must end with a period (.)' % args.file.name)
+        raise ParseException(
+            '%s: $ORIGIN must end with a period (.)' % args.file.name)
 
     try:
         zone = dns.zone.from_text(text, origin=origin, check_origin=False)
@@ -582,6 +603,8 @@ def cmd_import(args, r53):
             pprint(ret.ChangeResourceRecordSetsResponse)
 
 re_zone_id = re.compile('^[A-Z0-9]+$')
+
+
 def ZoneFactory(r53):
     def Zone(zone):
         if re_zone_id.match(zone):
@@ -589,24 +612,31 @@ def ZoneFactory(r53):
         ret = r53.get_all_hosted_zones()
 
         zone = zone.replace('/', '\\057')
-        hzs = [ hz.Id.replace('/hostedzone/', '') for hz in ret.ListHostedZonesResponse.HostedZones if hz.Name == zone or hz.Name == zone+'.' ]
+        hzs = [hz.Id.replace('/hostedzone/', '') for hz
+               in ret.ListHostedZonesResponse.HostedZones
+               if hz.Name == zone or hz.Name == zone+'.']
         if len(hzs) == 1:
             return hzs[0]
         elif len(hzs) > 1:
-            raise ArgumentTypeError('Zone %r is ambiguous (matches: %s), please specify ID' % (zone, ', '.join(hzs)))
+            raise ArgumentTypeError(
+                'Zone %r is ambiguous (matches: %s), please specify ID'
+                % (zone, ', '.join(hzs)))
         else:
             raise ArgumentTypeError('Zone %r not found' % zone)
     return Zone
+
 
 def _get_records(args, r53):
     info = r53.get_hosted_zone(args.zone)
     f = R53ToBindFormatter()
     return f.get_all_rrsets(r53, info.GetHostedZoneResponse, args.zone)
 
+
 def cmd_export(args, r53):
     zone = _get_records(args, r53)
-    print '$ORIGIN %s' % zone.origin.to_text()
+    print('$ORIGIN %s' % zone.origin.to_text())
     zone.to_file(sys.stdout, relativize=not args.full)
+
 
 def _read_aws_cfg(filename):
     import ConfigParser
@@ -616,15 +646,18 @@ def _read_aws_cfg(filename):
         if section.startswith('profile '):
             logging.debug('Scanning account: %s' % section)
             aws_access_key_id = config.get(section, 'aws_access_key_id')
-            aws_secret_access_key = config.get(section, 'aws_secret_access_key')
+            aws_secret_access_key = config.get(
+                section, 'aws_secret_access_key')
             region = config.get(section, 'region')
 
             try:
-                yield boto.ec2.connect_to_region(region,
-                    aws_access_key_id= aws_access_key_id,
+                yield boto.ec2.connect_to_region(
+                    region,
+                    aws_access_key_id=aws_access_key_id,
                     aws_secret_access_key=aws_secret_access_key)
-            except:
+            except Exception:
                 logging.exception('Failed connecting to account: %s' % section)
+
 
 def cmd_instances(args, r53):
     logging.info('Getting DNS records')
@@ -637,7 +670,9 @@ def cmd_instances(args, r53):
     if args.credentials:
         connections = _read_aws_cfg(args.credentials)
     else:
-        connections = [boto.ec2.connect_to_region(region) for region in args.regions.split(',')]
+        connections = \
+            [boto.ec2.connect_to_region(region) for region in
+             args.regions.split(',')]
 
     def get_instances():
         for conn in connections:
@@ -652,7 +687,8 @@ def cmd_instances(args, r53):
     # limit to instances with a Name tag
     instances = (i for i in instances if i.tags.get('Name'))
     if args.match:
-        instances = (i for i in instances if re.search(args.match, i.tags['Name']))
+        instances = (i for i in instances
+                     if re.search(args.match, i.tags['Name']))
     logging.info('Getting EC2 instances')
     instances_by_name = {}
     for inst in instances:
@@ -678,15 +714,19 @@ def cmd_instances(args, r53):
         node = zone.get_node(name)
         if node and node.rdatasets and node.rdatasets[0].rdtype != rtype:
             # don't replace/update existing manually created records
-            logging.warning("Not overwriting record for %s as it appears to have been manually created" % name)
+            logging.warning(
+                ("Not overwriting record for %s as it appears to have been "
+                 "manually created") % name)
             continue
 
         newvalue = None
         if inst.state == 'running':
             if inst.public_dns_name and not args.internal:
-                newvalue = inst.ip_address if args.write_a_record else inst.public_dns_name
+                newvalue = inst.ip_address if args.write_a_record \
+                    else inst.public_dns_name
             else:
-                newvalue = inst.private_ip_address if args.write_a_record else inst.private_dns_name
+                newvalue = inst.private_ip_address if args.write_a_record \
+                    else inst.private_dns_name
         elif args.off == 'delete':
             newvalue = None
         elif args.off and name not in creates:
@@ -699,9 +739,12 @@ def cmd_instances(args, r53):
                 oldvalue = node.rdatasets[0].items[0].target.strip('.')
             if oldvalue != newvalue:
                 if newvalue:
-                    logging.info('Updating record for %s: %s -> %s' % (name, oldvalue, newvalue))
+                    logging.info(
+                        'Updating record for %s: %s -> %s'
+                        % (name, oldvalue, newvalue))
                 else:
-                    logging.info('Deleting record for %s: %s' % (name, oldvalue))
+                    logging.info(
+                        'Deleting record for %s: %s' % (name, oldvalue))
                 deletes.append((name, node.rdatasets[0]))
             else:
                 logging.debug('Record %s unchanged' % name)
@@ -711,9 +754,11 @@ def cmd_instances(args, r53):
 
         if newvalue:
             if args.write_a_record:
-                rd = _create_rdataset('A', args.ttl, [newvalue], None, None, None)
+                rd = _create_rdataset(
+                    'A', args.ttl, [newvalue], None, None, None)
             else:
-                rd = _create_rdataset('CNAME', args.ttl, [newvalue], None, None, None)
+                rd = _create_rdataset(
+                    'CNAME', args.ttl, [newvalue], None, None, None)
             creates.append((name, rd))
 
     if not deletes and not creates:
@@ -734,12 +779,14 @@ def cmd_instances(args, r53):
             logging.info('Success')
             pprint(ret.ChangeResourceRecordSetsResponse)
 
+
 def cmd_create(args, r53):
     ret = r53.create_hosted_zone(args.zone, comment=args.comment)
     if args.wait:
         wait_for_sync(ret, r53)
     else:
         pprint(ret.CreateHostedZoneResponse)
+
 
 def cmd_delete(args, r53):
     ret = r53.delete_hosted_zone(args.zone)
@@ -750,6 +797,7 @@ def cmd_delete(args, r53):
     else:
         pprint(ret.DeleteHostedZoneResponse)
 
+
 def find_key_nonrecursive(adict, key):
     stack = [adict]
     while stack:
@@ -759,6 +807,7 @@ def find_key_nonrecursive(adict, key):
         for k, v in d.iteritems():
             if isinstance(v, dict):
                 stack.append(v)
+
 
 def wait_for_sync(obj, r53):
     waiting = 1
@@ -778,10 +827,13 @@ def wait_for_sync(obj, r53):
     logging.info("Completed")
     pprint(ret.GetChangeResponse)
 
+
 def cmd_rrcreate(args, r53):
     zone = _get_records(args, r53)
     name = dns.name.from_text(args.rr, zone.origin)
-    rdataset = _create_rdataset(args.type, args.ttl, args.values, args.weight, args.identifier, args.region)
+    rdataset = _create_rdataset(
+        args.type, args.ttl, args.values, args.weight, args.identifier,
+        args.region)
 
     rdataset_old = None
     node = zone.get_node(args.rr)
@@ -791,13 +843,13 @@ def cmd_rrcreate(args, r53):
                 # find the rds in the requested region only
                 if args.region is not None:
                     for rdtype in rds.items:
-                        if hasattr(rdtype, 'region') and rdtype.region == args.region:
+                        if hasattr(rdtype, 'region') and \
+                                rdtype.region == args.region:
                             rdataset_old = rds
                             break
                 else:
                     rdataset_old = rds
                     break
-
 
     f = BindToR53Formatter()
     if args.replace and rdataset_old:
@@ -814,6 +866,7 @@ def cmd_rrcreate(args, r53):
             logging.info('Success')
             pprint(ret.ChangeResourceRecordSetsResponse)
 
+
 def cmd_rrdelete(args, r53):
     zone = _get_records(args, r53)
     name = dns.name.from_text(args.rr, zone.origin)
@@ -821,20 +874,27 @@ def cmd_rrdelete(args, r53):
     node = zone.get_node(args.rr)
     if node:
         if len(node.rdatasets) > 1 and not args.type:
-            rtypes = [ dns.rdatatype.to_text(rds.rdtype) for rds in node.rdatasets ]
-            logging.warning('Ambigious record - several resource types for record %r found: %s' % (args.rr, ', '.join(rtypes)))
+            rtypes = [dns.rdatatype.to_text(rds.rdtype)
+                      for rds in node.rdatasets]
+            logging.warning(
+                ('Ambigious record - several resource types for '
+                 'record %r found: %s') % (args.rr, ', '.join(rtypes)))
         else:
             rdataset = None
             for rds in node.rdatasets:
-                if args.type == dns.rdatatype.to_text(rds.rdtype) or not args.type:
+                if args.type == dns.rdatatype.to_text(rds.rdtype) \
+                        or not args.type:
                     rdataset = rds
                     break
 
             if not rdataset:
-                logging.warning('Record not found: %s, type: %s' % (args.rr, args.type))
+                logging.warning(
+                    'Record not found: %s, type: %s' % (args.rr, args.type))
                 return
 
-            logging.info('Deleting %s %s...' % (args.rr, dns.rdatatype.to_text(rds.rdtype)))
+            logging.info(
+                'Deleting %s %s...'
+                % (args.rr, dns.rdatatype.to_text(rds.rdtype)))
 
             f = BindToR53Formatter()
             for xml in f.delete_record(zone, name, rdataset):
@@ -847,6 +907,7 @@ def cmd_rrdelete(args, r53):
     else:
         logging.warning('Record not found: %s' % args.rr)
 
+
 def cmd_rrpurge(args, r53):
     zone = _get_records(args, r53)
     f = BindToR53Formatter()
@@ -857,29 +918,32 @@ def cmd_rrpurge(args, r53):
         else:
             pprint(ret.ChangeResourceRecordSetsResponse)
 
+
 def cmd_rrlist(args, r53):
     zone = _get_records(args, r53)
-    print '\t'.join(["host", "ttl", "cls", "type", "data"])
+    print('\t'.join(["host", "ttl", "cls", "type", "data"]))
     for record_name, record_value in zone.iteritems():
-        print '\t'.join(record_value.to_text(record_name).split(' '))
+        print('\t'.join(record_value.to_text(record_name).split(' ')))
+
 
 def get_route53_connection():
     try:
         return boto.route53.Route53Connection()
     except boto.exception.NoAuthHandlerFound:
-        print 'Please configure your AWS credentials, either through environment '\
-              'variables or'
-        print '~/.boto config file.'
-        print 'e.g.'
-        print 'export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX'
-        print 'export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-        print 'or in ~/.boto:'
-        print '[Credentials]'
-        print 'aws_access_key_id = XXXXXXXXXXXXXX'
-        print 'aws_secret_access_key = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-        print
-        print 'See: http://code.google.com/p/boto/wiki/BotoConfig'
-        sys.exit(-1)
+        raise SystemExit('''
+        Please configure your AWS credentials, either through environment
+        variables or
+        ~/.boto config file.
+        e.g.
+        export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX
+        export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        or in ~/.boto:
+        [Credentials]
+        aws_access_key_id = XXXXXXXXXXXXXX
+        aws_secret_access_key = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+         See: http://code.google.com/p/boto/wiki/BotoConfig''')
+
 
 def main(connection=None):
     if not connection:
@@ -888,16 +952,20 @@ def main(connection=None):
     Zone = ZoneFactory(connection)
 
     parser = argparse.ArgumentParser(description='route53 command line tool')
-    parser.add_argument('-d', '--debug', action='store_true', help='Turn on debugging')
+    parser.add_argument(
+        '-d', '--debug', action='store_true', help='Turn on debugging')
     parser.add_argument('--logconfig', help='Specify logging configuration')
     subparsers = parser.add_subparsers(help='sub-command help')
 
-    supported_rtypes = ('A', 'AAAA', 'CNAME', 'SOA', 'NS', 'MX', 'PTR', 'SPF', 'SRV', 'TXT', 'ALIAS')
+    supported_rtypes = \
+        ('A', 'AAAA', 'CNAME', 'SOA', 'NS', 'MX', 'PTR', 'SPF',
+         'SRV', 'TXT', 'ALIAS')
 
     parser_list = subparsers.add_parser('list', help='list hosted zones')
     parser_list.set_defaults(func=cmd_list)
 
-    parser_info = subparsers.add_parser('info', help='get details of a hosted zone')
+    parser_info = subparsers.add_parser(
+        'info', help='get details of a hosted zone')
     parser_info.add_argument('zone', type=Zone, help='zone name')
     parser_info.set_defaults(func=cmd_info)
 
@@ -905,72 +973,133 @@ def main(connection=None):
     parser_describe.add_argument('zone', type=Zone, help='zone name')
     parser_describe.set_defaults(func=cmd_xml)
 
-    parser_describe = subparsers.add_parser('export', help='export dns in bind format')
+    parser_describe = subparsers.add_parser(
+        'export', help='export dns in bind format')
     parser_describe.add_argument('zone', type=Zone, help='zone name')
-    parser_describe.add_argument('--full', action='store_true', help='export prefixes as full names')
+    parser_describe.add_argument(
+        '--full', action='store_true', help='export prefixes as full names')
     parser_describe.set_defaults(func=cmd_export)
 
-    parser_import = subparsers.add_parser('import', help='import dns in bind format')
+    parser_import = subparsers.add_parser(
+        'import', help='import dns in bind format')
     parser_import.add_argument('zone', type=Zone, help='zone name')
-    parser_import.add_argument('-r', '--replace', action='store_true', help='replace all existing records (use with care!)')
-    parser_import.add_argument('-f', '--file', type=argparse.FileType('r'), help='bind file')
-    parser_import.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
-    parser_import.add_argument('--editauth', action='store_true', default=False, help='include SOA and NS records from zone file')
-    parser_import.add_argument('--dump', action='store_true', help='dump xml format to stdout')
+    parser_import.add_argument(
+        '-r', '--replace', action='store_true',
+        help='replace all existing records (use with care!)')
+    parser_import.add_argument(
+        '-f', '--file', type=argparse.FileType('r'), help='bind file')
+    parser_import.add_argument(
+        '--wait', action='store_true', default=False,
+        help='wait for changes to become live before exiting (default: false)')
+    parser_import.add_argument(
+        '--editauth', action='store_true', default=False,
+        help='include SOA and NS records from zone file')
+    parser_import.add_argument(
+        '--dump', action='store_true', help='dump xml format to stdout')
     parser_import.set_defaults(func=cmd_import)
 
-    parser_instances = subparsers.add_parser('instances', help='dynamically update your dns with instance names')
+    parser_instances = subparsers.add_parser(
+        'instances', help='dynamically update your dns with instance names')
     parser_instances.add_argument('zone', type=Zone, help='zone name')
-    parser_instances.add_argument('--off', default=False, help='if provided, then records for stopped instances will be updated. If set to "delete", they are removed, otherwise this option gives the dns name the CNAME should revert to')
-    parser_instances.add_argument('--regions', default=os.getenv('EC2_REGION', 'us-east-1'), help='a comma-separated list of regions to check (default: environment variable EC2_REGION, or otherwise "us-east-1")')
-    parser_instances.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
-    parser_instances.add_argument('-x', '--ttl', type=int, default=60, help='resource record ttl')
-    parser_instances.add_argument('--match', help='regular expression to select which Name tags will be qualify')
-    parser_instances.add_argument('--credentials', help='separate credentials file containing account(s) to check for instances')
-    parser_instances.add_argument('-i', '--internal', action='store_true', default=False, help='always use the internal hostname')
-    parser_instances.add_argument('-a', '--write-a-record', action='store_true', default=False, help='write an A record (IP) instead of CNAME')
-    parser_instances.add_argument('-n', '--dry-run', action='store_true', help='dry run - don\'t make any changes')
+    parser_instances.add_argument(
+        '--off', default=False,
+        help=('if provided, then records for stopped instances will be '
+              'updated. If set to "delete", they are removed, otherwise this '
+              'option gives the dns name the CNAME should revert to'))
+    parser_instances.add_argument(
+        '--regions', default=os.getenv('EC2_REGION', 'us-east-1'),
+        help=('a comma-separated list of regions to check (default: '
+              'environment variable EC2_REGION, or otherwise "us-east-1")'))
+    parser_instances.add_argument(
+        '--wait', action='store_true', default=False,
+        help='wait for changes to become live before exiting (default: false)')
+    parser_instances.add_argument(
+        '-x', '--ttl', type=int, default=60, help='resource record ttl')
+    parser_instances.add_argument(
+        '--match', help=('regular expression to select which Name tags will '
+                         'be qualify'))
+    parser_instances.add_argument(
+        '--credentials', help=('separate credentials file containing '
+                               'account(s) to check for instances'))
+    parser_instances.add_argument(
+        '-i', '--internal', action='store_true', default=False,
+        help='always use the internal hostname')
+    parser_instances.add_argument(
+        '-a', '--write-a-record', action='store_true', default=False,
+        help='write an A record (IP) instead of CNAME')
+    parser_instances.add_argument(
+        '-n', '--dry-run', action='store_true',
+        help='dry run - don\'t make any changes')
     parser_instances.set_defaults(func=cmd_instances)
 
-    parser_create = subparsers.add_parser('create', help='create a hosted zone')
+    parser_create = subparsers.add_parser(
+        'create', help='create a hosted zone')
     parser_create.add_argument('zone', help='zone name')
-    parser_create.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
+    parser_create.add_argument(
+        '--wait', action='store_true', default=False,
+        help='wait for changes to become live before exiting (default: false)')
     parser_create.add_argument('--comment', help='add a comment to the zone')
     parser_create.set_defaults(func=cmd_create)
 
-    parser_delete = subparsers.add_parser('delete', help='delete a hosted zone')
+    parser_delete = subparsers.add_parser(
+        'delete', help='delete a hosted zone')
     parser_delete.add_argument('zone', type=Zone, help='zone name')
-    parser_delete.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
+    parser_delete.add_argument(
+        '--wait', action='store_true', default=False,
+        help='wait for changes to become live before exiting (default: false)')
     parser_delete.set_defaults(func=cmd_delete)
 
-    parser_rrcreate = subparsers.add_parser('rrcreate', help='create a resource record')
+    parser_rrcreate = subparsers.add_parser(
+        'rrcreate', help='create a resource record')
     parser_rrcreate.add_argument('zone', type=Zone, help='zone name')
     parser_rrcreate.add_argument('rr', help='resource record')
-    parser_rrcreate.add_argument('type', choices=supported_rtypes, help='resource record type')
-    parser_rrcreate.add_argument('values', nargs='+', help='resource record values')
-    parser_rrcreate.add_argument('-x', '--ttl', type=int, default=86400, help='resource record ttl')
-    parser_rrcreate.add_argument('-w', '--weight', type=int, help='record weight')
-    parser_rrcreate.add_argument('-i', '--identifier', help='record set identifier')
-    parser_rrcreate.add_argument('--region', help='region for latency-based routing')
-    parser_rrcreate.add_argument('-r', '--replace', action='store_true', help='replace any existing record')
-    parser_rrcreate.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
-    parser_rrcreate.add_argument('--dump', action='store_true', help='dump xml format to stdout')
+    parser_rrcreate.add_argument(
+        'type', choices=supported_rtypes, help='resource record type')
+    parser_rrcreate.add_argument(
+        'values', nargs='+', help='resource record values')
+    parser_rrcreate.add_argument(
+        '-x', '--ttl', type=int, default=86400, help='resource record ttl')
+    parser_rrcreate.add_argument(
+        '-w', '--weight', type=int, help='record weight')
+    parser_rrcreate.add_argument(
+        '-i', '--identifier', help='record set identifier')
+    parser_rrcreate.add_argument(
+        '--region', help='region for latency-based routing')
+    parser_rrcreate.add_argument(
+        '-r', '--replace', action='store_true',
+        help='replace any existing record')
+    parser_rrcreate.add_argument(
+        '--wait', action='store_true', default=False,
+        help='wait for changes to become live before exiting (default: false)')
+    parser_rrcreate.add_argument(
+        '--dump', action='store_true', help='dump xml format to stdout')
     parser_rrcreate.set_defaults(func=cmd_rrcreate)
 
-    parser_rrdelete = subparsers.add_parser('rrdelete', help='delete a resource record')
+    parser_rrdelete = subparsers.add_parser(
+        'rrdelete', help='delete a resource record')
     parser_rrdelete.add_argument('zone', type=Zone, help='zone name')
     parser_rrdelete.add_argument('rr', help='resource record')
-    parser_rrdelete.add_argument('type', nargs='?', choices=supported_rtypes, help='resource record type')
-    parser_rrdelete.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
+    parser_rrdelete.add_argument(
+        'type', nargs='?', choices=supported_rtypes,
+        help='resource record type')
+    parser_rrdelete.add_argument(
+        '--wait', action='store_true', default=False,
+        help='wait for changes to become live before exiting (default: false)')
     parser_rrdelete.set_defaults(func=cmd_rrdelete)
 
-    parser_rrpurge = subparsers.add_parser('rrpurge', help='purge all resource records')
+    parser_rrpurge = subparsers.add_parser(
+        'rrpurge', help='purge all resource records')
     parser_rrpurge.add_argument('zone', type=Zone, help='zone name')
-    parser_rrpurge.add_argument('--confirm', required=True, action='store_true', help='confirm you definitely want to do this!')
-    parser_rrpurge.add_argument('--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: false)')
+    parser_rrpurge.add_argument(
+        '--confirm', required=True, action='store_true',
+        help='confirm you definitely want to do this!')
+    parser_rrpurge.add_argument(
+        '--wait', action='store_true', default=False,
+        help='wait for changes to become live before exiting (default: false)')
     parser_rrpurge.set_defaults(func=cmd_rrpurge)
 
-    parser_rrlist = subparsers.add_parser('rrlist', help='list all resource records')
+    parser_rrlist = subparsers.add_parser(
+        'rrlist', help='list all resource records')
     parser_rrlist.add_argument('zone', type=Zone, help='zone name')
     parser_rrlist.set_defaults(func=cmd_rrlist)
 
@@ -991,4 +1120,3 @@ def main(connection=None):
         args.func(args, r53=connection)
     except ParseException as ex:
         raise SystemExit("Parse error: %s" % ex)
-
