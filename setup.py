@@ -36,6 +36,7 @@ setup(name='cli53',
       install_requires=['boto', 'argparse', 'dnspython'],
       scripts=['scripts/cli53'],
       packages=find_packages(),
+      use_2to3 = True,
       classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
