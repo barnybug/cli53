@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from setuptools import Command
 
 __version__ = '0.4.4'
-long_description = file('README.markdown','r').read()
+long_description = open('README.markdown','r').read()
 
 class tag(Command):
     """Tag git release."""
