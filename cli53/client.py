@@ -30,7 +30,6 @@ if m:
 
 import argparse
 from argparse import ArgumentTypeError
-from types import StringTypes
 try:
     import xml.etree.ElementTree as et
     assert et  # silence warning
@@ -234,7 +233,7 @@ def pprint(obj, findent='', indent=''):
         for k, v in obj.iteritems():
             if k in ('IsTruncated', 'MaxItems'):
                 continue
-            if isinstance(v, StringTypes):
+            if isinstance(v, (str, unicode)):
                 logging.info('%s%s: %s' % (i, k, v))
             else:
                 logging.info('%s%s:' % (i, k))
