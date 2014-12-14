@@ -1,3 +1,0 @@
-boto==2.6.0
-argparse
-dnspython
