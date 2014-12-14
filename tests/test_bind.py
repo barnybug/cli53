@@ -4,7 +4,7 @@ import sys
 import os
 import re
 import random
-from common import cli53_cmd, NonZeroExit
+from .common import cli53_cmd, NonZeroExit
 
 def _f(x):
     return os.path.join(os.path.dirname(__file__), x)
@@ -27,39 +27,39 @@ class BindTest(unittest.TestCase):
         os.unlink('temp.txt')
 
     def _zonefile(self, fname):
-        with file('temp.txt', 'w') as fout:
-            print >>fout, "$ORIGIN %s." % self.zone
-            with file(_f(fname), 'r') as fin:
+        with open('temp.txt', 'w') as fout:
+            fout.write("$ORIGIN %s.\n" % self.zone)
+            with open(_f(fname), 'r') as fin:
                 fout.write(fin.read())
         return 'temp.txt'
 
 class ZoneTest(BindTest):
-    zone = '%d.example.com' % random.randint(0, sys.maxint)
+    zone = '%d.example.com' % random.randint(0, sys.maxsize)
 
     def test_import(self):
         fname = self._zonefile('zone1.txt')
         cli53_cmd('import', '--file', fname, self.zone)
 
         output = cli53_cmd('export', self.zone)
-        output = [ x for x in output.split('\n') if x ]
+        output = [ x for x in output.split(b'\n') if x ]
         output.sort()
 
         self.assertEqual(
             [
-                "$ORIGIN %s." % self.zone,
-                RegexEqual('^@ 172800 IN NS'),
-                RegexEqual('^@ 172800 IN NS'),
-                RegexEqual('^@ 172800 IN NS'),
-                RegexEqual('^@ 172800 IN NS'),
-                "@ 86400 IN A 10.0.0.1",
-                "@ 86400 IN MX 10 mail.example.com.",
-                "@ 86400 IN MX 20 mail2.example.com.",
-                "@ 86400 IN TXT \"v=spf1 a mx a:cli53.example.com mx:mail.example.com ip4:10.0.0.0/24 ~all\"",
-                RegexEqual('^@ 900 IN SOA'),
-                "mail 86400 IN A 10.0.0.2",
-                "mail2 86400 IN A 10.0.0.3",
-                'test 86400 IN TXT "multivalued" " txt \\"quoted\\" record"',
-                "www 86400 IN A 10.0.0.1",
+                b"$ORIGIN " + self.zone.encode('utf8') + b'.',
+                RegexEqual(b'^@ 172800 IN NS'),
+                RegexEqual(b'^@ 172800 IN NS'),
+                RegexEqual(b'^@ 172800 IN NS'),
+                RegexEqual(b'^@ 172800 IN NS'),
+                b"@ 86400 IN A 10.0.0.1",
+                b"@ 86400 IN MX 10 mail.example.com.",
+                b"@ 86400 IN MX 20 mail2.example.com.",
+                b"@ 86400 IN TXT \"v=spf1 a mx a:cli53.example.com mx:mail.example.com ip4:10.0.0.0/24 ~all\"",
+                RegexEqual(b'^@ 900 IN SOA'),
+                b"mail 86400 IN A 10.0.0.2",
+                b"mail2 86400 IN A 10.0.0.3",
+                b'test 86400 IN TXT "multivalued" " txt \\"quoted\\" record"',
+                b"www 86400 IN A 10.0.0.1",
             ],
             output
         )
@@ -69,25 +69,25 @@ class ZoneTest(BindTest):
         cli53_cmd('import', '--file', fname, self.zone)
 
         output = cli53_cmd('export', self.zone)
-        output = [ x for x in output.split('\n') if x ]
+        output = [ x for x in output.split(b'\n') if x ]
         output.sort()
 
         self.assertEqual(
             [
-                "$ORIGIN %s." % self.zone,
-                RegexEqual('^@ 172800 IN NS'),
-                RegexEqual('^@ 172800 IN NS'),
-                RegexEqual('^@ 172800 IN NS'),
-                RegexEqual('^@ 172800 IN NS'),
-                "@ 86400 IN A 10.0.0.1",
-                "@ 86400 IN MX 10 mail.example.com.",
-                "@ 86400 IN MX 20 mail2.example.com.",
-                "@ 86400 IN TXT \"v=spf1 a mx a:cli53.example.com mx:mail.example.com ip4:10.0.0.0/24 ~all\"",
-                RegexEqual('^@ 900 IN SOA'),
-                "mail 86400 IN A 10.0.0.2",
-                "mail2 86400 IN A 10.0.0.3",
-                'test 86400 IN TXT "multivalued" " txt \\"quoted\\" record"',
-                "www 86400 IN A 10.0.0.1",
+                b"$ORIGIN " + self.zone.encode('utf8') + b'.',
+                RegexEqual(b'^@ 172800 IN NS'),
+                RegexEqual(b'^@ 172800 IN NS'),
+                RegexEqual(b'^@ 172800 IN NS'),
+                RegexEqual(b'^@ 172800 IN NS'),
+                b"@ 86400 IN A 10.0.0.1",
+                b"@ 86400 IN MX 10 mail.example.com.",
+                b"@ 86400 IN MX 20 mail2.example.com.",
+                b"@ 86400 IN TXT \"v=spf1 a mx a:cli53.example.com mx:mail.example.com ip4:10.0.0.0/24 ~all\"",
+                RegexEqual(b'^@ 900 IN SOA'),
+                b"mail 86400 IN A 10.0.0.2",
+                b"mail2 86400 IN A 10.0.0.3",
+                b'test 86400 IN TXT "multivalued" " txt \\"quoted\\" record"',
+                b"www 86400 IN A 10.0.0.1",
             ],
             output
         )
@@ -98,12 +98,12 @@ class ZoneTest(BindTest):
         cli53_cmd('import', '--file', fname, self.zone)
 
         output = cli53_cmd('export', self.zone)
-        output = [ x for x in output.split('\n') if x ]
+        output = [ x for x in output.split(b'\n') if x ]
         output.sort()
 
         self.assertEqual(
             [
-                "$ORIGIN %s." % self.zone,
+                b"$ORIGIN " + self.zone.encode('utf8') + b'.',
                 RegexEqual('^@ 172800 IN NS'),
                 RegexEqual('^@ 172800 IN NS'),
                 RegexEqual('^@ 172800 IN NS'),
@@ -135,18 +135,18 @@ class ArpaTest(BindTest):
         cli53_cmd('import', '--file', fname, self.zone)
 
         output = cli53_cmd('export', self.zone)
-        output = [ x for x in output.split('\n') if x ]
+        output = [ x for x in output.split(b'\n') if x ]
         output.sort()
 
         self.assertEqual(
             [
-                "$ORIGIN %s." % self.zone,
-                "98 0 IN PTR blah.foo.com.",
-                RegexEqual('^@ 172800 IN NS'),
-                RegexEqual('^@ 172800 IN NS'),
-                RegexEqual('^@ 172800 IN NS'),
-                RegexEqual('^@ 172800 IN NS'),
-                RegexEqual('^@ 900 IN SOA'),
+                b"$ORIGIN " + self.zone.encode('utf8') + b'.',
+                b"98 0 IN PTR blah.foo.com.",
+                RegexEqual(b'^@ 172800 IN NS'),
+                RegexEqual(b'^@ 172800 IN NS'),
+                RegexEqual(b'^@ 172800 IN NS'),
+                RegexEqual(b'^@ 172800 IN NS'),
+                RegexEqual(b'^@ 900 IN SOA'),
             ],
             output
         )
