@@ -3,10 +3,13 @@ import re
 import itertools
 import os
 import six
-try:
-    from six.moves import cStringIO as StringIO
-except ImportError:
-    from six.moves import StringIO as StringIO
+if six.PY2:
+    try:
+        from six.moves import cStringIO as StringIO
+    except ImportError:
+        from six.moves import StringIO as StringIO
+elif six.PY3:
+    from io import BytesIO as StringIO
 
 from time import sleep
 import logging
