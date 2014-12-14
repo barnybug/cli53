@@ -3,7 +3,7 @@ import subprocess
 import sys
 import re
 import random
-from common import cli53_cmd
+from .common import cli53_cmd
 
 class RegexEqual(object):
     def __init__(self, r):
@@ -15,7 +15,7 @@ class RegexEqual(object):
 class CommandsTest(unittest.TestCase):
     def setUp(self):
         # re-use if already created
-        self.zone = '%d.example.com' % random.randint(0, sys.maxint)
+        self.zone = '%d.example.com' % random.randint(0, sys.maxsize)
         cli53_cmd('create', self.zone, '--comment', 'unittests')
 
     def tearDown(self):
@@ -41,16 +41,16 @@ class CommandsTest(unittest.TestCase):
         cli53_cmd('rrcreate', self.zone, 'weighttest3', 'CNAME', self.zone+'.', '-x 60', '-w 50', '-i awsweightfifty')
 
         output = cli53_cmd('export', self.zone)
-        output = [ x for x in output.split('\n') if '10.0.0.1' in x or 'CNAME' in x or 'TXT' in x ]
+        output = [ x for x in output.split(b'\n') if b'10.0.0.1' in x or b'CNAME' in x or b'TXT' in x ]
 
         self.assertEqual(
             [
-                "@ 86400 IN A 10.0.0.1",
-                'info 86400 IN TXT "this is a \\"test\\""',
-                "weighttest1 60 AWS CNAME 0 %s.  awsweightzero" % self.zone,
-                "weighttest2 60 AWS CNAME 1 %s.  awsweightone" % self.zone,
-                "weighttest3 60 AWS CNAME 50 %s.  awsweightfifty" % self.zone,
-                "www 3600 IN CNAME %s." % self.zone,
+                b"@ 86400 IN A 10.0.0.1",
+                b'info 86400 IN TXT "this is a \\"test\\""',
+                b"weighttest1 60 AWS CNAME 0 " + self.zone.encode('utf8') + b".  awsweightzero",
+                b"weighttest2 60 AWS CNAME 1 " + self.zone.encode('utf8') + b".  awsweightone",
+                b"weighttest3 60 AWS CNAME 50 " + self.zone.encode('utf8') + b".  awsweightfifty",
+                b"www 3600 IN CNAME " + self.zone.encode('utf8') + b".",
             ],
             output
         )
