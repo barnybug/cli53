@@ -153,6 +153,15 @@ As illustrated above, this also allows you to discover instances from multiple
 accounts - for example if you split prd and qa. cli53 will scan all '[profile
 ...]' sections.
 
+Private/public zones
+--------------------
+To manage zones that have both a private and a public zone, you must specify the
+zone ID instead the domain name, which is ambiguous. This is the 13 character ID
+after '/hostedzone/' you can see in the output to 'cli53 list'. eg::
+
+    $ cli53 rrcreate ZZZZZZZZZZZZZ name A 127.0.0.1
+
+
 Caveats
 -------
 As Amazon limits operations to a maximum of 100 changes, if you

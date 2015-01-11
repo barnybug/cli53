@@ -594,7 +594,7 @@ def ZoneFactory(r53):
         if len(hzs) == 1:
             return hzs[0]
         elif len(hzs) > 1:
-            raise ArgumentTypeError('Zone %r is ambiguous (matches: %s), please specify ID' % (zone, ', '.join(hzs)))
+            raise ArgumentTypeError('Zone %r is ambiguous (matches: %s), please specify zone as ID' % (zone, ', '.join(hzs)))
         else:
             raise ArgumentTypeError('Zone %r not found' % zone)
     return Zone
