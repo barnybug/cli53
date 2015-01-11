@@ -41,7 +41,7 @@ class ZoneTest(BindTest):
         cli53_cmd('import', '--file', fname, self.zone)
 
         output = cli53_cmd('export', self.zone)
-        output = [ x for x in output.split('\n') if x ]
+        output = [x for x in output.split('\n') if x]
         output.sort()
 
         self.assertEqual(
@@ -69,7 +69,7 @@ class ZoneTest(BindTest):
         cli53_cmd('import', '--file', fname, self.zone)
 
         output = cli53_cmd('export', self.zone)
-        output = [ x for x in output.split('\n') if x ]
+        output = [x for x in output.split('\n') if x]
         output.sort()
 
         self.assertEqual(
@@ -98,7 +98,7 @@ class ZoneTest(BindTest):
         cli53_cmd('import', '--file', fname, self.zone)
 
         output = cli53_cmd('export', self.zone)
-        output = [ x for x in output.split('\n') if x ]
+        output = [x for x in output.split('\n') if x]
         output.sort()
 
         self.assertEqual(
@@ -112,7 +112,8 @@ class ZoneTest(BindTest):
                 "test 86400 AWS A 10 127.0.0.1 abc",
                 "test 86400 AWS A 20 127.0.0.2 def",
                 "test2 600 AWS ALIAS Z3NF1Z3NOM5OY2 test-212960849.eu-west-1.elb.amazonaws.com.",
-                "test3 600 AWS ALIAS region:us-west-1 Z3NF1Z3NOM5OY2 test-212960849.eu-west-1.elb.amazonaws.com. identifier-test-id",
+                "test3 600 AWS ALIAS region:us-west-1 Z3NF1Z3NOM5OY2 test-212960849.eu-west-1.elb.amazonaws.com. "
+                "identifier-test-id",
                 "test4 600 AWS ALIAS 50 Z3NF1Z3NOM5OY2 test-212960849.eu-west-1.elb.amazonaws.com. latency-test-id",
             ],
             output
@@ -120,8 +121,8 @@ class ZoneTest(BindTest):
 
     def test_invalid1(self):
         fname = self._zonefile('invalid1.txt')
-        self.assertRaises(NonZeroExit,
-            cli53_cmd, 'import', '--file', fname, self.zone)
+        self.assertRaises(
+            NonZeroExit, cli53_cmd, 'import', '--file', fname, self.zone)
 
 def random_arpa_address():
     p = tuple(random.randint(0, 255) for x in range(3))
@@ -135,7 +136,7 @@ class ArpaTest(BindTest):
         cli53_cmd('import', '--file', fname, self.zone)
 
         output = cli53_cmd('export', self.zone)
-        output = [ x for x in output.split('\n') if x ]
+        output = [x for x in output.split('\n') if x]
         output.sort()
 
         self.assertEqual(

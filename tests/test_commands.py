@@ -34,14 +34,14 @@ class CommandsTest(unittest.TestCase):
 
     def test_rrcreate(self):
         cli53_cmd('rrcreate', self.zone, '', 'A', '10.0.0.1')
-        cli53_cmd('rrcreate', self.zone, 'www', 'CNAME', self.zone+'.', '-x 3600')
+        cli53_cmd('rrcreate', self.zone, 'www', 'CNAME', self.zone + '.', '-x 3600')
         cli53_cmd('rrcreate', self.zone, 'info', 'TXT', 'this is a "test"')
-        cli53_cmd('rrcreate', self.zone, 'weighttest1', 'CNAME', self.zone+'.', '-x 60', '-w 0', '-i awsweightzero')
-        cli53_cmd('rrcreate', self.zone, 'weighttest2', 'CNAME', self.zone+'.', '-x 60', '-w 1', '-i awsweightone')
-        cli53_cmd('rrcreate', self.zone, 'weighttest3', 'CNAME', self.zone+'.', '-x 60', '-w 50', '-i awsweightfifty')
+        cli53_cmd('rrcreate', self.zone, 'weighttest1', 'CNAME', self.zone + '.', '-x 60', '-w 0', '-i awsweightzero')
+        cli53_cmd('rrcreate', self.zone, 'weighttest2', 'CNAME', self.zone + '.', '-x 60', '-w 1', '-i awsweightone')
+        cli53_cmd('rrcreate', self.zone, 'weighttest3', 'CNAME', self.zone + '.', '-x 60', '-w 50', '-i awsweightfifty')
 
         output = cli53_cmd('export', self.zone)
-        output = [ x for x in output.split('\n') if '10.0.0.1' in x or 'CNAME' in x or 'TXT' in x ]
+        output = [x for x in output.split('\n') if '10.0.0.1' in x or 'CNAME' in x or 'TXT' in x]
 
         self.assertEqual(
             [
@@ -62,4 +62,5 @@ class CommandsTest(unittest.TestCase):
     def test_rrcreate_replace_latency(self):
         cli53_cmd('rrcreate', '-i', 'asiacdn', '--region', 'ap-southeast-1', self.zone, 'cdn', 'CNAME', 'asiacdn.com.')
         cli53_cmd('rrcreate', '-i', 'statescdn', '--region', 'us-west-1', self.zone, 'cdn', 'CNAME', 'uscdn.com.')
-        cli53_cmd('rrcreate', '-i', 'newuscdn', '--region', 'us-west-1', self.zone, 'cdn', 'CNAME', 'newuscdn.com.', '-r')
+        cli53_cmd('rrcreate', '-i', 'newuscdn', '--region', 'us-west-1', self.zone, 'cdn', 'CNAME', 'newuscdn.com.',
+                  '-r')

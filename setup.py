@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from setuptools import Command
 
 __version__ = '0.4.4'
-long_description = file('README.markdown','r').read()
+long_description = file('README.markdown', 'r').read()
 
 class tag(Command):
     """Tag git release."""
@@ -25,23 +25,24 @@ class tag(Command):
         if ret:
             raise SystemExit("git push --tags failed")
 
-setup(name='cli53',
-      version=__version__,
-      description='Command line script to administer the Amazon Route 53 DNS service',
-      long_description=long_description,
-      license='MIT',
-      author='Barnaby Gray',
-      author_email='barnaby@pickle.me.uk',
-      url='http://loads.pickle.me.uk/cli53/',
-      install_requires=['boto', 'argparse', 'dnspython'],
-      scripts=['scripts/cli53'],
-      packages=find_packages(),
-      classifiers=[
+setup(
+    name='cli53',
+    version=__version__,
+    description='Command line script to administer the Amazon Route 53 DNS service',
+    long_description=long_description,
+    license='MIT',
+    author='Barnaby Gray',
+    author_email='barnaby@pickle.me.uk',
+    url='http://loads.pickle.me.uk/cli53/',
+    install_requires=['boto', 'argparse', 'dnspython'],
+    scripts=['scripts/cli53'],
+    packages=find_packages(),
+    classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
         "License :: OSI Approved :: MIT License",
-        ],
-      cmdclass={
-          'tag': tag,
-      },
-      )
+    ],
+    cmdclass={
+        'tag': tag,
+    },
+)
