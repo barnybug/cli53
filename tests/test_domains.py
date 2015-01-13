@@ -1,7 +1,5 @@
-import os
 import sys
 import unittest
-import subprocess
 import random
 from common import cli53_cmd
 

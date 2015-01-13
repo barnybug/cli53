@@ -1,7 +1,5 @@
 import os
 import subprocess
-import sys
-import unittest
 
 class NonZeroExit(Exception):
     pass

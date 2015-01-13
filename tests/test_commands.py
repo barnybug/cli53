@@ -3,7 +3,7 @@ import subprocess
 import sys
 import re
 import random
-from common import cli53_cmd
+from common import cli53_cmd, NonZeroExit
 
 class RegexEqual(object):
     def __init__(self, r):
