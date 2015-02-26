@@ -114,6 +114,8 @@ class ZoneTest(BindTest):
                 "test3 600 AWS ALIAS region:us-west-1 Z3NF1Z3NOM5OY2 test-212960849.eu-west-1.elb.amazonaws.com. "
                 "identifier-test-id",
                 "test4 600 AWS ALIAS 50 Z3NF1Z3NOM5OY2 test-212960849.eu-west-1.elb.amazonaws.com. latency-test-id",
+                "test5 60 AWS A failover:PRIMARY 127.0.0.3 Primary",
+                "test5 600 AWS A failover:SECONDARY 127.0.0.4 Secondary"
             ],
             output
         )
