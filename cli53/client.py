@@ -81,12 +81,13 @@ class AWS:
 
     class A(dns.rdtypes.IN.A.A):
         def __init__(self, rdclass, rdtype, address, weight,
-                     identifier, region):
+                     identifier, region, failover):
             super(dns.rdtypes.IN.A.A, self).__init__(rdclass, rdtype)
             self.address = address
             self.weight = weight
             self.identifier = identifier
             self.region = region
+            self.failover = failover
 
         def to_text(self, **kw):
             if kw.get('relativize'):
@@ -96,6 +97,9 @@ class AWS:
                 elif self.region is not None:
                     return 'region:%s %s %s' % (
                         self.region, self.address, self.identifier)
+                elif self.failover is not None:
+                    return 'failover:%s %s %s' % (self.failover,
+                        self.address, self.identifier)
             return self.address
 
         @classmethod
@@ -103,21 +107,25 @@ class AWS:
             fst = tok.get_string()
             weight = None
             region = None
+            failover = None
             if fst.startswith('region:'):
                 region = fst[7:]
+            elif fst.startswith('failover:'):
+                failover = fst[9:]
             else:
                 weight = fst
             address = tok.get_identifier()
             identifier = tok.get_string()
-            return cls(rdclass, rdtype, address, weight, identifier, region)
+            return cls(rdclass, rdtype, address, weight, identifier, region, failover)
 
     class CNAME(CustomBase):
         def __init__(self, rdclass, rdtype, target, weight,
-                     identifier, region):
+                     identifier, region, failover):
             super(CustomBase, self).__init__(rdclass, rdtype, target)
             self.weight = weight
             self.identifier = identifier
             self.region = region
+            self.failover = failover
 
         def to_text(self, **kw):
             if kw.get('relativize'):
@@ -127,6 +135,9 @@ class AWS:
                 elif self.region is not None:
                     return 'region:%s %s %s' % (
                         self.region, self.target, self.identifier)
+                elif self.failover is not None:
+                    return 'failover:%s %s %s' % (self.failover,
+                        self.address, self.identifier)
             return self.target
 
         @classmethod
@@ -134,23 +145,27 @@ class AWS:
             fst = tok.get_string()
             weight = None
             region = None
+            failover = None
             if fst.startswith('region:'):
                 region = fst[7:]
+            elif fst.startswith('failover:'):
+                failover = fst[9:]
             else:
                 weight = fst
             target = tok.get_string()
             identifier = tok.get_string()
-            return cls(rdclass, rdtype, target, weight, identifier, region)
+            return cls(rdclass, rdtype, target, weight, identifier, region, failover)
 
     class ALIAS(dns.rdata.Rdata):
         def __init__(self, rdclass, rdtype, hosted_zone_id, dns_name,
-                     weight, identifier, region):
+                     weight, identifier, region, failover):
             super(AWS.ALIAS, self).__init__(rdclass, rdtype)
             self.alias_hosted_zone_id = hosted_zone_id
             self.alias_dns_name = dns_name
             self.weight = weight
             self.identifier = identifier
             self.region = region
+            self.failover = failover
 
         def to_text(self, **kw):
             if kw.get('relativize'):
@@ -164,6 +179,10 @@ class AWS:
                         self.region,
                         self.alias_hosted_zone_id, self.alias_dns_name,
                         self.identifier)
+                elif self.failover is not None:
+                    return 'failover:%s %s %s' % (self.failover,
+                        self.alias_hosted_zone_id, self.alias_dns_name,
+                        self.identifier)
             return '%s %s' % (self.alias_hosted_zone_id, self.alias_dns_name)
 
         @classmethod
@@ -173,8 +192,12 @@ class AWS:
             weight = None
             region = None
             identifier = None
+            failover = None
             if fst.startswith('region:'):
                 region = fst[7:]
+                hosted_zone_id = tok.get_identifier()
+            elif fst.startswith('failover:'):
+                failover = fst[9:]
                 hosted_zone_id = tok.get_identifier()
             elif re.match(weight_pattern, fst):
                 weight = int(fst)
@@ -182,12 +205,12 @@ class AWS:
             else:
                 hosted_zone_id = fst
             dns_name = tok.get_identifier()
-            if region or weight:
+            if region or weight or failover:
                 identifier = tok.get_string()
             tok.get_eol()
             return cls(
                 rdclass, rdtype, hosted_zone_id, dns_name, weight,
-                identifier, region)
+                identifier, region, failover)
 
     RDTYPE_ALIAS = 65535
     dns.rdatatype._by_text['ALIAS'] = RDTYPE_ALIAS
@@ -366,6 +389,11 @@ class BindToR53Formatter(object):
                                 rrset, 'SetIdentifier',
                                 rdtype.identifier)
                             text_element(rrset, 'Region', str(rdtype.region))
+                        elif rdtype.failover:
+                            text_element(
+                                rrset, 'SetIdentifier',
+                                rdtype.identifier)
+                            text_element(rrset, 'Failover', str(rdtype.failover))
                         at = et.SubElement(rrset, 'AliasTarget')
                         text_element(
                             at, 'HostedZoneId',
@@ -385,6 +413,8 @@ class BindToR53Formatter(object):
                             text_element(rrset, 'Weight', str(rdtype.weight))
                         elif rdtype.region:
                             text_element(rrset, 'Region', str(rdtype.region))
+                        elif rdtype.failover:
+                            text_element(rrset, 'Failover', str(rdtype.failover))
                         text_element(rrset, 'TTL', str(rdataset.ttl))
                         rrs = et.SubElement(rrset, 'ResourceRecords')
                         rr = et.SubElement(rrs, 'ResourceRecord')
@@ -447,7 +477,7 @@ class R53ToBindFormatter(object):
 
             rdataset = _create_rdataset(
                 rtype, ttl, values, rrset.weight,
-                rrset.identifier, getattr(rrset, 'region', None))
+                rrset.identifier, getattr(rrset, 'region', None), getattr(rrset, 'failover', None))
             node = z.get_node(name, create=True)
             node.rdatasets.append(rdataset)
 
@@ -464,7 +494,7 @@ def unquote_list(v):
     return [re_backslash.sub('\\1', s) for s in re_quotepair.split(v[1:-1])]
 
 
-def _create_rdataset(rtype, ttl, values, weight, identifier, region):
+def _create_rdataset(rtype, ttl, values, weight, identifier, region, failover):
     rdataset = dns.rdataset.Rdataset(
         dns.rdataclass.IN,
         dns.rdatatype.from_text(rtype))
@@ -481,11 +511,14 @@ def _create_rdataset(rtype, ttl, values, weight, identifier, region):
                 if weight is not None:
                     rdtype = AWS.A(
                         AWS.RDCLASS, dns.rdatatype.A, value, weight,
-                        identifier, None)
+                        identifier, None, None)
                 elif region is not None:
                     rdtype = AWS.A(
                         AWS.RDCLASS, dns.rdatatype.A, value, None,
-                        identifier, region)
+                        identifier, region, None)
+                elif failover is not None:
+                    rdtype = AWS.A(AWS.RDCLASS, dns.rdatatype.A, value, None,
+                        identifier, None, failover)
         elif rtype == 'AAAA':
             rdtype = AAAA(dns.rdataclass.IN, dns.rdatatype.AAAA, value)
         elif rtype == 'CNAME':
@@ -495,7 +528,7 @@ def _create_rdataset(rtype, ttl, values, weight, identifier, region):
                 rdataset.rdclass = AWS.RDCLASS
                 rdtype = AWS.CNAME(
                     AWS.RDCLASS, dns.rdatatype.CNAME, value,
-                    weight, identifier, region)
+                    weight, identifier, region, failover)
         elif rtype == 'SOA':
             mname, rname, serial, refresh, retry, expire, minimum = value.split()
             mname = dns.name.from_text(mname)
@@ -536,15 +569,17 @@ def _create_rdataset(rtype, ttl, values, weight, identifier, region):
             except ValueError:
                 raise ValueError('ALIAS records require two parts: hosted zone id and dns name of ELB')
             if identifier is None:
-                rdtype = AWS.ALIAS(AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, None, identifier, None)
+                rdtype = AWS.ALIAS(AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, None, identifier, None, None)
             else:
                 if weight is not None:
                     rdtype = AWS.ALIAS(
-                        AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, weight, identifier, None)
+                        AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, weight, identifier, None, None)
                 elif region is not None:
                     rdtype = AWS.ALIAS(
-                        AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, None, identifier, region)
-
+                        AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, None, identifier, region, None)
+                elif failover is not None:
+                    rdtype = AWS.A(AWS.RDCLASS, dns.rdatatype.A, value, None,
+                        identifier, None, failover)
         else:
             raise ValueError('record type %s not handled' % rtype)
         rdataset.items.append(rdtype)
@@ -742,9 +777,9 @@ def cmd_instances(args, r53):
 
         if newvalue:
             if args.write_a_record:
-                rd = _create_rdataset('A', args.ttl, [newvalue], None, None, None)
+                rd = _create_rdataset('A', args.ttl, [newvalue], None, None, None, None)
             else:
-                rd = _create_rdataset('CNAME', args.ttl, [newvalue], None, None, None)
+                rd = _create_rdataset('CNAME', args.ttl, [newvalue], None, None, None, None)
             creates.append((name, rd))
 
     if not deletes and not creates:
@@ -812,7 +847,7 @@ def wait_for_sync(obj, r53):
 def cmd_rrcreate(args, r53):
     zone = _get_records(args, r53)
     name = dns.name.from_text(args.rr, zone.origin)
-    rdataset = _create_rdataset(args.type, args.ttl, args.values, args.weight, args.identifier, args.region)
+    rdataset = _create_rdataset(args.type, args.ttl, args.values, args.weight, args.identifier, args.region, args.failover)
 
     rdataset_old = None
     node = zone.get_node(args.rr)
@@ -1002,6 +1037,7 @@ def main(connection=None):
     parser_rrcreate.add_argument('-w', '--weight', type=int, help='record weight')
     parser_rrcreate.add_argument('-i', '--identifier', help='record set identifier')
     parser_rrcreate.add_argument('--region', help='region for latency-based routing')
+    parser_rrcreate.add_argument('--failover', help='failover type for dns failover routing')
     parser_rrcreate.add_argument('-r', '--replace', action='store_true', help='replace any existing record')
     parser_rrcreate.add_argument(
         '--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: '
