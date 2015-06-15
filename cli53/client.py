@@ -275,8 +275,19 @@ def pprint(obj, findent='', indent=''):
         raise ValueError('Cannot pprint type %s' % type(obj))
 
 
+def get_all_hosted_zones(r53):
+    truncated = True
+    start_marker = 0
+    zone_list = []
+    while truncated:
+        ret = r53.get_all_hosted_zones(start_marker, zone_list)
+        truncated = ret.ListHostedZonesResponse.IsTruncated == 'true'
+        start_marker += int(ret.ListHostedZonesResponse.MaxItems)
+    return ret
+
+
 def cmd_list(args, r53):
-    ret = r53.get_all_hosted_zones()
+    ret = get_all_hosted_zones(r53)
     pprint(ret.ListHostedZonesResponse)
 
 
@@ -647,7 +658,7 @@ def ZoneFactory(r53):
     def Zone(zone):
         if re_zone_id.match(zone):
             return zone
-        ret = r53.get_all_hosted_zones()
+        ret = get_all_hosted_zones(r53)
 
         zone = zone.replace('/', '\\057')
         hzs = [
