@@ -275,8 +275,19 @@ def pprint(obj, findent='', indent=''):
         raise ValueError('Cannot pprint type %s' % type(obj))
 
 
+def get_all_hosted_zones(r53):
+    truncated = True
+    start_marker = 0
+    zone_list = []
+    while truncated:
+        ret = r53.get_all_hosted_zones(start_marker, zone_list)
+        truncated = ret.ListHostedZonesResponse.IsTruncated == 'true'
+        start_marker += int(ret.ListHostedZonesResponse.MaxItems)
+    return ret
+
+
 def cmd_list(args, r53):
-    ret = r53.get_all_hosted_zones()
+    ret = get_all_hosted_zones(r53)
     pprint(ret.ListHostedZonesResponse)
 
 
@@ -450,7 +461,14 @@ class BindToR53Formatter(object):
 
 class R53ToBindFormatter(object):
     def get_all_rrsets(self, r53, ghz, zone):
-        rrsets = r53.get_all_rrsets(zone, maxitems=10)
+        is_truncated = True
+        maxitems = 100
+        while is_truncated:
+            rrsets = r53.get_all_rrsets(zone, maxitems=maxitems)
+            is_truncated = rrsets.is_truncated
+            maxitems *= 2
+            # there doesn't seem to be a way to paginate through the list,
+            # you just need to keep expanding maxitems until you get everything
         return self.convert(ghz, rrsets)
 
     def convert(self, info, rrsets, z=None):
@@ -647,7 +665,7 @@ def ZoneFactory(r53):
     def Zone(zone):
         if re_zone_id.match(zone):
             return zone
-        ret = r53.get_all_hosted_zones()
+        ret = get_all_hosted_zones(r53)
 
         zone = zone.replace('/', '\\057')
         hzs = [
