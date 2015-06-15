@@ -461,7 +461,14 @@ class BindToR53Formatter(object):
 
 class R53ToBindFormatter(object):
     def get_all_rrsets(self, r53, ghz, zone):
-        rrsets = r53.get_all_rrsets(zone, maxitems=10)
+        is_truncated = True
+        maxitems = 100
+        while is_truncated:
+            rrsets = r53.get_all_rrsets(zone, maxitems=maxitems)
+            is_truncated = rrsets.is_truncated
+            maxitems *= 2
+            # there doesn't seem to be a way to paginate through the list,
+            # you just need to keep expanding maxitems until you get everything
         return self.convert(ghz, rrsets)
 
     def convert(self, info, rrsets, z=None):
