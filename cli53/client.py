@@ -450,7 +450,7 @@ class BindToR53Formatter(object):
 
 class R53ToBindFormatter(object):
     def get_all_rrsets(self, r53, ghz, zone):
-        rrsets = r53.get_all_rrsets(zone, maxitems=10)
+        rrsets = r53.get_all_rrsets(zone)
         return self.convert(ghz, rrsets)
 
     def convert(self, info, rrsets, z=None):
