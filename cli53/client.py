@@ -894,8 +894,14 @@ def cmd_rrdelete(args, r53):
             rdataset = None
             for rds in node.rdatasets:
                 if args.type == dns.rdatatype.to_text(rds.rdtype) or not args.type:
-                    rdataset = rds
-                    break
+                    if args.identifier is not None:
+                        for rdtype in rds.items:
+                            if hasattr(rdtype, 'identifier') and rdtype.identifier == args.identifier:
+                                rdataset = rds
+                                break
+                    else:
+                        rdataset = rds
+                        break
 
             if not rdataset:
                 logging.warning('Record not found: %s, type: %s' % (args.rr, args.type))
@@ -1049,6 +1055,7 @@ def main(connection=None):
     parser_rrdelete.add_argument('zone', type=Zone, help='zone name')
     parser_rrdelete.add_argument('rr', help='resource record')
     parser_rrdelete.add_argument('type', nargs='?', choices=supported_rtypes, help='resource record type')
+    parser_rrdelete.add_argument('-i', '--identifier', help='record set identifier')
     parser_rrdelete.add_argument(
         '--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: '
         'false)')
