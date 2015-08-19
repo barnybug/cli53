@@ -3,7 +3,7 @@ import re
 import itertools
 import os
 from cStringIO import StringIO
-from time import sleep
+import time
 import logging
 
 try:
@@ -276,12 +276,12 @@ def pprint(obj, findent='', indent=''):
 
 
 def cmd_list(args, r53):
-    ret = r53.get_all_hosted_zones()
+    ret = retry(r53.get_all_hosted_zones)
     pprint(ret.ListHostedZonesResponse)
 
 
 def cmd_info(args, r53):
-    ret = r53.get_hosted_zone(args.zone)
+    ret = retry(r53.get_hosted_zone, args.zone)
     pprint(ret.GetHostedZoneResponse)
 
 
@@ -450,7 +450,7 @@ class BindToR53Formatter(object):
 
 class R53ToBindFormatter(object):
     def get_all_rrsets(self, r53, ghz, zone):
-        rrsets = r53.get_all_rrsets(zone)
+        rrsets = retry(r53.get_all_rrsets, zone)
         return self.convert(ghz, rrsets)
 
     def convert(self, info, rrsets, z=None):
@@ -636,7 +636,7 @@ def cmd_import(args, r53):
     for xml in f.create_all(zone, old_zone=old_zone, exclude=exclude_rr):
         if args.dump:
             logging.debug(xml)
-        ret = r53.change_rrsets(args.zone, xml)
+        ret = retry(r53.change_rrsets, args.zone, xml)
         if args.wait:
             wait_for_sync(ret, r53)
         else:
@@ -647,7 +647,7 @@ def ZoneFactory(r53):
     def Zone(zone):
         if re_zone_id.match(zone):
             return zone
-        ret = r53.get_all_hosted_zones()
+        ret = retry(r53.get_all_hosted_zones)
 
         zone = zone.replace('/', '\\057')
         hzs = [
@@ -664,7 +664,7 @@ def ZoneFactory(r53):
     return Zone
 
 def _get_records(args, r53):
-    info = r53.get_hosted_zone(args.zone)
+    info = retry(r53.get_hosted_zone, args.zone)
     f = R53ToBindFormatter()
     return f.get_all_rrsets(r53, info.GetHostedZoneResponse, args.zone)
 
@@ -793,7 +793,7 @@ def cmd_instances(args, r53):
     f = BindToR53Formatter()
     parts = f.replace_records(zone, creates, deletes)
     for xml in parts:
-        ret = r53.change_rrsets(args.zone, xml)
+        ret = retry(r53.change_rrsets, args.zone, xml)
         if args.wait:
             wait_for_sync(ret, r53)
         else:
@@ -801,14 +801,26 @@ def cmd_instances(args, r53):
             pprint(ret.ChangeResourceRecordSetsResponse)
 
 def cmd_create(args, r53):
-    ret = r53.create_hosted_zone(args.zone, comment=args.comment)
+    ret = retry(r53.create_hosted_zone, args.zone, comment=args.comment)
     if args.wait:
         wait_for_sync(ret, r53)
     else:
         pprint(ret.CreateHostedZoneResponse)
 
+def retry(fn, *args, **kwargs):
+    sleep_time = 1
+    while True:
+        try:
+            return fn(*args, **kwargs)
+        except boto.route53.exception.DNSServerError as e:
+            if e.error_code == 'Throttling':
+                time.sleep(sleep_time)
+                sleep_time *= 2
+            else:
+                raise
+
 def cmd_delete(args, r53):
-    ret = r53.delete_hosted_zone(args.zone)
+    ret = retry(r53.delete_hosted_zone, args.zone)
     if hasattr(ret, 'ErrorResponse'):
         pprint(ret.ErrorResponse)
     elif args.wait:
@@ -827,7 +839,7 @@ def find_key_nonrecursive(adict, key):
                 stack.append(v)
 
 def wait_for_sync(obj, r53):
-    waiting = 1
+    waiting = True
     id = find_key_nonrecursive(obj, 'Id')
     id = id.replace('/change/', '')
     sys.stdout.write("Waiting for change to sync")
@@ -838,13 +850,14 @@ def wait_for_sync(obj, r53):
             ret = r53.get_change(id)
             status = find_key_nonrecursive(ret, 'Status')
             if status == 'INSYNC':
-                waiting = 0
+                waiting = False
             else:
                 sys.stdout.write('.')
                 sys.stdout.flush()
-                sleep(sleep_time)
+                time.sleep(sleep_time)
         except boto.route53.exception.DNSServerError as e:
             if e.error_code == 'Throttling':
+                time.sleep(sleep_time)
                 sleep_time *= 2
             else:
                 raise
@@ -879,7 +892,7 @@ def cmd_rrcreate(args, r53):
     for xml in parts:
         if args.dump:
             logging.debug(xml)
-        ret = r53.change_rrsets(args.zone, xml)
+        ret = retry(r53.change_rrsets, args.zone, xml)
         if args.wait:
             wait_for_sync(ret, r53)
         else:
@@ -918,7 +931,7 @@ def cmd_rrdelete(args, r53):
 
             f = BindToR53Formatter()
             for xml in f.delete_record(zone, name, rdataset):
-                ret = r53.change_rrsets(args.zone, xml)
+                ret = retry(r53.change_rrsets, args.zone, xml)
                 if args.wait:
                     wait_for_sync(ret, r53)
                 else:
@@ -931,7 +944,7 @@ def cmd_rrpurge(args, r53):
     zone = _get_records(args, r53)
     f = BindToR53Formatter()
     for xml in f.delete_all(zone, exclude=is_root_soa_or_ns):
-        ret = r53.change_rrsets(args.zone, xml)
+        ret = retry(r53.change_rrsets, args.zone, xml)
         if args.wait:
             wait_for_sync(ret, r53)
         else:
