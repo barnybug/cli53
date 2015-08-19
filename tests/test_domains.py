@@ -12,7 +12,8 @@ class DomainsTest(unittest.TestCase):
 
     def test_create_delete(self):
         name = self._unique_name()
-        cli53_cmd('create', name)
+        comment = 'unittests%s' % os.getenv('TRAVIS_JOB_ID', '')
+        cli53_cmd('create', self.zone, '--comment', comment)
         assert name in cli53_cmd('list')
         cli53_cmd('delete', name)
         assert name not in cli53_cmd('list')

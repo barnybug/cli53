@@ -1,3 +1,4 @@
+import os
 import unittest
 import subprocess
 import sys
@@ -16,7 +17,9 @@ class CommandsTest(unittest.TestCase):
     def setUp(self):
         # re-use if already created
         self.zone = '%d.example.com' % random.randint(0, sys.maxint)
-        cli53_cmd('create', self.zone, '--comment', 'unittests')
+
+        comment = 'unittests%s' % os.getenv('TRAVIS_JOB_ID', '')
+        cli53_cmd('create', self.zone, '--comment', comment)
 
     def tearDown(self):
         # clear up

@@ -17,7 +17,8 @@ class RegexEqual(object):
 
 class BindTest(unittest.TestCase):
     def setUp(self):
-        cli53_cmd('create', self.zone)
+        comment = 'unittests%s' % os.getenv('TRAVIS_JOB_ID', '')
+        cli53_cmd('create', self.zone, '--comment', comment)
 
     def tearDown(self):
         # clear up
