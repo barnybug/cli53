@@ -832,15 +832,22 @@ def wait_for_sync(obj, r53):
     id = id.replace('/change/', '')
     sys.stdout.write("Waiting for change to sync")
     ret = ''
+    sleep_time = 1
     while waiting:
-        ret = r53.get_change(id)
-        status = find_key_nonrecursive(ret, 'Status')
-        if status == 'INSYNC':
-            waiting = 0
-        else:
-            sys.stdout.write('.')
-            sys.stdout.flush()
-            sleep(1)
+        try:
+            ret = r53.get_change(id)
+            status = find_key_nonrecursive(ret, 'Status')
+            if status == 'INSYNC':
+                waiting = 0
+            else:
+                sys.stdout.write('.')
+                sys.stdout.flush()
+                sleep(sleep_time)
+        except boto.route53.exception.DNSServerError as e:
+            if e.error_code == 'Throttling':
+                sleep_time *= 2
+            else:
+                raise
     logging.info("Completed")
     pprint(ret.GetChangeResponse)
 
