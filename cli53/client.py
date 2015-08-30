@@ -585,10 +585,6 @@ def _create_rdataset(rtype, ttl, values, weight, identifier, region, failover):
         rdataset.items.append(rdtype)
     return rdataset
 
-def cmd_xml(_):
-    print 'This functionality is no longer available due to changes in the '\
-          'boto library.'
-
 re_dos = re.compile('\r\n$')
 re_origin = re.compile(r'\$ORIGIN[ \t](\S+)')
 re_include = re.compile(r'\$INCLUDE[ \t](\S+)')
@@ -993,10 +989,6 @@ def main(connection=None):
     parser_info = subparsers.add_parser('info', help='get details of a hosted zone')
     parser_info.add_argument('zone', type=Zone, help='zone name')
     parser_info.set_defaults(func=cmd_info)
-
-    parser_describe = subparsers.add_parser('xml')
-    parser_describe.add_argument('zone', type=Zone, help='zone name')
-    parser_describe.set_defaults(func=cmd_xml)
 
     parser_describe = subparsers.add_parser('export', help='export dns in bind format')
     parser_describe.add_argument('zone', type=Zone, help='zone name')
