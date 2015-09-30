@@ -53,6 +53,10 @@ Then install cli53:
 
 	$ sudo pip install cli53
 
+Or on Redhat/Amazon Linux:
+
+	$ sudo pip-2.7 install cli53
+
 (You may need to add /usr/local/bin to your $PATH)
 
 You can then run cli53 from your path:
