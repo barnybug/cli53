@@ -36,6 +36,33 @@ Features:
 
 - dynamic record creation for EC2 instances
 
+Installation
+------------
+
+You'll need to install pip if you've not installed it already.
+
+Ubuntu systems:
+
+	$ apt-get install python python-pip
+
+Redhat systems (eg Amazon Linux):
+
+	$ yum install python27 python27-pip
+
+Then install cli53:
+
+	$ sudo pip install cli53
+
+(You may need to add /usr/local/bin to your $PATH)
+
+You can then run cli53 from your path:
+
+	$ cli53
+
+You need to set your Amazon credentials in the environment as AWS_ACCESS_KEY_ID
+and AWS_SECRET_ACCESS_KEY or configure them in ~/.boto. For more information see:
+http://code.google.com/p/boto/wiki/BotoConfig
+
 Getting Started
 ---------------
 
@@ -79,19 +106,6 @@ Further documentation is available, e.g.::
 	$ cli53 --help
 	$ cli53 rrcreate --help
 
-
-Installation
-------------
-
-	$ sudo pip install cli53
-
-You can then run cli53 from your path:
-
-	$ cli53
-
-You need to set your Amazon credentials in the environment as AWS_ACCESS_KEY_ID
-and AWS_SECRET_ACCESS_KEY or configure them in ~/.boto. For more information see:
-http://code.google.com/p/boto/wiki/BotoConfig
 
 Broken CNAME exports (GoDaddy)
 ------------------------------
