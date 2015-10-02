@@ -1055,7 +1055,7 @@ def main(connection=None):
     parser_rrcreate.add_argument('-w', '--weight', type=int, help='record weight')
     parser_rrcreate.add_argument('-i', '--identifier', help='record set identifier')
     parser_rrcreate.add_argument('--region', help='region for latency-based routing')
-    parser_rrcreate.add_argument('--failover', help='failover type for dns failover routing')
+    parser_rrcreate.add_argument('--failover', choices=['PRIMARY', 'SECONDARY'], help='failover type for dns failover routing')
     parser_rrcreate.add_argument('-r', '--replace', action='store_true', help='replace any existing record')
     parser_rrcreate.add_argument(
         '--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: '
