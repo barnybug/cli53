@@ -190,6 +190,22 @@ inconsistent. You have been warned!
 
 Changelog
 ---------
+0.5.0
+
+- Remove 'xml' command. Fixes #99
+
+- Handling throttling gracefully.
+
+- Fixes to tests
+
+- Handle Route53 throttling responses while waiting
+
+- Allow specifying an identifier when delete RRs
+
+- Support failover record types (based on work of Lee-Ming Zen)
+
+- Clarify using Zone ID. Fixes #91.
+
 0.4.4
 
 - instances option (-i) to create internal records (@asmap)
