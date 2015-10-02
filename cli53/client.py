@@ -180,7 +180,7 @@ class AWS:
                         self.alias_hosted_zone_id, self.alias_dns_name,
                         self.identifier)
                 elif self.failover is not None:
-                    return 'failover:%s %s %s' % (self.failover,
+                    return 'failover:%s %s %s %s' % (self.failover,
                         self.alias_hosted_zone_id, self.alias_dns_name,
                         self.identifier)
             return '%s %s' % (self.alias_hosted_zone_id, self.alias_dns_name)
