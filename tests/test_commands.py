@@ -26,15 +26,6 @@ class CommandsTest(unittest.TestCase):
         cli53_cmd('rrpurge', '--confirm', self.zone)
         cli53_cmd('delete', self.zone)
 
-    def _cmd(self, cmd, *args):
-        pargs = ('scripts/cli53', cmd) + args
-        p = subprocess.Popen(pargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        p.wait()
-        if p.returncode:
-            # print >> sys.stderr, p.stderr.read()
-            raise NonZeroExit
-        return p.stdout.read()
-
     def test_rrcreate(self):
         cli53_cmd('rrcreate', self.zone, '', 'A', '10.0.0.1')
         cli53_cmd('rrcreate', self.zone, 'www', 'CNAME', self.zone + '.', '-x 3600')
