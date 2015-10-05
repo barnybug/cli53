@@ -578,8 +578,8 @@ def _create_rdataset(rtype, ttl, values, weight, identifier, region, failover):
                     rdtype = AWS.ALIAS(
                         AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, None, identifier, region, None)
                 elif failover is not None:
-                    rdtype = AWS.A(AWS.RDCLASS, dns.rdatatype.A, value, None,
-                        identifier, None, failover)
+                    rdtype = AWS.ALIAS(
+                        AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, None, identifier, None, failover)
                 else:
                     raise ValueError('unsupported alias type')
         else:
