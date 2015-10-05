@@ -378,6 +378,7 @@ class BindToR53Formatter(object):
                 if rdataset.rdtype == AWS.RDTYPE_ALIAS:
                     for rdtype in rdataset.items:
                         rrset = self._change(changes, chg, zone, name)
+                        evaluateTargetHealth = False
                         text_element(rrset, 'Type', 'A')
                         if rdtype.weight:
                             text_element(
@@ -394,12 +395,13 @@ class BindToR53Formatter(object):
                                 rrset, 'SetIdentifier',
                                 rdtype.identifier)
                             text_element(rrset, 'Failover', str(rdtype.failover))
+                            evaluateTargetHealth = (rdtype.failover == 'PRIMARY')
                         at = et.SubElement(rrset, 'AliasTarget')
                         text_element(
                             at, 'HostedZoneId',
                             rdtype.alias_hosted_zone_id)
                         text_element(at, 'DNSName', rdtype.alias_dns_name)
-                        text_element(at, 'EvaluateTargetHealth', 'false')
+                        text_element(at, 'EvaluateTargetHealth', str(evaluateTargetHealth).lower())
                 elif rdataset.rdtype in (dns.rdatatype.A, dns.rdatatype.CNAME):
                     # Weighted A expands into multiple records (as each can
                     # have its own weighting/identifier)
