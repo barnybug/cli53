@@ -19,21 +19,17 @@ class CommandsTest(unittest.TestCase):
         self.zone = '%d.example.com' % random.randint(0, sys.maxint)
 
         comment = 'unittests%s' % os.getenv('TRAVIS_JOB_ID', '')
-        cli53_cmd('create', self.zone, '--comment', comment)
+        output = cli53_cmd('create', self.zone, '--comment', comment)
+        # extract the zone id
+        for line in output.split('\n'):
+            m = re.search(r'/hostedzone/(.+)', line)
+            if m:
+                self.zoneid = m.group(1)
 
     def tearDown(self):
         # clear up
         cli53_cmd('rrpurge', '--confirm', self.zone)
         cli53_cmd('delete', self.zone)
-
-    def _cmd(self, cmd, *args):
-        pargs = ('scripts/cli53', cmd) + args
-        p = subprocess.Popen(pargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        p.wait()
-        if p.returncode:
-            # print >> sys.stderr, p.stderr.read()
-            raise NonZeroExit
-        return p.stdout.read()
 
     def test_rrcreate(self):
         cli53_cmd('rrcreate', self.zone, '', 'A', '10.0.0.1')
@@ -54,6 +50,32 @@ class CommandsTest(unittest.TestCase):
                 "weighttest2 60 AWS CNAME 1 %s.  awsweightone" % self.zone,
                 "weighttest3 60 AWS CNAME 50 %s.  awsweightfifty" % self.zone,
                 "www 3600 IN CNAME %s." % self.zone,
+            ],
+            output
+        )
+
+    def test_rrcreate_no_alias_type(self):
+        with self.assertRaises(NonZeroExit):
+            cli53_cmd('rrcreate', self.zone, 'bad', 'ALIAS', '10.0.0.1', '-i bad')
+
+    def test_rrcreate_failover_bad_value(self):
+        with self.assertRaises(NonZeroExit):
+            cli53_cmd('rrcreate', self.zone, 'bad', 'A', '10.0.0.1', '-i bad', '--failover', 'BADVALUE')
+
+    def test_rrcreate_failover_ALIAS(self):
+        cli53_cmd('rrcreate', self.zone, '', 'A', '10.0.0.1')
+        alias = "%s %s." % (self.zoneid, self.zone)
+        cli53_cmd('rrcreate', self.zone, 'primary', 'ALIAS', alias, '-x 60', '-i failover-primary', '--failover', 'PRIMARY')
+        cli53_cmd('rrcreate', self.zone, 'secondary', 'ALIAS', alias, '-x 60', '-i failover-secondary', '--failover', 'SECONDARY')
+
+        output = cli53_cmd('export', self.zone)
+        output = [x for x in output.split('\n') if 'failover-' in x]
+
+        # ALIAS doesn't use TTL in this case, so the value is arbitrary
+        self.assertEqual(
+            [
+                RegexEqual("primary \d+ AWS ALIAS failover:PRIMARY %s  failover-primary" % alias),
+                RegexEqual("secondary \d+ AWS ALIAS failover:SECONDARY %s  failover-secondary" % alias),
             ],
             output
         )

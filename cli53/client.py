@@ -180,7 +180,7 @@ class AWS:
                         self.alias_hosted_zone_id, self.alias_dns_name,
                         self.identifier)
                 elif self.failover is not None:
-                    return 'failover:%s %s %s' % (self.failover,
+                    return 'failover:%s %s %s %s' % (self.failover,
                         self.alias_hosted_zone_id, self.alias_dns_name,
                         self.identifier)
             return '%s %s' % (self.alias_hosted_zone_id, self.alias_dns_name)
@@ -378,6 +378,7 @@ class BindToR53Formatter(object):
                 if rdataset.rdtype == AWS.RDTYPE_ALIAS:
                     for rdtype in rdataset.items:
                         rrset = self._change(changes, chg, zone, name)
+                        evaluateTargetHealth = False
                         text_element(rrset, 'Type', 'A')
                         if rdtype.weight:
                             text_element(
@@ -394,12 +395,13 @@ class BindToR53Formatter(object):
                                 rrset, 'SetIdentifier',
                                 rdtype.identifier)
                             text_element(rrset, 'Failover', str(rdtype.failover))
+                            evaluateTargetHealth = (rdtype.failover == 'PRIMARY')
                         at = et.SubElement(rrset, 'AliasTarget')
                         text_element(
                             at, 'HostedZoneId',
                             rdtype.alias_hosted_zone_id)
                         text_element(at, 'DNSName', rdtype.alias_dns_name)
-                        text_element(at, 'EvaluateTargetHealth', 'false')
+                        text_element(at, 'EvaluateTargetHealth', str(evaluateTargetHealth).lower())
                 elif rdataset.rdtype in (dns.rdatatype.A, dns.rdatatype.CNAME):
                     # Weighted A expands into multiple records (as each can
                     # have its own weighting/identifier)
@@ -578,8 +580,10 @@ def _create_rdataset(rtype, ttl, values, weight, identifier, region, failover):
                     rdtype = AWS.ALIAS(
                         AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, None, identifier, region, None)
                 elif failover is not None:
-                    rdtype = AWS.A(AWS.RDCLASS, dns.rdatatype.A, value, None,
-                        identifier, None, failover)
+                    rdtype = AWS.ALIAS(
+                        AWS.RDCLASS, AWS.RDTYPE_ALIAS, hosted_zone_id, dns_name, None, identifier, None, failover)
+                else:
+                    raise ValueError('unsupported alias type')
         else:
             raise ValueError('record type %s not handled' % rtype)
         rdataset.items.append(rdtype)
@@ -1055,7 +1059,7 @@ def main(connection=None):
     parser_rrcreate.add_argument('-w', '--weight', type=int, help='record weight')
     parser_rrcreate.add_argument('-i', '--identifier', help='record set identifier')
     parser_rrcreate.add_argument('--region', help='region for latency-based routing')
-    parser_rrcreate.add_argument('--failover', help='failover type for dns failover routing')
+    parser_rrcreate.add_argument('--failover', choices=['PRIMARY', 'SECONDARY'], help='failover type for dns failover routing')
     parser_rrcreate.add_argument('-r', '--replace', action='store_true', help='replace any existing record')
     parser_rrcreate.add_argument(
         '--wait', action='store_true', default=False, help='wait for changes to become live before exiting (default: '
