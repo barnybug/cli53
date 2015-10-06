@@ -21,7 +21,10 @@ class CommandsTest(unittest.TestCase):
         comment = 'unittests%s' % os.getenv('TRAVIS_JOB_ID', '')
         output = cli53_cmd('create', self.zone, '--comment', comment)
         # extract the zone id
-        self.zoneid = [x for x in output.split('\n') if '/hostedzone/' in x][0].split('/')[2]
+        for line in output.split('\n'):
+            m = re.search(r'/hostedzone/(.+)', line)
+            if m:
+                self.zoneid = m.group(1)
 
     def tearDown(self):
         # clear up
@@ -51,18 +54,19 @@ class CommandsTest(unittest.TestCase):
             output
         )
 
-    @unittest.expectedFailure
     def test_rrcreate_no_alias_type(self):
-        cli53_cmd('rrcreate', self.zone, 'bad', 'ALIAS', '10.0.0.1', '-i bad')
+        with self.assertRaises(NonZeroExit):
+            cli53_cmd('rrcreate', self.zone, 'bad', 'ALIAS', '10.0.0.1', '-i bad')
 
-    @unittest.expectedFailure
     def test_rrcreate_failover_bad_value(self):
-        cli53_cmd('rrcreate', self.zone, 'bad', 'A', '10.0.0.1', '-i bad', '--failover', 'BADVALUE')
+        with self.assertRaises(NonZeroExit):
+            cli53_cmd('rrcreate', self.zone, 'bad', 'A', '10.0.0.1', '-i bad', '--failover', 'BADVALUE')
 
     def test_rrcreate_failover_ALIAS(self):
         cli53_cmd('rrcreate', self.zone, '', 'A', '10.0.0.1')
-        cli53_cmd('rrcreate', self.zone, 'primary', 'ALIAS', "%s %s." % (self.zoneid, self.zone), '-x 60', '-i failover-primary', '--failover', 'PRIMARY')
-        cli53_cmd('rrcreate', self.zone, 'secondary', 'ALIAS', "%s %s." % (self.zoneid, self.zone), '-x 60', '-i failover-secondary', '--failover', 'SECONDARY')
+        alias = "%s %s." % (self.zoneid, self.zone)
+        cli53_cmd('rrcreate', self.zone, 'primary', 'ALIAS', alias, '-x 60', '-i failover-primary', '--failover', 'PRIMARY')
+        cli53_cmd('rrcreate', self.zone, 'secondary', 'ALIAS', alias, '-x 60', '-i failover-secondary', '--failover', 'SECONDARY')
 
         output = cli53_cmd('export', self.zone)
         output = [x for x in output.split('\n') if 'failover-' in x]
@@ -70,8 +74,8 @@ class CommandsTest(unittest.TestCase):
         # ALIAS doesn't use TTL in this case, so the value is arbitrary
         self.assertEqual(
             [
-                RegexEqual("primary \d+ AWS ALIAS failover:PRIMARY %s %s.  failover-primary" % (self.zoneid, self.zone)),
-                RegexEqual("secondary \d+ AWS ALIAS failover:SECONDARY %s %s.  failover-secondary" % (self.zoneid, self.zone)),
+                RegexEqual("primary \d+ AWS ALIAS failover:PRIMARY %s  failover-primary" % alias),
+                RegexEqual("secondary \d+ AWS ALIAS failover:SECONDARY %s  failover-secondary" % alias),
             ],
             output
         )
