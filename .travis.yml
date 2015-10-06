@@ -4,7 +4,9 @@ python:
   - "2.7"
 sudo: false
 # command to install dependencies
-install: "pip install -r requirements.txt --use-mirrors"
+install:
+- pip install -r requirements.txt --use-mirrors
+- pip install -r dev-requirements.txt --use-mirrors
 # command to run tests
 script: nosetests
 # ensure no domains are left around ($$$)
