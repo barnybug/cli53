@@ -55,12 +55,16 @@ class CommandsTest(unittest.TestCase):
         )
 
     def test_rrcreate_no_alias_type(self):
-        with self.assertRaises(NonZeroExit):
-            cli53_cmd('rrcreate', self.zone, 'bad', 'ALIAS', '10.0.0.1', '-i bad')
+        self.assertRaises(NonZeroExit,
+            cli53_cmd,
+            'rrcreate', self.zone, 'bad', 'ALIAS', '10.0.0.1', '-i bad'
+        )
 
     def test_rrcreate_failover_bad_value(self):
-        with self.assertRaises(NonZeroExit):
-            cli53_cmd('rrcreate', self.zone, 'bad', 'A', '10.0.0.1', '-i bad', '--failover', 'BADVALUE')
+        self.assertRaises(NonZeroExit,
+            cli53_cmd,
+            'rrcreate', self.zone, 'bad', 'A', '10.0.0.1', '-i bad', '--failover', 'BADVALUE'
+        )
 
     def test_rrcreate_failover_ALIAS(self):
         cli53_cmd('rrcreate', self.zone, '', 'A', '10.0.0.1')
