@@ -1,0 +1,3 @@
+$ORIGIN geo.example.com.
+geo	300	IN	A	127.0.0.2 ; AWS routing="GEOLOCATION" continentCode="AF" identifier="Africa"
+geo	300	IN	A	127.0.0.1 ; AWS routing="GEOLOCATION" countryCode="GB" identifier="UK"

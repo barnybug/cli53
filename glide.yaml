@@ -1,0 +1,19 @@
+package: main
+import:
+  - package: github.com/aws/aws-sdk-go
+    repo:    https://github.com/aws/aws-sdk-go
+    vcs:     git
+    subpackages:
+      - /service
+  - package: github.com/lsegal/gucumber
+    repo:    https://github.com/lsegal/gucumber
+    vcs:     git
+    subpackages:
+      - /cmd/gucumber
+  - package: github.com/codegangsta/cli
+    repo:    https://github.com/codegangsta/cli
+    vcs:     git
+  - package: github.com/miekg/dns
+  - package: github.com/stretchr/testify
+    repo:    https://github.com/stretchr/testify
+    vcs:     git

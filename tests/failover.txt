@@ -1,0 +1,3 @@
+$ORIGIN failover.example.com.
+failover	300	IN	A	127.0.0.1 ; AWS routing="FAILOVER" failover="PRIMARY" healthCheckId="6bb57c41-879a-42d0-acdd-ed6472f08eb9" identifier="failover-Primary"
+failover	300	IN	A	127.0.0.2 ; AWS routing="FAILOVER" failover="SECONDARY" identifier="failover-Secondary"
