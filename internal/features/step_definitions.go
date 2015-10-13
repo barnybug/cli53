@@ -19,8 +19,10 @@ import (
 )
 
 func getService() *route53.Route53 {
-	client := aws.Config{}
-	return route53.New(&client)
+	config := aws.Config{}
+	// ensures throttled requests are retried
+	config.MaxRetries = aws.Int(100)
+	return route53.New(&config)
 }
 
 func fatalIfErr(err error) {
