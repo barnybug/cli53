@@ -190,6 +190,16 @@ inconsistent. You have been warned!
 
 Changelog
 ---------
+0.5.1
+
+- Set EvaluateTargetHealth to 'true' when creating failover ALIASes
+
+- Raise a ValueError when the type of alias is not of the supported ones
+
+- Restrict the values for the '--failover' argument
+
+- Add retry for convert in which rate limitting can occur.
+
 0.5.0
 
 - Remove 'xml' command. Fixes #99
