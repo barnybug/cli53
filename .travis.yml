@@ -5,10 +5,7 @@ sudo: required
 before_script:
 - sudo apt-get -y install upx-ucl
 script:
-- go get github.com/lsegal/gucumber/cmd/gucumber
-- make test
-after_success:
-- make release
+- make deps test release
 deploy:
   provider: releases
   api_key:

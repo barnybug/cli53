@@ -7,6 +7,10 @@ buildargs = -ldflags '-X github.com/barnybug/cli53.version=${TRAVIS_TAG}'
 
 all: install
 
+deps:
+	go get github.com/pwaller/goupx
+	go get github.com/lsegal/gucumber/cmd/gucumber
+
 build:
 	go build $(exe)
 
