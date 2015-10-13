@@ -25,7 +25,7 @@ release:
 	GOOS=windows GOARCH=386 go build $(buildargs) -o release/cli53-windows-386.exe $(exe)
 	GOOS=windows GOARCH=amd64 go build $(buildargs) -o release/cli53-windows-amd64.exe $(exe)
 	goupx release/cli53-linux-amd64
-	upx release/cli53-linux-386 release/cli53-linux-arm release/cli53-windows-386.exe release/cli53-windows-amd64.exe
+	upx release/cli53-linux-386 release/cli53-linux-arm release/cli53-windows-386.exe
 
 test-unit:
 	go test .
