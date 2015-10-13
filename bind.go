@@ -115,9 +115,9 @@ func ConvertBindToRR(record dns.RR) []*route53.ResourceRecord {
 		}
 		return rrs
 	default:
-		// TODO: warning?
-		return []*route53.ResourceRecord{}
+		errorAndExit(fmt.Sprintf("Unsupported resource record: %s", record))
 	}
+	return []*route53.ResourceRecord{}
 }
 
 func ConvertAliasToRRSet(alias *dns.PrivateRR) *route53.ResourceRecordSet {

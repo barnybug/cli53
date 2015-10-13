@@ -34,7 +34,7 @@ Features:
 Installation is easy, just download the binary from the github releases page (builds are available for Linux, Mac and Windows):
 https://github.com/barnybug/cli53/releases/latest
 
-    $ sudo cp cli53-my-platform /usr/local/bin
+    $ sudo cp cli53-my-platform /usr/local/bin/cli53
     $ sudo chmod +x /usr/local/bin/cli53
 
 To configure your Amazon credentials, either place them in a file `~/.aws/credentials`:
@@ -45,9 +45,7 @@ To configure your Amazon credentials, either place them in a file `~/.aws/creden
 
 Or set the environment variables: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
-For more information, see:
-
-http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs
+For more information, see: http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs
 
 ## Building from source
 

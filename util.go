@@ -12,6 +12,7 @@ import (
 	"unicode"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/route53"
 )
 
@@ -82,7 +83,10 @@ func lookupZone(nameOrId string) *route53.HostedZone {
 			Id: aws.String(id),
 		}
 		resp, err := r53.GetHostedZone(&req)
-		fatalIfErr(err) // TODO: check non-exists
+		if err, ok := err.(awserr.Error); ok && err.Code() == "NoSuchHostedZone" {
+			errorAndExit(fmt.Sprintf("Zone '%s' not found", nameOrId))
+		}
+		fatalIfErr(err)
 		return resp.HostedZone
 	} else {
 		// lookup by name
