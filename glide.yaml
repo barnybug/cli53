@@ -17,3 +17,6 @@ import:
   - package: github.com/stretchr/testify
     repo:    https://github.com/stretchr/testify
     vcs:     git
+  - package: github.com/vaughan0/go-ini
+    repo:    https://github.com/vaughan0/go-ini
+    vcs:     git
