@@ -1,0 +1,2 @@
+$ORIGIN alias.example.com.
+alias	86400	AWS	ALIAS	A www.alias.example.com. $self false
