@@ -78,3 +78,10 @@ func TestQualifyName(t *testing.T) {
 	assert.Equal(t, "a.", qualifyName("a.", "example.com."))
 	assert.Equal(t, "a.b.example.com.", qualifyName("a.b", "example.com."))
 }
+
+func TestShortenName(t *testing.T) {
+	assert.Equal(t, "@", shortenName("example.com.", "example.com."))
+	assert.Equal(t, "a", shortenName("a.example.com.", "example.com."))
+	assert.Equal(t, "a.", shortenName("a.", "example.com."))
+	assert.Equal(t, "a.b", shortenName("a.b.example.com.", "example.com."))
+}

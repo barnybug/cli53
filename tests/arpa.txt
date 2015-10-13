@@ -1,2 +1,1 @@
-$ORIGIN 0.1.10.in-addr.arpa.
 98 3600 IN PTR blah.foo.com.

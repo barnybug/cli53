@@ -35,10 +35,10 @@ func parseComment(rr dns.RR, comment string) dns.RR {
 	return rr
 }
 
-func parseBindFile(file string) []dns.RR {
+func parseBindFile(file, origin string) []dns.RR {
 	rdr, err := os.Open(file)
 	fatalIfErr(err)
-	tokensch := dns.ParseZone(rdr, "", file)
+	tokensch := dns.ParseZone(rdr, origin, file)
 	records := []dns.RR{}
 	for token := range tokensch {
 		if token.Error != nil {

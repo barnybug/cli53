@@ -89,12 +89,13 @@ func isAuthRecord(zone *route53.HostedZone, rrset *route53.ResourceRecordSet) bo
 	return (*rrset.Type == "SOA" || *rrset.Type == "NS") && *rrset.Name == *zone.Name
 }
 
-func expandSelfAliases(records []dns.RR, id string) {
+func expandSelfAliases(records []dns.RR, zone *route53.HostedZone) {
 	for _, rr := range records {
 		if alias, ok := rr.(*dns.PrivateRR); ok {
 			rdata := alias.Data.(*ALIAS)
 			if rdata.ZoneId == "$self" {
-				rdata.ZoneId = strings.Replace(id, "/hostedzone/", "", 1)
+				rdata.ZoneId = strings.Replace(*zone.Id, "/hostedzone/", "", 1)
+				rdata.Target = qualifyName(rdata.Target, *zone.Name)
 			}
 		}
 	}
@@ -108,8 +109,8 @@ type Key struct {
 
 func importBind(name string, file string, wait bool, editauth bool, replace bool) {
 	zone := lookupZone(name)
-	records := parseBindFile(file)
-	expandSelfAliases(records, *zone.Id)
+	records := parseBindFile(file, *zone.Name)
+	expandSelfAliases(records, zone)
 
 	// group records by name+type and optionally identifier
 	grouped := map[Key][]dns.RR{}
@@ -187,13 +188,14 @@ func importBind(name string, file string, wait bool, editauth bool, replace bool
 	}
 }
 
-func unexpandSelfAliases(records []dns.RR, id string) {
-	id = strings.Replace(id, "/hostedzone/", "", 1)
+func unexpandSelfAliases(records []dns.RR, zone *route53.HostedZone) {
+	id := strings.Replace(*zone.Id, "/hostedzone/", "", 1)
 	for _, rr := range records {
 		if alias, ok := rr.(*dns.PrivateRR); ok {
 			rdata := alias.Data.(*ALIAS)
 			if rdata.ZoneId == id {
 				rdata.ZoneId = "$self"
+				rdata.Target = shortenName(rdata.Target, *zone.Name)
 			}
 		}
 	}
@@ -208,10 +210,15 @@ func exportBind(name string, full bool) {
 	fmt.Printf("$ORIGIN %s\n", dnsname)
 	for _, rrset := range rrsets {
 		rrs := ConvertRRSetToBind(rrset)
-		unexpandSelfAliases(rrs, *zone.Id)
+		unexpandSelfAliases(rrs, zone)
 		for _, rr := range rrs {
 			line := rr.String()
 			if !full {
+				parts := strings.SplitN(line, "\t", 2)
+				line = strings.Join([]string{
+					shortenName(parts[0], *zone.Name),
+					parts[1],
+				}, "\t")
 				line = shortenName(line, dnsname)
 			}
 			fmt.Println(line)

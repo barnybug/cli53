@@ -1,4 +1,3 @@
-$ORIGIN replace.example.com.
 @ 86400 IN A 10.0.0.2
 @ 86400 IN MX 20 mail.example.com.
 @ 86400 IN MX 10 mail2.example.com.

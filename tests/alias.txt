@@ -1,2 +1,1 @@
-$ORIGIN alias.example.com.
 www	86400	IN	A	127.0.0.1

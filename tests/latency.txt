@@ -1,3 +1,2 @@
-$ORIGIN latency.example.com.
 latency	300	IN	A	127.0.0.1 ; AWS routing="LATENCY" region="us-west-1" identifier="USWest1"
 latency	300	IN	A	127.0.0.2 ; AWS routing="LATENCY" region="us-west-2" identifier="USWest2"

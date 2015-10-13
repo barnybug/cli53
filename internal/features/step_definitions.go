@@ -124,7 +124,17 @@ func safeSplit(s string) []string {
 	return result
 }
 
+func domain(s string) string {
+	domain := World["$domain"].(string)
+	return strings.Replace(s, "$domain", domain, -1)
+}
+
 func init() {
+	Before("", func() {
+		// randomize temporary test domain name
+		World["$domain"] = fmt.Sprintf("%s.example.com", uniqueReference())
+	})
+
 	After("", func() {
 		if len(cleanupIds) > 0 {
 			// cleanup
@@ -137,6 +147,7 @@ func init() {
 	})
 
 	Given(`^I have a domain "(.+?)"$`, func(name string) {
+		name = domain(name)
 		// create a test domain
 		r53 := getService()
 		callerReference := uniqueReference()
@@ -150,6 +161,7 @@ func init() {
 	})
 
 	When(`^I run "(.+?)"$`, func(cmd string) {
+		cmd = domain(cmd)
 		args := safeSplit(cmd)
 		ps := exec.Command("./"+args[0], args[1:]...)
 		out, err := ps.CombinedOutput()
@@ -161,6 +173,7 @@ func init() {
 	})
 
 	Then(`^the domain "(.+?)" is created$`, func(name string) {
+		name = domain(name)
 		id := domainId(name)
 		if id == "" {
 			T.Errorf("Domain %s was not created", name)
@@ -170,6 +183,7 @@ func init() {
 	})
 
 	Then(`^the domain "(.+?)" is deleted$`, func(name string) {
+		name = domain(name)
 		id := domainId(name)
 		if id == "" {
 			cleanupIds = []string{} // drop from cleanupIds
@@ -180,6 +194,7 @@ func init() {
 	})
 
 	Then(`^the domain "(.+?)" has (\d+) records$`, func(name string, expected int) {
+		name = domain(name)
 		r53 := getService()
 		id := domainId(name)
 		rrsets, err := cli53.ListAllRecordSets(r53, id)
@@ -191,18 +206,23 @@ func init() {
 	})
 
 	Then(`^the domain "(.+?)" has record "(.+)"$`, func(name, record string) {
+		name = domain(name)
+		record = domain(record)
 		if !hasRecord(name, record) {
 			T.Errorf("Domain %s: missing record %s", name, record)
 		}
 	})
 
 	Then(`^the domain "(.+?)" doesn't have record "(.+)"$`, func(name, record string) {
+		name = domain(name)
+		record = domain(record)
 		if hasRecord(name, record) {
 			T.Errorf("Domain %s: present record %s", name, record)
 		}
 	})
 
 	Then(`^the domain "(.+?)" export matches file "(.+?)"( including auth)?$`, func(name, filename, auth string) {
+		name = domain(name)
 		ps := exec.Command("./cli53", "export", name)
 		actual, err := ps.CombinedOutput()
 		if err != nil {
@@ -222,6 +242,7 @@ func init() {
 	})
 
 	Then(`^the output contains "(.+?)"$`, func(s string) {
+		s = domain(s)
 		if !strings.Contains(runOutput, s) {
 			T.Errorf("Output did not contain \"%s\"", s)
 		}
@@ -253,6 +274,9 @@ func prepareZoneFile(b []byte, includeAuth bool) map[string]bool {
 	lines := strings.Split(s, "\n")
 	ret := map[string]bool{}
 	for _, line := range lines {
+		if strings.HasPrefix(line, "$ORIGIN") {
+			continue
+		}
 		if !includeAuth && (strings.Contains(line, " NS ") || strings.Contains(line, " SOA ")) {
 			continue
 		}

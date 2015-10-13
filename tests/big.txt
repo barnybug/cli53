@@ -1,4 +1,3 @@
-$ORIGIN big.example.com.
 1 86400 IN A 10.0.0.1
 2 86400 IN A 10.0.0.1
 3 86400 IN A 10.0.0.1

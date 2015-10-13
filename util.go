@@ -57,7 +57,7 @@ func uniqueReference() string {
 	seeded.Do(func() {
 		rand.Seed(time.Now().UnixNano())
 	})
-	return fmt.Sprint(rand.Int())
+	return fmt.Sprintf("%0x", rand.Int())
 }
 
 var unescaper = strings.NewReplacer(`\057`, "/", `\052`, "*")
@@ -132,11 +132,13 @@ func waitForChange(change *route53.ChangeInfo) {
 
 // Use shortened form of name with origin removed/abbreviated.
 func shortenName(name, origin string) string {
-	re, _ := regexp.Compile("^" + regexp.QuoteMeta(origin) + "\t")
-	name = re.ReplaceAllString(name, "@\t")
-	re2, _ := regexp.Compile(`^(?:(.+)\.)` + regexp.QuoteMeta(origin) + "\t")
-	name = re2.ReplaceAllString(name, "$1\t")
-	return name
+	if name == origin {
+		return "@"
+	} else if strings.HasSuffix(name, origin) {
+		return name[0 : len(name)-len(origin)-1]
+	} else {
+		return name
+	}
 }
 
 var reOutsideQuotes = regexp.MustCompile(`"(.*)"`)

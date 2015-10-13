@@ -1,4 +1,3 @@
-$ORIGIN auth.example.com.
 @ 900 IN SOA ns1.somenameserver.com. blah.example.com. 1 7200 900 1209600 86400
 @ 172800 IN NS ns1.somenameserver.com.
 @ 172800 IN NS ns2.somenameserver.com.
