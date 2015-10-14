@@ -56,7 +56,7 @@ func uniqueReference() string {
 	seeded.Do(func() {
 		rand.Seed(time.Now().UnixNano())
 	})
-	return fmt.Sprint(rand.Int())
+	return fmt.Sprintf("%0x", rand.Int())
 }
 
 func cleanupDomain(r53 *route53.Route53, id string) {

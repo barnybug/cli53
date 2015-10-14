@@ -96,7 +96,7 @@ func lookupZone(nameOrId string) *route53.HostedZone {
 			resp, err := r53.ListHostedZones(&req)
 			fatalIfErr(err)
 			for _, zone := range resp.HostedZones {
-				if zoneName(*zone.Name) == nameOrId || *zone.Id == nameOrId {
+				if zoneName(*zone.Name) == zoneName(nameOrId) || *zone.Id == nameOrId {
 					matches = append(matches, *zone)
 				}
 			}
