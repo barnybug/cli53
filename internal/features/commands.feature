@@ -35,6 +35,12 @@ Feature: commands
     When I run "cli53 rrcreate -i Zero --weight 0 $domain 'weighted 300 IN A 127.0.0.1'"
     Then the domain "$domain" has record "weighted.$domain. 300 IN A 127.0.0.1 ; AWS routing="WEIGHTED" weight=0 identifier="Zero""
 
+  Scenario: I can create an alias
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain 'www A 127.0.0.1'"
+    When I run "cli53 rrcreate $domain 'alias 86400 AWS ALIAS A www $self false'"
+    Then the domain "$domain" has record "alias.$domain. 86400 AWS ALIAS A www $self false"
+
   Scenario: I can delete a resource record
     Given I have a domain "$domain"
     When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"

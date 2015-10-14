@@ -38,14 +38,21 @@ func domainExists(name string) bool {
 	return domainId(name) != ""
 }
 
-func domainId(name string) string {
+func domainZone(name string) *route53.HostedZone {
 	r53 := getService()
 	zones, err := r53.ListHostedZones(nil)
 	fatalIfErr(err)
 	for _, zone := range zones.HostedZones {
 		if *zone.Name == name+"." {
-			return *zone.Id
+			return zone
 		}
+	}
+	return nil
+}
+
+func domainId(name string) string {
+	if zone := domainZone(name); zone != nil {
+		return *zone.Id
 	}
 	return ""
 }
@@ -251,12 +258,13 @@ func init() {
 
 func hasRecord(name, record string) bool {
 	r53 := getService()
-	id := domainId(name)
-	rrsets, err := cli53.ListAllRecordSets(r53, id)
+	zone := domainZone(name)
+	rrsets, err := cli53.ListAllRecordSets(r53, *zone.Id)
 	fatalIfErr(err)
 
 	for _, rrset := range rrsets {
 		rrs := cli53.ConvertRRSetToBind(rrset)
+		cli53.UnexpandSelfAliases(rrs, zone)
 		for _, rr := range rrs {
 			line := rr.String()
 			line = strings.Replace(line, "\t", " ", -1)

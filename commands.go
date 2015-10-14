@@ -90,13 +90,17 @@ func isAuthRecord(zone *route53.HostedZone, rrset *route53.ResourceRecordSet) bo
 }
 
 func expandSelfAliases(records []dns.RR, zone *route53.HostedZone) {
-	for _, rr := range records {
-		if alias, ok := rr.(*dns.PrivateRR); ok {
-			rdata := alias.Data.(*ALIAS)
-			if rdata.ZoneId == "$self" {
-				rdata.ZoneId = strings.Replace(*zone.Id, "/hostedzone/", "", 1)
-				rdata.Target = qualifyName(rdata.Target, *zone.Name)
-			}
+	for _, record := range records {
+		expandSelfAlias(record, zone)
+	}
+}
+
+func expandSelfAlias(record dns.RR, zone *route53.HostedZone) {
+	if alias, ok := record.(*dns.PrivateRR); ok {
+		rdata := alias.Data.(*ALIAS)
+		if rdata.ZoneId == "$self" {
+			rdata.ZoneId = strings.Replace(*zone.Id, "/hostedzone/", "", 1)
+			rdata.Target = qualifyName(rdata.Target, *zone.Name)
 		}
 	}
 }
@@ -188,7 +192,7 @@ func importBind(name string, file string, wait bool, editauth bool, replace bool
 	}
 }
 
-func unexpandSelfAliases(records []dns.RR, zone *route53.HostedZone) {
+func UnexpandSelfAliases(records []dns.RR, zone *route53.HostedZone) {
 	id := strings.Replace(*zone.Id, "/hostedzone/", "", 1)
 	for _, rr := range records {
 		if alias, ok := rr.(*dns.PrivateRR); ok {
@@ -210,7 +214,7 @@ func exportBind(name string, full bool) {
 	fmt.Printf("$ORIGIN %s\n", dnsname)
 	for _, rrset := range rrsets {
 		rrs := ConvertRRSetToBind(rrset)
-		unexpandSelfAliases(rrs, zone)
+		UnexpandSelfAliases(rrs, zone)
 		for _, rr := range rrs {
 			line := rr.String()
 			if !full {
@@ -245,6 +249,7 @@ func createRecord(args createArgs) {
 	origin := fmt.Sprintf("$ORIGIN %s\n", *zone.Name)
 	rr, err := dns.NewRR(origin + args.record)
 	fatalIfErr(err)
+	expandSelfAlias(rr, zone)
 	rrset := ConvertBindToRRSet([]dns.RR{rr})
 	if args.identifier != "" {
 		rrset.SetIdentifier = aws.String(args.identifier)
