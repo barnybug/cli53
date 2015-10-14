@@ -233,7 +233,7 @@ type createArgs struct {
 	identifier    string
 	failover      string
 	healthCheckId string
-	weight        int
+	weight        *int
 	region        string
 	countryCode   string
 	continentCode string
@@ -255,8 +255,8 @@ func createRecord(args createArgs) {
 	if args.healthCheckId != "" {
 		rrset.HealthCheckId = aws.String(args.healthCheckId)
 	}
-	if args.weight != 0 {
-		rrset.Weight = aws.Int64(int64(args.weight))
+	if args.weight != nil {
+		rrset.Weight = aws.Int64(int64(*args.weight))
 	}
 	if args.region != "" {
 		rrset.Region = aws.String(args.region)

@@ -1,2 +1,3 @@
 weighted	300	IN	A	127.0.0.1 ; AWS routing="WEIGHTED" weight=1 identifier="One"
 weighted	300	IN	A	127.0.0.2 ; AWS routing="WEIGHTED" weight=2 identifier="Two"
+weighted	300	IN	A	127.0.0.1 ; AWS routing="WEIGHTED" weight=0 identifier="Zero"

@@ -3,6 +3,7 @@ package cli53
 import (
 	"os"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/route53"
 	"github.com/codegangsta/cli"
 )
@@ -182,6 +183,10 @@ func Main() {
 					cli.ShowCommandHelp(c, "rrcreate")
 					os.Exit(1)
 				}
+				var weight *int
+				if c.IsSet("weight") {
+					weight = aws.Int(c.Int("weight"))
+				}
 				args := createArgs{
 					name:          c.Args()[0],
 					record:        c.Args()[1],
@@ -189,7 +194,7 @@ func Main() {
 					identifier:    c.String("identifier"),
 					failover:      c.String("failover"),
 					healthCheckId: c.String("health-check"),
-					weight:        c.Int("weight"),
+					weight:        weight,
 					region:        c.String("region"),
 					countryCode:   c.String("country-code"),
 					continentCode: c.String("continent-code"),

@@ -30,6 +30,11 @@ Feature: commands
     When I run "cli53 rrcreate -i One --weight 1 $domain 'weighted 300 IN A 127.0.0.1'"
     Then the domain "$domain" has record "weighted.$domain. 300 IN A 127.0.0.1 ; AWS routing="WEIGHTED" weight=1 identifier="One""
 
+  Scenario: I can create a weighted record with zero weight
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate -i Zero --weight 0 $domain 'weighted 300 IN A 127.0.0.1'"
+    Then the domain "$domain" has record "weighted.$domain. 300 IN A 127.0.0.1 ; AWS routing="WEIGHTED" weight=0 identifier="Zero""
+
   Scenario: I can delete a resource record
     Given I have a domain "$domain"
     When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"
