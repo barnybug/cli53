@@ -99,6 +99,17 @@ Further documentation is available, e.g.:
 	$ cli53 --help
 	$ cli53 rrcreate --help
 
+## Bug reports
+
+Please open a github issue including cli53 version number `cli53 --version`
+and the commands or a zone file to reproduce the issue. A good bug report is
+much appreciated!
+
+## Pull requests
+
+Pull requests are gratefully received, though please do include a test case
+too.
+
 ## Broken CNAME exports (GoDaddy)
 
 Some DNS providers export broken bind files, without the trailing '.'
