@@ -308,6 +308,8 @@ func ListAllRecordSets(r53 *route53.Route53, id string) (rrsets []*route53.Resou
 			rrsets = append(rrsets, resp.ResourceRecordSets...)
 			if *resp.IsTruncated {
 				req.StartRecordName = resp.NextRecordName
+				req.StartRecordType = resp.NextRecordType
+				req.StartRecordIdentifier = resp.NextRecordIdentifier
 			} else {
 				break
 			}

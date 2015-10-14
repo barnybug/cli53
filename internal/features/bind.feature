@@ -15,6 +15,11 @@ Feature: bind files
     When I run "cli53 import --file tests/big.txt $domain"
     Then the domain "$domain" export matches file "tests/big.txt"
 
+  Scenario: I can import a big zone with identifiers
+    Given I have a domain "$domain"
+    When I run "cli53 import --file tests/big2.txt $domain"
+    Then the domain "$domain" export matches file "tests/big2.txt"
+
   Scenario: I can import a zone with failover extensions
     Given I have a domain "$domain"
     When I run "cli53 import --file tests/failover.txt $domain"
