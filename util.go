@@ -90,13 +90,20 @@ func lookupZone(nameOrId string) *route53.HostedZone {
 		return resp.HostedZone
 	} else {
 		// lookup by name
-		req := route53.ListHostedZonesInput{}
-		resp, err := r53.ListHostedZones(&req)
-		fatalIfErr(err)
 		matches := []route53.HostedZone{}
-		for _, zone := range resp.HostedZones {
-			if zoneName(*zone.Name) == nameOrId || *zone.Id == nameOrId {
-				matches = append(matches, *zone)
+		req := route53.ListHostedZonesInput{}
+		for {
+			resp, err := r53.ListHostedZones(&req)
+			fatalIfErr(err)
+			for _, zone := range resp.HostedZones {
+				if zoneName(*zone.Name) == nameOrId || *zone.Id == nameOrId {
+					matches = append(matches, *zone)
+				}
+			}
+			if *resp.IsTruncated {
+				req.Marker = resp.NextMarker
+			} else {
+				break
 			}
 		}
 		switch len(matches) {
