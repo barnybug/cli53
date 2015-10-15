@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -33,6 +34,7 @@ func fatalIfErr(err error) {
 
 var cleanupIds = []string{}
 var runOutput string
+var retCode int
 
 func domainExists(name string) bool {
 	return domainId(name) != ""
@@ -179,6 +181,22 @@ func init() {
 		}
 	})
 
+	When(`^I execute "(.+?)"$`, func(cmd string) {
+		cmd = domain(cmd)
+		args := safeSplit(cmd)
+		ps := exec.Command("./"+args[0], args[1:]...)
+		out, err := ps.CombinedOutput()
+		runOutput = string(out)
+		if err, ok := err.(*exec.ExitError); ok {
+			waitStatus := err.Sys().(syscall.WaitStatus)
+			retCode = waitStatus.ExitStatus()
+		} else if err != nil {
+			T.Errorf("Error: %s Output: %s", err, out)
+		} else {
+			runOutput = string(out)
+		}
+	})
+
 	Then(`^the domain "(.+?)" is created$`, func(name string) {
 		name = domain(name)
 		id := domainId(name)
@@ -252,6 +270,12 @@ func init() {
 		s = domain(s)
 		if !strings.Contains(runOutput, s) {
 			T.Errorf("Output did not contain \"%s\"", s)
+		}
+	})
+
+	Then(`^the exit code was (\d+)$`, func(code int) {
+		if code != retCode {
+			T.Errorf("Exit code expected: %d != actual: %d", code, retCode)
 		}
 	})
 }
