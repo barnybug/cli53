@@ -192,12 +192,14 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 	// - latency
 	// - weighted
 
+	name := unescaper.Replace(*rrset.Name)
+
 	// Only resource records without routing can be represented in vanilla bind.
 	if rrset.AliasTarget != nil {
 		alias := rrset.AliasTarget
 		dnsrr := &dns.PrivateRR{
 			Hdr: dns.RR_Header{
-				Name:   *rrset.Name,
+				Name:   name,
 				Rrtype: TypeALIAS,
 				Class:  ClassAWS,
 				Ttl:    86400,
@@ -216,7 +218,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 			for _, rr := range rrset.ResourceRecords {
 				dnsrr := &dns.A{
 					Hdr: dns.RR_Header{
-						Name:   *rrset.Name,
+						Name:   name,
 						Rrtype: dns.TypeA,
 						Class:  dns.ClassINET,
 						Ttl:    uint32(*rrset.TTL),
@@ -229,7 +231,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 			for _, rr := range rrset.ResourceRecords {
 				dnsrr := &dns.AAAA{
 					Hdr: dns.RR_Header{
-						Name:   *rrset.Name,
+						Name:   name,
 						Rrtype: dns.TypeAAAA,
 						Class:  dns.ClassINET,
 						Ttl:    uint32(*rrset.TTL),
@@ -242,7 +244,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 			for _, rr := range rrset.ResourceRecords {
 				dnsrr := &dns.CNAME{
 					Hdr: dns.RR_Header{
-						Name:   *rrset.Name,
+						Name:   name,
 						Rrtype: dns.TypeCNAME,
 						Class:  dns.ClassINET,
 						Ttl:    uint32(*rrset.TTL),
@@ -260,7 +262,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 
 				dnsrr := &dns.MX{
 					Hdr: dns.RR_Header{
-						Name:   *rrset.Name,
+						Name:   name,
 						Rrtype: dns.TypeMX,
 						Class:  dns.ClassINET,
 						Ttl:    uint32(*rrset.TTL),
@@ -274,7 +276,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 			for _, rr := range rrset.ResourceRecords {
 				dnsrr := &dns.NS{
 					Hdr: dns.RR_Header{
-						Name:   *rrset.Name,
+						Name:   name,
 						Rrtype: dns.TypeNS,
 						Class:  dns.ClassINET,
 						Ttl:    uint32(*rrset.TTL),
@@ -287,7 +289,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 			for _, rr := range rrset.ResourceRecords {
 				dnsrr := &dns.PTR{
 					Hdr: dns.RR_Header{
-						Name:   *rrset.Name,
+						Name:   name,
 						Rrtype: dns.TypePTR,
 						Class:  dns.ClassINET,
 						Ttl:    uint32(*rrset.TTL),
@@ -305,7 +307,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 
 				dnsrr := &dns.SOA{
 					Hdr: dns.RR_Header{
-						Name:   *rrset.Name,
+						Name:   name,
 						Rrtype: dns.TypeSOA,
 						Class:  dns.ClassINET,
 						Ttl:    uint32(*rrset.TTL),
@@ -324,7 +326,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 			for _, rr := range rrset.ResourceRecords {
 				dnsrr := &dns.SPF{
 					Hdr: dns.RR_Header{
-						Name:   *rrset.Name,
+						Name:   name,
 						Rrtype: dns.TypeSPF,
 						Class:  dns.ClassINET,
 						Ttl:    uint32(*rrset.TTL),
@@ -342,7 +344,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 
 				dnsrr := &dns.SRV{
 					Hdr: dns.RR_Header{
-						Name:   *rrset.Name,
+						Name:   name,
 						Rrtype: dns.TypeSRV,
 						Class:  dns.ClassINET,
 						Ttl:    uint32(*rrset.TTL),
@@ -362,7 +364,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 			}
 			dnsrr := &dns.TXT{
 				Hdr: dns.RR_Header{
-					Name:   *rrset.Name,
+					Name:   name,
 					Rrtype: dns.TypeTXT,
 					Class:  dns.ClassINET,
 					Ttl:    uint32(*rrset.TTL),

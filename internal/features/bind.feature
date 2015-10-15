@@ -1,5 +1,10 @@
 @bind
 Feature: bind files
+  Scenario: I can import a wildcard zone
+    Given I have a domain "$domain"
+    When I run "cli53 import --file tests/wildcard.txt $domain"
+    Then the domain "$domain" export matches file "tests/wildcard.txt"
+
   Scenario: I can import a basic zone
     Given I have a domain "$domain"
     When I run "cli53 import --file tests/basic.txt $domain"

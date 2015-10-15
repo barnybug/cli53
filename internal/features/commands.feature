@@ -1,5 +1,10 @@
 @commands
 Feature: commands
+  Scenario: I can create a wildcard record
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain '* A 127.0.0.1'"
+    Then the domain "$domain" has record "*.$domain. 3600 IN A 127.0.0.1"
+
   Scenario: I can create a resource record
     Given I have a domain "$domain"
     When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"
