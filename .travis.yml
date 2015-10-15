@@ -2,12 +2,16 @@ language: go
 go:
 - 1.5
 sudo: false
+before_install:
+  - pip install --user codecov
 before_script:
 - 'mkdir -p $GOPATH/bin && wget -q https://github.com/barnybug/cli53/releases/download/0.6.0/upx -O $GOPATH/bin/upx'
 script:
-- make deps test
+- make deps test-coverage test-integration
 before_deploy:
 - make release
+after_success:
+  - codecov
 deploy:
   provider: releases
   api_key:

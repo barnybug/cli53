@@ -28,9 +28,12 @@ release:
 	upx release/cli53-linux-386 release/cli53-linux-arm release/cli53-windows-386.exe
 
 test-unit:
-	go test .
+	go test
 
 test-integration: build
 	gucumber
+
+test-coverage:
+	go test -coverprofile=coverage.txt -covermode=atomic
 
 test: test-unit test-integration
