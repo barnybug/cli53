@@ -1,4 +1,4 @@
-[![Build status](https://secure.travis-ci.org/barnybug/cli53.png?branch=master)](https://secure.travis-ci.org/barnybug/cli53)
+[![Build status](https://secure.travis-ci.org/barnybug/cli53.png?branch=master)](https://secure.travis-ci.org/barnybug/cli53) [![codecov.io](http://codecov.io/github/barnybug/cli53/coverage.svg?branch=master)](http://codecov.io/github/barnybug/cli53?branch=master)
 
 # cli53 - Command line tool to administer the Amazon Route 53 DNS service
 
