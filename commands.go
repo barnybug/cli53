@@ -245,7 +245,7 @@ type createArgs struct {
 }
 
 func (args createArgs) validate() {
-	if args.failover != "PRIMARY" && args.failover != "SECONDARY" {
+	if args.failover != "" && args.failover != "PRIMARY" && args.failover != "SECONDARY" {
 		errorAndExit("failover must be PRIMARY or SECONDARY")
 	}
 	extcount := 0
