@@ -41,6 +41,20 @@ Feature: commands
     When I run "cli53 rrcreate $domain 'alias 86400 AWS ALIAS A www $self false'"
     Then the domain "$domain" has record "alias.$domain. 86400 AWS ALIAS A www $self false"
 
+  Scenario: I can replace a resource record
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"
+    And I run "cli53 rrcreate --replace $domain 'a A 127.0.0.2'"
+    Then the domain "$domain" has record "a.$domain. 3600 IN A 127.0.0.2"
+
+  Scenario: I can replace a weighted record
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate -i One --weight 1 $domain 'a A 127.0.0.1'"
+    And I run "cli53 rrcreate -i Two --weight 2 $domain 'a A 127.0.0.2'"
+    And I run "cli53 rrcreate --replace -i One --weight 3 $domain 'a A 127.1.0.1'"
+    Then the domain "$domain" has record "a.$domain. 3600 IN A 127.1.0.1 ; AWS routing="WEIGHTED" weight=3 identifier="One""
+    And the domain "$domain" has record "a.$domain. 3600 IN A 127.0.0.2 ; AWS routing="WEIGHTED" weight=2 identifier="Two""
+
   Scenario: I can delete a resource record
     Given I have a domain "$domain"
     When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"

@@ -148,6 +148,10 @@ func Main() {
 					Name:  "wait",
 					Usage: "wait for changes to become live",
 				},
+				cli.BoolFlag{
+					Name:  "replace",
+					Usage: "replace the record",
+				},
 				cli.StringFlag{
 					Name:  "identifier, i",
 					Usage: "record set identifier (for routed records)",
@@ -191,6 +195,7 @@ func Main() {
 					name:          c.Args()[0],
 					record:        c.Args()[1],
 					wait:          c.Bool("wait"),
+					replace:       c.Bool("replace"),
 					identifier:    c.String("identifier"),
 					failover:      c.String("failover"),
 					healthCheckId: c.String("health-check"),

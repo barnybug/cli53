@@ -234,6 +234,7 @@ type createArgs struct {
 	name          string
 	record        string
 	wait          bool
+	replace       bool
 	identifier    string
 	failover      string
 	healthCheckId string
@@ -241,6 +242,16 @@ type createArgs struct {
 	region        string
 	countryCode   string
 	continentCode string
+}
+
+func equalStringPtrs(a, b *string) bool {
+	if a == nil && b == nil {
+		return true
+	} else if a != nil && b != nil {
+		return *a == *b
+	} else {
+		return false
+	}
 }
 
 func createRecord(args createArgs) {
@@ -277,11 +288,31 @@ func createRecord(args createArgs) {
 		}
 	}
 
+	changes := []*route53.Change{}
+	if args.replace {
+		// add DELETE for any existing record
+		rrsets, err := ListAllRecordSets(r53, *zone.Id)
+		fatalIfErr(err)
+		for _, candidate := range rrsets {
+			if equalStringPtrs(rrset.Name, candidate.Name) &&
+				equalStringPtrs(rrset.Type, candidate.Type) &&
+				equalStringPtrs(rrset.SetIdentifier, candidate.SetIdentifier) {
+				change := &route53.Change{
+					Action:            aws.String("DELETE"),
+					ResourceRecordSet: candidate,
+				}
+				changes = append(changes, change)
+				break
+			}
+		}
+	}
+
 	change := &route53.Change{
 		Action:            aws.String("CREATE"),
 		ResourceRecordSet: rrset,
 	}
-	changes := []*route53.Change{change}
+	changes = append(changes, change)
+
 	req := route53.ChangeResourceRecordSetsInput{
 		HostedZoneId: zone.Id,
 		ChangeBatch: &route53.ChangeBatch{
