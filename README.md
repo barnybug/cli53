@@ -9,32 +9,20 @@ Route 53 domains.
 
 Features:
 
-- create hosted zones
+- import and export BIND format
 
-- delete hosted zones
+- create, delete and list hosted zones
 
-- list hosted zones
+- create, delete and update individual records
 
-- import from BIND format
-
-- export to BIND format
-
-- create resource records
-
-- delete resource records
-
-- works with BIND format zone files we all know and love
-
-- create AWS extensions: failover, geolocation, latency and weighted records
-
-- create AWS Alias records
+- create AWS extensions: failover, geolocation, latency, weighted and ALIAS records
 
 ## Installation
 
 Installation is easy, just download the binary from the github releases page (builds are available for Linux, Mac and Windows):
 https://github.com/barnybug/cli53/releases/latest
 
-    $ sudo cp cli53-my-platform /usr/local/bin/cli53
+    $ sudo mv cli53-my-platform /usr/local/bin/cli53
     $ sudo chmod +x /usr/local/bin/cli53
 
 To configure your Amazon credentials, either place them in a file `~/.aws/credentials`:
@@ -49,7 +37,7 @@ For more information, see: http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFG
 
 ## Building from source
 
-To build yourself from source you will need golang 1.5 installed and 'GO15VENDOREXPERIMENT=1' set in your environment, then:
+To build yourself from source (you will need golang 1.5 installed):
 
     $ go get github.com/barnybug/cli53
     $ cd $GOPATH/src/github.com/barnybug/cli53
