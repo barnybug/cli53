@@ -1,6 +1,7 @@
 package features
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -138,6 +139,12 @@ func domain(s string) string {
 	return strings.Replace(s, "$domain", domain, -1)
 }
 
+func coverageArgs(args []string) []string {
+	// add coverage parameters to command
+	coverage := fmt.Sprintf("coverage/%d.txt", rand.Int())
+	return append([]string{args[0], "-test.coverprofile", coverage}, args[1:]...)
+}
+
 func init() {
 	Before("", func() {
 		// randomize temporary test domain name
@@ -172,6 +179,7 @@ func init() {
 	When(`^I run "(.+?)"$`, func(cmd string) {
 		cmd = domain(cmd)
 		args := safeSplit(cmd)
+		args = coverageArgs(args)
 		ps := exec.Command("./"+args[0], args[1:]...)
 		out, err := ps.CombinedOutput()
 		if err != nil {
@@ -248,21 +256,20 @@ func init() {
 
 	Then(`^the domain "(.+?)" export matches file "(.+?)"( including auth)?$`, func(name, filename, auth string) {
 		name = domain(name)
-		ps := exec.Command("./cli53", "export", name)
-		actual, err := ps.CombinedOutput()
-		if err != nil {
-			T.Errorf("Error: %s Output: %s", err, actual)
-		} else {
-			rfile, err := os.Open(filename)
-			fatalIfErr(err)
-			defer rfile.Close()
-			expected, err := ioutil.ReadAll(rfile)
-			fatalIfErr(err)
+		r53 := getService()
+		zone := domainZone(name)
+		out := new(bytes.Buffer)
+		cli53.ExportBindToWriter(r53, zone, false, out)
+		actual := out.Bytes()
+		rfile, err := os.Open(filename)
+		fatalIfErr(err)
+		defer rfile.Close()
+		expected, err := ioutil.ReadAll(rfile)
+		fatalIfErr(err)
 
-			errors := compareDomains(expected, actual, auth != "")
-			if len(errors) > 0 {
-				T.Errorf(errors)
-			}
+		errors := compareDomains(expected, actual, auth != "")
+		if len(errors) > 0 {
+			T.Errorf(errors)
 		}
 	})
 

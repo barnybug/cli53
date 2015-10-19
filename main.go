@@ -12,7 +12,7 @@ var r53 *route53.Route53
 var version string /* passed in by go build */
 
 // Entry point for cli53 application
-func Main() {
+func Main(args []string) {
 	app := cli.NewApp()
 	app.Name = "cli53"
 	app.Usage = "manage route53 DNS"
@@ -266,5 +266,5 @@ func Main() {
 			},
 		},
 	}
-	app.Run(os.Args)
+	app.Run(args)
 }

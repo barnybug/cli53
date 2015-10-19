@@ -2,6 +2,8 @@ package cli53
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -207,11 +209,15 @@ func UnexpandSelfAliases(records []dns.RR, zone *route53.HostedZone) {
 
 func exportBind(name string, full bool) {
 	zone := lookupZone(name)
+	ExportBindToWriter(r53, zone, full, os.Stdout)
+}
+
+func ExportBindToWriter(r53 *route53.Route53, zone *route53.HostedZone, full bool, out io.Writer) {
 	rrsets, err := ListAllRecordSets(r53, *zone.Id)
 	fatalIfErr(err)
 
 	dnsname := *zone.Name
-	fmt.Printf("$ORIGIN %s\n", dnsname)
+	fmt.Fprintf(out, "$ORIGIN %s\n", dnsname)
 	for _, rrset := range rrsets {
 		rrs := ConvertRRSetToBind(rrset)
 		UnexpandSelfAliases(rrs, zone)
@@ -225,7 +231,7 @@ func exportBind(name string, full bool) {
 				}, "\t")
 				line = shortenName(line, dnsname)
 			}
-			fmt.Println(line)
+			fmt.Fprintln(out, line)
 		}
 	}
 }

@@ -9,6 +9,7 @@ all: install
 
 deps:
 	go get github.com/pwaller/goupx
+	go get github.com/wadey/gocovmerge
 	go get github.com/lsegal/gucumber/cmd/gucumber
 
 build:
@@ -33,7 +34,12 @@ test-unit:
 test-integration: build
 	gucumber
 
+# run unit and system tests, then recombine coverage output
 test-coverage:
-	go test -coverprofile=coverage.txt -covermode=atomic
+	rm -rf coverage && mkdir coverage
+	go test -covermode=count -coverprofile=coverage/unit.txt
+	go test -c -covermode=count -coverpkg . -o ./cli53 ./cmd/cli53
+	gucumber
+	gocovmerge coverage/*.txt > coverage.txt
 
 test: test-unit test-integration
