@@ -39,7 +39,7 @@ test-coverage:
 	rm -rf coverage && mkdir coverage
 	go test -covermode=count -coverprofile=coverage/unit.txt
 	go test -c -covermode=count -coverpkg . -o ./cli53 ./cmd/cli53
-	gucumber
+	COVERAGE=1 gucumber
 	gocovmerge coverage/*.txt > coverage.txt
 
 test: test-unit test-integration

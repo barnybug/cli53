@@ -28,3 +28,15 @@ Feature: domain management
     Given I have a domain "$domain"
     When I run "cli53 list"
     Then the output contains "$domain"
+
+  Scenario: I can purge a domain
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"
+    And I run "cli53 rrpurge --confirm $domain"
+    Then the domain "$domain" doesn't have record "a.$domain. 3600 IN A 127.0.0.1"
+
+  Scenario: I can export a domain
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"
+    And I run "cli53 export $domain"
+    Then the output contains "$domain"

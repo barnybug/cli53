@@ -179,7 +179,9 @@ func init() {
 	When(`^I run "(.+?)"$`, func(cmd string) {
 		cmd = domain(cmd)
 		args := safeSplit(cmd)
-		args = coverageArgs(args)
+		if os.Getenv("COVERAGE") != "" {
+			args = coverageArgs(args)
+		}
 		ps := exec.Command("./"+args[0], args[1:]...)
 		out, err := ps.CombinedOutput()
 		if err != nil {
