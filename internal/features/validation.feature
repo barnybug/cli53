@@ -23,3 +23,31 @@ Feature: parameter validation
   Scenario: failover and weight are mutually exclusive
     When I execute "cli53 rrcreate -i id --failover PRIMARY --weight 10 $domain 'a A 127.0.0.1'"
     Then the exit code was 1
+
+  Scenario: create requires one argument
+    When I execute "cli53 create a b"
+    Then the exit code was 1
+
+  Scenario: delete requires one argument
+    When I execute "cli53 delete a b"
+    Then the exit code was 1
+
+  Scenario: import requires one argument
+    When I execute "cli53 import a b"
+    Then the exit code was 1
+
+  Scenario: export requires one argument
+    When I execute "cli53 export a b"
+    Then the exit code was 1
+
+  Scenario: rrcreate requires two arguments
+    When I execute "cli53 import a b c"
+    Then the exit code was 1
+
+  Scenario: rrdelete requires three arguments
+    When I execute "cli53 import a b c d"
+    Then the exit code was 1
+
+  Scenario: rrpurge requires one argument
+    When I execute "cli53 rrpurge a b"
+    Then the exit code was 1

@@ -250,9 +250,10 @@ type createArgs struct {
 	continentCode string
 }
 
-func (args createArgs) validate() {
+func (args createArgs) validate() bool {
 	if args.failover != "" && args.failover != "PRIMARY" && args.failover != "SECONDARY" {
-		errorAndExit("failover must be PRIMARY or SECONDARY")
+		fmt.Println("failover must be PRIMARY or SECONDARY")
+		return false
 	}
 	extcount := 0
 	if args.failover != "" {
@@ -271,14 +272,18 @@ func (args createArgs) validate() {
 		extcount += 1
 	}
 	if extcount > 0 && args.identifier == "" {
-		errorAndExit("identifier must be set when creating an extended record")
+		fmt.Println("identifier must be set when creating an extended record")
+		return false
 	}
 	if extcount == 0 && args.identifier != "" {
-		errorAndExit("identifier should only be set when creating an extended record")
+		fmt.Println("identifier should only be set when creating an extended record")
+		return false
 	}
 	if extcount > 1 {
-		errorAndExit("failover, weight, region, country-code and continent-code are mutually exclusive")
+		fmt.Println("failover, weight, region, country-code and continent-code are mutually exclusive")
+		return false
 	}
+	return true
 }
 
 func equalStringPtrs(a, b *string) bool {
@@ -292,7 +297,6 @@ func equalStringPtrs(a, b *string) bool {
 }
 
 func createRecord(args createArgs) {
-	args.validate()
 	zone := lookupZone(args.name)
 
 	origin := fmt.Sprintf("$ORIGIN %s\n", *zone.Name)

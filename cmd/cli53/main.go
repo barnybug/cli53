@@ -7,5 +7,6 @@ import (
 )
 
 func main() {
-	cli53.Main(os.Args)
+	exitCode := cli53.Main(os.Args)
+	os.Exit(exitCode)
 }

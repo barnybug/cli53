@@ -1,8 +1,6 @@
 package cli53
 
 import (
-	"os"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/route53"
 	"github.com/codegangsta/cli"
@@ -12,7 +10,8 @@ var r53 *route53.Route53
 var version string /* passed in by go build */
 
 // Entry point for cli53 application
-func Main(args []string) {
+func Main(args []string) int {
+	exitCode := 0
 	app := cli.NewApp()
 	app.Name = "cli53"
 	app.Usage = "manage route53 DNS"
@@ -46,7 +45,8 @@ func Main(args []string) {
 				r53 = getService(c.Bool("debug"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "create")
-					os.Exit(1)
+					exitCode = 1
+					return
 				}
 				createZone(c.Args().First(), c.String("comment"))
 			},
@@ -69,7 +69,8 @@ func Main(args []string) {
 				r53 = getService(c.Bool("debug"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "delete")
-					os.Exit(1)
+					exitCode = 1
+					return
 				}
 				domain := c.Args().First()
 				deleteZone(domain, c.Bool("purge"))
@@ -106,7 +107,8 @@ func Main(args []string) {
 				r53 = getService(c.Bool("debug"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "import")
-					os.Exit(1)
+					exitCode = 1
+					return
 				}
 				importBind(c.Args().First(), c.String("file"), c.Bool("wait"), c.Bool("editauth"), c.Bool("replace"))
 			},
@@ -129,7 +131,8 @@ func Main(args []string) {
 				r53 = getService(c.Bool("debug"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "export")
-					os.Exit(1)
+					exitCode = 1
+					return
 				}
 				exportBind(c.Args().First(), c.Bool("full"))
 			},
@@ -185,7 +188,8 @@ func Main(args []string) {
 				r53 = getService(c.Bool("debug"))
 				if len(c.Args()) != 2 {
 					cli.ShowCommandHelp(c, "rrcreate")
-					os.Exit(1)
+					exitCode = 1
+					return
 				}
 				var weight *int
 				if c.IsSet("weight") {
@@ -204,7 +208,11 @@ func Main(args []string) {
 					countryCode:   c.String("country-code"),
 					continentCode: c.String("continent-code"),
 				}
-				createRecord(args)
+				if args.validate() {
+					createRecord(args)
+				} else {
+					exitCode = 1
+				}
 			},
 		},
 		{
@@ -230,7 +238,8 @@ func Main(args []string) {
 				r53 = getService(c.Bool("debug"))
 				if len(c.Args()) != 3 {
 					cli.ShowCommandHelp(c, "rrdelete")
-					os.Exit(1)
+					exitCode = 1
+					return
 				}
 				deleteRecord(c.Args()[0], c.Args()[1], c.Args()[2], c.Bool("wait"), c.String("identifier"))
 			},
@@ -257,7 +266,8 @@ func Main(args []string) {
 				r53 = getService(c.Bool("debug"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "rrpurge")
-					os.Exit(1)
+					exitCode = 1
+					return
 				}
 				if !c.Bool("confirm") {
 					errorAndExit("You must --confirm this action")
@@ -267,4 +277,5 @@ func Main(args []string) {
 		},
 	}
 	app.Run(args)
+	return exitCode
 }
