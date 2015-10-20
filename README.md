@@ -98,6 +98,17 @@ much appreciated!
 Pull requests are gratefully received, though please do include a test case
 too.
 
+## Where's python/pypi cli53?
+
+I've since rewritten the original python cli53. As people were still
+installing the old version I've taken it off pypi. If you must, you can still
+install the python cli53 by giving pip the github branch:
+
+	$ pip install git+https://github.com/barnybug/cli53.git@python
+
+Bare in mind I'll no longer be supporting this any more, so any bug reports
+will be flatly closed!
+
 ## Broken CNAME exports (GoDaddy)
 
 Some DNS providers export broken bind files, without the trailing '.'
