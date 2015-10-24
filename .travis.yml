@@ -5,7 +5,7 @@ sudo: false
 before_install:
   - pip install --user codecov
 before_script:
-- 'mkdir -p $GOPATH/bin && wget -q https://github.com/barnybug/cli53/releases/download/0.6.0/upx -O $GOPATH/bin/upx'
+- 'mkdir -p $GOPATH/bin && wget -q https://github.com/barnybug/cli53/releases/download/0.6.0/upx -O $GOPATH/bin/upx && chmod +x $GOPATH/bin/upx'
 script:
 - make deps test-coverage
 before_deploy:
