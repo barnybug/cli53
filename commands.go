@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -212,10 +213,40 @@ func exportBind(name string, full bool) {
 	ExportBindToWriter(r53, zone, full, os.Stdout)
 }
 
+type recordSorter struct {
+	rrsets []*route53.ResourceRecordSet
+	zone   string
+}
+
+func (r recordSorter) Len() int {
+	return len(r.rrsets)
+}
+
+func (r recordSorter) Swap(i, j int) {
+	r.rrsets[i], r.rrsets[j] = r.rrsets[j], r.rrsets[i]
+}
+
+func (r recordSorter) Less(i, j int) bool {
+	if *r.rrsets[i].Name == *r.rrsets[j].Name {
+		if *r.rrsets[i].Type == "SOA" {
+			return true
+		}
+		return *r.rrsets[i].Type < *r.rrsets[j].Type
+	}
+	if *r.rrsets[i].Name == r.zone {
+		return true
+	}
+	if *r.rrsets[j].Name == r.zone {
+		return false
+	}
+	return *r.rrsets[i].Name < *r.rrsets[j].Name
+}
+
 func ExportBindToWriter(r53 *route53.Route53, zone *route53.HostedZone, full bool, out io.Writer) {
 	rrsets, err := ListAllRecordSets(r53, *zone.Id)
 	fatalIfErr(err)
 
+	sort.Sort(recordSorter{rrsets, *zone.Name})
 	dnsname := *zone.Name
 	fmt.Fprintf(out, "$ORIGIN %s\n", dnsname)
 	for _, rrset := range rrsets {
