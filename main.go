@@ -12,6 +12,18 @@ var version string /* passed in by go build */
 // Entry point for cli53 application
 func Main(args []string) int {
 	exitCode := 0
+
+	commonFlags := []cli.Flag{
+		cli.BoolFlag{
+			Name:  "debug, d",
+			Usage: "enable debug logging",
+		},
+		cli.StringFlag{
+			Name:  "profile",
+			Usage: "profile to use from credentials file",
+		},
+	}
+
 	app := cli.NewApp()
 	app.Name = "cli53"
 	app.Usage = "manage route53 DNS"
@@ -21,8 +33,9 @@ func Main(args []string) int {
 			Name:    "list",
 			Aliases: []string{"l"},
 			Usage:   "list domains",
+			Flags:   commonFlags,
 			Action: func(c *cli.Context) {
-				r53 = getService(c.Bool("debug"))
+				r53 = getService(c.Bool("debug"), c.String("profile"))
 				listZones()
 			},
 		},
@@ -30,19 +43,15 @@ func Main(args []string) int {
 			Name:      "create",
 			Usage:     "create a domain",
 			ArgsUsage: "domain.name",
-			Flags: []cli.Flag{
-				cli.BoolFlag{
-					Name:  "debug, d",
-					Usage: "enable debug logging",
-				},
+			Flags: append(commonFlags,
 				cli.StringFlag{
 					Name:  "comment",
 					Value: "",
 					Usage: "comment on the domain",
 				},
-			},
+			),
 			Action: func(c *cli.Context) {
-				r53 = getService(c.Bool("debug"))
+				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "create")
 					exitCode = 1
@@ -55,18 +64,14 @@ func Main(args []string) int {
 			Name:      "delete",
 			Usage:     "delete a domain",
 			ArgsUsage: "zone",
-			Flags: []cli.Flag{
-				cli.BoolFlag{
-					Name:  "debug, d",
-					Usage: "enable debug logging",
-				},
+			Flags: append(commonFlags,
 				cli.BoolFlag{
 					Name:  "purge",
 					Usage: "remove any existing records on the domain (otherwise deletion will fail)",
 				},
-			},
+			),
 			Action: func(c *cli.Context) {
-				r53 = getService(c.Bool("debug"))
+				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "delete")
 					exitCode = 1
@@ -80,11 +85,7 @@ func Main(args []string) int {
 			Name:      "import",
 			Usage:     "import a bind zone file",
 			ArgsUsage: "zone",
-			Flags: []cli.Flag{
-				cli.BoolFlag{
-					Name:  "debug, d",
-					Usage: "enable debug logging",
-				},
+			Flags: append(commonFlags,
 				cli.StringFlag{
 					Name:  "file",
 					Value: "",
@@ -102,9 +103,9 @@ func Main(args []string) int {
 					Name:  "replace",
 					Usage: "replace all existing records",
 				},
-			},
+			),
 			Action: func(c *cli.Context) {
-				r53 = getService(c.Bool("debug"))
+				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "import")
 					exitCode = 1
@@ -117,18 +118,14 @@ func Main(args []string) int {
 			Name:      "export",
 			Usage:     "export a bind zone file (to stdout)",
 			ArgsUsage: "zone",
-			Flags: []cli.Flag{
-				cli.BoolFlag{
-					Name:  "debug, d",
-					Usage: "enable debug logging",
-				},
+			Flags: append(commonFlags,
 				cli.BoolFlag{
 					Name:  "full, f",
 					Usage: "export prefixes as full names",
 				},
-			},
+			),
 			Action: func(c *cli.Context) {
-				r53 = getService(c.Bool("debug"))
+				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "export")
 					exitCode = 1
@@ -142,11 +139,7 @@ func Main(args []string) int {
 			Aliases:   []string{"rc"},
 			Usage:     "create a record",
 			ArgsUsage: "zone record",
-			Flags: []cli.Flag{
-				cli.BoolFlag{
-					Name:  "debug, d",
-					Usage: "enable debug logging",
-				},
+			Flags: append(commonFlags,
 				cli.BoolFlag{
 					Name:  "wait",
 					Usage: "wait for changes to become live",
@@ -183,9 +176,9 @@ func Main(args []string) int {
 					Name:  "continent-code",
 					Usage: "continent code for geolocation routing",
 				},
-			},
+			),
 			Action: func(c *cli.Context) {
-				r53 = getService(c.Bool("debug"))
+				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 2 {
 					cli.ShowCommandHelp(c, "rrcreate")
 					exitCode = 1
@@ -220,11 +213,7 @@ func Main(args []string) int {
 			Aliases:   []string{"rd"},
 			Usage:     "delete a record",
 			ArgsUsage: "zone prefix type",
-			Flags: []cli.Flag{
-				cli.BoolFlag{
-					Name:  "debug, d",
-					Usage: "enable debug logging",
-				},
+			Flags: append(commonFlags,
 				cli.BoolFlag{
 					Name:  "wait",
 					Usage: "wait for changes to become live",
@@ -233,9 +222,9 @@ func Main(args []string) int {
 					Name:  "identifier, i",
 					Usage: "record set identifier to delete",
 				},
-			},
+			),
 			Action: func(c *cli.Context) {
-				r53 = getService(c.Bool("debug"))
+				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 3 {
 					cli.ShowCommandHelp(c, "rrdelete")
 					exitCode = 1
@@ -248,11 +237,7 @@ func Main(args []string) int {
 			Name:      "rrpurge",
 			Usage:     "delete all the records (danger!)",
 			ArgsUsage: "zone",
-			Flags: []cli.Flag{
-				cli.BoolFlag{
-					Name:  "debug, d",
-					Usage: "enable debug logging",
-				},
+			Flags: append(commonFlags,
 				cli.BoolFlag{
 					Name:  "confirm",
 					Usage: "confirm you definitely want to do this!",
@@ -261,9 +246,9 @@ func Main(args []string) int {
 					Name:  "wait",
 					Usage: "wait for changes to become live",
 				},
-			},
+			),
 			Action: func(c *cli.Context) {
-				r53 = getService(c.Bool("debug"))
+				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "rrpurge")
 					exitCode = 1

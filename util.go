@@ -11,6 +11,8 @@ import (
 	"time"
 	"unicode"
 
+	"github.com/aws/aws-sdk-go/aws/credentials"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/route53"
@@ -30,8 +32,11 @@ func qualifyName(name, origin string) string {
 	}
 }
 
-func getService(debug bool) *route53.Route53 {
+func getService(debug bool, profile string) *route53.Route53 {
 	config := aws.Config{}
+	if profile != "" {
+		config.Credentials = credentials.NewSharedCredentials("", profile)
+	}
 	// ensures throttled requests are retried
 	config.MaxRetries = aws.Int(100)
 	if debug {
