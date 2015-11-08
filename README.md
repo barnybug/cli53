@@ -39,6 +39,7 @@ For more information, see: http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFG
 
 To build yourself from source (you will need golang 1.5 installed):
 
+    $ export GO15VENDOREXPERIMENT=1
     $ go get github.com/barnybug/cli53
     $ cd $GOPATH/src/github.com/barnybug/cli53
     $ make install
