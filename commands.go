@@ -255,12 +255,12 @@ func ExportBindToWriter(r53 *route53.Route53, zone *route53.HostedZone, full boo
 		for _, rr := range rrs {
 			line := rr.String()
 			if !full {
-				parts := strings.SplitN(line, "\t", 2)
-				line = strings.Join([]string{
-					shortenName(parts[0], *zone.Name),
-					parts[1],
-				}, "\t")
-				line = shortenName(line, dnsname)
+				parts := strings.Split(line, "\t")
+				parts[0] = shortenName(parts[0], dnsname)
+				if parts[3] == "CNAME" {
+					parts[4] = shortenName(parts[4], dnsname)
+				}
+				line = strings.Join(parts, "\t")
 			}
 			fmt.Fprintln(out, line)
 		}

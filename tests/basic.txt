@@ -7,6 +7,7 @@
 @ 86400 IN TXT "v=spf1 a mx a:cli53.example.com mx:mail.example.com ip4:10.0.0.0/24 ~all"
 mail 86400 IN A 10.0.0.2
 mail2 86400 IN A 10.0.0.3
+root 86400 IN CNAME @
 test 86400 IN TXT "multivalued" " txt \"quoted\" record"
 www 86400 IN A 10.0.0.1
 web 86400 IN CNAME www
