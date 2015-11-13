@@ -73,6 +73,11 @@ Manually create some records:
 	$ cli53 rrcreate --replace test.example.com 'www 3600 A 192.168.0.2'
 	$ cli53 rrcreate test.example.com '@ MX "10 192.168.0.1" "20 192.168.0.2"'
 
+For CNAME records, relative domains have no trailing dot, but absolute domains should:
+
+	$ cli53 rrcreate test.example.com 'login CNAME www'
+	$ cli53 rrcreate test.example.com 'mail CNAME ghs.googlehosted.com.'
+
 Export as a BIND zone file (for backup!):
 
 	$ cli53 export test.example.com
