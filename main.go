@@ -158,7 +158,7 @@ func Main(args []string) int {
 				},
 				cli.StringFlag{
 					Name:  "health-check",
-					Usage: "associated health check id for failover PRIMART",
+					Usage: "associated health check id for failover PRIMARY",
 				},
 				cli.IntFlag{
 					Name:  "weight",
