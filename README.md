@@ -54,7 +54,7 @@ This will produce a binary `cli53` in `~/go/bin`, after this follow the steps as
 
 Create a hosted zone:
 
-	$ cli53 create test.example.com --comment 'my first zone'
+	$ cli53 create example.com --comment 'my first zone'
 
 Check what we've done:
 
@@ -62,35 +62,43 @@ Check what we've done:
 
 Import a BIND zone file:
 
-	$ cli53 import --file zonefile.txt test.example.com
+	$ cli53 import --file zonefile.txt example.com
 
 Replace with an imported zone, waiting for completion:
 
-	$ cli53 import --file zonefile.txt --replace --wait test.example.com
+	$ cli53 import --file zonefile.txt --replace --wait example.com
 
 Manually create some records:
 
-	$ cli53 rrcreate test.example.com 'www 3600 A 192.168.0.1'
-	$ cli53 rrcreate --replace test.example.com 'www 3600 A 192.168.0.2'
-	$ cli53 rrcreate test.example.com '@ MX "10 192.168.0.1" "20 192.168.0.2"'
+	$ cli53 rrcreate example.com 'www 3600 A 192.168.0.1'
+	$ cli53 rrcreate --replace example.com 'www 3600 A 192.168.0.2'
+	$ cli53 rrcreate example.com '@ MX "10 192.168.0.1" "20 192.168.0.2"'
 
 For CNAME records, relative domains have no trailing dot, but absolute domains should:
 
-	$ cli53 rrcreate test.example.com 'login CNAME www'
-	$ cli53 rrcreate test.example.com 'mail CNAME ghs.googlehosted.com.'
+	$ cli53 rrcreate example.com 'login CNAME www'
+	$ cli53 rrcreate example.com 'mail CNAME ghs.googlehosted.com.'
 
 Export as a BIND zone file (for backup!):
 
-	$ cli53 export test.example.com
+	$ cli53 export example.com
 
 Create some weighted records:
 
-	$ cli53 rrcreate --identifier server1 --weight 10 test.example.com 'www A 192.168.0.1'
-	$ cli53 rrcreate --identifier server2 --weight 20 test.example.com 'www A 192.168.0.2'
+	$ cli53 rrcreate --identifier server1 --weight 10 example.com 'www A 192.168.0.1'
+	$ cli53 rrcreate --identifier server2 --weight 20 example.com 'www A 192.168.0.2'
 
-Create an alias to ELB:
+Create an alias to an ELB:
 
-	$ cli53 rrcreate test.example.com 'www ALIAS ABCDEFABCDE dns-name.elb.amazonaws.com.'
+	$ cli53 rrcreate example.com 'www AWS ALIAS A dns-name.elb.amazonaws.com. ABCDEFABCDE false'
+
+Create an alias to an A record:
+
+	$ cli53 rrcreate example.com 'www AWS ALIAS A server1 $self false'
+
+Create an alias to a CNAME:
+
+	$ cli53 rrcreate example.com 'docs AWS ALIAS CNAME mail $self false'
 
 Further documentation is available, e.g.:
 
