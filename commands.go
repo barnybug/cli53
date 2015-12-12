@@ -136,6 +136,7 @@ func importBind(name string, file string, wait bool, editauth bool, replace bool
 		fatalIfErr(err)
 		for _, rrset := range rrsets {
 			if editauth || !isAuthRecord(zone, rrset) {
+				rrset.Name = aws.String(unescaper.Replace(*rrset.Name))
 				existing[rrset.String()] = rrset
 			}
 		}
