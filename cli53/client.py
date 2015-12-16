@@ -975,6 +975,13 @@ def get_route53_connection():
         sys.exit(-1)
 
 def main(connection=None):
+    print "WARNING: out of date version of cli53 installed."
+    print "cli53 0.5 (python version) is no longer being actively maintained,"
+    print "to install the latest version see:"
+    print "https://github.com/barnybug/cli53/#installation"
+    print ""
+    print "You will need to 'pip uninstall cli53' first."
+
     if not connection:
         connection = get_route53_connection()
 
