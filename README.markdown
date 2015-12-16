@@ -190,6 +190,10 @@ inconsistent. You have been warned!
 
 Changelog
 ---------
+0.5.2
+
+- A note about new version.
+
 0.5.1
 
 - Set EvaluateTargetHealth to 'true' when creating failover ALIASes

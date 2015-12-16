@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 from setuptools import Command
 
-__version__ = '0.5.1'
+__version__ = '0.5.2'
 long_description = file('README.markdown', 'r').read()
 
 class tag(Command):
