@@ -94,7 +94,7 @@ func ConvertBindToRR(record dns.RR) []*route53.ResourceRecord {
 		rrs := []*route53.ResourceRecord{}
 		for _, txt := range record.Txt {
 			rr := &route53.ResourceRecord{
-				Value: aws.String(txt),
+				Value: aws.String(`"` + txt + `"`),
 			}
 			rrs = append(rrs, rr)
 		}
@@ -323,18 +323,21 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 				ret = append(ret, dnsrr)
 			}
 		case "SPF":
+			// SPF records are unusual in that multiple values are stored as a single bind record.
+			txt := []string{}
 			for _, rr := range rrset.ResourceRecords {
-				dnsrr := &dns.SPF{
-					Hdr: dns.RR_Header{
-						Name:   name,
-						Rrtype: dns.TypeSPF,
-						Class:  dns.ClassINET,
-						Ttl:    uint32(*rrset.TTL),
-					},
-					Txt: []string{*rr.Value},
-				}
-				ret = append(ret, dnsrr)
+				txt = append(txt, unquote(*rr.Value))
 			}
+			dnsrr := &dns.SPF{
+				Hdr: dns.RR_Header{
+					Name:   name,
+					Rrtype: dns.TypeSPF,
+					Class:  dns.ClassINET,
+					Ttl:    uint32(*rrset.TTL),
+				},
+				Txt: txt,
+			}
+			ret = append(ret, dnsrr)
 		case "SRV":
 			for _, rr := range rrset.ResourceRecords {
 				// parse value

@@ -200,7 +200,7 @@ var testConvertRRSetToBindTable = []struct {
 			Name: aws.String("example.com."),
 			ResourceRecords: []*route53.ResourceRecord{
 				&route53.ResourceRecord{
-					Value: aws.String("~all"),
+					Value: aws.String("\"~all\""),
 				},
 			},
 			TTL: aws.Int64(900),
