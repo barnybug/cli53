@@ -297,7 +297,7 @@ func hasRecord(name, record string) bool {
 
 	for _, rrset := range rrsets {
 		rrs := cli53.ConvertRRSetToBind(rrset)
-		cli53.UnexpandSelfAliases(rrs, zone)
+		cli53.UnexpandSelfAliases(rrs, zone, false)
 		for _, rr := range rrs {
 			line := rr.String()
 			line = strings.Replace(line, "\t", " ", -1)

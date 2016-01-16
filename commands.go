@@ -196,14 +196,16 @@ func importBind(name string, file string, wait bool, editauth bool, replace bool
 	}
 }
 
-func UnexpandSelfAliases(records []dns.RR, zone *route53.HostedZone) {
+func UnexpandSelfAliases(records []dns.RR, zone *route53.HostedZone, full bool) {
 	id := strings.Replace(*zone.Id, "/hostedzone/", "", 1)
 	for _, rr := range records {
 		if alias, ok := rr.(*dns.PrivateRR); ok {
 			rdata := alias.Data.(*ALIAS)
 			if rdata.ZoneId == id {
 				rdata.ZoneId = "$self"
-				rdata.Target = shortenName(rdata.Target, *zone.Name)
+				if !full {
+					rdata.Target = shortenName(rdata.Target, *zone.Name)
+				}
 			}
 		}
 	}
@@ -252,7 +254,7 @@ func ExportBindToWriter(r53 *route53.Route53, zone *route53.HostedZone, full boo
 	fmt.Fprintf(out, "$ORIGIN %s\n", dnsname)
 	for _, rrset := range rrsets {
 		rrs := ConvertRRSetToBind(rrset)
-		UnexpandSelfAliases(rrs, zone)
+		UnexpandSelfAliases(rrs, zone, full)
 		for _, rr := range rrs {
 			line := rr.String()
 			if !full {
