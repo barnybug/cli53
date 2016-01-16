@@ -49,6 +49,16 @@ func Main(args []string) int {
 					Value: "",
 					Usage: "comment on the domain",
 				},
+				cli.StringFlag{
+					Name:  "vpc-id",
+					Value: "",
+					Usage: "create a private zone in the VPC",
+				},
+				cli.StringFlag{
+					Name:  "vpc-region",
+					Value: "",
+					Usage: "VPC region (required if vpcId is specified)",
+				},
 			),
 			Action: func(c *cli.Context) {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
@@ -57,7 +67,7 @@ func Main(args []string) int {
 					exitCode = 1
 					return
 				}
-				createZone(c.Args().First(), c.String("comment"))
+				createZone(c.Args().First(), c.String("comment"), c.String("vpc-id"), c.String("vpc-region"))
 			},
 		},
 		{

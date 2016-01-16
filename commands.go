@@ -14,7 +14,7 @@ import (
 
 const ChangeBatchSize = 100
 
-func createZone(name, comment string) {
+func createZone(name, comment, vpcId, vpcRegion string) {
 	callerReference := uniqueReference()
 	req := route53.CreateHostedZoneInput{
 		CallerReference: &callerReference,
@@ -22,6 +22,12 @@ func createZone(name, comment string) {
 		HostedZoneConfig: &route53.HostedZoneConfig{
 			Comment: &comment,
 		},
+	}
+	if vpcId != "" && vpcRegion != "" {
+		req.VPC = &route53.VPC{
+			VPCId:     aws.String(vpcId),
+			VPCRegion: aws.String(vpcRegion),
+		}
 	}
 	resp, err := r53.CreateHostedZone(&req)
 	fatalIfErr(err)
