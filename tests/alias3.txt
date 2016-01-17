@@ -1,2 +1,0 @@
-www	86400	IN	A	127.0.0.1
-alias	86400	AWS	ALIAS	A www $self false

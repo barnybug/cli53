@@ -48,8 +48,7 @@ Feature: bind files
   Scenario: I can import a zone with alias extensions
     Given I have a domain "$domain"
     When I run "cli53 import --file tests/alias.txt $domain"
-    When I run "cli53 import --file tests/alias2.txt $domain"
-    Then the domain "$domain" export matches file "tests/alias3.txt"
+    Then the domain "$domain" export matches file "tests/alias.txt"
 
   Scenario: I can import (replace) a zone
     Given I have a domain "$domain"

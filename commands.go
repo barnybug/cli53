@@ -120,6 +120,29 @@ type Key struct {
 	Identifier string
 }
 
+type changeSorter struct {
+	changes []*route53.Change
+}
+
+func (r changeSorter) Len() int {
+	return len(r.changes)
+}
+
+func (r changeSorter) Swap(i, j int) {
+	r.changes[i], r.changes[j] = r.changes[j], r.changes[i]
+}
+
+func (r changeSorter) Less(i, j int) bool {
+	// sort non-aliases first
+	if r.changes[i].ResourceRecordSet.AliasTarget == nil {
+		return true
+	}
+	if r.changes[j].ResourceRecordSet.AliasTarget == nil {
+		return false
+	}
+	return *r.changes[i].ResourceRecordSet.Name < *r.changes[j].ResourceRecordSet.Name
+}
+
 func importBind(name string, file string, wait bool, editauth bool, replace bool) {
 	zone := lookupZone(name)
 	records := parseBindFile(file, *zone.Name)
@@ -166,6 +189,9 @@ func importBind(name string, file string, wait bool, editauth bool, replace bool
 			}
 		}
 	}
+	// sort additions so aliases are last
+	sort.Sort(changeSorter{additions})
+
 	// remaining records in existing should be deleted
 	deletions := []*route53.Change{}
 	for _, rrset := range existing {
@@ -222,20 +248,20 @@ func exportBind(name string, full bool) {
 	ExportBindToWriter(r53, zone, full, os.Stdout)
 }
 
-type recordSorter struct {
+type exportSorter struct {
 	rrsets []*route53.ResourceRecordSet
 	zone   string
 }
 
-func (r recordSorter) Len() int {
+func (r exportSorter) Len() int {
 	return len(r.rrsets)
 }
 
-func (r recordSorter) Swap(i, j int) {
+func (r exportSorter) Swap(i, j int) {
 	r.rrsets[i], r.rrsets[j] = r.rrsets[j], r.rrsets[i]
 }
 
-func (r recordSorter) Less(i, j int) bool {
+func (r exportSorter) Less(i, j int) bool {
 	if *r.rrsets[i].Name == *r.rrsets[j].Name {
 		if *r.rrsets[i].Type == "SOA" {
 			return true
@@ -255,7 +281,7 @@ func ExportBindToWriter(r53 *route53.Route53, zone *route53.HostedZone, full boo
 	rrsets, err := ListAllRecordSets(r53, *zone.Id)
 	fatalIfErr(err)
 
-	sort.Sort(recordSorter{rrsets, *zone.Name})
+	sort.Sort(exportSorter{rrsets, *zone.Name})
 	dnsname := *zone.Name
 	fmt.Fprintf(out, "$ORIGIN %s\n", dnsname)
 	for _, rrset := range rrsets {
