@@ -1,6 +1,9 @@
 package dns
 
 import (
+	"crypto/tls"
+	"fmt"
+	"net"
 	"strconv"
 	"testing"
 	"time"
@@ -12,7 +15,7 @@ func TestClientSync(t *testing.T) {
 
 	s, addrstr, err := RunLocalUDPServer("127.0.0.1:0")
 	if err != nil {
-		t.Fatalf("Unable to run test server: %v", err)
+		t.Fatalf("unable to run test server: %v", err)
 	}
 	defer s.Shutdown()
 
@@ -37,13 +40,50 @@ func TestClientSync(t *testing.T) {
 	}
 }
 
+func TestClientTLSSync(t *testing.T) {
+	HandleFunc("miek.nl.", HelloServer)
+	defer HandleRemove("miek.nl.")
+
+	cert, err := tls.X509KeyPair(CertPEMBlock, KeyPEMBlock)
+	if err != nil {
+		t.Fatalf("unable to build certificate: %v", err)
+	}
+
+	config := tls.Config{
+		Certificates: []tls.Certificate{cert},
+	}
+
+	s, addrstr, err := RunLocalTLSServer("127.0.0.1:0", &config)
+	if err != nil {
+		t.Fatalf("unable to run test server: %v", err)
+	}
+	defer s.Shutdown()
+
+	m := new(Msg)
+	m.SetQuestion("miek.nl.", TypeSOA)
+
+	c := new(Client)
+	c.Net = "tcp-tls"
+	c.TLSConfig = &tls.Config{
+		InsecureSkipVerify: true,
+	}
+
+	r, _, err := c.Exchange(m, addrstr)
+	if err != nil {
+		t.Errorf("failed to exchange: %v", err)
+	}
+	if r != nil && r.Rcode != RcodeSuccess {
+		t.Errorf("failed to get an valid answer\n%v", r)
+	}
+}
+
 func TestClientSyncBadId(t *testing.T) {
 	HandleFunc("miek.nl.", HelloServerBadId)
 	defer HandleRemove("miek.nl.")
 
 	s, addrstr, err := RunLocalUDPServer("127.0.0.1:0")
 	if err != nil {
-		t.Fatalf("Unable to run test server: %v", err)
+		t.Fatalf("unable to run test server: %v", err)
 	}
 	defer s.Shutdown()
 
@@ -66,7 +106,7 @@ func TestClientEDNS0(t *testing.T) {
 
 	s, addrstr, err := RunLocalUDPServer("127.0.0.1:0")
 	if err != nil {
-		t.Fatalf("Unable to run test server: %v", err)
+		t.Fatalf("unable to run test server: %v", err)
 	}
 	defer s.Shutdown()
 
@@ -113,7 +153,7 @@ func TestClientEDNS0Local(t *testing.T) {
 
 	s, addrstr, err := RunLocalUDPServer("127.0.0.1:0")
 	if err != nil {
-		t.Fatalf("Unable to run test server: %s", err)
+		t.Fatalf("unable to run test server: %s", err)
 	}
 	defer s.Shutdown()
 
@@ -161,8 +201,8 @@ func TestClientEDNS0Local(t *testing.T) {
 	}
 }
 
-// ExampleUpdateLeaseTSIG shows how to update a lease signed with TSIG.
-func ExampleUpdateLeaseTSIG(t *testing.T) {
+// ExampleTsigSecret_updateLeaseTSIG shows how to update a lease signed with TSIG
+func ExampleTsigSecret_updateLeaseTSIG() {
 	m := new(Msg)
 	m.SetUpdate("t.local.ip6.io.")
 	rr, _ := NewRR("t.local.ip6.io. 30 A 127.0.0.1")
@@ -185,7 +225,7 @@ func ExampleUpdateLeaseTSIG(t *testing.T) {
 
 	_, _, err := c.Exchange(m, "127.0.0.1:53")
 	if err != nil {
-		t.Error(err)
+		panic(err)
 	}
 }
 
@@ -196,7 +236,7 @@ func TestClientConn(t *testing.T) {
 	// This uses TCP just to make it slightly different than TestClientSync
 	s, addrstr, err := RunLocalTCPServer("127.0.0.1:0")
 	if err != nil {
-		t.Fatalf("Unable to run test server: %v", err)
+		t.Fatalf("unable to run test server: %v", err)
 	}
 	defer s.Shutdown()
 
@@ -234,5 +274,148 @@ func TestClientConn(t *testing.T) {
 	}
 	if err = r.Unpack(buf); err != nil {
 		t.Errorf("unable to unpack message fully: %v", err)
+	}
+}
+
+func TestTruncatedMsg(t *testing.T) {
+	m := new(Msg)
+	m.SetQuestion("miek.nl.", TypeSRV)
+	cnt := 10
+	for i := 0; i < cnt; i++ {
+		r := &SRV{
+			Hdr:    RR_Header{Name: m.Question[0].Name, Rrtype: TypeSRV, Class: ClassINET, Ttl: 0},
+			Port:   uint16(i + 8000),
+			Target: "target.miek.nl.",
+		}
+		m.Answer = append(m.Answer, r)
+
+		re := &A{
+			Hdr: RR_Header{Name: m.Question[0].Name, Rrtype: TypeA, Class: ClassINET, Ttl: 0},
+			A:   net.ParseIP(fmt.Sprintf("127.0.0.%d", i)).To4(),
+		}
+		m.Extra = append(m.Extra, re)
+	}
+	buf, err := m.Pack()
+	if err != nil {
+		t.Errorf("failed to pack: %v", err)
+	}
+
+	r := new(Msg)
+	if err = r.Unpack(buf); err != nil {
+		t.Errorf("unable to unpack message: %v", err)
+	}
+	if len(r.Answer) != cnt {
+		t.Logf("answer count after regular unpack doesn't match: %d", len(r.Answer))
+		t.Fail()
+	}
+	if len(r.Extra) != cnt {
+		t.Logf("extra count after regular unpack doesn't match: %d", len(r.Extra))
+		t.Fail()
+	}
+
+	m.Truncated = true
+	buf, err = m.Pack()
+	if err != nil {
+		t.Errorf("failed to pack truncated: %v", err)
+	}
+
+	r = new(Msg)
+	if err = r.Unpack(buf); err != nil && err != ErrTruncated {
+		t.Errorf("unable to unpack truncated message: %v", err)
+	}
+	if !r.Truncated {
+		t.Log("truncated message wasn't unpacked as truncated")
+		t.Fail()
+	}
+	if len(r.Answer) != cnt {
+		t.Logf("answer count after truncated unpack doesn't match: %d", len(r.Answer))
+		t.Fail()
+	}
+	if len(r.Extra) != cnt {
+		t.Logf("extra count after truncated unpack doesn't match: %d", len(r.Extra))
+		t.Fail()
+	}
+
+	// Now we want to remove almost all of the extra records
+	// We're going to loop over the extra to get the count of the size of all
+	// of them
+	off := 0
+	buf1 := make([]byte, m.Len())
+	for i := 0; i < len(m.Extra); i++ {
+		off, err = PackRR(m.Extra[i], buf1, off, nil, m.Compress)
+		if err != nil {
+			t.Errorf("failed to pack extra: %v", err)
+		}
+	}
+
+	// Remove all of the extra bytes but 10 bytes from the end of buf
+	off -= 10
+	buf1 = buf[:len(buf)-off]
+
+	r = new(Msg)
+	if err = r.Unpack(buf1); err != nil && err != ErrTruncated {
+		t.Errorf("unable to unpack cutoff message: %v", err)
+	}
+	if !r.Truncated {
+		t.Log("truncated cutoff message wasn't unpacked as truncated")
+		t.Fail()
+	}
+	if len(r.Answer) != cnt {
+		t.Logf("answer count after cutoff unpack doesn't match: %d", len(r.Answer))
+		t.Fail()
+	}
+	if len(r.Extra) != 0 {
+		t.Logf("extra count after cutoff unpack is not zero: %d", len(r.Extra))
+		t.Fail()
+	}
+
+	// Now we want to remove almost all of the answer records too
+	buf1 = make([]byte, m.Len())
+	as := 0
+	for i := 0; i < len(m.Extra); i++ {
+		off1 := off
+		off, err = PackRR(m.Extra[i], buf1, off, nil, m.Compress)
+		as = off - off1
+		if err != nil {
+			t.Errorf("failed to pack extra: %v", err)
+		}
+	}
+
+	// Keep exactly one answer left
+	// This should still cause Answer to be nil
+	off -= as
+	buf1 = buf[:len(buf)-off]
+
+	r = new(Msg)
+	if err = r.Unpack(buf1); err != nil && err != ErrTruncated {
+		t.Errorf("unable to unpack cutoff message: %v", err)
+	}
+	if !r.Truncated {
+		t.Log("truncated cutoff message wasn't unpacked as truncated")
+		t.Fail()
+	}
+	if len(r.Answer) != 0 {
+		t.Logf("answer count after second cutoff unpack is not zero: %d", len(r.Answer))
+		t.Fail()
+	}
+
+	// Now leave only 1 byte of the question
+	// Since the header is always 12 bytes, we just need to keep 13
+	buf1 = buf[:13]
+
+	r = new(Msg)
+	err = r.Unpack(buf1)
+	if err == nil || err == ErrTruncated {
+		t.Logf("error should not be ErrTruncated from question cutoff unpack: %v", err)
+		t.Fail()
+	}
+
+	// Finally, if we only have the header, we should still return an error
+	buf1 = buf[:12]
+
+	r = new(Msg)
+	if err = r.Unpack(buf1); err == nil || err != ErrTruncated {
+		t.Logf("error not ErrTruncated from header-only unpack: %v", err)
+		t.Fail()
 	}
 }

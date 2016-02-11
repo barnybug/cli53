@@ -7,17 +7,19 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
+	"github.com/aws/aws-sdk-go/aws/client"
+	"github.com/aws/aws-sdk-go/aws/client/metadata"
 	"github.com/aws/aws-sdk-go/aws/corehandlers"
 	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/aws/service"
-	"github.com/aws/aws-sdk-go/aws/service/serviceinfo"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/kinesis"
 	"github.com/stretchr/testify/require"
 )
 
-var testSvc = func() *service.Service {
-	s := &service.Service{
-		ServiceInfo: serviceinfo.ServiceInfo{
-			Config:      &aws.Config{},
+var testSvc = func() *client.Client {
+	s := &client.Client{
+		Config: aws.Config{},
+		ClientInfo: metadata.ClientInfo{
 			ServiceName: "mock-service",
 			APIVersion:  "2015-01-01",
 		},
@@ -32,17 +34,12 @@ type StructShape struct {
 	OptionalStruct *ConditionalStructShape
 
 	hiddenParameter *string
-
-	metadataStructureShape
-}
-
-type metadataStructureShape struct {
-	SDKShapeTraits bool
+	_               struct{}
 }
 
 type ConditionalStructShape struct {
-	Name           *string `required:"true"`
-	SDKShapeTraits bool
+	Name *string `required:"true"`
+	_    struct{}
 }
 
 func TestNoErrors(t *testing.T) {
@@ -130,5 +127,28 @@ func TestValidateFieldMinParameter(t *testing.T) {
 		corehandlers.ValidateParametersHandler.Fn(req)
 
 		require.Equal(t, c.err, req.Error, "%d case failed", i)
+	}
+}
+
+func BenchmarkValidateAny(b *testing.B) {
+	input := &kinesis.PutRecordsInput{
+		StreamName: aws.String("stream"),
+	}
+	for i := 0; i < 100; i++ {
+		record := &kinesis.PutRecordsRequestEntry{
+			Data:         make([]byte, 10000),
+			PartitionKey: aws.String("partition"),
+		}
+		input.Records = append(input.Records, record)
+	}
+
+	req, _ := kinesis.New(session.New()).PutRecordsRequest(input)
+
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		corehandlers.ValidateParametersHandler.Fn(req)
+		if err := req.Error; err != nil {
+			b.Fatalf("validation failed: %v", err)
+		}
 	}
 }

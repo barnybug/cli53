@@ -1,0 +1,57 @@
+hash: 3c345311264060a5b099962d2d8929903cd293411f8ab703b19e38ba78632e3e
+updated: 2016-02-11T12:59:48.680426197+05:30
+imports:
+- name: github.com/aws/aws-sdk-go
+  version: 72a68b4e5a9c3f6a75813e6d4393b3a21749e9c4
+  repo: https://github.com/aws/aws-sdk-go
+  vcs: git
+  subpackages:
+  - /service
+- name: github.com/codegangsta/cli
+  version: 0ab42fd482c27cf2c95e7794ad3bb2082c2ab2d7
+  repo: https://github.com/codegangsta/cli
+  vcs: git
+- name: github.com/davecgh/go-spew
+  version: 2df174808ee097f90d259e432cc04442cf60be21
+  subpackages:
+  - spew
+- name: github.com/go-ini/ini
+  version: 193d1ecb466bf97aae8b454a5cfc192941c64809
+- name: github.com/jmespath/go-jmespath
+  version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
+- name: github.com/lsegal/gucumber
+  version: 44a4d7eb3b14a88cf82b073dfb7e06277afdc549
+  repo: https://github.com/lsegal/gucumber
+  vcs: git
+  subpackages:
+  - /cmd/gucumber
+- name: github.com/miekg/dns
+  version: 83f7d658ac219335d42f7ec4397a76e35ca7f835
+- name: github.com/pmezard/go-difflib
+  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
+  subpackages:
+  - difflib
+- name: github.com/shiena/ansicolor
+  version: a422bbe96644373c5753384a59d678f7d261ff10
+- name: github.com/stretchr/objx
+  version: cbeaeb16a013161a98496fad62933b1d21786672
+- name: github.com/stretchr/testify
+  version: 9f9027faeb0dad515336ed2f28317f9f8f527ab4
+  repo: https://github.com/stretchr/testify
+  vcs: git
+- name: github.com/vaughan0/go-ini
+  version: a98ad7ee00ec53921f08832bc06ecf7fd600e6a1
+  repo: https://github.com/vaughan0/go-ini
+  vcs: git
+- name: golang.org/x/crypto
+  version: 1f22c0103821b9390939b6776727195525381532
+  repo: https://golang.org/x/crypto
+- name: golang.org/x/net
+  version: 7f88271ea9913b72aca44fa7fc8af919eacc17ce
+  repo: https://golang.org/x/net
+- name: golang.org/x/text
+  version: 3cf1a407a4e2eedab950cb2caa897cb185354d0f
+  repo: https://golang.org/x/text
+- name: golang.org/x/tools
+  version: 344080534465c5613c3563c30fd38c031073841d
+devImports: []

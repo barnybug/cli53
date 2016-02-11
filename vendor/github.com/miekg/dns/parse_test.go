@@ -145,13 +145,13 @@ func TestTXTEscapeParsing(t *testing.T) {
 	for _, s := range test {
 		rr, err := NewRR(fmt.Sprintf("example.com. IN TXT %v", s[0]))
 		if err != nil {
-			t.Errorf("Could not parse %v TXT: %s", s[0], err)
+			t.Errorf("could not parse %v TXT: %s", s[0], err)
 			continue
 		}
 
 		txt := sprintTxt(rr.(*TXT).Txt)
 		if txt != s[1] {
-			t.Errorf("Mismatch after parsing `%v` TXT record: `%v` != `%v`", s[0], txt, s[1])
+			t.Errorf("mismatch after parsing `%v` TXT record: `%v` != `%v`", s[0], txt, s[1])
 		}
 	}
 }
@@ -569,7 +569,7 @@ test                          IN CNAME test.a.example.com.
 	t.Logf("%d RRs parsed in %.2f s (%.2f RR/s)", i, float32(delta)/1e9, float32(i)/(float32(delta)/1e9))
 }
 
-func ExampleZone() {
+func ExampleParseZone() {
 	zone := `$ORIGIN .
 $TTL 3600       ; 1 hour
 name                    IN SOA  a6.nstld.com. hostmaster.nic.name. (
@@ -768,7 +768,7 @@ func TestRfc1982(t *testing.T) {
 }
 
 func TestEmpty(t *testing.T) {
-	for _ = range ParseZone(strings.NewReader(""), "", "") {
+	for range ParseZone(strings.NewReader(""), "", "") {
 		t.Errorf("should be empty")
 	}
 }
@@ -799,7 +799,7 @@ func TestLowercaseTokens(t *testing.T) {
 	}
 }
 
-func ExampleGenerate() {
+func ExampleParseZone_generate() {
 	// From the manual: http://www.bind9.net/manual/bind/9.3.2/Bv9ARM.ch06.html#id2566761
 	zone := "$GENERATE 1-2 0 NS SERVER$.EXAMPLE.\n$GENERATE 1-8 $ CNAME $.0"
 	to := ParseZone(strings.NewReader(zone), "0.0.192.IN-ADDR.ARPA.", "")
@@ -1208,11 +1208,11 @@ func TestNewPrivateKey(t *testing.T) {
 		t.Skip("skipping test in short mode.")
 	}
 	algorithms := []algorithm{
-		algorithm{ECDSAP256SHA256, 256},
-		algorithm{ECDSAP384SHA384, 384},
-		algorithm{RSASHA1, 1024},
-		algorithm{RSASHA256, 2048},
-		algorithm{DSA, 1024},
+		{ECDSAP256SHA256, 256},
+		{ECDSAP384SHA384, 384},
+		{RSASHA1, 1024},
+		{RSASHA256, 2048},
+		{DSA, 1024},
 	}
 
 	for _, algo := range algorithms {

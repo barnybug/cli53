@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudtrail"
 )
 
@@ -15,7 +16,7 @@ var _ time.Duration
 var _ bytes.Buffer
 
 func ExampleCloudTrail_AddTags() {
-	svc := cloudtrail.New(nil)
+	svc := cloudtrail.New(session.New())
 
 	params := &cloudtrail.AddTagsInput{
 		ResourceId: aws.String("String"), // Required
@@ -41,7 +42,7 @@ func ExampleCloudTrail_AddTags() {
 }
 
 func ExampleCloudTrail_CreateTrail() {
-	svc := cloudtrail.New(nil)
+	svc := cloudtrail.New(session.New())
 
 	params := &cloudtrail.CreateTrailInput{
 		Name:                       aws.String("String"), // Required
@@ -50,6 +51,7 @@ func ExampleCloudTrail_CreateTrail() {
 		CloudWatchLogsRoleArn:      aws.String("String"),
 		EnableLogFileValidation:    aws.Bool(true),
 		IncludeGlobalServiceEvents: aws.Bool(true),
+		IsMultiRegionTrail:         aws.Bool(true),
 		KmsKeyId:                   aws.String("String"),
 		S3KeyPrefix:                aws.String("String"),
 		SnsTopicName:               aws.String("String"),
@@ -68,7 +70,7 @@ func ExampleCloudTrail_CreateTrail() {
 }
 
 func ExampleCloudTrail_DeleteTrail() {
-	svc := cloudtrail.New(nil)
+	svc := cloudtrail.New(session.New())
 
 	params := &cloudtrail.DeleteTrailInput{
 		Name: aws.String("String"), // Required
@@ -87,9 +89,10 @@ func ExampleCloudTrail_DeleteTrail() {
 }
 
 func ExampleCloudTrail_DescribeTrails() {
-	svc := cloudtrail.New(nil)
+	svc := cloudtrail.New(session.New())
 
 	params := &cloudtrail.DescribeTrailsInput{
+		IncludeShadowTrails: aws.Bool(true),
 		TrailNameList: []*string{
 			aws.String("String"), // Required
 			// More values...
@@ -109,7 +112,7 @@ func ExampleCloudTrail_DescribeTrails() {
 }
 
 func ExampleCloudTrail_GetTrailStatus() {
-	svc := cloudtrail.New(nil)
+	svc := cloudtrail.New(session.New())
 
 	params := &cloudtrail.GetTrailStatusInput{
 		Name: aws.String("String"), // Required
@@ -128,7 +131,7 @@ func ExampleCloudTrail_GetTrailStatus() {
 }
 
 func ExampleCloudTrail_ListPublicKeys() {
-	svc := cloudtrail.New(nil)
+	svc := cloudtrail.New(session.New())
 
 	params := &cloudtrail.ListPublicKeysInput{
 		EndTime:   aws.Time(time.Now()),
@@ -149,7 +152,7 @@ func ExampleCloudTrail_ListPublicKeys() {
 }
 
 func ExampleCloudTrail_ListTags() {
-	svc := cloudtrail.New(nil)
+	svc := cloudtrail.New(session.New())
 
 	params := &cloudtrail.ListTagsInput{
 		ResourceIdList: []*string{ // Required
@@ -172,7 +175,7 @@ func ExampleCloudTrail_ListTags() {
 }
 
 func ExampleCloudTrail_LookupEvents() {
-	svc := cloudtrail.New(nil)
+	svc := cloudtrail.New(session.New())
 
 	params := &cloudtrail.LookupEventsInput{
 		EndTime: aws.Time(time.Now()),
@@ -201,7 +204,7 @@ func ExampleCloudTrail_LookupEvents() {
 }
 
 func ExampleCloudTrail_RemoveTags() {
-	svc := cloudtrail.New(nil)
+	svc := cloudtrail.New(session.New())
 
 	params := &cloudtrail.RemoveTagsInput{
 		ResourceId: aws.String("String"), // Required
@@ -227,7 +230,7 @@ func ExampleCloudTrail_RemoveTags() {
 }
 
 func ExampleCloudTrail_StartLogging() {
-	svc := cloudtrail.New(nil)
+	svc := cloudtrail.New(session.New())
 
 	params := &cloudtrail.StartLoggingInput{
 		Name: aws.String("String"), // Required
@@ -246,7 +249,7 @@ func ExampleCloudTrail_StartLogging() {
 }
 
 func ExampleCloudTrail_StopLogging() {
-	svc := cloudtrail.New(nil)
+	svc := cloudtrail.New(session.New())
 
 	params := &cloudtrail.StopLoggingInput{
 		Name: aws.String("String"), // Required
@@ -265,7 +268,7 @@ func ExampleCloudTrail_StopLogging() {
 }
 
 func ExampleCloudTrail_UpdateTrail() {
-	svc := cloudtrail.New(nil)
+	svc := cloudtrail.New(session.New())
 
 	params := &cloudtrail.UpdateTrailInput{
 		Name: aws.String("String"), // Required
@@ -273,6 +276,7 @@ func ExampleCloudTrail_UpdateTrail() {
 		CloudWatchLogsRoleArn:      aws.String("String"),
 		EnableLogFileValidation:    aws.Bool(true),
 		IncludeGlobalServiceEvents: aws.Bool(true),
+		IsMultiRegionTrail:         aws.Bool(true),
 		KmsKeyId:                   aws.String("String"),
 		S3BucketName:               aws.String("String"),
 		S3KeyPrefix:                aws.String("String"),

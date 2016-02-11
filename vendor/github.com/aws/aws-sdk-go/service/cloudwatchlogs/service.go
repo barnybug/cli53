@@ -4,12 +4,11 @@ package cloudwatchlogs
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/defaults"
+	"github.com/aws/aws-sdk-go/aws/client"
+	"github.com/aws/aws-sdk-go/aws/client/metadata"
 	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/aws/service"
-	"github.com/aws/aws-sdk-go/aws/service/serviceinfo"
-	"github.com/aws/aws-sdk-go/internal/protocol/jsonrpc"
-	"github.com/aws/aws-sdk-go/internal/signer/v4"
+	"github.com/aws/aws-sdk-go/private/protocol/jsonrpc"
+	"github.com/aws/aws-sdk-go/private/signer/v4"
 )
 
 // This is the Amazon CloudWatch Logs API Reference. Amazon CloudWatch Logs
@@ -22,12 +21,12 @@ import (
 // Use the following links to get started using the Amazon CloudWatch Logs
 // API Reference:
 //
-//   Actions (http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_Operations.html):
-// An alphabetical list of all Amazon CloudWatch Logs actions.  Data Types (http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_Types.html):
-// An alphabetical list of all Amazon CloudWatch Logs data types.  Common Parameters
+//  Actions (http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_Operations.html):
+// An alphabetical list of all Amazon CloudWatch Logs actions. Data Types (http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_Types.html):
+// An alphabetical list of all Amazon CloudWatch Logs data types. Common Parameters
 // (http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/CommonParameters.html):
-// Parameters that all Query actions can use.  Common Errors (http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/CommonErrors.html):
-// Client and server errors that all actions can return.  Regions and Endpoints
+// Parameters that all Query actions can use. Common Errors (http://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/CommonErrors.html):
+// Client and server errors that all actions can return. Regions and Endpoints
 // (http://docs.aws.amazon.com/general/latest/gr/index.html?rande.html): Itemized
 // regions and endpoints for all AWS products.  In addition to using the Amazon
 // CloudWatch Logs API, you can also use the following SDKs and third-party
@@ -44,42 +43,66 @@ import (
 // Center (http://aws.amazon.com/php/) AWS Python Developer Center (http://aws.amazon.com/python/)
 // AWS Ruby Developer Center (http://aws.amazon.com/ruby/) AWS Windows and .NET
 // Developer Center (http://aws.amazon.com/net/)
+//The service client's operations are safe to be used concurrently.
+// It is not safe to mutate any of the client's properties though.
 type CloudWatchLogs struct {
-	*service.Service
+	*client.Client
 }
 
-// Used for custom service initialization logic
-var initService func(*service.Service)
+// Used for custom client initialization logic
+var initClient func(*client.Client)
 
 // Used for custom request initialization logic
 var initRequest func(*request.Request)
 
-// New returns a new CloudWatchLogs client.
-func New(config *aws.Config) *CloudWatchLogs {
-	service := &service.Service{
-		ServiceInfo: serviceinfo.ServiceInfo{
-			Config:       defaults.DefaultConfig.Merge(config),
-			ServiceName:  "logs",
-			APIVersion:   "2014-03-28",
-			JSONVersion:  "1.1",
-			TargetPrefix: "Logs_20140328",
-		},
+// A ServiceName is the name of the service the client will make API calls to.
+const ServiceName = "logs"
+
+// New creates a new instance of the CloudWatchLogs client with a session.
+// If additional configuration is needed for the client instance use the optional
+// aws.Config parameter to add your extra config.
+//
+// Example:
+//     // Create a CloudWatchLogs client from just a session.
+//     svc := cloudwatchlogs.New(mySession)
+//
+//     // Create a CloudWatchLogs client with additional configuration
+//     svc := cloudwatchlogs.New(mySession, aws.NewConfig().WithRegion("us-west-2"))
+func New(p client.ConfigProvider, cfgs ...*aws.Config) *CloudWatchLogs {
+	c := p.ClientConfig(ServiceName, cfgs...)
+	return newClient(*c.Config, c.Handlers, c.Endpoint, c.SigningRegion)
+}
+
+// newClient creates, initializes and returns a new service client instance.
+func newClient(cfg aws.Config, handlers request.Handlers, endpoint, signingRegion string) *CloudWatchLogs {
+	svc := &CloudWatchLogs{
+		Client: client.New(
+			cfg,
+			metadata.ClientInfo{
+				ServiceName:   ServiceName,
+				SigningRegion: signingRegion,
+				Endpoint:      endpoint,
+				APIVersion:    "2014-03-28",
+				JSONVersion:   "1.1",
+				TargetPrefix:  "Logs_20140328",
+			},
+			handlers,
+		),
 	}
-	service.Initialize()
 
 	// Handlers
-	service.Handlers.Sign.PushBack(v4.Sign)
-	service.Handlers.Build.PushBack(jsonrpc.Build)
-	service.Handlers.Unmarshal.PushBack(jsonrpc.Unmarshal)
-	service.Handlers.UnmarshalMeta.PushBack(jsonrpc.UnmarshalMeta)
-	service.Handlers.UnmarshalError.PushBack(jsonrpc.UnmarshalError)
+	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Build.PushBackNamed(jsonrpc.BuildHandler)
+	svc.Handlers.Unmarshal.PushBackNamed(jsonrpc.UnmarshalHandler)
+	svc.Handlers.UnmarshalMeta.PushBackNamed(jsonrpc.UnmarshalMetaHandler)
+	svc.Handlers.UnmarshalError.PushBackNamed(jsonrpc.UnmarshalErrorHandler)
 
-	// Run custom service initialization if present
-	if initService != nil {
-		initService(service)
+	// Run custom client initialization if present
+	if initClient != nil {
+		initClient(svc.Client)
 	}
 
-	return &CloudWatchLogs{service}
+	return svc
 }
 
 // newRequest creates a new request for a CloudWatchLogs operation and runs any

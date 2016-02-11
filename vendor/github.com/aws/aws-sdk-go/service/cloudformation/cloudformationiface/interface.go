@@ -14,6 +14,10 @@ type CloudFormationAPI interface {
 
 	CancelUpdateStack(*cloudformation.CancelUpdateStackInput) (*cloudformation.CancelUpdateStackOutput, error)
 
+	ContinueUpdateRollbackRequest(*cloudformation.ContinueUpdateRollbackInput) (*request.Request, *cloudformation.ContinueUpdateRollbackOutput)
+
+	ContinueUpdateRollback(*cloudformation.ContinueUpdateRollbackInput) (*cloudformation.ContinueUpdateRollbackOutput, error)
+
 	CreateStackRequest(*cloudformation.CreateStackInput) (*request.Request, *cloudformation.CreateStackOutput)
 
 	CreateStack(*cloudformation.CreateStackInput) (*cloudformation.CreateStackOutput, error)
@@ -90,3 +94,5 @@ type CloudFormationAPI interface {
 
 	ValidateTemplate(*cloudformation.ValidateTemplateInput) (*cloudformation.ValidateTemplateOutput, error)
 }
+
+var _ CloudFormationAPI = (*cloudformation.CloudFormation)(nil)

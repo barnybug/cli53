@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"path"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -14,6 +15,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/request"
+	"github.com/aws/aws-sdk-go/aws/session"
 )
 
 func initTestServer(path string, resp string) *httptest.Server {
@@ -28,15 +30,15 @@ func initTestServer(path string, resp string) *httptest.Server {
 }
 
 func TestEndpoint(t *testing.T) {
-	c := ec2metadata.New(&ec2metadata.Config{})
+	c := ec2metadata.New(session.New())
 	op := &request.Operation{
 		Name:       "GetMetadata",
 		HTTPMethod: "GET",
 		HTTPPath:   path.Join("/", "meta-data", "testpath"),
 	}
 
-	req := c.Service.NewRequest(op, nil, nil)
-	assert.Equal(t, "http://169.254.169.254/latest", req.Service.Endpoint)
+	req := c.NewRequest(op, nil, nil)
+	assert.Equal(t, "http://169.254.169.254/latest", req.ClientInfo.Endpoint)
 	assert.Equal(t, "http://169.254.169.254/latest/meta-data/testpath", req.HTTPRequest.URL.String())
 }
 
@@ -46,7 +48,7 @@ func TestGetMetadata(t *testing.T) {
 		"success", // real response includes suffix
 	)
 	defer server.Close()
-	c := ec2metadata.New(&ec2metadata.Config{Endpoint: aws.String(server.URL + "/latest")})
+	c := ec2metadata.New(session.New(), &aws.Config{Endpoint: aws.String(server.URL + "/latest")})
 
 	resp, err := c.GetMetadata("some/path")
 
@@ -60,7 +62,7 @@ func TestGetRegion(t *testing.T) {
 		"us-west-2a", // real response includes suffix
 	)
 	defer server.Close()
-	c := ec2metadata.New(&ec2metadata.Config{Endpoint: aws.String(server.URL + "/latest")})
+	c := ec2metadata.New(session.New(), &aws.Config{Endpoint: aws.String(server.URL + "/latest")})
 
 	region, err := c.Region()
 
@@ -74,7 +76,7 @@ func TestMetadataAvailable(t *testing.T) {
 		"instance-id",
 	)
 	defer server.Close()
-	c := ec2metadata.New(&ec2metadata.Config{Endpoint: aws.String(server.URL + "/latest")})
+	c := ec2metadata.New(session.New(), &aws.Config{Endpoint: aws.String(server.URL + "/latest")})
 
 	available := c.Available()
 
@@ -82,7 +84,7 @@ func TestMetadataAvailable(t *testing.T) {
 }
 
 func TestMetadataNotAvailable(t *testing.T) {
-	c := ec2metadata.New(nil)
+	c := ec2metadata.New(session.New())
 	c.Handlers.Send.Clear()
 	c.Handlers.Send.PushBack(func(r *request.Request) {
 		r.HTTPResponse = &http.Response{
@@ -97,4 +99,21 @@ func TestMetadataNotAvailable(t *testing.T) {
 	available := c.Available()
 
 	assert.False(t, available)
+}
+
+func TestMetadataErrorResponse(t *testing.T) {
+	c := ec2metadata.New(session.New())
+	c.Handlers.Send.Clear()
+	c.Handlers.Send.PushBack(func(r *request.Request) {
+		r.HTTPResponse = &http.Response{
+			StatusCode: http.StatusBadRequest,
+			Status:     http.StatusText(http.StatusBadRequest),
+			Body:       ioutil.NopCloser(strings.NewReader("error message text")),
+		}
+		r.Retryable = aws.Bool(false) // network errors are retryable
+	})
+
+	data, err := c.GetMetadata("uri/path")
+	assert.Empty(t, data)
+	assert.Contains(t, err.Error(), "error message text")
 }

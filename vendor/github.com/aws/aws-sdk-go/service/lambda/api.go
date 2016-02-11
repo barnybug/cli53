@@ -9,6 +9,8 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws/awsutil"
 	"github.com/aws/aws-sdk-go/aws/request"
+	"github.com/aws/aws-sdk-go/private/protocol"
+	"github.com/aws/aws-sdk-go/private/protocol/restjson"
 )
 
 const opAddPermission = "AddPermission"
@@ -18,7 +20,7 @@ func (c *Lambda) AddPermissionRequest(input *AddPermissionInput) (req *request.R
 	op := &request.Operation{
 		Name:       opAddPermission,
 		HTTPMethod: "POST",
-		HTTPPath:   "/2015-03-31/functions/{FunctionName}/versions/HEAD/policy",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/policy",
 	}
 
 	if input == nil {
@@ -31,18 +33,54 @@ func (c *Lambda) AddPermissionRequest(input *AddPermissionInput) (req *request.R
 	return
 }
 
-// Adds a permission to the access policy associated with the specified AWS
-// Lambda function. In a "push event" model, the access policy attached to the
-// Lambda function grants Amazon S3 or a user application permission for the
-// Lambda lambda:Invoke action. For information about the push model, see AWS
-// Lambda: How it Works (http://docs.aws.amazon.com/lambda/latest/dg/lambda-introduction.html).
-// Each Lambda function has one access policy associated with it. You can use
-// the AddPermission API to add a permission to the policy. You have one access
-// policy but it can have multiple permission statements.
+// Adds a permission to the resource policy associated with the specified AWS
+// Lambda function. You use resource policies to grant permissions to event
+// sources that use "push" model. In "push" model, event sources (such as Amazon
+// S3 and custom applications) invoke your Lambda function. Each permission
+// you add to the resource policy allows an event source, permission to invoke
+// the Lambda function.
+//
+// For information about the push model, see AWS Lambda: How it Works (http://docs.aws.amazon.com/lambda/latest/dg/lambda-introduction.html).
+//
+// If you are using versioning feature (see AWS Lambda Function Versioning
+// and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases-v2.html)),
+// a Lambda function can have multiple ARNs that can be used to invoke the function.
+// Note that, each permission you add to resource policy using this API is specific
+// to an ARN, specified using the Qualifier parameter
 //
 // This operation requires permission for the lambda:AddPermission action.
 func (c *Lambda) AddPermission(input *AddPermissionInput) (*AddPermissionOutput, error) {
 	req, out := c.AddPermissionRequest(input)
+	err := req.Send()
+	return out, err
+}
+
+const opCreateAlias = "CreateAlias"
+
+// CreateAliasRequest generates a request for the CreateAlias operation.
+func (c *Lambda) CreateAliasRequest(input *CreateAliasInput) (req *request.Request, output *AliasConfiguration) {
+	op := &request.Operation{
+		Name:       opCreateAlias,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/aliases",
+	}
+
+	if input == nil {
+		input = &CreateAliasInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &AliasConfiguration{}
+	req.Data = output
+	return
+}
+
+// Creates an alias to the specified Lambda function version. For more information,
+// see Introduction to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-v2-intro-aliases.html)
+//
+// This requires permission for the lambda:CreateAlias action.
+func (c *Lambda) CreateAlias(input *CreateAliasInput) (*AliasConfiguration, error) {
+	req, out := c.CreateAliasRequest(input)
 	err := req.Send()
 	return out, err
 }
@@ -124,6 +162,38 @@ func (c *Lambda) CreateFunction(input *CreateFunctionInput) (*FunctionConfigurat
 	return out, err
 }
 
+const opDeleteAlias = "DeleteAlias"
+
+// DeleteAliasRequest generates a request for the DeleteAlias operation.
+func (c *Lambda) DeleteAliasRequest(input *DeleteAliasInput) (req *request.Request, output *DeleteAliasOutput) {
+	op := &request.Operation{
+		Name:       opDeleteAlias,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/aliases/{Name}",
+	}
+
+	if input == nil {
+		input = &DeleteAliasInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
+	output = &DeleteAliasOutput{}
+	req.Data = output
+	return
+}
+
+// Deletes specified Lambda function alias. For more information, see Introduction
+// to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-v2-intro-aliases.html)
+//
+// This requires permission for the lambda:DeleteAlias action.
+func (c *Lambda) DeleteAlias(input *DeleteAliasInput) (*DeleteAliasOutput, error) {
+	req, out := c.DeleteAliasRequest(input)
+	err := req.Send()
+	return out, err
+}
+
 const opDeleteEventSourceMapping = "DeleteEventSourceMapping"
 
 // DeleteEventSourceMappingRequest generates a request for the DeleteEventSourceMapping operation.
@@ -170,6 +240,8 @@ func (c *Lambda) DeleteFunctionRequest(input *DeleteFunctionInput) (req *request
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &DeleteFunctionOutput{}
 	req.Data = output
 	return
@@ -177,12 +249,49 @@ func (c *Lambda) DeleteFunctionRequest(input *DeleteFunctionInput) (req *request
 
 // Deletes the specified Lambda function code and configuration.
 //
-// When you delete a function the associated access policy is also deleted.
+// If you don't specify a function version, AWS Lambda will delete the function,
+// including all its versions, and any aliases pointing to the function versions.
+//
+// When you delete a function the associated resource policy is also deleted.
 // You will need to delete the event source mappings explicitly.
+//
+// For information about function versioning, see AWS Lambda Function Versioning
+// and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases-v2.html).
 //
 // This operation requires permission for the lambda:DeleteFunction action.
 func (c *Lambda) DeleteFunction(input *DeleteFunctionInput) (*DeleteFunctionOutput, error) {
 	req, out := c.DeleteFunctionRequest(input)
+	err := req.Send()
+	return out, err
+}
+
+const opGetAlias = "GetAlias"
+
+// GetAliasRequest generates a request for the GetAlias operation.
+func (c *Lambda) GetAliasRequest(input *GetAliasInput) (req *request.Request, output *AliasConfiguration) {
+	op := &request.Operation{
+		Name:       opGetAlias,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/aliases/{Name}",
+	}
+
+	if input == nil {
+		input = &GetAliasInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &AliasConfiguration{}
+	req.Data = output
+	return
+}
+
+// Returns the specified alias information such as the alias ARN, description,
+// and function version it is pointing to. For more information, see Introduction
+// to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-v2-intro-aliases.html)
+//
+// This requires permission for the lambda:GetAlias action.
+func (c *Lambda) GetAlias(input *GetAliasInput) (*AliasConfiguration, error) {
+	req, out := c.GetAliasRequest(input)
 	err := req.Send()
 	return out, err
 }
@@ -225,7 +334,7 @@ func (c *Lambda) GetFunctionRequest(input *GetFunctionInput) (req *request.Reque
 	op := &request.Operation{
 		Name:       opGetFunction,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2015-03-31/functions/{FunctionName}/versions/HEAD",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}",
 	}
 
 	if input == nil {
@@ -244,6 +353,12 @@ func (c *Lambda) GetFunctionRequest(input *GetFunctionInput) (req *request.Reque
 // information is the same information you provided as parameters when uploading
 // the function.
 //
+// Using the optional Qualifier parameter, you can specify a specific function
+// version for which you want this information. If you don't specify this parameter,
+// the API uses unqualified function ARN which return information about the
+// $LATEST version of the Lambda function. For more information, see AWS Lambda
+// Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases-v2.html).
+//
 // This operation requires permission for the lambda:GetFunction action.
 func (c *Lambda) GetFunction(input *GetFunctionInput) (*GetFunctionOutput, error) {
 	req, out := c.GetFunctionRequest(input)
@@ -258,7 +373,7 @@ func (c *Lambda) GetFunctionConfigurationRequest(input *GetFunctionConfiguration
 	op := &request.Operation{
 		Name:       opGetFunctionConfiguration,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2015-03-31/functions/{FunctionName}/versions/HEAD/configuration",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/configuration",
 	}
 
 	if input == nil {
@@ -275,6 +390,11 @@ func (c *Lambda) GetFunctionConfigurationRequest(input *GetFunctionConfiguration
 // information you provided as parameters when uploading the function by using
 // CreateFunction.
 //
+// You can use the optional Qualifier parameter to retrieve configuration information
+// for a specific Lambda function version. If you don't provide it, the API
+// returns information about the $LATEST version of the function. For more information
+// about versioning, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases-v2.html).
+//
 // This operation requires permission for the lambda:GetFunctionConfiguration
 // operation.
 func (c *Lambda) GetFunctionConfiguration(input *GetFunctionConfigurationInput) (*FunctionConfiguration, error) {
@@ -290,7 +410,7 @@ func (c *Lambda) GetPolicyRequest(input *GetPolicyInput) (req *request.Request, 
 	op := &request.Operation{
 		Name:       opGetPolicy,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2015-03-31/functions/{FunctionName}/versions/HEAD/policy",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/policy",
 	}
 
 	if input == nil {
@@ -303,8 +423,10 @@ func (c *Lambda) GetPolicyRequest(input *GetPolicyInput) (req *request.Request, 
 	return
 }
 
-// Returns the access policy, containing a list of permissions granted via the
-// AddPermission API, associated with the specified bucket.
+// Returns the resource policy, containing a list of permissions that apply
+// to a specific to an ARN that you specify via the Qualifier paramter.
+//
+// For informration about adding permissions, see AddPermission.
 //
 // You need permission for the lambda:GetPolicy action.
 func (c *Lambda) GetPolicy(input *GetPolicyInput) (*GetPolicyOutput, error) {
@@ -333,7 +455,20 @@ func (c *Lambda) InvokeRequest(input *InvokeInput) (req *request.Request, output
 	return
 }
 
-// Invokes a specified Lambda function.
+// Invokes a specific Lambda function version.
+//
+// If you don't provide the Qualifier parameter, it uses the unqualified function
+// ARN which results in invocation of the $LATEST version of the Lambda function
+// (when you create a Lambda function, the $LATEST is the version). The AWS
+// Lambda versioning and aliases feature allows you to publish multiple versions
+// of a Lambda function and also create aliases for each function version. So
+// each your Lambda function version can be invoked using multiple ARNs. For
+// more information, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases-v2.html).
+// Using the Qualifier parameter, you can specify a function version or alias
+// name to invoke specific function version. If you specify function version,
+// the API uses the qualified function ARN to invoke a specific function version.
+// If you specify alias name, the API uses the alias ARN to invoke the function
+// version to which the alias points.
 //
 // This operation requires permission for the lambda:InvokeFunction action.
 func (c *Lambda) Invoke(input *InvokeInput) (*InvokeOutput, error) {
@@ -346,6 +481,9 @@ const opInvokeAsync = "InvokeAsync"
 
 // InvokeAsyncRequest generates a request for the InvokeAsync operation.
 func (c *Lambda) InvokeAsyncRequest(input *InvokeAsyncInput) (req *request.Request, output *InvokeAsyncOutput) {
+	if c.Client.Config.Logger != nil {
+		c.Client.Config.Logger.Log("This operation, InvokeAsync, has been deprecated")
+	}
 	op := &request.Operation{
 		Name:       opInvokeAsync,
 		HTTPMethod: "POST",
@@ -370,6 +508,38 @@ func (c *Lambda) InvokeAsyncRequest(input *InvokeAsyncInput) (req *request.Reque
 // This operation requires permission for the lambda:InvokeFunction action.
 func (c *Lambda) InvokeAsync(input *InvokeAsyncInput) (*InvokeAsyncOutput, error) {
 	req, out := c.InvokeAsyncRequest(input)
+	err := req.Send()
+	return out, err
+}
+
+const opListAliases = "ListAliases"
+
+// ListAliasesRequest generates a request for the ListAliases operation.
+func (c *Lambda) ListAliasesRequest(input *ListAliasesInput) (req *request.Request, output *ListAliasesOutput) {
+	op := &request.Operation{
+		Name:       opListAliases,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/aliases",
+	}
+
+	if input == nil {
+		input = &ListAliasesInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &ListAliasesOutput{}
+	req.Data = output
+	return
+}
+
+// Returns list of aliases created for a Lambda function. For each alias, the
+// response includes information such as the alias ARN, description, alias name,
+// and the function version to which it points. For more information, see Introduction
+// to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-v2-intro-aliases.html)
+//
+// This requires permission for the lambda:ListAliases action.
+func (c *Lambda) ListAliases(input *ListAliasesInput) (*ListAliasesOutput, error) {
+	req, out := c.ListAliasesRequest(input)
 	err := req.Send()
 	return out, err
 }
@@ -417,6 +587,7 @@ func (c *Lambda) ListEventSourceMappings(input *ListEventSourceMappingsInput) (*
 
 func (c *Lambda) ListEventSourceMappingsPages(input *ListEventSourceMappingsInput, fn func(p *ListEventSourceMappingsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListEventSourceMappingsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*ListEventSourceMappingsOutput), lastPage)
 	})
@@ -461,9 +632,68 @@ func (c *Lambda) ListFunctions(input *ListFunctionsInput) (*ListFunctionsOutput,
 
 func (c *Lambda) ListFunctionsPages(input *ListFunctionsInput, fn func(p *ListFunctionsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListFunctionsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*ListFunctionsOutput), lastPage)
 	})
+}
+
+const opListVersionsByFunction = "ListVersionsByFunction"
+
+// ListVersionsByFunctionRequest generates a request for the ListVersionsByFunction operation.
+func (c *Lambda) ListVersionsByFunctionRequest(input *ListVersionsByFunctionInput) (req *request.Request, output *ListVersionsByFunctionOutput) {
+	op := &request.Operation{
+		Name:       opListVersionsByFunction,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/versions",
+	}
+
+	if input == nil {
+		input = &ListVersionsByFunctionInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &ListVersionsByFunctionOutput{}
+	req.Data = output
+	return
+}
+
+// List all versions of a function.
+func (c *Lambda) ListVersionsByFunction(input *ListVersionsByFunctionInput) (*ListVersionsByFunctionOutput, error) {
+	req, out := c.ListVersionsByFunctionRequest(input)
+	err := req.Send()
+	return out, err
+}
+
+const opPublishVersion = "PublishVersion"
+
+// PublishVersionRequest generates a request for the PublishVersion operation.
+func (c *Lambda) PublishVersionRequest(input *PublishVersionInput) (req *request.Request, output *FunctionConfiguration) {
+	op := &request.Operation{
+		Name:       opPublishVersion,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/versions",
+	}
+
+	if input == nil {
+		input = &PublishVersionInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &FunctionConfiguration{}
+	req.Data = output
+	return
+}
+
+// Publishes a version of your function from the current snapshot of HEAD. That
+// is, AWS Lambda takes a snapshot of the function code and configuration information
+// from HEAD and publishes a new version. The code and handler of this specific
+// Lambda function version cannot be modified after publication, but you can
+// modify the configuration information.
+func (c *Lambda) PublishVersion(input *PublishVersionInput) (*FunctionConfiguration, error) {
+	req, out := c.PublishVersionRequest(input)
+	err := req.Send()
+	return out, err
 }
 
 const opRemovePermission = "RemovePermission"
@@ -473,7 +703,7 @@ func (c *Lambda) RemovePermissionRequest(input *RemovePermissionInput) (req *req
 	op := &request.Operation{
 		Name:       opRemovePermission,
 		HTTPMethod: "DELETE",
-		HTTPPath:   "/2015-03-31/functions/{FunctionName}/versions/HEAD/policy/{StatementId}",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/policy/{StatementId}",
 	}
 
 	if input == nil {
@@ -481,13 +711,17 @@ func (c *Lambda) RemovePermissionRequest(input *RemovePermissionInput) (req *req
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &RemovePermissionOutput{}
 	req.Data = output
 	return
 }
 
-// You can remove individual permissions from an access policy associated with
-// a Lambda function by providing a Statement ID.
+// You can remove individual permissions from an resource policy associated
+// with a Lambda function by providing a statement ID that you provided when
+// you addded the permission. The API removes corresponding permission that
+// is associated with the specific ARN identified by the Qualifier parameter.
 //
 // Note that removal of a permission will cause an active event source to lose
 // permission to the function.
@@ -495,6 +729,37 @@ func (c *Lambda) RemovePermissionRequest(input *RemovePermissionInput) (req *req
 // You need permission for the lambda:RemovePermission action.
 func (c *Lambda) RemovePermission(input *RemovePermissionInput) (*RemovePermissionOutput, error) {
 	req, out := c.RemovePermissionRequest(input)
+	err := req.Send()
+	return out, err
+}
+
+const opUpdateAlias = "UpdateAlias"
+
+// UpdateAliasRequest generates a request for the UpdateAlias operation.
+func (c *Lambda) UpdateAliasRequest(input *UpdateAliasInput) (req *request.Request, output *AliasConfiguration) {
+	op := &request.Operation{
+		Name:       opUpdateAlias,
+		HTTPMethod: "PUT",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/aliases/{Name}",
+	}
+
+	if input == nil {
+		input = &UpdateAliasInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &AliasConfiguration{}
+	req.Data = output
+	return
+}
+
+// Using this API you can update function version to which the alias points
+// to and alias description. For more information, see Introduction to AWS Lambda
+// Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-v2-intro-aliases.html)
+//
+// This requires permission for the lambda:UpdateAlias action.
+func (c *Lambda) UpdateAlias(input *UpdateAliasInput) (*AliasConfiguration, error) {
+	req, out := c.UpdateAliasRequest(input)
 	err := req.Send()
 	return out, err
 }
@@ -539,7 +804,7 @@ func (c *Lambda) UpdateFunctionCodeRequest(input *UpdateFunctionCodeInput) (req 
 	op := &request.Operation{
 		Name:       opUpdateFunctionCode,
 		HTTPMethod: "PUT",
-		HTTPPath:   "/2015-03-31/functions/{FunctionName}/versions/HEAD/code",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/code",
 	}
 
 	if input == nil {
@@ -570,7 +835,7 @@ func (c *Lambda) UpdateFunctionConfigurationRequest(input *UpdateFunctionConfigu
 	op := &request.Operation{
 		Name:       opUpdateFunctionConfiguration,
 		HTTPMethod: "PUT",
-		HTTPPath:   "/2015-03-31/functions/{FunctionName}/versions/HEAD/configuration",
+		HTTPPath:   "/2015-03-31/functions/{FunctionName}/configuration",
 	}
 
 	if input == nil {
@@ -597,13 +862,15 @@ func (c *Lambda) UpdateFunctionConfiguration(input *UpdateFunctionConfigurationI
 }
 
 type AddPermissionInput struct {
+	_ struct{} `type:"structure"`
+
 	// The AWS Lambda action you want to allow in this statement. Each Lambda action
 	// is a string starting with "lambda:" followed by the API name (see Operations).
 	// For example, "lambda:CreateFunction". You can use wildcard ("lambda:*") to
 	// grant permission for all AWS Lambda actions.
 	Action *string `type:"string" required:"true"`
 
-	// Name of the Lambda function whose access policy you are updating by adding
+	// Name of the Lambda function whose resource policy you are updating by adding
 	// a new permission.
 	//
 	//  You can specify an unqualified function name (for example, "Thumbnail")
@@ -621,6 +888,24 @@ type AddPermissionInput struct {
 	// want to allow a custom application in another AWS account to push events
 	// to AWS Lambda by invoking your function.
 	Principal *string `type:"string" required:"true"`
+
+	// You can specify this optional query parameter to specify function version
+	// or alias name. The permission will then apply to the specific qualified ARN.
+	// For example, if you specify function version 2 as the qualifier, then permission
+	// applies only when request is made using qualified function ARN:
+	//
+	// arn:aws:lambda:aws-region:acct-id:function:function-name:2
+	//
+	// If you specify alias name, for example "PROD", then the permission is valid
+	// only for requests made using the alias ARN:
+	//
+	// arn:aws:lambda:aws-region:acct-id:function:function-name:PROD
+	//
+	// If the qualifier is not specified, the permission is valid only when requests
+	// is made using unqualified function ARN.
+	//
+	// arn:aws:lambda:aws-region:acct-id:function:function-name
+	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 
 	// The AWS account ID (without a hyphen) of the source owner. For example, if
 	// the SourceArn identifies a bucket, then this is the bucket owner's account
@@ -643,12 +928,6 @@ type AddPermissionInput struct {
 
 	// A unique statement identifier.
 	StatementId *string `min:"1" type:"string" required:"true"`
-
-	metadataAddPermissionInput `json:"-" xml:"-"`
-}
-
-type metadataAddPermissionInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -662,15 +941,11 @@ func (s AddPermissionInput) GoString() string {
 }
 
 type AddPermissionOutput struct {
+	_ struct{} `type:"structure"`
+
 	// The permission statement you specified in the request. The response returns
 	// the same as a string using "\" as an escape character in the JSON.
 	Statement *string `type:"string"`
-
-	metadataAddPermissionOutput `json:"-" xml:"-"`
-}
-
-type metadataAddPermissionOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -683,14 +958,71 @@ func (s AddPermissionOutput) GoString() string {
 	return s.String()
 }
 
+// Provides configuration information about a Lambda function version alias.
+type AliasConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// Lambda function ARN that is qualified using alias name as the suffix. For
+	// example, if you create an alias "BETA" pointing to a helloworld function
+	// version, the ARN is arn:aws:lambda:aws-regions:acct-id:function:helloworld:BETA.
+	AliasArn *string `type:"string"`
+
+	// Alias description.
+	Description *string `type:"string"`
+
+	// Function version to which the alias points.
+	FunctionVersion *string `min:"1" type:"string"`
+
+	// Alias name.
+	Name *string `min:"1" type:"string"`
+}
+
+// String returns the string representation
+func (s AliasConfiguration) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s AliasConfiguration) GoString() string {
+	return s.String()
+}
+
+type CreateAliasInput struct {
+	_ struct{} `type:"structure"`
+
+	// Description of the alias.
+	Description *string `type:"string"`
+
+	// Name of the Lambda function for which you want to create an alias.
+	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
+
+	// Lambda function version for which you are creating the alias.
+	FunctionVersion *string `min:"1" type:"string" required:"true"`
+
+	// Name for the alias your creating.
+	Name *string `min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation
+func (s CreateAliasInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s CreateAliasInput) GoString() string {
+	return s.String()
+}
+
 type CreateEventSourceMappingInput struct {
+	_ struct{} `type:"structure"`
+
 	// The largest number of records that AWS Lambda will retrieve from your event
 	// source at the time of invoking your function. Your function receives an event
 	// with all the retrieved records. The default is 100 records.
 	BatchSize *int64 `min:"1" type:"integer"`
 
-	// Indicates whether AWS Lambda should begin polling the event source, the default
-	// is not enabled.
+	// Indicates whether AWS Lambda should begin polling the event source. By default,
+	// Enabled is true.
 	Enabled *bool `type:"boolean"`
 
 	// The Amazon Resource Name (ARN) of the Amazon Kinesis or the Amazon DynamoDB
@@ -714,12 +1046,6 @@ type CreateEventSourceMappingInput struct {
 	// information, go to ShardIteratorType (http://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetShardIterator.html#Kinesis-GetShardIterator-request-ShardIteratorType)
 	// in the Amazon Kinesis API Reference.
 	StartingPosition *string `type:"string" required:"true" enum:"EventSourcePosition"`
-
-	metadataCreateEventSourceMappingInput `json:"-" xml:"-"`
-}
-
-type metadataCreateEventSourceMappingInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -733,6 +1059,8 @@ func (s CreateEventSourceMappingInput) GoString() string {
 }
 
 type CreateFunctionInput struct {
+	_ struct{} `type:"structure"`
+
 	// The code for the Lambda function.
 	Code *FunctionCode `type:"structure" required:"true"`
 
@@ -765,6 +1093,10 @@ type CreateFunctionInput struct {
 	// MB.
 	MemorySize *int64 `min:"128" type:"integer"`
 
+	// This boolean parameter can be used to request AWS Lambda to create the Lambda
+	// function and publish a version as an atomic operation.
+	Publish *bool `type:"boolean"`
+
 	// The Amazon Resource Name (ARN) of the IAM role that Lambda assumes when it
 	// executes your function to access any other Amazon Web Services (AWS) resources.
 	// For more information, see AWS Lambda: How it Works (http://docs.aws.amazon.com/lambda/latest/dg/lambda-introduction.html)
@@ -778,12 +1110,6 @@ type CreateFunctionInput struct {
 	// Because the execution time has cost implications, we recommend you set this
 	// value based on your expected execution time. The default is 3 seconds.
 	Timeout *int64 `min:"1" type:"integer"`
-
-	metadataCreateFunctionInput `json:"-" xml:"-"`
-}
-
-type metadataCreateFunctionInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -796,15 +1122,45 @@ func (s CreateFunctionInput) GoString() string {
 	return s.String()
 }
 
-type DeleteEventSourceMappingInput struct {
-	// The event source mapping ID.
-	UUID *string `location:"uri" locationName:"UUID" type:"string" required:"true"`
+type DeleteAliasInput struct {
+	_ struct{} `type:"structure"`
 
-	metadataDeleteEventSourceMappingInput `json:"-" xml:"-"`
+	// The Lambda function name for which the alias is created.
+	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
+
+	// Name of the alias to delete.
+	Name *string `location:"uri" locationName:"Name" min:"1" type:"string" required:"true"`
 }
 
-type metadataDeleteEventSourceMappingInput struct {
-	SDKShapeTraits bool `type:"structure"`
+// String returns the string representation
+func (s DeleteAliasInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s DeleteAliasInput) GoString() string {
+	return s.String()
+}
+
+type DeleteAliasOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation
+func (s DeleteAliasOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s DeleteAliasOutput) GoString() string {
+	return s.String()
+}
+
+type DeleteEventSourceMappingInput struct {
+	_ struct{} `type:"structure"`
+
+	// The event source mapping ID.
+	UUID *string `location:"uri" locationName:"UUID" type:"string" required:"true"`
 }
 
 // String returns the string representation
@@ -818,6 +1174,8 @@ func (s DeleteEventSourceMappingInput) GoString() string {
 }
 
 type DeleteFunctionInput struct {
+	_ struct{} `type:"structure"`
+
 	// The Lambda function to delete.
 	//
 	//  You can specify an unqualified function name (for example, "Thumbnail")
@@ -828,11 +1186,20 @@ type DeleteFunctionInput struct {
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
-	metadataDeleteFunctionInput `json:"-" xml:"-"`
-}
-
-type metadataDeleteFunctionInput struct {
-	SDKShapeTraits bool `type:"structure"`
+	// Using this optional parameter you can specify a function version (but not
+	// the $LATEST version) to direct AWS Lambda to delete a specific function version.
+	// If the function version has one or more aliases pointing to it, you will
+	// get an error because you cannot have aliases pointing to it. You can delete
+	// any function version but not the $LATEST, that is, you cannot specify $LATEST
+	// as the value of this parameter. The $LATEST version can be deleted only when
+	// you want to delete all the function versions and aliases.
+	//
+	// You can only specify a function version and not alias name using this parameter.
+	// You cannot delete a function version using its alias.
+	//
+	// If you don't specify this parameter, AWS Lambda will delete the function,
+	// including all its versions and aliases.
+	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 }
 
 // String returns the string representation
@@ -846,11 +1213,7 @@ func (s DeleteFunctionInput) GoString() string {
 }
 
 type DeleteFunctionOutput struct {
-	metadataDeleteFunctionOutput `json:"-" xml:"-"`
-}
-
-type metadataDeleteFunctionOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -865,6 +1228,8 @@ func (s DeleteFunctionOutput) GoString() string {
 
 // Describes mapping between an Amazon Kinesis stream and a Lambda function.
 type EventSourceMappingConfiguration struct {
+	_ struct{} `type:"structure"`
+
 	// The largest number of records that AWS Lambda will retrieve from your event
 	// source at the time of invoking your function. Your function receives an event
 	// with all the retrieved records.
@@ -893,12 +1258,6 @@ type EventSourceMappingConfiguration struct {
 
 	// The AWS Lambda assigned opaque identifier for the mapping.
 	UUID *string `type:"string"`
-
-	metadataEventSourceMappingConfiguration `json:"-" xml:"-"`
-}
-
-type metadataEventSourceMappingConfiguration struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -913,6 +1272,8 @@ func (s EventSourceMappingConfiguration) GoString() string {
 
 // The code for the Lambda function.
 type FunctionCode struct {
+	_ struct{} `type:"structure"`
+
 	// Amazon S3 bucket name where the .zip file containing your deployment package
 	// is stored. This bucket must reside in the same AWS region where you are creating
 	// the Lambda function.
@@ -928,12 +1289,6 @@ type FunctionCode struct {
 	// about creating a .zip file, go to Execution Permissions (http://docs.aws.amazon.com/lambda/latest/dg/intro-permission-model.html#lambda-intro-execution-role.html)
 	// in the AWS Lambda Developer Guide.
 	ZipFile []byte `type:"blob"`
-
-	metadataFunctionCode `json:"-" xml:"-"`
-}
-
-type metadataFunctionCode struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -948,18 +1303,14 @@ func (s FunctionCode) GoString() string {
 
 // The object for the Lambda function location.
 type FunctionCodeLocation struct {
+	_ struct{} `type:"structure"`
+
 	// The presigned URL you can use to download the function's .zip file that you
 	// previously uploaded. The URL is valid for up to 10 minutes.
 	Location *string `type:"string"`
 
 	// The repository from which you can download the function.
 	RepositoryType *string `type:"string"`
-
-	metadataFunctionCodeLocation `json:"-" xml:"-"`
-}
-
-type metadataFunctionCodeLocation struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -974,6 +1325,11 @@ func (s FunctionCodeLocation) GoString() string {
 
 // A complex type that describes function metadata.
 type FunctionConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// It is the SHA256 hash of your function deployment package.
+	CodeSha256 *string `type:"string"`
+
 	// The size, in bytes, of the function .zip file you uploaded.
 	CodeSize *int64 `type:"long"`
 
@@ -1008,11 +1364,8 @@ type FunctionConfiguration struct {
 	// value based on your expected execution time. The default is 3 seconds.
 	Timeout *int64 `min:"1" type:"integer"`
 
-	metadataFunctionConfiguration `json:"-" xml:"-"`
-}
-
-type metadataFunctionConfiguration struct {
-	SDKShapeTraits bool `type:"structure"`
+	// The version of the Lambda function.
+	Version *string `min:"1" type:"string"`
 }
 
 // String returns the string representation
@@ -1025,15 +1378,33 @@ func (s FunctionConfiguration) GoString() string {
 	return s.String()
 }
 
-type GetEventSourceMappingInput struct {
-	// The AWS Lambda assigned ID of the event source mapping.
-	UUID *string `location:"uri" locationName:"UUID" type:"string" required:"true"`
+type GetAliasInput struct {
+	_ struct{} `type:"structure"`
 
-	metadataGetEventSourceMappingInput `json:"-" xml:"-"`
+	// Function name for which the alias is created. An alias is a subresource that
+	// exists only in the context of an existing Lambda function. So you must specify
+	// the function name.
+	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
+
+	// Name of the alias for which you want to retrieve information.
+	Name *string `location:"uri" locationName:"Name" min:"1" type:"string" required:"true"`
 }
 
-type metadataGetEventSourceMappingInput struct {
-	SDKShapeTraits bool `type:"structure"`
+// String returns the string representation
+func (s GetAliasInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s GetAliasInput) GoString() string {
+	return s.String()
+}
+
+type GetEventSourceMappingInput struct {
+	_ struct{} `type:"structure"`
+
+	// The AWS Lambda assigned ID of the event source mapping.
+	UUID *string `location:"uri" locationName:"UUID" type:"string" required:"true"`
 }
 
 // String returns the string representation
@@ -1047,6 +1418,8 @@ func (s GetEventSourceMappingInput) GoString() string {
 }
 
 type GetFunctionConfigurationInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the Lambda function for which you want to retrieve the configuration
 	// information.
 	//
@@ -1058,11 +1431,15 @@ type GetFunctionConfigurationInput struct {
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
-	metadataGetFunctionConfigurationInput `json:"-" xml:"-"`
-}
-
-type metadataGetFunctionConfigurationInput struct {
-	SDKShapeTraits bool `type:"structure"`
+	// Using this optional parameter you can specify function version or alias name.
+	// If you specify function version, the API uses qualified function ARN and
+	// returns information about the specific function version. if you specify alias
+	// name, the API uses alias ARN and returns information about the function version
+	// to which the alias points.
+	//
+	// If you don't specify this parameter, the API uses unqualified function ARN,
+	// and returns information about the $LATEST function version.
+	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 }
 
 // String returns the string representation
@@ -1076,6 +1453,8 @@ func (s GetFunctionConfigurationInput) GoString() string {
 }
 
 type GetFunctionInput struct {
+	_ struct{} `type:"structure"`
+
 	// The Lambda function name.
 	//
 	//  You can specify an unqualified function name (for example, "Thumbnail")
@@ -1086,11 +1465,14 @@ type GetFunctionInput struct {
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
-	metadataGetFunctionInput `json:"-" xml:"-"`
-}
-
-type metadataGetFunctionInput struct {
-	SDKShapeTraits bool `type:"structure"`
+	// Using this optional parameter to specify a function version or alias name.
+	// If you specify function version, the API uses qualified function ARN for
+	// the request and returns information about the specific Lambda function version.
+	// If you specify alias name, the API uses alias ARN and returns information
+	// about the function version to which the alias points. If you don't provide
+	// this parameter, the API uses unqualified function ARN and returns information
+	// about the $LATEST version of the Lambda function.
+	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 }
 
 // String returns the string representation
@@ -1105,17 +1487,13 @@ func (s GetFunctionInput) GoString() string {
 
 // This response contains the object for the Lambda function location (see API_FunctionCodeLocation
 type GetFunctionOutput struct {
+	_ struct{} `type:"structure"`
+
 	// The object for the Lambda function location.
 	Code *FunctionCodeLocation `type:"structure"`
 
 	// A complex type that describes function metadata.
 	Configuration *FunctionConfiguration `type:"structure"`
-
-	metadataGetFunctionOutput `json:"-" xml:"-"`
-}
-
-type metadataGetFunctionOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1129,7 +1507,9 @@ func (s GetFunctionOutput) GoString() string {
 }
 
 type GetPolicyInput struct {
-	// Function name whose access policy you want to retrieve.
+	_ struct{} `type:"structure"`
+
+	// Function name whose resource policy you want to retrieve.
 	//
 	//  You can specify an unqualified function name (for example, "Thumbnail")
 	// or you can specify Amazon Resource Name (ARN) of the function (for example,
@@ -1139,11 +1519,11 @@ type GetPolicyInput struct {
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
-	metadataGetPolicyInput `json:"-" xml:"-"`
-}
-
-type metadataGetPolicyInput struct {
-	SDKShapeTraits bool `type:"structure"`
+	// You can specify this optional query parameter to specify function version
+	// or alias name in which case this API will return all permissions associated
+	// with the specific ARN. If you don't provide this parameter, the API will
+	// return permissions that apply to the unqualified function ARN.
+	Qualifier *string `min:"1" type:"string"`
 }
 
 // String returns the string representation
@@ -1157,15 +1537,11 @@ func (s GetPolicyInput) GoString() string {
 }
 
 type GetPolicyOutput struct {
-	// The access policy associated with the specified function. The response returns
-	// the same as a string using "\" as an escape character in the JSON.
+	_ struct{} `type:"structure"`
+
+	// The resource policy associated with the specified function. The response
+	// returns the same as a string using "\" as an escape character in the JSON.
 	Policy *string `type:"string"`
-
-	metadataGetPolicyOutput `json:"-" xml:"-"`
-}
-
-type metadataGetPolicyOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1179,17 +1555,13 @@ func (s GetPolicyOutput) GoString() string {
 }
 
 type InvokeAsyncInput struct {
+	_ struct{} `deprecated:"true" type:"structure" payload:"InvokeArgs"`
+
 	// The Lambda function name.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// JSON that you want to provide to your Lambda function as input.
 	InvokeArgs io.ReadSeeker `type:"blob" required:"true"`
-
-	metadataInvokeAsyncInput `json:"-" xml:"-"`
-}
-
-type metadataInvokeAsyncInput struct {
-	SDKShapeTraits bool `type:"structure" payload:"InvokeArgs"`
 }
 
 // String returns the string representation
@@ -1204,14 +1576,10 @@ func (s InvokeAsyncInput) GoString() string {
 
 // Upon success, it returns empty response. Otherwise, throws an exception.
 type InvokeAsyncOutput struct {
+	_ struct{} `deprecated:"true" type:"structure"`
+
 	// It will be 202 upon success.
 	Status *int64 `location:"statusCode" type:"integer"`
-
-	metadataInvokeAsyncOutput `json:"-" xml:"-"`
-}
-
-type metadataInvokeAsyncOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1225,6 +1593,8 @@ func (s InvokeAsyncOutput) GoString() string {
 }
 
 type InvokeInput struct {
+	_ struct{} `type:"structure" payload:"Payload"`
+
 	// Using the ClientContext you can pass client-specific information to the Lambda
 	// function you are invoking. You can then process the client information in
 	// your Lambda function as you choose through the context variable. For an example
@@ -1262,11 +1632,15 @@ type InvokeInput struct {
 	// JSON that you want to provide to your Lambda function as input.
 	Payload []byte `type:"blob"`
 
-	metadataInvokeInput `json:"-" xml:"-"`
-}
-
-type metadataInvokeInput struct {
-	SDKShapeTraits bool `type:"structure" payload:"Payload"`
+	// You can use this optional paramter to specify a Lambda function version or
+	// alias name. If you specify function version, the API uses qualified function
+	// ARN to invoke a specific Lambda function. If you specify alias name, the
+	// API uses the alias ARN to invoke the Lambda function version to which the
+	// alias points.
+	//
+	// If you don't provide this parameter, then the API uses unqualified function
+	// ARN which results in invocation of the $LATEST version.
+	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 }
 
 // String returns the string representation
@@ -1281,6 +1655,8 @@ func (s InvokeInput) GoString() string {
 
 // Upon success, returns an empty response. Otherwise, throws an exception.
 type InvokeOutput struct {
+	_ struct{} `type:"structure" payload:"Payload"`
+
 	// Indicates whether an error occurred while executing the Lambda function.
 	// If an error occurred this field will have one of two values; Handled or Unhandled.
 	// Handled errors are errors that are reported by the function while the Unhandled
@@ -1307,12 +1683,6 @@ type InvokeOutput struct {
 	// "Event" invocation type this status code will be 202. For the "DryRun" invocation
 	// type the status code will be 204.
 	StatusCode *int64 `location:"statusCode" type:"integer"`
-
-	metadataInvokeOutput `json:"-" xml:"-"`
-}
-
-type metadataInvokeOutput struct {
-	SDKShapeTraits bool `type:"structure" payload:"Payload"`
 }
 
 // String returns the string representation
@@ -1325,7 +1695,59 @@ func (s InvokeOutput) GoString() string {
 	return s.String()
 }
 
+type ListAliasesInput struct {
+	_ struct{} `type:"structure"`
+
+	// Lambda function name for which the alias is created.
+	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
+
+	// If you specify this optional parameter, the API returns only the aliases
+	// pointing to the specific Lambda function version, otherwise returns all aliases
+	// created for the Lambda function.
+	FunctionVersion *string `location:"querystring" locationName:"FunctionVersion" min:"1" type:"string"`
+
+	// Optional string. An opaque pagination token returned from a previous ListAliases
+	// operation. If present, indicates where to continue the listing.
+	Marker *string `location:"querystring" locationName:"Marker" type:"string"`
+
+	// Optional integer. Specifies the maximum number of aliases to return in response.
+	// This parameter value must be greater than 0.
+	MaxItems *int64 `location:"querystring" locationName:"MaxItems" min:"1" type:"integer"`
+}
+
+// String returns the string representation
+func (s ListAliasesInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s ListAliasesInput) GoString() string {
+	return s.String()
+}
+
+type ListAliasesOutput struct {
+	_ struct{} `type:"structure"`
+
+	// An list of alises.
+	Aliases []*AliasConfiguration `type:"list"`
+
+	// A string, present if there are more aliases.
+	NextMarker *string `type:"string"`
+}
+
+// String returns the string representation
+func (s ListAliasesOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s ListAliasesOutput) GoString() string {
+	return s.String()
+}
+
 type ListEventSourceMappingsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The Amazon Resource Name (ARN) of the Amazon Kinesis stream.
 	EventSourceArn *string `location:"querystring" locationName:"EventSourceArn" type:"string"`
 
@@ -1347,12 +1769,6 @@ type ListEventSourceMappingsInput struct {
 	// Optional integer. Specifies the maximum number of event sources to return
 	// in response. This value must be greater than 0.
 	MaxItems *int64 `location:"querystring" locationName:"MaxItems" min:"1" type:"integer"`
-
-	metadataListEventSourceMappingsInput `json:"-" xml:"-"`
-}
-
-type metadataListEventSourceMappingsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1367,17 +1783,13 @@ func (s ListEventSourceMappingsInput) GoString() string {
 
 // Contains a list of event sources (see API_EventSourceMappingConfiguration)
 type ListEventSourceMappingsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// An array of EventSourceMappingConfiguration objects.
 	EventSourceMappings []*EventSourceMappingConfiguration `type:"list"`
 
 	// A string, present if there are more event source mappings.
 	NextMarker *string `type:"string"`
-
-	metadataListEventSourceMappingsOutput `json:"-" xml:"-"`
-}
-
-type metadataListEventSourceMappingsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1391,6 +1803,8 @@ func (s ListEventSourceMappingsOutput) GoString() string {
 }
 
 type ListFunctionsInput struct {
+	_ struct{} `type:"structure"`
+
 	// Optional string. An opaque pagination token returned from a previous ListFunctions
 	// operation. If present, indicates where to continue the listing.
 	Marker *string `location:"querystring" locationName:"Marker" type:"string"`
@@ -1398,12 +1812,6 @@ type ListFunctionsInput struct {
 	// Optional integer. Specifies the maximum number of AWS Lambda functions to
 	// return in response. This parameter value must be greater than 0.
 	MaxItems *int64 `location:"querystring" locationName:"MaxItems" min:"1" type:"integer"`
-
-	metadataListFunctionsInput `json:"-" xml:"-"`
-}
-
-type metadataListFunctionsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1418,17 +1826,13 @@ func (s ListFunctionsInput) GoString() string {
 
 // Contains a list of AWS Lambda function configurations (see FunctionConfiguration.
 type ListFunctionsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of Lambda functions.
 	Functions []*FunctionConfiguration `type:"list"`
 
 	// A string, present if there are more functions.
 	NextMarker *string `type:"string"`
-
-	metadataListFunctionsOutput `json:"-" xml:"-"`
-}
-
-type metadataListFunctionsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1441,8 +1845,93 @@ func (s ListFunctionsOutput) GoString() string {
 	return s.String()
 }
 
+type ListVersionsByFunctionInput struct {
+	_ struct{} `type:"structure"`
+
+	// Function name whose versions to list. You can specify an unqualified function
+	// name (for example, "Thumbnail") or you can specify Amazon Resource Name (ARN)
+	// of the function (for example, "arn:aws:lambda:us-west-2:account-id:function:ThumbNail").
+	// AWS Lambda also allows you to specify only the account ID qualifier (for
+	// example, "account-id:Thumbnail"). Note that the length constraint applies
+	// only to the ARN. If you specify only the function name, it is limited to
+	// 64 character in length.
+	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
+
+	// Optional string. An opaque pagination token returned from a previous ListVersionsByFunction
+	// operation. If present, indicates where to continue the listing.
+	Marker *string `location:"querystring" locationName:"Marker" type:"string"`
+
+	// Optional integer. Specifies the maximum number of AWS Lambda function versions
+	// to return in response. This parameter value must be greater than 0.
+	MaxItems *int64 `location:"querystring" locationName:"MaxItems" min:"1" type:"integer"`
+}
+
+// String returns the string representation
+func (s ListVersionsByFunctionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s ListVersionsByFunctionInput) GoString() string {
+	return s.String()
+}
+
+type ListVersionsByFunctionOutput struct {
+	_ struct{} `type:"structure"`
+
+	// A string, present if there are more function versions.
+	NextMarker *string `type:"string"`
+
+	// A list of Lambda function versions.
+	Versions []*FunctionConfiguration `type:"list"`
+}
+
+// String returns the string representation
+func (s ListVersionsByFunctionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s ListVersionsByFunctionOutput) GoString() string {
+	return s.String()
+}
+
+type PublishVersionInput struct {
+	_ struct{} `type:"structure"`
+
+	// The SHA256 hash of the deployment package you want to publish. This provides
+	// validation on the code you are publishing. If you provide this parameter
+	// value must match the SHA256 of the HEAD version for the publication to succeed.
+	CodeSha256 *string `type:"string"`
+
+	// The description for the version you are publishing. If not provided, AWS
+	// Lambda copies the description from the HEAD version.
+	Description *string `type:"string"`
+
+	// The Lambda function name. You can specify an unqualified function name (for
+	// example, "Thumbnail") or you can specify Amazon Resource Name (ARN) of the
+	// function (for example, "arn:aws:lambda:us-west-2:account-id:function:ThumbNail").
+	// AWS Lambda also allows you to specify only the account ID qualifier (for
+	// example, "account-id:Thumbnail"). Note that the length constraint applies
+	// only to the ARN. If you specify only the function name, it is limited to
+	// 64 character in length.
+	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation
+func (s PublishVersionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s PublishVersionInput) GoString() string {
+	return s.String()
+}
+
 type RemovePermissionInput struct {
-	// Lambda function whose access policy you want to remove a permission from.
+	_ struct{} `type:"structure"`
+
+	// Lambda function whose resource policy you want to remove a permission from.
 	//
 	//  You can specify an unqualified function name (for example, "Thumbnail")
 	// or you can specify Amazon Resource Name (ARN) of the function (for example,
@@ -1452,14 +1941,14 @@ type RemovePermissionInput struct {
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
+	// You can specify this optional parameter to remove permission associated with
+	// a specific function version or function alias. The value of this paramter
+	// is the function version or alias name. If you don't specify this parameter,
+	// the API removes permission associated with the unqualified function ARN.
+	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
+
 	// Statement ID of the permission to remove.
 	StatementId *string `location:"uri" locationName:"StatementId" min:"1" type:"string" required:"true"`
-
-	metadataRemovePermissionInput `json:"-" xml:"-"`
-}
-
-type metadataRemovePermissionInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1473,11 +1962,7 @@ func (s RemovePermissionInput) GoString() string {
 }
 
 type RemovePermissionOutput struct {
-	metadataRemovePermissionOutput `json:"-" xml:"-"`
-}
-
-type metadataRemovePermissionOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -1490,7 +1975,36 @@ func (s RemovePermissionOutput) GoString() string {
 	return s.String()
 }
 
+type UpdateAliasInput struct {
+	_ struct{} `type:"structure"`
+
+	// You can optionally change the description of the alias using this parameter.
+	Description *string `type:"string"`
+
+	// The function name for which the alias is created.
+	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
+
+	// Using this parameter you can optionally change the Lambda function version
+	// to which the alias to points to.
+	FunctionVersion *string `min:"1" type:"string"`
+
+	// The alias name.
+	Name *string `location:"uri" locationName:"Name" min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation
+func (s UpdateAliasInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s UpdateAliasInput) GoString() string {
+	return s.String()
+}
+
 type UpdateEventSourceMappingInput struct {
+	_ struct{} `type:"structure"`
+
 	// The maximum number of stream records that can be sent to your Lambda function
 	// for a single invocation.
 	BatchSize *int64 `min:"1" type:"integer"`
@@ -1511,12 +2025,6 @@ type UpdateEventSourceMappingInput struct {
 
 	// The event source mapping identifier.
 	UUID *string `location:"uri" locationName:"UUID" type:"string" required:"true"`
-
-	metadataUpdateEventSourceMappingInput `json:"-" xml:"-"`
-}
-
-type metadataUpdateEventSourceMappingInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1530,6 +2038,8 @@ func (s UpdateEventSourceMappingInput) GoString() string {
 }
 
 type UpdateFunctionCodeInput struct {
+	_ struct{} `type:"structure"`
+
 	// The existing Lambda function name whose code you want to replace.
 	//
 	//  You can specify an unqualified function name (for example, "Thumbnail")
@@ -1539,6 +2049,10 @@ type UpdateFunctionCodeInput struct {
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
+
+	// This boolean parameter can be used to request AWS Lambda to update the Lambda
+	// function and publish a version as an atomic operation.
+	Publish *bool `type:"boolean"`
 
 	// Amazon S3 bucket name where the .zip file containing your deployment package
 	// is stored. This bucket must reside in the same AWS region where you are creating
@@ -1553,12 +2067,6 @@ type UpdateFunctionCodeInput struct {
 
 	// Based64-encoded .zip file containing your packaged source code.
 	ZipFile []byte `type:"blob"`
-
-	metadataUpdateFunctionCodeInput `json:"-" xml:"-"`
-}
-
-type metadataUpdateFunctionCodeInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1572,6 +2080,8 @@ func (s UpdateFunctionCodeInput) GoString() string {
 }
 
 type UpdateFunctionConfigurationInput struct {
+	_ struct{} `type:"structure"`
+
 	// A short user-defined function description. AWS Lambda does not use this value.
 	// Assign a meaningful description as you see fit.
 	Description *string `type:"string"`
@@ -1606,12 +2116,6 @@ type UpdateFunctionConfigurationInput struct {
 	// Because the execution time has cost implications, we recommend you set this
 	// value based on your expected execution time. The default is 3 seconds.
 	Timeout *int64 `min:"1" type:"integer"`
-
-	metadataUpdateFunctionConfigurationInput `json:"-" xml:"-"`
-}
-
-type metadataUpdateFunctionConfigurationInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1652,4 +2156,6 @@ const (
 	RuntimeNodejs = "nodejs"
 	// @enum Runtime
 	RuntimeJava8 = "java8"
+	// @enum Runtime
+	RuntimePython27 = "python2.7"
 )

@@ -8,6 +8,8 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws/awsutil"
 	"github.com/aws/aws-sdk-go/aws/request"
+	"github.com/aws/aws-sdk-go/private/protocol"
+	"github.com/aws/aws-sdk-go/private/protocol/query"
 )
 
 const opAuthorizeClusterSecurityGroupIngress = "AuthorizeClusterSecurityGroupIngress"
@@ -455,6 +457,8 @@ func (c *Redshift) CreateTagsRequest(input *CreateTagsInput) (req *request.Reque
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(query.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &CreateTagsOutput{}
 	req.Data = output
 	return
@@ -531,6 +535,8 @@ func (c *Redshift) DeleteClusterParameterGroupRequest(input *DeleteClusterParame
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(query.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &DeleteClusterParameterGroupOutput{}
 	req.Data = output
 	return
@@ -559,6 +565,8 @@ func (c *Redshift) DeleteClusterSecurityGroupRequest(input *DeleteClusterSecurit
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(query.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &DeleteClusterSecurityGroupOutput{}
 	req.Data = output
 	return
@@ -625,6 +633,8 @@ func (c *Redshift) DeleteClusterSubnetGroupRequest(input *DeleteClusterSubnetGro
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(query.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &DeleteClusterSubnetGroupOutput{}
 	req.Data = output
 	return
@@ -652,6 +662,8 @@ func (c *Redshift) DeleteEventSubscriptionRequest(input *DeleteEventSubscription
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(query.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &DeleteEventSubscriptionOutput{}
 	req.Data = output
 	return
@@ -679,6 +691,8 @@ func (c *Redshift) DeleteHsmClientCertificateRequest(input *DeleteHsmClientCerti
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(query.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &DeleteHsmClientCertificateOutput{}
 	req.Data = output
 	return
@@ -706,6 +720,8 @@ func (c *Redshift) DeleteHsmConfigurationRequest(input *DeleteHsmConfigurationIn
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(query.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &DeleteHsmConfigurationOutput{}
 	req.Data = output
 	return
@@ -733,6 +749,8 @@ func (c *Redshift) DeleteSnapshotCopyGrantRequest(input *DeleteSnapshotCopyGrant
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(query.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &DeleteSnapshotCopyGrantOutput{}
 	req.Data = output
 	return
@@ -760,6 +778,8 @@ func (c *Redshift) DeleteTagsRequest(input *DeleteTagsInput) (req *request.Reque
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(query.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &DeleteTagsOutput{}
 	req.Data = output
 	return
@@ -826,6 +846,7 @@ func (c *Redshift) DescribeClusterParameterGroups(input *DescribeClusterParamete
 
 func (c *Redshift) DescribeClusterParameterGroupsPages(input *DescribeClusterParameterGroupsInput, fn func(p *DescribeClusterParameterGroupsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeClusterParameterGroupsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeClusterParameterGroupsOutput), lastPage)
 	})
@@ -877,6 +898,7 @@ func (c *Redshift) DescribeClusterParameters(input *DescribeClusterParametersInp
 
 func (c *Redshift) DescribeClusterParametersPages(input *DescribeClusterParametersInput, fn func(p *DescribeClusterParametersOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeClusterParametersRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeClusterParametersOutput), lastPage)
 	})
@@ -933,6 +955,7 @@ func (c *Redshift) DescribeClusterSecurityGroups(input *DescribeClusterSecurityG
 
 func (c *Redshift) DescribeClusterSecurityGroupsPages(input *DescribeClusterSecurityGroupsInput, fn func(p *DescribeClusterSecurityGroupsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeClusterSecurityGroupsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeClusterSecurityGroupsOutput), lastPage)
 	})
@@ -988,6 +1011,7 @@ func (c *Redshift) DescribeClusterSnapshots(input *DescribeClusterSnapshotsInput
 
 func (c *Redshift) DescribeClusterSnapshotsPages(input *DescribeClusterSnapshotsInput, fn func(p *DescribeClusterSnapshotsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeClusterSnapshotsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeClusterSnapshotsOutput), lastPage)
 	})
@@ -1040,6 +1064,7 @@ func (c *Redshift) DescribeClusterSubnetGroups(input *DescribeClusterSubnetGroup
 
 func (c *Redshift) DescribeClusterSubnetGroupsPages(input *DescribeClusterSubnetGroupsInput, fn func(p *DescribeClusterSubnetGroupsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeClusterSubnetGroupsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeClusterSubnetGroupsOutput), lastPage)
 	})
@@ -1084,6 +1109,7 @@ func (c *Redshift) DescribeClusterVersions(input *DescribeClusterVersionsInput) 
 
 func (c *Redshift) DescribeClusterVersionsPages(input *DescribeClusterVersionsInput, fn func(p *DescribeClusterVersionsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeClusterVersionsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeClusterVersionsOutput), lastPage)
 	})
@@ -1137,6 +1163,7 @@ func (c *Redshift) DescribeClusters(input *DescribeClustersInput) (*DescribeClus
 
 func (c *Redshift) DescribeClustersPages(input *DescribeClustersInput, fn func(p *DescribeClustersOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeClustersRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeClustersOutput), lastPage)
 	})
@@ -1181,6 +1208,7 @@ func (c *Redshift) DescribeDefaultClusterParameters(input *DescribeDefaultCluste
 
 func (c *Redshift) DescribeDefaultClusterParametersPages(input *DescribeDefaultClusterParametersInput, fn func(p *DescribeDefaultClusterParametersOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeDefaultClusterParametersRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeDefaultClusterParametersOutput), lastPage)
 	})
@@ -1252,6 +1280,7 @@ func (c *Redshift) DescribeEventSubscriptions(input *DescribeEventSubscriptionsI
 
 func (c *Redshift) DescribeEventSubscriptionsPages(input *DescribeEventSubscriptionsInput, fn func(p *DescribeEventSubscriptionsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeEventSubscriptionsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeEventSubscriptionsOutput), lastPage)
 	})
@@ -1295,6 +1324,7 @@ func (c *Redshift) DescribeEvents(input *DescribeEventsInput) (*DescribeEventsOu
 
 func (c *Redshift) DescribeEventsPages(input *DescribeEventsInput, fn func(p *DescribeEventsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeEventsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeEventsOutput), lastPage)
 	})
@@ -1347,6 +1377,7 @@ func (c *Redshift) DescribeHsmClientCertificates(input *DescribeHsmClientCertifi
 
 func (c *Redshift) DescribeHsmClientCertificatesPages(input *DescribeHsmClientCertificatesInput, fn func(p *DescribeHsmClientCertificatesOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeHsmClientCertificatesRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeHsmClientCertificatesOutput), lastPage)
 	})
@@ -1399,6 +1430,7 @@ func (c *Redshift) DescribeHsmConfigurations(input *DescribeHsmConfigurationsInp
 
 func (c *Redshift) DescribeHsmConfigurationsPages(input *DescribeHsmConfigurationsInput, fn func(p *DescribeHsmConfigurationsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeHsmConfigurationsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeHsmConfigurationsOutput), lastPage)
 	})
@@ -1475,6 +1507,7 @@ func (c *Redshift) DescribeOrderableClusterOptions(input *DescribeOrderableClust
 
 func (c *Redshift) DescribeOrderableClusterOptionsPages(input *DescribeOrderableClusterOptionsInput, fn func(p *DescribeOrderableClusterOptionsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeOrderableClusterOptionsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeOrderableClusterOptionsOutput), lastPage)
 	})
@@ -1524,6 +1557,7 @@ func (c *Redshift) DescribeReservedNodeOfferings(input *DescribeReservedNodeOffe
 
 func (c *Redshift) DescribeReservedNodeOfferingsPages(input *DescribeReservedNodeOfferingsInput, fn func(p *DescribeReservedNodeOfferingsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeReservedNodeOfferingsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeReservedNodeOfferingsOutput), lastPage)
 	})
@@ -1564,6 +1598,7 @@ func (c *Redshift) DescribeReservedNodes(input *DescribeReservedNodesInput) (*De
 
 func (c *Redshift) DescribeReservedNodesPages(input *DescribeReservedNodesInput, fn func(p *DescribeReservedNodesOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeReservedNodesRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*DescribeReservedNodesOutput), lastPage)
 	})
@@ -2179,14 +2214,10 @@ func (c *Redshift) RotateEncryptionKey(input *RotateEncryptionKeyInput) (*Rotate
 
 // Describes an AWS customer account authorized to restore a snapshot.
 type AccountWithRestoreAccess struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of an AWS customer account authorized to restore a snapshot.
 	AccountId *string `type:"string"`
-
-	metadataAccountWithRestoreAccess `json:"-" xml:"-"`
-}
-
-type metadataAccountWithRestoreAccess struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2201,6 +2232,8 @@ func (s AccountWithRestoreAccess) GoString() string {
 
 // ???
 type AuthorizeClusterSecurityGroupIngressInput struct {
+	_ struct{} `type:"structure"`
+
 	// The IP range to be added the Amazon Redshift security group.
 	CIDRIP *string `type:"string"`
 
@@ -2216,12 +2249,6 @@ type AuthorizeClusterSecurityGroupIngressInput struct {
 	//
 	//  Example: 111122223333
 	EC2SecurityGroupOwnerId *string `type:"string"`
-
-	metadataAuthorizeClusterSecurityGroupIngressInput `json:"-" xml:"-"`
-}
-
-type metadataAuthorizeClusterSecurityGroupIngressInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2235,14 +2262,10 @@ func (s AuthorizeClusterSecurityGroupIngressInput) GoString() string {
 }
 
 type AuthorizeClusterSecurityGroupIngressOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a security group.
 	ClusterSecurityGroup *ClusterSecurityGroup `type:"structure"`
-
-	metadataAuthorizeClusterSecurityGroupIngressOutput `json:"-" xml:"-"`
-}
-
-type metadataAuthorizeClusterSecurityGroupIngressOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2256,6 +2279,8 @@ func (s AuthorizeClusterSecurityGroupIngressOutput) GoString() string {
 }
 
 type AuthorizeSnapshotAccessInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the AWS customer account authorized to restore the specified
 	// snapshot.
 	AccountWithRestoreAccess *string `type:"string" required:"true"`
@@ -2267,12 +2292,6 @@ type AuthorizeSnapshotAccessInput struct {
 
 	// The identifier of the snapshot the account is authorized to restore.
 	SnapshotIdentifier *string `type:"string" required:"true"`
-
-	metadataAuthorizeSnapshotAccessInput `json:"-" xml:"-"`
-}
-
-type metadataAuthorizeSnapshotAccessInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2286,14 +2305,10 @@ func (s AuthorizeSnapshotAccessInput) GoString() string {
 }
 
 type AuthorizeSnapshotAccessOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a snapshot.
 	Snapshot *Snapshot `type:"structure"`
-
-	metadataAuthorizeSnapshotAccessOutput `json:"-" xml:"-"`
-}
-
-type metadataAuthorizeSnapshotAccessOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2308,14 +2323,10 @@ func (s AuthorizeSnapshotAccessOutput) GoString() string {
 
 // Describes an availability zone.
 type AvailabilityZone struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the availability zone.
 	Name *string `type:"string"`
-
-	metadataAvailabilityZone `json:"-" xml:"-"`
-}
-
-type metadataAvailabilityZone struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2330,6 +2341,8 @@ func (s AvailabilityZone) GoString() string {
 
 // Describes a cluster.
 type Cluster struct {
+	_ struct{} `type:"structure"`
+
 	// If true, major version upgrades will be applied automatically to the cluster
 	// during the maintenance window.
 	AllowVersionUpgrade *bool `type:"boolean"`
@@ -2444,12 +2457,6 @@ type Cluster struct {
 	// with the cluster. This parameter is returned only if the cluster is in a
 	// VPC.
 	VpcSecurityGroups []*VpcSecurityGroupMembership `locationNameList:"VpcSecurityGroup" type:"list"`
-
-	metadataCluster `json:"-" xml:"-"`
-}
-
-type metadataCluster struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2464,6 +2471,8 @@ func (s Cluster) GoString() string {
 
 // The identifier of a node in a cluster.
 type ClusterNode struct {
+	_ struct{} `type:"structure"`
+
 	// Whether the node is a leader node or a compute node.
 	NodeRole *string `type:"string"`
 
@@ -2472,12 +2481,6 @@ type ClusterNode struct {
 
 	// The public IP address of a node within a cluster.
 	PublicIPAddress *string `type:"string"`
-
-	metadataClusterNode `json:"-" xml:"-"`
-}
-
-type metadataClusterNode struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2492,6 +2495,8 @@ func (s ClusterNode) GoString() string {
 
 // Describes a parameter group.
 type ClusterParameterGroup struct {
+	_ struct{} `type:"structure"`
+
 	// The description of the parameter group.
 	Description *string `type:"string"`
 
@@ -2504,12 +2509,6 @@ type ClusterParameterGroup struct {
 
 	// The list of tags for the cluster parameter group.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataClusterParameterGroup `json:"-" xml:"-"`
-}
-
-type metadataClusterParameterGroup struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2526,6 +2525,8 @@ func (s ClusterParameterGroup) GoString() string {
 // actions and indicate the parameter group involved and the status of the operation
 // on the parameter group.
 type ClusterParameterGroupNameMessage struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the cluster parameter group.
 	ParameterGroupName *string `type:"string"`
 
@@ -2533,12 +2534,6 @@ type ClusterParameterGroupNameMessage struct {
 	// parameter group name-value pair, then the change could be pending a reboot
 	// of an associated cluster.
 	ParameterGroupStatus *string `type:"string"`
-
-	metadataClusterParameterGroupNameMessage `json:"-" xml:"-"`
-}
-
-type metadataClusterParameterGroupNameMessage struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2553,6 +2548,8 @@ func (s ClusterParameterGroupNameMessage) GoString() string {
 
 // Describes the status of a parameter group.
 type ClusterParameterGroupStatus struct {
+	_ struct{} `type:"structure"`
+
 	// The list of parameter statuses.
 	//
 	//  For more information about parameters and parameter groups, go to Amazon
@@ -2565,12 +2562,6 @@ type ClusterParameterGroupStatus struct {
 
 	// The name of the cluster parameter group.
 	ParameterGroupName *string `type:"string"`
-
-	metadataClusterParameterGroupStatus `json:"-" xml:"-"`
-}
-
-type metadataClusterParameterGroupStatus struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2585,6 +2576,8 @@ func (s ClusterParameterGroupStatus) GoString() string {
 
 // Describes the status of a parameter group.
 type ClusterParameterStatus struct {
+	_ struct{} `type:"structure"`
+
 	// The error that prevented the parameter from being applied to the database.
 	ParameterApplyErrorDescription *string `type:"string"`
 
@@ -2606,12 +2599,6 @@ type ClusterParameterStatus struct {
 
 	// The name of the parameter.
 	ParameterName *string `type:"string"`
-
-	metadataClusterParameterStatus `json:"-" xml:"-"`
-}
-
-type metadataClusterParameterStatus struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2626,6 +2613,8 @@ func (s ClusterParameterStatus) GoString() string {
 
 // Describes a security group.
 type ClusterSecurityGroup struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the cluster security group to which the operation was applied.
 	ClusterSecurityGroupName *string `type:"string"`
 
@@ -2642,12 +2631,6 @@ type ClusterSecurityGroup struct {
 
 	// The list of tags for the cluster security group.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataClusterSecurityGroup `json:"-" xml:"-"`
-}
-
-type metadataClusterSecurityGroup struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2662,17 +2645,13 @@ func (s ClusterSecurityGroup) GoString() string {
 
 // Describes a security group.
 type ClusterSecurityGroupMembership struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the cluster security group.
 	ClusterSecurityGroupName *string `type:"string"`
 
 	// The status of the cluster security group.
 	Status *string `type:"string"`
-
-	metadataClusterSecurityGroupMembership `json:"-" xml:"-"`
-}
-
-type metadataClusterSecurityGroupMembership struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2688,6 +2667,8 @@ func (s ClusterSecurityGroupMembership) GoString() string {
 // Returns the destination region and retention period that are configured for
 // cross-region snapshot copy.
 type ClusterSnapshotCopyStatus struct {
+	_ struct{} `type:"structure"`
+
 	// The destination region that snapshots are automatically copied to when cross-region
 	// snapshot copy is enabled.
 	DestinationRegion *string `type:"string"`
@@ -2698,12 +2679,6 @@ type ClusterSnapshotCopyStatus struct {
 
 	// The name of the snapshot copy grant.
 	SnapshotCopyGrantName *string `type:"string"`
-
-	metadataClusterSnapshotCopyStatus `json:"-" xml:"-"`
-}
-
-type metadataClusterSnapshotCopyStatus struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2718,6 +2693,8 @@ func (s ClusterSnapshotCopyStatus) GoString() string {
 
 // Describes a subnet group.
 type ClusterSubnetGroup struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the cluster subnet group.
 	ClusterSubnetGroupName *string `type:"string"`
 
@@ -2736,12 +2713,6 @@ type ClusterSubnetGroup struct {
 
 	// The VPC ID of the cluster subnet group.
 	VpcId *string `type:"string"`
-
-	metadataClusterSubnetGroup `json:"-" xml:"-"`
-}
-
-type metadataClusterSubnetGroup struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2757,6 +2728,8 @@ func (s ClusterSubnetGroup) GoString() string {
 // Describes a cluster version, including the parameter group family and description
 // of the version.
 type ClusterVersion struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the cluster parameter group family for the cluster.
 	ClusterParameterGroupFamily *string `type:"string"`
 
@@ -2765,12 +2738,6 @@ type ClusterVersion struct {
 
 	// The description of the cluster version.
 	Description *string `type:"string"`
-
-	metadataClusterVersion `json:"-" xml:"-"`
-}
-
-type metadataClusterVersion struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2784,6 +2751,8 @@ func (s ClusterVersion) GoString() string {
 }
 
 type CopyClusterSnapshotInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the cluster the source snapshot was created from. This
 	// parameter is required if your IAM user has a policy containing a snapshot
 	// resource element that specifies anything other than * for the cluster name.
@@ -2809,12 +2778,6 @@ type CopyClusterSnapshotInput struct {
 	// a hyphen or contain two consecutive hyphens. Must be unique for the AWS account
 	// that is making the request.
 	TargetSnapshotIdentifier *string `type:"string" required:"true"`
-
-	metadataCopyClusterSnapshotInput `json:"-" xml:"-"`
-}
-
-type metadataCopyClusterSnapshotInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2828,14 +2791,10 @@ func (s CopyClusterSnapshotInput) GoString() string {
 }
 
 type CopyClusterSnapshotOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a snapshot.
 	Snapshot *Snapshot `type:"structure"`
-
-	metadataCopyClusterSnapshotOutput `json:"-" xml:"-"`
-}
-
-type metadataCopyClusterSnapshotOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2849,6 +2808,8 @@ func (s CopyClusterSnapshotOutput) GoString() string {
 }
 
 type CreateClusterInput struct {
+	_ struct{} `type:"structure"`
+
 	// If true, major version upgrades can be applied during the maintenance window
 	// to the Amazon Redshift engine that is running on the cluster.
 	//
@@ -3061,12 +3022,6 @@ type CreateClusterInput struct {
 	//
 	// Default: The default VPC security group is associated with the cluster.
 	VpcSecurityGroupIds []*string `locationNameList:"VpcSecurityGroupId" type:"list"`
-
-	metadataCreateClusterInput `json:"-" xml:"-"`
-}
-
-type metadataCreateClusterInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3080,14 +3035,10 @@ func (s CreateClusterInput) GoString() string {
 }
 
 type CreateClusterOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a cluster.
 	Cluster *Cluster `type:"structure"`
-
-	metadataCreateClusterOutput `json:"-" xml:"-"`
-}
-
-type metadataCreateClusterOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3101,6 +3052,8 @@ func (s CreateClusterOutput) GoString() string {
 }
 
 type CreateClusterParameterGroupInput struct {
+	_ struct{} `type:"structure"`
+
 	// A description of the parameter group.
 	Description *string `type:"string" required:"true"`
 
@@ -3127,12 +3080,6 @@ type CreateClusterParameterGroupInput struct {
 
 	// A list of tag instances.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataCreateClusterParameterGroupInput `json:"-" xml:"-"`
-}
-
-type metadataCreateClusterParameterGroupInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3146,14 +3093,10 @@ func (s CreateClusterParameterGroupInput) GoString() string {
 }
 
 type CreateClusterParameterGroupOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a parameter group.
 	ClusterParameterGroup *ClusterParameterGroup `type:"structure"`
-
-	metadataCreateClusterParameterGroupOutput `json:"-" xml:"-"`
-}
-
-type metadataCreateClusterParameterGroupOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3168,6 +3111,8 @@ func (s CreateClusterParameterGroupOutput) GoString() string {
 
 // ???
 type CreateClusterSecurityGroupInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name for the security group. Amazon Redshift stores the value as a lowercase
 	// string.
 	//
@@ -3183,12 +3128,6 @@ type CreateClusterSecurityGroupInput struct {
 
 	// A list of tag instances.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataCreateClusterSecurityGroupInput `json:"-" xml:"-"`
-}
-
-type metadataCreateClusterSecurityGroupInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3202,14 +3141,10 @@ func (s CreateClusterSecurityGroupInput) GoString() string {
 }
 
 type CreateClusterSecurityGroupOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a security group.
 	ClusterSecurityGroup *ClusterSecurityGroup `type:"structure"`
-
-	metadataCreateClusterSecurityGroupOutput `json:"-" xml:"-"`
-}
-
-type metadataCreateClusterSecurityGroupOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3223,6 +3158,8 @@ func (s CreateClusterSecurityGroupOutput) GoString() string {
 }
 
 type CreateClusterSnapshotInput struct {
+	_ struct{} `type:"structure"`
+
 	// The cluster identifier for which you want a snapshot.
 	ClusterIdentifier *string `type:"string" required:"true"`
 
@@ -3238,12 +3175,6 @@ type CreateClusterSnapshotInput struct {
 
 	// A list of tag instances.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataCreateClusterSnapshotInput `json:"-" xml:"-"`
-}
-
-type metadataCreateClusterSnapshotInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3257,14 +3188,10 @@ func (s CreateClusterSnapshotInput) GoString() string {
 }
 
 type CreateClusterSnapshotOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a snapshot.
 	Snapshot *Snapshot `type:"structure"`
-
-	metadataCreateClusterSnapshotOutput `json:"-" xml:"-"`
-}
-
-type metadataCreateClusterSnapshotOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3278,6 +3205,8 @@ func (s CreateClusterSnapshotOutput) GoString() string {
 }
 
 type CreateClusterSubnetGroupInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name for the subnet group. Amazon Redshift stores the value as a lowercase
 	// string.
 	//
@@ -3297,12 +3226,6 @@ type CreateClusterSubnetGroupInput struct {
 
 	// A list of tag instances.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataCreateClusterSubnetGroupInput `json:"-" xml:"-"`
-}
-
-type metadataCreateClusterSubnetGroupInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3316,14 +3239,10 @@ func (s CreateClusterSubnetGroupInput) GoString() string {
 }
 
 type CreateClusterSubnetGroupOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a subnet group.
 	ClusterSubnetGroup *ClusterSubnetGroup `type:"structure"`
-
-	metadataCreateClusterSubnetGroupOutput `json:"-" xml:"-"`
-}
-
-type metadataCreateClusterSubnetGroupOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3337,6 +3256,8 @@ func (s CreateClusterSubnetGroupOutput) GoString() string {
 }
 
 type CreateEventSubscriptionInput struct {
+	_ struct{} `type:"structure"`
+
 	// A Boolean value; set to true to activate the subscription, set to false to
 	// create the subscription but not active it.
 	Enabled *bool `type:"boolean"`
@@ -3390,12 +3311,6 @@ type CreateEventSubscriptionInput struct {
 
 	// A list of tag instances.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataCreateEventSubscriptionInput `json:"-" xml:"-"`
-}
-
-type metadataCreateEventSubscriptionInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3409,13 +3324,9 @@ func (s CreateEventSubscriptionInput) GoString() string {
 }
 
 type CreateEventSubscriptionOutput struct {
+	_ struct{} `type:"structure"`
+
 	EventSubscription *EventSubscription `type:"structure"`
-
-	metadataCreateEventSubscriptionOutput `json:"-" xml:"-"`
-}
-
-type metadataCreateEventSubscriptionOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3429,18 +3340,14 @@ func (s CreateEventSubscriptionOutput) GoString() string {
 }
 
 type CreateHsmClientCertificateInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier to be assigned to the new HSM client certificate that the
 	// cluster will use to connect to the HSM to use the database encryption keys.
 	HsmClientCertificateIdentifier *string `type:"string" required:"true"`
 
 	// A list of tag instances.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataCreateHsmClientCertificateInput `json:"-" xml:"-"`
-}
-
-type metadataCreateHsmClientCertificateInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3454,16 +3361,12 @@ func (s CreateHsmClientCertificateInput) GoString() string {
 }
 
 type CreateHsmClientCertificateOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Returns information about an HSM client certificate. The certificate is stored
 	// in a secure Hardware Storage Module (HSM), and used by the Amazon Redshift
 	// cluster to encrypt data files.
 	HsmClientCertificate *HsmClientCertificate `type:"structure"`
-
-	metadataCreateHsmClientCertificateOutput `json:"-" xml:"-"`
-}
-
-type metadataCreateHsmClientCertificateOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3477,6 +3380,8 @@ func (s CreateHsmClientCertificateOutput) GoString() string {
 }
 
 type CreateHsmConfigurationInput struct {
+	_ struct{} `type:"structure"`
+
 	// A text description of the HSM configuration to be created.
 	Description *string `type:"string" required:"true"`
 
@@ -3499,12 +3404,6 @@ type CreateHsmConfigurationInput struct {
 
 	// A list of tag instances.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataCreateHsmConfigurationInput `json:"-" xml:"-"`
-}
-
-type metadataCreateHsmConfigurationInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3518,16 +3417,12 @@ func (s CreateHsmConfigurationInput) GoString() string {
 }
 
 type CreateHsmConfigurationOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Returns information about an HSM configuration, which is an object that describes
 	// to Amazon Redshift clusters the information they require to connect to an
 	// HSM where they can store database encryption keys.
 	HsmConfiguration *HsmConfiguration `type:"structure"`
-
-	metadataCreateHsmConfigurationOutput `json:"-" xml:"-"`
-}
-
-type metadataCreateHsmConfigurationOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3542,6 +3437,8 @@ func (s CreateHsmConfigurationOutput) GoString() string {
 
 // The result of the CreateSnapshotCopyGrant action.
 type CreateSnapshotCopyGrantInput struct {
+	_ struct{} `type:"structure"`
+
 	// The unique identifier of the customer master key (CMK) to which to grant
 	// Amazon Redshift permission. If no key is specified, the default key is used.
 	KmsKeyId *string `type:"string"`
@@ -3559,12 +3456,6 @@ type CreateSnapshotCopyGrantInput struct {
 
 	// A list of tag instances.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataCreateSnapshotCopyGrantInput `json:"-" xml:"-"`
-}
-
-type metadataCreateSnapshotCopyGrantInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3578,6 +3469,8 @@ func (s CreateSnapshotCopyGrantInput) GoString() string {
 }
 
 type CreateSnapshotCopyGrantOutput struct {
+	_ struct{} `type:"structure"`
+
 	// The snapshot copy grant that grants Amazon Redshift permission to encrypt
 	// copied snapshots with the specified customer master key (CMK) from AWS KMS
 	// in the destination region.
@@ -3586,12 +3479,6 @@ type CreateSnapshotCopyGrantOutput struct {
 	// Redshift Database Encryption (http://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html)
 	// in the Amazon Redshift Cluster Management Guide.
 	SnapshotCopyGrant *SnapshotCopyGrant `type:"structure"`
-
-	metadataCreateSnapshotCopyGrantOutput `json:"-" xml:"-"`
-}
-
-type metadataCreateSnapshotCopyGrantOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3606,6 +3493,8 @@ func (s CreateSnapshotCopyGrantOutput) GoString() string {
 
 // Contains the output from the CreateTags action.
 type CreateTagsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The Amazon Resource Name (ARN) to which you want to add the tag or tags.
 	// For example, arn:aws:redshift:us-east-1:123456789:cluster:t1.
 	ResourceName *string `type:"string" required:"true"`
@@ -3616,12 +3505,6 @@ type CreateTagsInput struct {
 	// by a comma (,). Separate multiple tags with a space. For example, --tags
 	// "Key"="owner","Value"="admin" "Key"="environment","Value"="test" "Key"="version","Value"="1.0".
 	Tags []*Tag `locationNameList:"Tag" type:"list" required:"true"`
-
-	metadataCreateTagsInput `json:"-" xml:"-"`
-}
-
-type metadataCreateTagsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3635,11 +3518,7 @@ func (s CreateTagsInput) GoString() string {
 }
 
 type CreateTagsOutput struct {
-	metadataCreateTagsOutput `json:"-" xml:"-"`
-}
-
-type metadataCreateTagsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -3654,6 +3533,8 @@ func (s CreateTagsOutput) GoString() string {
 
 // Describes the default cluster parameters for a parameter group family.
 type DefaultClusterParameters struct {
+	_ struct{} `type:"structure"`
+
 	// A value that indicates the starting point for the next set of response records
 	// in a subsequent request. If a value is returned in a response, you can retrieve
 	// the next set of records by providing this returned marker value in the Marker
@@ -3667,12 +3548,6 @@ type DefaultClusterParameters struct {
 
 	// The list of cluster default parameters.
 	Parameters []*Parameter `locationNameList:"Parameter" type:"list"`
-
-	metadataDefaultClusterParameters `json:"-" xml:"-"`
-}
-
-type metadataDefaultClusterParameters struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3686,6 +3561,8 @@ func (s DefaultClusterParameters) GoString() string {
 }
 
 type DeleteClusterInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the cluster to be deleted.
 	//
 	// Constraints:
@@ -3712,12 +3589,6 @@ type DeleteClusterInput struct {
 	// The FinalClusterSnapshotIdentifier parameter must be specified if SkipFinalClusterSnapshot
 	// is false. Default: false
 	SkipFinalClusterSnapshot *bool `type:"boolean"`
-
-	metadataDeleteClusterInput `json:"-" xml:"-"`
-}
-
-type metadataDeleteClusterInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3731,14 +3602,10 @@ func (s DeleteClusterInput) GoString() string {
 }
 
 type DeleteClusterOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a cluster.
 	Cluster *Cluster `type:"structure"`
-
-	metadataDeleteClusterOutput `json:"-" xml:"-"`
-}
-
-type metadataDeleteClusterOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3752,6 +3619,8 @@ func (s DeleteClusterOutput) GoString() string {
 }
 
 type DeleteClusterParameterGroupInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the parameter group to be deleted.
 	//
 	// Constraints:
@@ -3759,12 +3628,6 @@ type DeleteClusterParameterGroupInput struct {
 	//  Must be the name of an existing cluster parameter group. Cannot delete
 	// a default cluster parameter group.
 	ParameterGroupName *string `type:"string" required:"true"`
-
-	metadataDeleteClusterParameterGroupInput `json:"-" xml:"-"`
-}
-
-type metadataDeleteClusterParameterGroupInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3778,11 +3641,7 @@ func (s DeleteClusterParameterGroupInput) GoString() string {
 }
 
 type DeleteClusterParameterGroupOutput struct {
-	metadataDeleteClusterParameterGroupOutput `json:"-" xml:"-"`
-}
-
-type metadataDeleteClusterParameterGroupOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -3796,14 +3655,10 @@ func (s DeleteClusterParameterGroupOutput) GoString() string {
 }
 
 type DeleteClusterSecurityGroupInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the cluster security group to be deleted.
 	ClusterSecurityGroupName *string `type:"string" required:"true"`
-
-	metadataDeleteClusterSecurityGroupInput `json:"-" xml:"-"`
-}
-
-type metadataDeleteClusterSecurityGroupInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3817,11 +3672,7 @@ func (s DeleteClusterSecurityGroupInput) GoString() string {
 }
 
 type DeleteClusterSecurityGroupOutput struct {
-	metadataDeleteClusterSecurityGroupOutput `json:"-" xml:"-"`
-}
-
-type metadataDeleteClusterSecurityGroupOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -3835,6 +3686,8 @@ func (s DeleteClusterSecurityGroupOutput) GoString() string {
 }
 
 type DeleteClusterSnapshotInput struct {
+	_ struct{} `type:"structure"`
+
 	// The unique identifier of the cluster the snapshot was created from. This
 	// parameter is required if your IAM user has a policy containing a snapshot
 	// resource element that specifies anything other than * for the cluster name.
@@ -3847,12 +3700,6 @@ type DeleteClusterSnapshotInput struct {
 	// Constraints: Must be the name of an existing snapshot that is in the available
 	// state.
 	SnapshotIdentifier *string `type:"string" required:"true"`
-
-	metadataDeleteClusterSnapshotInput `json:"-" xml:"-"`
-}
-
-type metadataDeleteClusterSnapshotInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3866,14 +3713,10 @@ func (s DeleteClusterSnapshotInput) GoString() string {
 }
 
 type DeleteClusterSnapshotOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a snapshot.
 	Snapshot *Snapshot `type:"structure"`
-
-	metadataDeleteClusterSnapshotOutput `json:"-" xml:"-"`
-}
-
-type metadataDeleteClusterSnapshotOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3887,14 +3730,10 @@ func (s DeleteClusterSnapshotOutput) GoString() string {
 }
 
 type DeleteClusterSubnetGroupInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the cluster subnet group name to be deleted.
 	ClusterSubnetGroupName *string `type:"string" required:"true"`
-
-	metadataDeleteClusterSubnetGroupInput `json:"-" xml:"-"`
-}
-
-type metadataDeleteClusterSubnetGroupInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3908,11 +3747,7 @@ func (s DeleteClusterSubnetGroupInput) GoString() string {
 }
 
 type DeleteClusterSubnetGroupOutput struct {
-	metadataDeleteClusterSubnetGroupOutput `json:"-" xml:"-"`
-}
-
-type metadataDeleteClusterSubnetGroupOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -3926,14 +3761,10 @@ func (s DeleteClusterSubnetGroupOutput) GoString() string {
 }
 
 type DeleteEventSubscriptionInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the Amazon Redshift event notification subscription to be deleted.
 	SubscriptionName *string `type:"string" required:"true"`
-
-	metadataDeleteEventSubscriptionInput `json:"-" xml:"-"`
-}
-
-type metadataDeleteEventSubscriptionInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3947,11 +3778,7 @@ func (s DeleteEventSubscriptionInput) GoString() string {
 }
 
 type DeleteEventSubscriptionOutput struct {
-	metadataDeleteEventSubscriptionOutput `json:"-" xml:"-"`
-}
-
-type metadataDeleteEventSubscriptionOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -3965,14 +3792,10 @@ func (s DeleteEventSubscriptionOutput) GoString() string {
 }
 
 type DeleteHsmClientCertificateInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the HSM client certificate to be deleted.
 	HsmClientCertificateIdentifier *string `type:"string" required:"true"`
-
-	metadataDeleteHsmClientCertificateInput `json:"-" xml:"-"`
-}
-
-type metadataDeleteHsmClientCertificateInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3986,11 +3809,7 @@ func (s DeleteHsmClientCertificateInput) GoString() string {
 }
 
 type DeleteHsmClientCertificateOutput struct {
-	metadataDeleteHsmClientCertificateOutput `json:"-" xml:"-"`
-}
-
-type metadataDeleteHsmClientCertificateOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -4004,14 +3823,10 @@ func (s DeleteHsmClientCertificateOutput) GoString() string {
 }
 
 type DeleteHsmConfigurationInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the Amazon Redshift HSM configuration to be deleted.
 	HsmConfigurationIdentifier *string `type:"string" required:"true"`
-
-	metadataDeleteHsmConfigurationInput `json:"-" xml:"-"`
-}
-
-type metadataDeleteHsmConfigurationInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4025,11 +3840,7 @@ func (s DeleteHsmConfigurationInput) GoString() string {
 }
 
 type DeleteHsmConfigurationOutput struct {
-	metadataDeleteHsmConfigurationOutput `json:"-" xml:"-"`
-}
-
-type metadataDeleteHsmConfigurationOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -4044,14 +3855,10 @@ func (s DeleteHsmConfigurationOutput) GoString() string {
 
 // The result of the DeleteSnapshotCopyGrant action.
 type DeleteSnapshotCopyGrantInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the snapshot copy grant to delete.
 	SnapshotCopyGrantName *string `type:"string" required:"true"`
-
-	metadataDeleteSnapshotCopyGrantInput `json:"-" xml:"-"`
-}
-
-type metadataDeleteSnapshotCopyGrantInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4065,11 +3872,7 @@ func (s DeleteSnapshotCopyGrantInput) GoString() string {
 }
 
 type DeleteSnapshotCopyGrantOutput struct {
-	metadataDeleteSnapshotCopyGrantOutput `json:"-" xml:"-"`
-}
-
-type metadataDeleteSnapshotCopyGrantOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -4084,18 +3887,14 @@ func (s DeleteSnapshotCopyGrantOutput) GoString() string {
 
 // Contains the output from the DeleteTags action.
 type DeleteTagsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The Amazon Resource Name (ARN) from which you want to remove the tag or tags.
 	// For example, arn:aws:redshift:us-east-1:123456789:cluster:t1.
 	ResourceName *string `type:"string" required:"true"`
 
 	// The tag key that you want to delete.
 	TagKeys []*string `locationNameList:"TagKey" type:"list" required:"true"`
-
-	metadataDeleteTagsInput `json:"-" xml:"-"`
-}
-
-type metadataDeleteTagsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4109,11 +3908,7 @@ func (s DeleteTagsInput) GoString() string {
 }
 
 type DeleteTagsOutput struct {
-	metadataDeleteTagsOutput `json:"-" xml:"-"`
-}
-
-type metadataDeleteTagsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -4127,6 +3922,8 @@ func (s DeleteTagsOutput) GoString() string {
 }
 
 type DescribeClusterParameterGroupsInput struct {
+	_ struct{} `type:"structure"`
+
 	// An optional parameter that specifies the starting point to return a set of
 	// response records. When the results of a DescribeClusterParameterGroups request
 	// exceed the value specified in MaxRecords, AWS returns a value in the Marker
@@ -4164,12 +3961,6 @@ type DescribeClusterParameterGroupsInput struct {
 	// Redshift returns a response with the parameter groups that have either or
 	// both of these tag values associated with them.
 	TagValues []*string `locationNameList:"TagValue" type:"list"`
-
-	metadataDescribeClusterParameterGroupsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterParameterGroupsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4184,6 +3975,8 @@ func (s DescribeClusterParameterGroupsInput) GoString() string {
 
 // Contains the output from the DescribeClusterParameterGroups action.
 type DescribeClusterParameterGroupsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A value that indicates the starting point for the next set of response records
 	// in a subsequent request. If a value is returned in a response, you can retrieve
 	// the next set of records by providing this returned marker value in the Marker
@@ -4194,12 +3987,6 @@ type DescribeClusterParameterGroupsOutput struct {
 	// A list of ClusterParameterGroup instances. Each instance describes one cluster
 	// parameter group.
 	ParameterGroups []*ClusterParameterGroup `locationNameList:"ClusterParameterGroup" type:"list"`
-
-	metadataDescribeClusterParameterGroupsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterParameterGroupsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4213,6 +4000,8 @@ func (s DescribeClusterParameterGroupsOutput) GoString() string {
 }
 
 type DescribeClusterParametersInput struct {
+	_ struct{} `type:"structure"`
+
 	// An optional parameter that specifies the starting point to return a set of
 	// response records. When the results of a DescribeClusterParameters request
 	// exceed the value specified in MaxRecords, AWS returns a value in the Marker
@@ -4242,12 +4031,6 @@ type DescribeClusterParametersInput struct {
 	//
 	// Valid Values: user | engine-default
 	Source *string `type:"string"`
-
-	metadataDescribeClusterParametersInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterParametersInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4262,6 +4045,8 @@ func (s DescribeClusterParametersInput) GoString() string {
 
 // Contains the output from the DescribeClusterParameters action.
 type DescribeClusterParametersOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A value that indicates the starting point for the next set of response records
 	// in a subsequent request. If a value is returned in a response, you can retrieve
 	// the next set of records by providing this returned marker value in the Marker
@@ -4272,12 +4057,6 @@ type DescribeClusterParametersOutput struct {
 	// A list of Parameter instances. Each instance lists the parameters of one
 	// cluster parameter group.
 	Parameters []*Parameter `locationNameList:"Parameter" type:"list"`
-
-	metadataDescribeClusterParametersOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterParametersOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4292,6 +4071,8 @@ func (s DescribeClusterParametersOutput) GoString() string {
 
 // ???
 type DescribeClusterSecurityGroupsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of a cluster security group for which you are requesting details.
 	// You can specify either the Marker parameter or a ClusterSecurityGroupName
 	// parameter, but not both.
@@ -4335,12 +4116,6 @@ type DescribeClusterSecurityGroupsInput struct {
 	// Redshift returns a response with the security groups that have either or
 	// both of these tag values associated with them.
 	TagValues []*string `locationNameList:"TagValue" type:"list"`
-
-	metadataDescribeClusterSecurityGroupsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterSecurityGroupsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4355,6 +4130,8 @@ func (s DescribeClusterSecurityGroupsInput) GoString() string {
 
 // Contains the output from the DescribeClusterSecurityGroups action.
 type DescribeClusterSecurityGroupsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of ClusterSecurityGroup instances.
 	ClusterSecurityGroups []*ClusterSecurityGroup `locationNameList:"ClusterSecurityGroup" type:"list"`
 
@@ -4364,12 +4141,6 @@ type DescribeClusterSecurityGroupsOutput struct {
 	// parameter and retrying the command. If the Marker field is empty, all response
 	// records have been retrieved for the request.
 	Marker *string `type:"string"`
-
-	metadataDescribeClusterSecurityGroupsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterSecurityGroupsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4383,6 +4154,8 @@ func (s DescribeClusterSecurityGroupsOutput) GoString() string {
 }
 
 type DescribeClusterSnapshotsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the cluster for which information about snapshots is requested.
 	ClusterIdentifier *string `type:"string"`
 
@@ -4448,12 +4221,6 @@ type DescribeClusterSnapshotsInput struct {
 	// Redshift returns a response with the snapshots that have either or both of
 	// these tag values associated with them.
 	TagValues []*string `locationNameList:"TagValue" type:"list"`
-
-	metadataDescribeClusterSnapshotsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterSnapshotsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4468,6 +4235,8 @@ func (s DescribeClusterSnapshotsInput) GoString() string {
 
 // Contains the output from the DescribeClusterSnapshots action.
 type DescribeClusterSnapshotsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A value that indicates the starting point for the next set of response records
 	// in a subsequent request. If a value is returned in a response, you can retrieve
 	// the next set of records by providing this returned marker value in the Marker
@@ -4477,12 +4246,6 @@ type DescribeClusterSnapshotsOutput struct {
 
 	// A list of Snapshot instances.
 	Snapshots []*Snapshot `locationNameList:"Snapshot" type:"list"`
-
-	metadataDescribeClusterSnapshotsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterSnapshotsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4496,6 +4259,8 @@ func (s DescribeClusterSnapshotsOutput) GoString() string {
 }
 
 type DescribeClusterSubnetGroupsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the cluster subnet group for which information is requested.
 	ClusterSubnetGroupName *string `type:"string"`
 
@@ -4532,12 +4297,6 @@ type DescribeClusterSubnetGroupsInput struct {
 	// Redshift returns a response with the subnet groups that have either or both
 	// of these tag values associated with them.
 	TagValues []*string `locationNameList:"TagValue" type:"list"`
-
-	metadataDescribeClusterSubnetGroupsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterSubnetGroupsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4552,6 +4311,8 @@ func (s DescribeClusterSubnetGroupsInput) GoString() string {
 
 // Contains the output from the DescribeClusterSubnetGroups action.
 type DescribeClusterSubnetGroupsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of ClusterSubnetGroup instances.
 	ClusterSubnetGroups []*ClusterSubnetGroup `locationNameList:"ClusterSubnetGroup" type:"list"`
 
@@ -4561,12 +4322,6 @@ type DescribeClusterSubnetGroupsOutput struct {
 	// parameter and retrying the command. If the Marker field is empty, all response
 	// records have been retrieved for the request.
 	Marker *string `type:"string"`
-
-	metadataDescribeClusterSubnetGroupsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterSubnetGroupsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4580,6 +4335,8 @@ func (s DescribeClusterSubnetGroupsOutput) GoString() string {
 }
 
 type DescribeClusterVersionsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of a specific cluster parameter group family to return details for.
 	//
 	// Constraints:
@@ -4609,12 +4366,6 @@ type DescribeClusterVersionsInput struct {
 	//
 	// Constraints: minimum 20, maximum 100.
 	MaxRecords *int64 `type:"integer"`
-
-	metadataDescribeClusterVersionsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterVersionsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4629,6 +4380,8 @@ func (s DescribeClusterVersionsInput) GoString() string {
 
 // Contains the output from the DescribeClusterVersions action.
 type DescribeClusterVersionsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of Version elements.
 	ClusterVersions []*ClusterVersion `locationNameList:"ClusterVersion" type:"list"`
 
@@ -4638,12 +4391,6 @@ type DescribeClusterVersionsOutput struct {
 	// parameter and retrying the command. If the Marker field is empty, all response
 	// records have been retrieved for the request.
 	Marker *string `type:"string"`
-
-	metadataDescribeClusterVersionsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterVersionsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4657,6 +4404,8 @@ func (s DescribeClusterVersionsOutput) GoString() string {
 }
 
 type DescribeClustersInput struct {
+	_ struct{} `type:"structure"`
+
 	// The unique identifier of a cluster whose properties you are requesting. This
 	// parameter is case sensitive.
 	//
@@ -4698,12 +4447,6 @@ type DescribeClustersInput struct {
 	// returns a response with the clusters that have either or both of these tag
 	// values associated with them.
 	TagValues []*string `locationNameList:"TagValue" type:"list"`
-
-	metadataDescribeClustersInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClustersInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4718,6 +4461,8 @@ func (s DescribeClustersInput) GoString() string {
 
 // Contains the output from the DescribeClusters action.
 type DescribeClustersOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of Cluster objects, where each object describes one cluster.
 	Clusters []*Cluster `locationNameList:"Cluster" type:"list"`
 
@@ -4727,12 +4472,6 @@ type DescribeClustersOutput struct {
 	// parameter and retrying the command. If the Marker field is empty, all response
 	// records have been retrieved for the request.
 	Marker *string `type:"string"`
-
-	metadataDescribeClustersOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClustersOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4746,6 +4485,8 @@ func (s DescribeClustersOutput) GoString() string {
 }
 
 type DescribeDefaultClusterParametersInput struct {
+	_ struct{} `type:"structure"`
+
 	// An optional parameter that specifies the starting point to return a set of
 	// response records. When the results of a DescribeDefaultClusterParameters
 	// request exceed the value specified in MaxRecords, AWS returns a value in
@@ -4766,12 +4507,6 @@ type DescribeDefaultClusterParametersInput struct {
 
 	// The name of the cluster parameter group family.
 	ParameterGroupFamily *string `type:"string" required:"true"`
-
-	metadataDescribeDefaultClusterParametersInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeDefaultClusterParametersInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4785,14 +4520,10 @@ func (s DescribeDefaultClusterParametersInput) GoString() string {
 }
 
 type DescribeDefaultClusterParametersOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes the default cluster parameters for a parameter group family.
 	DefaultClusterParameters *DefaultClusterParameters `type:"structure"`
-
-	metadataDescribeDefaultClusterParametersOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeDefaultClusterParametersOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4806,17 +4537,13 @@ func (s DescribeDefaultClusterParametersOutput) GoString() string {
 }
 
 type DescribeEventCategoriesInput struct {
+	_ struct{} `type:"structure"`
+
 	// The source type, such as cluster or parameter group, to which the described
 	// event categories apply.
 	//
 	//  Valid values: cluster, snapshot, parameter group, and security group.
 	SourceType *string `type:"string"`
-
-	metadataDescribeEventCategoriesInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeEventCategoriesInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4830,14 +4557,10 @@ func (s DescribeEventCategoriesInput) GoString() string {
 }
 
 type DescribeEventCategoriesOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of event categories descriptions.
 	EventCategoriesMapList []*EventCategoriesMap `locationNameList:"EventCategoriesMap" type:"list"`
-
-	metadataDescribeEventCategoriesOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeEventCategoriesOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4851,6 +4574,8 @@ func (s DescribeEventCategoriesOutput) GoString() string {
 }
 
 type DescribeEventSubscriptionsInput struct {
+	_ struct{} `type:"structure"`
+
 	// An optional parameter that specifies the starting point to return a set of
 	// response records. When the results of a DescribeEventSubscriptions request
 	// exceed the value specified in MaxRecords, AWS returns a value in the Marker
@@ -4871,12 +4596,6 @@ type DescribeEventSubscriptionsInput struct {
 
 	// The name of the Amazon Redshift event notification subscription to be described.
 	SubscriptionName *string `type:"string"`
-
-	metadataDescribeEventSubscriptionsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeEventSubscriptionsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4890,6 +4609,8 @@ func (s DescribeEventSubscriptionsInput) GoString() string {
 }
 
 type DescribeEventSubscriptionsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of event subscriptions.
 	EventSubscriptionsList []*EventSubscription `locationNameList:"EventSubscription" type:"list"`
 
@@ -4899,12 +4620,6 @@ type DescribeEventSubscriptionsOutput struct {
 	// parameter and retrying the command. If the Marker field is empty, all response
 	// records have been retrieved for the request.
 	Marker *string `type:"string"`
-
-	metadataDescribeEventSubscriptionsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeEventSubscriptionsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -4918,6 +4633,8 @@ func (s DescribeEventSubscriptionsOutput) GoString() string {
 }
 
 type DescribeEventsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The number of minutes prior to the time of the request for which to retrieve
 	// events. For example, if the request is sent at 18:00 and you specify a duration
 	// of 60, then only events which have occurred after 17:00 will be returned.
@@ -4982,12 +4699,6 @@ type DescribeEventsInput struct {
 	//
 	// Example: 2009-07-08T18:00Z
 	StartTime *time.Time `type:"timestamp" timestampFormat:"iso8601"`
-
-	metadataDescribeEventsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeEventsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5002,6 +4713,8 @@ func (s DescribeEventsInput) GoString() string {
 
 // Contains the output from the DescribeEvents action.
 type DescribeEventsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of Event instances.
 	Events []*Event `locationNameList:"Event" type:"list"`
 
@@ -5011,12 +4724,6 @@ type DescribeEventsOutput struct {
 	// parameter and retrying the command. If the Marker field is empty, all response
 	// records have been retrieved for the request.
 	Marker *string `type:"string"`
-
-	metadataDescribeEventsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeEventsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5030,6 +4737,8 @@ func (s DescribeEventsOutput) GoString() string {
 }
 
 type DescribeHsmClientCertificatesInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of a specific HSM client certificate for which you want information.
 	// If no identifier is specified, information is returned for all HSM client
 	// certificates owned by your AWS customer account.
@@ -5068,12 +4777,6 @@ type DescribeHsmClientCertificatesInput struct {
 	// in the request, Amazon Redshift returns a response with the HSM client certificates
 	// that have either or both of these tag values associated with them.
 	TagValues []*string `locationNameList:"TagValue" type:"list"`
-
-	metadataDescribeHsmClientCertificatesInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeHsmClientCertificatesInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5087,6 +4790,8 @@ func (s DescribeHsmClientCertificatesInput) GoString() string {
 }
 
 type DescribeHsmClientCertificatesOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of the identifiers for one or more HSM client certificates used by
 	// Amazon Redshift clusters to store and retrieve database encryption keys in
 	// an HSM.
@@ -5098,12 +4803,6 @@ type DescribeHsmClientCertificatesOutput struct {
 	// parameter and retrying the command. If the Marker field is empty, all response
 	// records have been retrieved for the request.
 	Marker *string `type:"string"`
-
-	metadataDescribeHsmClientCertificatesOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeHsmClientCertificatesOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5117,6 +4816,8 @@ func (s DescribeHsmClientCertificatesOutput) GoString() string {
 }
 
 type DescribeHsmConfigurationsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of a specific Amazon Redshift HSM configuration to be described.
 	// If no identifier is specified, information is returned for all HSM configurations
 	// owned by your AWS customer account.
@@ -5155,12 +4856,6 @@ type DescribeHsmConfigurationsInput struct {
 	// Redshift returns a response with the HSM configurations that have either
 	// or both of these tag values associated with them.
 	TagValues []*string `locationNameList:"TagValue" type:"list"`
-
-	metadataDescribeHsmConfigurationsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeHsmConfigurationsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5174,6 +4869,8 @@ func (s DescribeHsmConfigurationsInput) GoString() string {
 }
 
 type DescribeHsmConfigurationsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of Amazon Redshift HSM configurations.
 	HsmConfigurations []*HsmConfiguration `locationNameList:"HsmConfiguration" type:"list"`
 
@@ -5183,12 +4880,6 @@ type DescribeHsmConfigurationsOutput struct {
 	// parameter and retrying the command. If the Marker field is empty, all response
 	// records have been retrieved for the request.
 	Marker *string `type:"string"`
-
-	metadataDescribeHsmConfigurationsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeHsmConfigurationsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5202,16 +4893,12 @@ func (s DescribeHsmConfigurationsOutput) GoString() string {
 }
 
 type DescribeLoggingStatusInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the cluster to get the logging status from.
 	//
 	// Example: examplecluster
 	ClusterIdentifier *string `type:"string" required:"true"`
-
-	metadataDescribeLoggingStatusInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeLoggingStatusInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5225,6 +4912,8 @@ func (s DescribeLoggingStatusInput) GoString() string {
 }
 
 type DescribeOrderableClusterOptionsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The version filter value. Specify this parameter to show only the available
 	// offerings matching the specified version.
 	//
@@ -5254,12 +4943,6 @@ type DescribeOrderableClusterOptionsInput struct {
 	// The node type filter value. Specify this parameter to show only the available
 	// offerings matching the specified node type.
 	NodeType *string `type:"string"`
-
-	metadataDescribeOrderableClusterOptionsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeOrderableClusterOptionsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5274,6 +4957,8 @@ func (s DescribeOrderableClusterOptionsInput) GoString() string {
 
 // Contains the output from the DescribeOrderableClusterOptions action.
 type DescribeOrderableClusterOptionsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A value that indicates the starting point for the next set of response records
 	// in a subsequent request. If a value is returned in a response, you can retrieve
 	// the next set of records by providing this returned marker value in the Marker
@@ -5284,12 +4969,6 @@ type DescribeOrderableClusterOptionsOutput struct {
 	// An OrderableClusterOption structure containing information about orderable
 	// options for the Cluster.
 	OrderableClusterOptions []*OrderableClusterOption `locationNameList:"OrderableClusterOption" type:"list"`
-
-	metadataDescribeOrderableClusterOptionsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeOrderableClusterOptionsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5303,6 +4982,8 @@ func (s DescribeOrderableClusterOptionsOutput) GoString() string {
 }
 
 type DescribeReservedNodeOfferingsInput struct {
+	_ struct{} `type:"structure"`
+
 	// An optional parameter that specifies the starting point to return a set of
 	// response records. When the results of a DescribeReservedNodeOfferings request
 	// exceed the value specified in MaxRecords, AWS returns a value in the Marker
@@ -5323,12 +5004,6 @@ type DescribeReservedNodeOfferingsInput struct {
 
 	// The unique identifier for the offering.
 	ReservedNodeOfferingId *string `type:"string"`
-
-	metadataDescribeReservedNodeOfferingsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeReservedNodeOfferingsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5343,6 +5018,8 @@ func (s DescribeReservedNodeOfferingsInput) GoString() string {
 
 // Contains the output from the DescribeReservedNodeOfferings action.
 type DescribeReservedNodeOfferingsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A value that indicates the starting point for the next set of response records
 	// in a subsequent request. If a value is returned in a response, you can retrieve
 	// the next set of records by providing this returned marker value in the Marker
@@ -5352,12 +5029,6 @@ type DescribeReservedNodeOfferingsOutput struct {
 
 	// A list of reserved node offerings.
 	ReservedNodeOfferings []*ReservedNodeOffering `locationNameList:"ReservedNodeOffering" type:"list"`
-
-	metadataDescribeReservedNodeOfferingsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeReservedNodeOfferingsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5371,6 +5042,8 @@ func (s DescribeReservedNodeOfferingsOutput) GoString() string {
 }
 
 type DescribeReservedNodesInput struct {
+	_ struct{} `type:"structure"`
+
 	// An optional parameter that specifies the starting point to return a set of
 	// response records. When the results of a DescribeReservedNodes request exceed
 	// the value specified in MaxRecords, AWS returns a value in the Marker field
@@ -5390,12 +5063,6 @@ type DescribeReservedNodesInput struct {
 
 	// Identifier for the node reservation.
 	ReservedNodeId *string `type:"string"`
-
-	metadataDescribeReservedNodesInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeReservedNodesInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5410,6 +5077,8 @@ func (s DescribeReservedNodesInput) GoString() string {
 
 // Contains the output from the DescribeReservedNodes action.
 type DescribeReservedNodesOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A value that indicates the starting point for the next set of response records
 	// in a subsequent request. If a value is returned in a response, you can retrieve
 	// the next set of records by providing this returned marker value in the Marker
@@ -5419,12 +5088,6 @@ type DescribeReservedNodesOutput struct {
 
 	// The list of reserved nodes.
 	ReservedNodes []*ReservedNode `locationNameList:"ReservedNode" type:"list"`
-
-	metadataDescribeReservedNodesOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeReservedNodesOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5438,18 +5101,14 @@ func (s DescribeReservedNodesOutput) GoString() string {
 }
 
 type DescribeResizeInput struct {
+	_ struct{} `type:"structure"`
+
 	// The unique identifier of a cluster whose resize progress you are requesting.
 	// This parameter is case-sensitive.
 	//
 	// By default, resize operations for all clusters defined for an AWS account
 	// are returned.
 	ClusterIdentifier *string `type:"string" required:"true"`
-
-	metadataDescribeResizeInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeResizeInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5464,6 +5123,8 @@ func (s DescribeResizeInput) GoString() string {
 
 // Describes the result of a cluster resize operation.
 type DescribeResizeOutput struct {
+	_ struct{} `type:"structure"`
+
 	// The average rate of the resize operation over the last few minutes, measured
 	// in megabytes per second. After the resize operation completes, this value
 	// shows the average rate of the entire resize operation.
@@ -5522,12 +5183,6 @@ type DescribeResizeOutput struct {
 	// The estimated total amount of data, in megabytes, on the cluster before the
 	// resize operation began.
 	TotalResizeDataInMegaBytes *int64 `type:"long"`
-
-	metadataDescribeResizeOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeResizeOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5542,6 +5197,8 @@ func (s DescribeResizeOutput) GoString() string {
 
 // The result of the DescribeSnapshotCopyGrants action.
 type DescribeSnapshotCopyGrantsInput struct {
+	_ struct{} `type:"structure"`
+
 	// An optional parameter that specifies the starting point to return a set of
 	// response records. When the results of a DescribeSnapshotCopyGrant request
 	// exceed the value specified in MaxRecords, AWS returns a value in the Marker
@@ -5581,12 +5238,6 @@ type DescribeSnapshotCopyGrantsInput struct {
 	// a response with all resources that have either or both of these tag values
 	// associated with them.
 	TagValues []*string `locationNameList:"TagValue" type:"list"`
-
-	metadataDescribeSnapshotCopyGrantsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeSnapshotCopyGrantsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5601,6 +5252,8 @@ func (s DescribeSnapshotCopyGrantsInput) GoString() string {
 
 // The result of the snapshot copy grant.
 type DescribeSnapshotCopyGrantsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// An optional parameter that specifies the starting point to return a set of
 	// response records. When the results of a DescribeSnapshotCopyGrant request
 	// exceed the value specified in MaxRecords, AWS returns a value in the Marker
@@ -5614,12 +5267,6 @@ type DescribeSnapshotCopyGrantsOutput struct {
 
 	// The list of snapshot copy grants.
 	SnapshotCopyGrants []*SnapshotCopyGrant `locationNameList:"SnapshotCopyGrant" type:"list"`
-
-	metadataDescribeSnapshotCopyGrantsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeSnapshotCopyGrantsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5634,6 +5281,8 @@ func (s DescribeSnapshotCopyGrantsOutput) GoString() string {
 
 // Contains the output from the DescribeTags action.
 type DescribeTagsInput struct {
+	_ struct{} `type:"structure"`
+
 	// A value that indicates the starting point for the next set of response records
 	// in a subsequent request. If a value is returned in a response, you can retrieve
 	// the next set of records by providing this returned marker value in the marker
@@ -5676,12 +5325,6 @@ type DescribeTagsInput struct {
 	// a response with all resources that have either or both of these tag values
 	// associated with them.
 	TagValues []*string `locationNameList:"TagValue" type:"list"`
-
-	metadataDescribeTagsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeTagsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5696,6 +5339,8 @@ func (s DescribeTagsInput) GoString() string {
 
 // Contains the output from the DescribeTags action.
 type DescribeTagsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A value that indicates the starting point for the next set of response records
 	// in a subsequent request. If a value is returned in a response, you can retrieve
 	// the next set of records by providing this returned marker value in the Marker
@@ -5705,12 +5350,6 @@ type DescribeTagsOutput struct {
 
 	// A list of tags with their associated resources.
 	TaggedResources []*TaggedResource `locationNameList:"TaggedResource" type:"list"`
-
-	metadataDescribeTagsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeTagsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5724,16 +5363,12 @@ func (s DescribeTagsOutput) GoString() string {
 }
 
 type DisableLoggingInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the cluster on which logging is to be stopped.
 	//
 	// Example: examplecluster
 	ClusterIdentifier *string `type:"string" required:"true"`
-
-	metadataDisableLoggingInput `json:"-" xml:"-"`
-}
-
-type metadataDisableLoggingInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5747,18 +5382,14 @@ func (s DisableLoggingInput) GoString() string {
 }
 
 type DisableSnapshotCopyInput struct {
+	_ struct{} `type:"structure"`
+
 	// The unique identifier of the source cluster that you want to disable copying
 	// of snapshots to a destination region.
 	//
 	//  Constraints: Must be the valid name of an existing cluster that has cross-region
 	// snapshot copy enabled.
 	ClusterIdentifier *string `type:"string" required:"true"`
-
-	metadataDisableSnapshotCopyInput `json:"-" xml:"-"`
-}
-
-type metadataDisableSnapshotCopyInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5772,14 +5403,10 @@ func (s DisableSnapshotCopyInput) GoString() string {
 }
 
 type DisableSnapshotCopyOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a cluster.
 	Cluster *Cluster `type:"structure"`
-
-	metadataDisableSnapshotCopyOutput `json:"-" xml:"-"`
-}
-
-type metadataDisableSnapshotCopyOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5794,6 +5421,8 @@ func (s DisableSnapshotCopyOutput) GoString() string {
 
 // Describes an Amazon EC2 security group.
 type EC2SecurityGroup struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the EC2 Security Group.
 	EC2SecurityGroupName *string `type:"string"`
 
@@ -5806,12 +5435,6 @@ type EC2SecurityGroup struct {
 
 	// The list of tags for the EC2 security group.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataEC2SecurityGroup `json:"-" xml:"-"`
-}
-
-type metadataEC2SecurityGroup struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5826,17 +5449,13 @@ func (s EC2SecurityGroup) GoString() string {
 
 // Describes the status of the elastic IP (EIP) address.
 type ElasticIpStatus struct {
+	_ struct{} `type:"structure"`
+
 	// The elastic IP (EIP) address for the cluster.
 	ElasticIp *string `type:"string"`
 
 	// Describes the status of the elastic IP (EIP) address.
 	Status *string `type:"string"`
-
-	metadataElasticIpStatus `json:"-" xml:"-"`
-}
-
-type metadataElasticIpStatus struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5850,6 +5469,8 @@ func (s ElasticIpStatus) GoString() string {
 }
 
 type EnableLoggingInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of an existing S3 bucket where the log files are to be stored.
 	//
 	// Constraints:
@@ -5871,12 +5492,6 @@ type EnableLoggingInput struct {
 	// single quotes ('), a backslash (\), or control characters. The hexadecimal
 	// codes for invalid characters are:  x00 to x20 x22 x27 x5c x7f or larger
 	S3KeyPrefix *string `type:"string"`
-
-	metadataEnableLoggingInput `json:"-" xml:"-"`
-}
-
-type metadataEnableLoggingInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5890,6 +5505,8 @@ func (s EnableLoggingInput) GoString() string {
 }
 
 type EnableSnapshotCopyInput struct {
+	_ struct{} `type:"structure"`
+
 	// The unique identifier of the source cluster to copy snapshots from.
 	//
 	//  Constraints: Must be the valid name of an existing cluster that does not
@@ -5914,12 +5531,6 @@ type EnableSnapshotCopyInput struct {
 	// The name of the snapshot copy grant to use when snapshots of an AWS KMS-encrypted
 	// cluster are copied to the destination region.
 	SnapshotCopyGrantName *string `type:"string"`
-
-	metadataEnableSnapshotCopyInput `json:"-" xml:"-"`
-}
-
-type metadataEnableSnapshotCopyInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5933,14 +5544,10 @@ func (s EnableSnapshotCopyInput) GoString() string {
 }
 
 type EnableSnapshotCopyOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a cluster.
 	Cluster *Cluster `type:"structure"`
-
-	metadataEnableSnapshotCopyOutput `json:"-" xml:"-"`
-}
-
-type metadataEnableSnapshotCopyOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5955,17 +5562,13 @@ func (s EnableSnapshotCopyOutput) GoString() string {
 
 // Describes a connection endpoint.
 type Endpoint struct {
+	_ struct{} `type:"structure"`
+
 	// The DNS address of the Cluster.
 	Address *string `type:"string"`
 
 	// The port that the database engine is listening on.
 	Port *int64 `type:"integer"`
-
-	metadataEndpoint `json:"-" xml:"-"`
-}
-
-type metadataEndpoint struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -5980,6 +5583,8 @@ func (s Endpoint) GoString() string {
 
 // Describes an event.
 type Event struct {
+	_ struct{} `type:"structure"`
+
 	// The date and time of the event.
 	Date *time.Time `type:"timestamp" timestampFormat:"iso8601"`
 
@@ -6004,12 +5609,6 @@ type Event struct {
 
 	// The source type for this event.
 	SourceType *string `type:"string" enum:"SourceType"`
-
-	metadataEvent `json:"-" xml:"-"`
-}
-
-type metadataEvent struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6023,18 +5622,14 @@ func (s Event) GoString() string {
 }
 
 type EventCategoriesMap struct {
+	_ struct{} `type:"structure"`
+
 	// The events in the event category.
 	Events []*EventInfoMap `locationNameList:"EventInfoMap" type:"list"`
 
 	// The Amazon Redshift source type, such as cluster or cluster-snapshot, that
 	// the returned categories belong to.
 	SourceType *string `type:"string"`
-
-	metadataEventCategoriesMap `json:"-" xml:"-"`
-}
-
-type metadataEventCategoriesMap struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6048,6 +5643,8 @@ func (s EventCategoriesMap) GoString() string {
 }
 
 type EventInfoMap struct {
+	_ struct{} `type:"structure"`
+
 	// The category of an Amazon Redshift event.
 	EventCategories []*string `locationNameList:"EventCategory" type:"list"`
 
@@ -6061,12 +5658,6 @@ type EventInfoMap struct {
 	//
 	// Values: ERROR, INFO
 	Severity *string `type:"string"`
-
-	metadataEventInfoMap `json:"-" xml:"-"`
-}
-
-type metadataEventInfoMap struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6080,6 +5671,8 @@ func (s EventInfoMap) GoString() string {
 }
 
 type EventSubscription struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the Amazon Redshift event notification subscription.
 	CustSubscriptionId *string `type:"string"`
 
@@ -6130,12 +5723,6 @@ type EventSubscription struct {
 
 	// The list of tags for the event subscription.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataEventSubscription `json:"-" xml:"-"`
-}
-
-type metadataEventSubscription struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6152,6 +5739,8 @@ func (s EventSubscription) GoString() string {
 // in a secure Hardware Storage Module (HSM), and used by the Amazon Redshift
 // cluster to encrypt data files.
 type HsmClientCertificate struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the HSM client certificate.
 	HsmClientCertificateIdentifier *string `type:"string"`
 
@@ -6161,12 +5750,6 @@ type HsmClientCertificate struct {
 
 	// The list of tags for the HSM client certificate.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataHsmClientCertificate `json:"-" xml:"-"`
-}
-
-type metadataHsmClientCertificate struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6183,6 +5766,8 @@ func (s HsmClientCertificate) GoString() string {
 // to Amazon Redshift clusters the information they require to connect to an
 // HSM where they can store database encryption keys.
 type HsmConfiguration struct {
+	_ struct{} `type:"structure"`
+
 	// A text description of the HSM configuration.
 	Description *string `type:"string"`
 
@@ -6198,12 +5783,6 @@ type HsmConfiguration struct {
 
 	// The list of tags for the HSM configuration.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataHsmConfiguration `json:"-" xml:"-"`
-}
-
-type metadataHsmConfiguration struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6217,6 +5796,8 @@ func (s HsmConfiguration) GoString() string {
 }
 
 type HsmStatus struct {
+	_ struct{} `type:"structure"`
+
 	// Specifies the name of the HSM client certificate the Amazon Redshift cluster
 	// uses to retrieve the data encryption keys stored in an HSM.
 	HsmClientCertificateIdentifier *string `type:"string"`
@@ -6230,12 +5811,6 @@ type HsmStatus struct {
 	//
 	// Values: active, applying
 	Status *string `type:"string"`
-
-	metadataHsmStatus `json:"-" xml:"-"`
-}
-
-type metadataHsmStatus struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6250,6 +5825,8 @@ func (s HsmStatus) GoString() string {
 
 // Describes an IP range used in a security group.
 type IPRange struct {
+	_ struct{} `type:"structure"`
+
 	// The IP range in Classless Inter-Domain Routing (CIDR) notation.
 	CIDRIP *string `type:"string"`
 
@@ -6258,12 +5835,6 @@ type IPRange struct {
 
 	// The list of tags for the IP range.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataIPRange `json:"-" xml:"-"`
-}
-
-type metadataIPRange struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6278,6 +5849,8 @@ func (s IPRange) GoString() string {
 
 // Describes the status of logging for a cluster.
 type LoggingStatus struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the S3 bucket where the log files are stored.
 	BucketName *string `type:"string"`
 
@@ -6295,12 +5868,6 @@ type LoggingStatus struct {
 
 	// The prefix applied to the log file names.
 	S3KeyPrefix *string `type:"string"`
-
-	metadataLoggingStatus `json:"-" xml:"-"`
-}
-
-type metadataLoggingStatus struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6314,6 +5881,8 @@ func (s LoggingStatus) GoString() string {
 }
 
 type ModifyClusterInput struct {
+	_ struct{} `type:"structure"`
+
 	// If true, major version upgrades will be applied automatically to the cluster
 	// during the maintenance window.
 	//
@@ -6468,12 +6037,6 @@ type ModifyClusterInput struct {
 	// A list of virtual private cloud (VPC) security groups to be associated with
 	// the cluster.
 	VpcSecurityGroupIds []*string `locationNameList:"VpcSecurityGroupId" type:"list"`
-
-	metadataModifyClusterInput `json:"-" xml:"-"`
-}
-
-type metadataModifyClusterInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6487,14 +6050,10 @@ func (s ModifyClusterInput) GoString() string {
 }
 
 type ModifyClusterOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a cluster.
 	Cluster *Cluster `type:"structure"`
-
-	metadataModifyClusterOutput `json:"-" xml:"-"`
-}
-
-type metadataModifyClusterOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6508,6 +6067,8 @@ func (s ModifyClusterOutput) GoString() string {
 }
 
 type ModifyClusterParameterGroupInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the parameter group to be modified.
 	ParameterGroupName *string `type:"string" required:"true"`
 
@@ -6520,12 +6081,6 @@ type ModifyClusterParameterGroupInput struct {
 	//  For the workload management (WLM) configuration, you must supply all the
 	// name-value pairs in the wlm_json_configuration parameter.
 	Parameters []*Parameter `locationNameList:"Parameter" type:"list" required:"true"`
-
-	metadataModifyClusterParameterGroupInput `json:"-" xml:"-"`
-}
-
-type metadataModifyClusterParameterGroupInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6539,6 +6094,8 @@ func (s ModifyClusterParameterGroupInput) GoString() string {
 }
 
 type ModifyClusterSubnetGroupInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the subnet group to be modified.
 	ClusterSubnetGroupName *string `type:"string" required:"true"`
 
@@ -6548,12 +6105,6 @@ type ModifyClusterSubnetGroupInput struct {
 	// An array of VPC subnet IDs. A maximum of 20 subnets can be modified in a
 	// single request.
 	SubnetIds []*string `locationNameList:"SubnetIdentifier" type:"list" required:"true"`
-
-	metadataModifyClusterSubnetGroupInput `json:"-" xml:"-"`
-}
-
-type metadataModifyClusterSubnetGroupInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6567,14 +6118,10 @@ func (s ModifyClusterSubnetGroupInput) GoString() string {
 }
 
 type ModifyClusterSubnetGroupOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a subnet group.
 	ClusterSubnetGroup *ClusterSubnetGroup `type:"structure"`
-
-	metadataModifyClusterSubnetGroupOutput `json:"-" xml:"-"`
-}
-
-type metadataModifyClusterSubnetGroupOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6588,6 +6135,8 @@ func (s ModifyClusterSubnetGroupOutput) GoString() string {
 }
 
 type ModifyEventSubscriptionInput struct {
+	_ struct{} `type:"structure"`
+
 	// A Boolean value indicating if the subscription is enabled. true indicates
 	// the subscription is enabled
 	Enabled *bool `type:"boolean"`
@@ -6631,12 +6180,6 @@ type ModifyEventSubscriptionInput struct {
 
 	// The name of the modified Amazon Redshift event notification subscription.
 	SubscriptionName *string `type:"string" required:"true"`
-
-	metadataModifyEventSubscriptionInput `json:"-" xml:"-"`
-}
-
-type metadataModifyEventSubscriptionInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6650,13 +6193,9 @@ func (s ModifyEventSubscriptionInput) GoString() string {
 }
 
 type ModifyEventSubscriptionOutput struct {
+	_ struct{} `type:"structure"`
+
 	EventSubscription *EventSubscription `type:"structure"`
-
-	metadataModifyEventSubscriptionOutput `json:"-" xml:"-"`
-}
-
-type metadataModifyEventSubscriptionOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6670,6 +6209,8 @@ func (s ModifyEventSubscriptionOutput) GoString() string {
 }
 
 type ModifySnapshotCopyRetentionPeriodInput struct {
+	_ struct{} `type:"structure"`
+
 	// The unique identifier of the cluster for which you want to change the retention
 	// period for automated snapshots that are copied to a destination region.
 	//
@@ -6687,12 +6228,6 @@ type ModifySnapshotCopyRetentionPeriodInput struct {
 	//
 	//  Constraints: Must be at least 1 and no more than 35.
 	RetentionPeriod *int64 `type:"integer" required:"true"`
-
-	metadataModifySnapshotCopyRetentionPeriodInput `json:"-" xml:"-"`
-}
-
-type metadataModifySnapshotCopyRetentionPeriodInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6706,14 +6241,10 @@ func (s ModifySnapshotCopyRetentionPeriodInput) GoString() string {
 }
 
 type ModifySnapshotCopyRetentionPeriodOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a cluster.
 	Cluster *Cluster `type:"structure"`
-
-	metadataModifySnapshotCopyRetentionPeriodOutput `json:"-" xml:"-"`
-}
-
-type metadataModifySnapshotCopyRetentionPeriodOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6728,6 +6259,8 @@ func (s ModifySnapshotCopyRetentionPeriodOutput) GoString() string {
 
 // Describes an orderable cluster option.
 type OrderableClusterOption struct {
+	_ struct{} `type:"structure"`
+
 	// A list of availability zones for the orderable cluster.
 	AvailabilityZones []*AvailabilityZone `locationNameList:"AvailabilityZone" type:"list"`
 
@@ -6739,12 +6272,6 @@ type OrderableClusterOption struct {
 
 	// The node type for the orderable cluster.
 	NodeType *string `type:"string"`
-
-	metadataOrderableClusterOption `json:"-" xml:"-"`
-}
-
-type metadataOrderableClusterOption struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6759,6 +6286,8 @@ func (s OrderableClusterOption) GoString() string {
 
 // Describes a parameter in a cluster parameter group.
 type Parameter struct {
+	_ struct{} `type:"structure"`
+
 	// The valid range of values for the parameter.
 	AllowedValues *string `type:"string"`
 
@@ -6786,12 +6315,6 @@ type Parameter struct {
 
 	// The source of the parameter value, such as "engine-default" or "user".
 	Source *string `type:"string"`
-
-	metadataParameter `json:"-" xml:"-"`
-}
-
-type metadataParameter struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6807,6 +6330,8 @@ func (s Parameter) GoString() string {
 // Describes cluster attributes that are in a pending state. A change to one
 // or more the attributes was requested and is in progress or will be applied.
 type PendingModifiedValues struct {
+	_ struct{} `type:"structure"`
+
 	// The pending or in-progress change of the automated snapshot retention period.
 	AutomatedSnapshotRetentionPeriod *int64 `type:"integer"`
 
@@ -6827,12 +6352,6 @@ type PendingModifiedValues struct {
 
 	// The pending or in-progress change of the number of nodes in the cluster.
 	NumberOfNodes *int64 `type:"integer"`
-
-	metadataPendingModifiedValues `json:"-" xml:"-"`
-}
-
-type metadataPendingModifiedValues struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6846,6 +6365,8 @@ func (s PendingModifiedValues) GoString() string {
 }
 
 type PurchaseReservedNodeOfferingInput struct {
+	_ struct{} `type:"structure"`
+
 	// The number of reserved nodes you want to purchase.
 	//
 	// Default: 1
@@ -6853,12 +6374,6 @@ type PurchaseReservedNodeOfferingInput struct {
 
 	// The unique identifier of the reserved node offering you want to purchase.
 	ReservedNodeOfferingId *string `type:"string" required:"true"`
-
-	metadataPurchaseReservedNodeOfferingInput `json:"-" xml:"-"`
-}
-
-type metadataPurchaseReservedNodeOfferingInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6872,15 +6387,11 @@ func (s PurchaseReservedNodeOfferingInput) GoString() string {
 }
 
 type PurchaseReservedNodeOfferingOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a reserved node. You can call the DescribeReservedNodeOfferings
 	// API to obtain the available reserved node offerings.
 	ReservedNode *ReservedNode `type:"structure"`
-
-	metadataPurchaseReservedNodeOfferingOutput `json:"-" xml:"-"`
-}
-
-type metadataPurchaseReservedNodeOfferingOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6894,14 +6405,10 @@ func (s PurchaseReservedNodeOfferingOutput) GoString() string {
 }
 
 type RebootClusterInput struct {
+	_ struct{} `type:"structure"`
+
 	// The cluster identifier.
 	ClusterIdentifier *string `type:"string" required:"true"`
-
-	metadataRebootClusterInput `json:"-" xml:"-"`
-}
-
-type metadataRebootClusterInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6915,14 +6422,10 @@ func (s RebootClusterInput) GoString() string {
 }
 
 type RebootClusterOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a cluster.
 	Cluster *Cluster `type:"structure"`
-
-	metadataRebootClusterOutput `json:"-" xml:"-"`
-}
-
-type metadataRebootClusterOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6937,18 +6440,14 @@ func (s RebootClusterOutput) GoString() string {
 
 // Describes a recurring charge.
 type RecurringCharge struct {
+	_ struct{} `type:"structure"`
+
 	// The amount charged per the period of time specified by the recurring charge
 	// frequency.
 	RecurringChargeAmount *float64 `type:"double"`
 
 	// The frequency at which the recurring charge amount is applied.
 	RecurringChargeFrequency *string `type:"string"`
-
-	metadataRecurringCharge `json:"-" xml:"-"`
-}
-
-type metadataRecurringCharge struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -6964,6 +6463,8 @@ func (s RecurringCharge) GoString() string {
 // Describes a reserved node. You can call the DescribeReservedNodeOfferings
 // API to obtain the available reserved node offerings.
 type ReservedNode struct {
+	_ struct{} `type:"structure"`
+
 	// The currency code for the reserved cluster.
 	CurrencyCode *string `type:"string"`
 
@@ -7008,12 +6509,6 @@ type ReservedNode struct {
 
 	// The hourly rate Amazon Redshift charges you for this reserved node.
 	UsagePrice *float64 `type:"double"`
-
-	metadataReservedNode `json:"-" xml:"-"`
-}
-
-type metadataReservedNode struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7028,6 +6523,8 @@ func (s ReservedNode) GoString() string {
 
 // Describes a reserved node offering.
 type ReservedNodeOffering struct {
+	_ struct{} `type:"structure"`
+
 	// The currency code for the compute nodes offering.
 	CurrencyCode *string `type:"string"`
 
@@ -7056,12 +6553,6 @@ type ReservedNodeOffering struct {
 	// The rate you are charged for each hour the cluster that is using the offering
 	// is running.
 	UsagePrice *float64 `type:"double"`
-
-	metadataReservedNodeOffering `json:"-" xml:"-"`
-}
-
-type metadataReservedNodeOffering struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7075,6 +6566,8 @@ func (s ReservedNodeOffering) GoString() string {
 }
 
 type ResetClusterParameterGroupInput struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the cluster parameter group to be reset.
 	ParameterGroupName *string `type:"string" required:"true"`
 
@@ -7089,12 +6582,6 @@ type ResetClusterParameterGroupInput struct {
 	//
 	// Default: true
 	ResetAllParameters *bool `type:"boolean"`
-
-	metadataResetClusterParameterGroupInput `json:"-" xml:"-"`
-}
-
-type metadataResetClusterParameterGroupInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7108,6 +6595,8 @@ func (s ResetClusterParameterGroupInput) GoString() string {
 }
 
 type RestoreFromClusterSnapshotInput struct {
+	_ struct{} `type:"structure"`
+
 	// If true, major version upgrades can be applied during the maintenance window
 	// to the Amazon Redshift engine that is running on the cluster.
 	//
@@ -7242,12 +6731,6 @@ type RestoreFromClusterSnapshotInput struct {
 	//
 	//  VPC security groups only apply to clusters in VPCs.
 	VpcSecurityGroupIds []*string `locationNameList:"VpcSecurityGroupId" type:"list"`
-
-	metadataRestoreFromClusterSnapshotInput `json:"-" xml:"-"`
-}
-
-type metadataRestoreFromClusterSnapshotInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7261,14 +6744,10 @@ func (s RestoreFromClusterSnapshotInput) GoString() string {
 }
 
 type RestoreFromClusterSnapshotOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a cluster.
 	Cluster *Cluster `type:"structure"`
-
-	metadataRestoreFromClusterSnapshotOutput `json:"-" xml:"-"`
-}
-
-type metadataRestoreFromClusterSnapshotOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7284,6 +6763,8 @@ func (s RestoreFromClusterSnapshotOutput) GoString() string {
 // Describes the status of a cluster restore action. Returns null if the cluster
 // was not created by restoring a snapshot.
 type RestoreStatus struct {
+	_ struct{} `type:"structure"`
+
 	// The number of megabytes per second being transferred from the backup storage.
 	// Returns the average rate for a completed backup.
 	CurrentRestoreRateInMegaBytesPerSecond *float64 `type:"double"`
@@ -7305,12 +6786,6 @@ type RestoreStatus struct {
 	// The status of the restore action. Returns starting, restoring, completed,
 	// or failed.
 	Status *string `type:"string"`
-
-	metadataRestoreStatus `json:"-" xml:"-"`
-}
-
-type metadataRestoreStatus struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7325,6 +6800,8 @@ func (s RestoreStatus) GoString() string {
 
 // ???
 type RevokeClusterSecurityGroupIngressInput struct {
+	_ struct{} `type:"structure"`
+
 	// The IP range for which to revoke access. This range must be a valid Classless
 	// Inter-Domain Routing (CIDR) block of IP addresses. If CIDRIP is specified,
 	// EC2SecurityGroupName and EC2SecurityGroupOwnerId cannot be provided.
@@ -7345,12 +6822,6 @@ type RevokeClusterSecurityGroupIngressInput struct {
 	//
 	// Example: 111122223333
 	EC2SecurityGroupOwnerId *string `type:"string"`
-
-	metadataRevokeClusterSecurityGroupIngressInput `json:"-" xml:"-"`
-}
-
-type metadataRevokeClusterSecurityGroupIngressInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7364,14 +6835,10 @@ func (s RevokeClusterSecurityGroupIngressInput) GoString() string {
 }
 
 type RevokeClusterSecurityGroupIngressOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a security group.
 	ClusterSecurityGroup *ClusterSecurityGroup `type:"structure"`
-
-	metadataRevokeClusterSecurityGroupIngressOutput `json:"-" xml:"-"`
-}
-
-type metadataRevokeClusterSecurityGroupIngressOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7385,6 +6852,8 @@ func (s RevokeClusterSecurityGroupIngressOutput) GoString() string {
 }
 
 type RevokeSnapshotAccessInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the AWS customer account that can no longer restore the
 	// specified snapshot.
 	AccountWithRestoreAccess *string `type:"string" required:"true"`
@@ -7396,12 +6865,6 @@ type RevokeSnapshotAccessInput struct {
 
 	// The identifier of the snapshot that the account can no longer access.
 	SnapshotIdentifier *string `type:"string" required:"true"`
-
-	metadataRevokeSnapshotAccessInput `json:"-" xml:"-"`
-}
-
-type metadataRevokeSnapshotAccessInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7415,14 +6878,10 @@ func (s RevokeSnapshotAccessInput) GoString() string {
 }
 
 type RevokeSnapshotAccessOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a snapshot.
 	Snapshot *Snapshot `type:"structure"`
-
-	metadataRevokeSnapshotAccessOutput `json:"-" xml:"-"`
-}
-
-type metadataRevokeSnapshotAccessOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7436,17 +6895,13 @@ func (s RevokeSnapshotAccessOutput) GoString() string {
 }
 
 type RotateEncryptionKeyInput struct {
+	_ struct{} `type:"structure"`
+
 	// The unique identifier of the cluster that you want to rotate the encryption
 	// keys for.
 	//
 	//  Constraints: Must be the name of valid cluster that has encryption enabled.
 	ClusterIdentifier *string `type:"string" required:"true"`
-
-	metadataRotateEncryptionKeyInput `json:"-" xml:"-"`
-}
-
-type metadataRotateEncryptionKeyInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7460,14 +6915,10 @@ func (s RotateEncryptionKeyInput) GoString() string {
 }
 
 type RotateEncryptionKeyOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Describes a cluster.
 	Cluster *Cluster `type:"structure"`
-
-	metadataRotateEncryptionKeyOutput `json:"-" xml:"-"`
-}
-
-type metadataRotateEncryptionKeyOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7482,6 +6933,8 @@ func (s RotateEncryptionKeyOutput) GoString() string {
 
 // Describes a snapshot.
 type Snapshot struct {
+	_ struct{} `type:"structure"`
+
 	// A list of the AWS customer accounts authorized to restore the snapshot. Returns
 	// null if no accounts are authorized. Visible only to the snapshot owner.
 	AccountsWithRestoreAccess []*AccountWithRestoreAccess `locationNameList:"AccountWithRestoreAccess" type:"list"`
@@ -7581,12 +7034,6 @@ type Snapshot struct {
 	// The VPC identifier of the cluster if the snapshot is from a cluster in a
 	// VPC. Otherwise, this field is not in the output.
 	VpcId *string `type:"string"`
-
-	metadataSnapshot `json:"-" xml:"-"`
-}
-
-type metadataSnapshot struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7607,6 +7054,8 @@ func (s Snapshot) GoString() string {
 // Redshift Database Encryption (http://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html)
 // in the Amazon Redshift Cluster Management Guide.
 type SnapshotCopyGrant struct {
+	_ struct{} `type:"structure"`
+
 	// The unique identifier of the customer master key (CMK) in AWS KMS to which
 	// Amazon Redshift is granted permission.
 	KmsKeyId *string `type:"string"`
@@ -7616,12 +7065,6 @@ type SnapshotCopyGrant struct {
 
 	// A list of tag instances.
 	Tags []*Tag `locationNameList:"Tag" type:"list"`
-
-	metadataSnapshotCopyGrant `json:"-" xml:"-"`
-}
-
-type metadataSnapshotCopyGrant struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7636,6 +7079,8 @@ func (s SnapshotCopyGrant) GoString() string {
 
 // Describes a subnet.
 type Subnet struct {
+	_ struct{} `type:"structure"`
+
 	// Describes an availability zone.
 	SubnetAvailabilityZone *AvailabilityZone `type:"structure"`
 
@@ -7644,12 +7089,6 @@ type Subnet struct {
 
 	// The status of the subnet.
 	SubnetStatus *string `type:"string"`
-
-	metadataSubnet `json:"-" xml:"-"`
-}
-
-type metadataSubnet struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7664,17 +7103,13 @@ func (s Subnet) GoString() string {
 
 // A tag consisting of a name/value pair for a resource.
 type Tag struct {
+	_ struct{} `type:"structure"`
+
 	// The key, or name, for the resource tag.
 	Key *string `type:"string"`
 
 	// The value for the resource tag.
 	Value *string `type:"string"`
-
-	metadataTag `json:"-" xml:"-"`
-}
-
-type metadataTag struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7689,6 +7124,8 @@ func (s Tag) GoString() string {
 
 // A tag and its associated resource.
 type TaggedResource struct {
+	_ struct{} `type:"structure"`
+
 	// The Amazon Resource Name (ARN) with which the tag is associated. For example,
 	// arn:aws:redshift:us-east-1:123456789:cluster:t1.
 	ResourceName *string `type:"string"`
@@ -7704,12 +7141,6 @@ type TaggedResource struct {
 
 	// The tag for the resource.
 	Tag *Tag `type:"structure"`
-
-	metadataTaggedResource `json:"-" xml:"-"`
-}
-
-type metadataTaggedResource struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -7724,15 +7155,11 @@ func (s TaggedResource) GoString() string {
 
 // Describes the members of a VPC security group.
 type VpcSecurityGroupMembership struct {
+	_ struct{} `type:"structure"`
+
 	Status *string `type:"string"`
 
 	VpcSecurityGroupId *string `type:"string"`
-
-	metadataVpcSecurityGroupMembership `json:"-" xml:"-"`
-}
-
-type metadataVpcSecurityGroupMembership struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation

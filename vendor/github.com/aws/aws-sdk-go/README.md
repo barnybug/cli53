@@ -9,31 +9,13 @@ aws-sdk-go is the official AWS SDK for the Go programming language.
 
 Checkout our [release notes](https://github.com/aws/aws-sdk-go/releases) for information about the latest bug fixes, updates, and features added to the SDK.
 
-**Release [v0.9.0rc1](http://aws.amazon.com/releasenotes/2948141298714307) introduced a breaking change to the SDK. See the release notes for details of the change and instructions to migrate to the latest SDK version.**
-
-## Caution
-
-The SDK is currently in the process of being developed, and not everything
-may be working fully yet. Please be patient and report any bugs or problems
-you experience. The APIs may change radically without much warning, so please
-vendor your dependencies with Godep or similar.
-
-Please do not confuse this for a stable, feature-complete library.
-
-Note that while most AWS protocols are currently supported, not all services
-available in this package are implemented fully, as some require extra
-customizations to work with the SDK. If you've encountered such a scenario,
-please open a [GitHub issue](https://github.com/aws/aws-sdk-go/issues)
-so we can track work for the service.
-
 ## Installing
 
-Install your specific service package with the following `go get` command.
-For example, EC2 support might be installed with:
+If you are using Go 1.5 with the `GO15VENDOREXPERIMENT=1` vendoring flag you can use the following to get the SDK as the SDK's runtime dependencies are vendored in the `vendor` folder.
 
-    $ go get github.com/aws/aws-sdk-go/service/ec2
+    $ go get -u github.com/aws/aws-sdk-go
 
-You can also install the entire SDK by installing the root package, including all of the SDK's dependencies:
+Otherwise you'll need to tell Go to get the SDK and all of its dependencies.
 
     $ go get -u github.com/aws/aws-sdk-go/...
 
@@ -59,10 +41,13 @@ AWS_ACCESS_KEY_ID=AKID1234567890
 AWS_SECRET_ACCESS_KEY=MY-SECRET-KEY
 ```
 
-## Using
+### AWS CLI config file (`~/aws/config`)
+The AWS SDK for Go does not support the AWS CLI's config file. The SDK will not use any contents from this file. The SDK only supports the shared credentials file (`~/aws/credentials`). #384 tracks this feature request discussion.
+
+## Using the Go SDK
 
 To use a service in the SDK, create a service variable by calling the `New()`
-function. Once you have a service, you can call API operations which each
+function. Once you have a service client, you can call API operations which each
 return response data and a possible error.
 
 To list a set of instance IDs from EC2, you could run:
@@ -74,6 +59,7 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
@@ -81,7 +67,7 @@ func main() {
 	// Create an EC2 service object in the "us-west-2" region
 	// Note that you can also configure your region globally by
 	// exporting the AWS_REGION environment variable
-	svc := ec2.New(&aws.Config{Region: aws.String("us-west-2")})
+	svc := ec2.New(session.New(), &aws.Config{Region: aws.String("us-west-2")})
 
 	// Call the DescribeInstances Operation
 	resp, err := svc.DescribeInstances(nil)

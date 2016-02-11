@@ -10,9 +10,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/request"
 )
 
-// ValidateParameters is a request handler to validate the input parameters.
+// ValidateParametersHandler is a request handler to validate the input parameters.
 // Validating parameters only has meaning if done prior to the request being sent.
-var ValidateParametersHandler = request.NamedHandler{"core.ValidateParametersHandler", func(r *request.Request) {
+var ValidateParametersHandler = request.NamedHandler{Name: "core.ValidateParametersHandler", Fn: func(r *request.Request) {
 	if r.ParamsFilled() {
 		v := validator{errors: []string{}}
 		v.validateAny(reflect.ValueOf(r.Params), "")
@@ -30,6 +30,11 @@ type validator struct {
 	errors []string
 }
 
+// There's no validation to be done on the contents of []byte values. Prepare
+// to check validateAny arguments against that type so we can quickly skip
+// them.
+var byteSliceType = reflect.TypeOf([]byte(nil))
+
 // validateAny will validate any struct, slice or map type. All validations
 // are also performed recursively for nested types.
 func (v *validator) validateAny(value reflect.Value, path string) {
@@ -42,6 +47,10 @@ func (v *validator) validateAny(value reflect.Value, path string) {
 	case reflect.Struct:
 		v.validateStruct(value, path)
 	case reflect.Slice:
+		if value.Type() == byteSliceType {
+			// We don't need to validate the contents of []byte.
+			return
+		}
 		for i := 0; i < value.Len(); i++ {
 			v.validateAny(value.Index(i), path+fmt.Sprintf("[%d]", i))
 		}

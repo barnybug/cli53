@@ -8,6 +8,8 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws/awsutil"
 	"github.com/aws/aws-sdk-go/aws/request"
+	"github.com/aws/aws-sdk-go/private/protocol"
+	"github.com/aws/aws-sdk-go/private/protocol/jsonrpc"
 )
 
 const opAddInstanceGroups = "AddInstanceGroups"
@@ -149,6 +151,9 @@ const opDescribeJobFlows = "DescribeJobFlows"
 
 // DescribeJobFlowsRequest generates a request for the DescribeJobFlows operation.
 func (c *EMR) DescribeJobFlowsRequest(input *DescribeJobFlowsInput) (req *request.Request, output *DescribeJobFlowsOutput) {
+	if c.Client.Config.Logger != nil {
+		c.Client.Config.Logger.Log("This operation, DescribeJobFlows, has been deprecated")
+	}
 	op := &request.Operation{
 		Name:       opDescribeJobFlows,
 		HTTPMethod: "POST",
@@ -251,6 +256,7 @@ func (c *EMR) ListBootstrapActions(input *ListBootstrapActionsInput) (*ListBoots
 
 func (c *EMR) ListBootstrapActionsPages(input *ListBootstrapActionsInput, fn func(p *ListBootstrapActionsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListBootstrapActionsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*ListBootstrapActionsOutput), lastPage)
 	})
@@ -295,6 +301,7 @@ func (c *EMR) ListClusters(input *ListClustersInput) (*ListClustersOutput, error
 
 func (c *EMR) ListClustersPages(input *ListClustersInput, fn func(p *ListClustersOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListClustersRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*ListClustersOutput), lastPage)
 	})
@@ -335,6 +342,7 @@ func (c *EMR) ListInstanceGroups(input *ListInstanceGroupsInput) (*ListInstanceG
 
 func (c *EMR) ListInstanceGroupsPages(input *ListInstanceGroupsInput, fn func(p *ListInstanceGroupsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListInstanceGroupsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*ListInstanceGroupsOutput), lastPage)
 	})
@@ -379,6 +387,7 @@ func (c *EMR) ListInstances(input *ListInstancesInput) (*ListInstancesOutput, er
 
 func (c *EMR) ListInstancesPages(input *ListInstancesInput, fn func(p *ListInstancesOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListInstancesRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*ListInstancesOutput), lastPage)
 	})
@@ -419,6 +428,7 @@ func (c *EMR) ListSteps(input *ListStepsInput) (*ListStepsOutput, error) {
 
 func (c *EMR) ListStepsPages(input *ListStepsInput, fn func(p *ListStepsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListStepsRequest(input)
+	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
 	return page.EachPage(func(p interface{}, lastPage bool) bool {
 		return fn(p.(*ListStepsOutput), lastPage)
 	})
@@ -439,6 +449,8 @@ func (c *EMR) ModifyInstanceGroupsRequest(input *ModifyInstanceGroupsInput) (req
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(jsonrpc.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &ModifyInstanceGroupsOutput{}
 	req.Data = output
 	return
@@ -550,6 +562,8 @@ func (c *EMR) SetTerminationProtectionRequest(input *SetTerminationProtectionInp
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(jsonrpc.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &SetTerminationProtectionOutput{}
 	req.Data = output
 	return
@@ -593,6 +607,8 @@ func (c *EMR) SetVisibleToAllUsersRequest(input *SetVisibleToAllUsersInput) (req
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(jsonrpc.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &SetVisibleToAllUsersOutput{}
 	req.Data = output
 	return
@@ -625,6 +641,8 @@ func (c *EMR) TerminateJobFlowsRequest(input *TerminateJobFlowsInput) (req *requ
 	}
 
 	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(jsonrpc.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
 	output = &TerminateJobFlowsOutput{}
 	req.Data = output
 	return
@@ -647,17 +665,13 @@ func (c *EMR) TerminateJobFlows(input *TerminateJobFlowsInput) (*TerminateJobFlo
 
 // Input to an AddInstanceGroups call.
 type AddInstanceGroupsInput struct {
+	_ struct{} `type:"structure"`
+
 	// Instance Groups to add.
 	InstanceGroups []*InstanceGroupConfig `type:"list" required:"true"`
 
 	// Job flow in which to add the instance groups.
 	JobFlowId *string `type:"string" required:"true"`
-
-	metadataAddInstanceGroupsInput `json:"-" xml:"-"`
-}
-
-type metadataAddInstanceGroupsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -672,17 +686,13 @@ func (s AddInstanceGroupsInput) GoString() string {
 
 // Output from an AddInstanceGroups call.
 type AddInstanceGroupsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// Instance group IDs of the newly created instance groups.
 	InstanceGroupIds []*string `type:"list"`
 
 	// The job flow ID in which the instance groups are added.
 	JobFlowId *string `type:"string"`
-
-	metadataAddInstanceGroupsOutput `json:"-" xml:"-"`
-}
-
-type metadataAddInstanceGroupsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -697,18 +707,14 @@ func (s AddInstanceGroupsOutput) GoString() string {
 
 // The input argument to the AddJobFlowSteps operation.
 type AddJobFlowStepsInput struct {
+	_ struct{} `type:"structure"`
+
 	// A string that uniquely identifies the job flow. This identifier is returned
 	// by RunJobFlow and can also be obtained from ListClusters.
 	JobFlowId *string `type:"string" required:"true"`
 
 	// A list of StepConfig to be executed by the job flow.
 	Steps []*StepConfig `type:"list" required:"true"`
-
-	metadataAddJobFlowStepsInput `json:"-" xml:"-"`
-}
-
-type metadataAddJobFlowStepsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -723,14 +729,10 @@ func (s AddJobFlowStepsInput) GoString() string {
 
 // The output for the AddJobFlowSteps operation.
 type AddJobFlowStepsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifiers of the list of steps added to the job flow.
 	StepIds []*string `type:"list"`
-
-	metadataAddJobFlowStepsOutput `json:"-" xml:"-"`
-}
-
-type metadataAddJobFlowStepsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -745,6 +747,8 @@ func (s AddJobFlowStepsOutput) GoString() string {
 
 // This input identifies a cluster and a list of tags to attach.
 type AddTagsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The Amazon EMR resource identifier to which tags will be added. This value
 	// must be a cluster identifier.
 	ResourceId *string `type:"string" required:"true"`
@@ -754,12 +758,6 @@ type AddTagsInput struct {
 	// with a maximum of 128 characters, and an optional value string with a maximum
 	// of 256 characters.
 	Tags []*Tag `type:"list" required:"true"`
-
-	metadataAddTagsInput `json:"-" xml:"-"`
-}
-
-type metadataAddTagsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -774,11 +772,7 @@ func (s AddTagsInput) GoString() string {
 
 // This output indicates the result of adding tags to a resource.
 type AddTagsOutput struct {
-	metadataAddTagsOutput `json:"-" xml:"-"`
-}
-
-type metadataAddTagsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -806,6 +800,8 @@ func (s AddTagsOutput) GoString() string {
 // accepted parameter is the application name. To pass arguments to applications,
 // you supply a configuration for each application.
 type Application struct {
+	_ struct{} `type:"structure"`
+
 	// This option is for advanced users only. This is meta information about third-party
 	// applications that third-party vendors use for testing purposes.
 	AdditionalInfo map[string]*string `type:"map"`
@@ -818,12 +814,6 @@ type Application struct {
 
 	// The version of the application.
 	Version *string `type:"string"`
-
-	metadataApplication `json:"-" xml:"-"`
-}
-
-type metadataApplication struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -838,17 +828,13 @@ func (s Application) GoString() string {
 
 // Configuration of a bootstrap action.
 type BootstrapActionConfig struct {
+	_ struct{} `type:"structure"`
+
 	// The name of the bootstrap action.
 	Name *string `type:"string" required:"true"`
 
 	// The script run by the bootstrap action.
 	ScriptBootstrapAction *ScriptBootstrapActionConfig `type:"structure" required:"true"`
-
-	metadataBootstrapActionConfig `json:"-" xml:"-"`
-}
-
-type metadataBootstrapActionConfig struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -863,14 +849,10 @@ func (s BootstrapActionConfig) GoString() string {
 
 // Reports the configuration of a bootstrap action in a job flow.
 type BootstrapActionDetail struct {
+	_ struct{} `type:"structure"`
+
 	// A description of the bootstrap action.
 	BootstrapActionConfig *BootstrapActionConfig `type:"structure"`
-
-	metadataBootstrapActionDetail `json:"-" xml:"-"`
-}
-
-type metadataBootstrapActionDetail struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -885,6 +867,8 @@ func (s BootstrapActionDetail) GoString() string {
 
 // The detailed description of the cluster.
 type Cluster struct {
+	_ struct{} `type:"structure"`
+
 	// The applications installed on this cluster.
 	Applications []*Application `type:"list"`
 
@@ -952,12 +936,6 @@ type Cluster struct {
 	// the cluster can view and manage it. This value can be changed using the SetVisibleToAllUsers
 	// action.
 	VisibleToAllUsers *bool `type:"boolean"`
-
-	metadataCluster `json:"-" xml:"-"`
-}
-
-type metadataCluster struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -972,17 +950,13 @@ func (s Cluster) GoString() string {
 
 // The reason that the cluster changed to its current state.
 type ClusterStateChangeReason struct {
+	_ struct{} `type:"structure"`
+
 	// The programmatic code for the state change reason.
 	Code *string `type:"string" enum:"ClusterStateChangeReasonCode"`
 
 	// The descriptive message for the state change reason.
 	Message *string `type:"string"`
-
-	metadataClusterStateChangeReason `json:"-" xml:"-"`
-}
-
-type metadataClusterStateChangeReason struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -997,6 +971,8 @@ func (s ClusterStateChangeReason) GoString() string {
 
 // The detailed status of the cluster.
 type ClusterStatus struct {
+	_ struct{} `type:"structure"`
+
 	// The current state of the cluster.
 	State *string `type:"string" enum:"ClusterState"`
 
@@ -1006,12 +982,6 @@ type ClusterStatus struct {
 	// A timeline that represents the status of a cluster over the lifetime of the
 	// cluster.
 	Timeline *ClusterTimeline `type:"structure"`
-
-	metadataClusterStatus `json:"-" xml:"-"`
-}
-
-type metadataClusterStatus struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1026,6 +996,8 @@ func (s ClusterStatus) GoString() string {
 
 // The summary description of the cluster.
 type ClusterSummary struct {
+	_ struct{} `type:"structure"`
+
 	// The unique identifier for the cluster.
 	Id *string `type:"string"`
 
@@ -1042,12 +1014,6 @@ type ClusterSummary struct {
 
 	// The details about the current status of the cluster.
 	Status *ClusterStatus `type:"structure"`
-
-	metadataClusterSummary `json:"-" xml:"-"`
-}
-
-type metadataClusterSummary struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1062,6 +1028,8 @@ func (s ClusterSummary) GoString() string {
 
 // Represents the timeline of the cluster's lifecycle.
 type ClusterTimeline struct {
+	_ struct{} `type:"structure"`
+
 	// The creation date and time of the cluster.
 	CreationDateTime *time.Time `type:"timestamp" timestampFormat:"unix"`
 
@@ -1070,12 +1038,6 @@ type ClusterTimeline struct {
 
 	// The date and time when the cluster was ready to execute steps.
 	ReadyDateTime *time.Time `type:"timestamp" timestampFormat:"unix"`
-
-	metadataClusterTimeline `json:"-" xml:"-"`
-}
-
-type metadataClusterTimeline struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1090,6 +1052,8 @@ func (s ClusterTimeline) GoString() string {
 
 // An entity describing an executable that runs on a cluster.
 type Command struct {
+	_ struct{} `type:"structure"`
+
 	// Arguments for Amazon EMR to pass to the command for execution.
 	Args []*string `type:"list"`
 
@@ -1098,12 +1062,6 @@ type Command struct {
 
 	// The Amazon S3 location of the command script.
 	ScriptPath *string `type:"string"`
-
-	metadataCommand `json:"-" xml:"-"`
-}
-
-type metadataCommand struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1124,6 +1082,8 @@ func (s Command) GoString() string {
 // and a set of properties. Configurations can be nested, so a configuration
 // may have its own Configuration objects listed.
 type Configuration struct {
+	_ struct{} `type:"structure"`
+
 	// The classification of a configuration. For more information see, Amazon EMR
 	// Configurations (http://docs.aws.amazon.com/ElasticMapReduce/latest/API/EmrConfigurations.html).
 	Classification *string `type:"string"`
@@ -1133,12 +1093,6 @@ type Configuration struct {
 
 	// A set of properties supplied to the Configuration object.
 	Properties map[string]*string `type:"map"`
-
-	metadataConfiguration `json:"-" xml:"-"`
-}
-
-type metadataConfiguration struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1153,14 +1107,10 @@ func (s Configuration) GoString() string {
 
 // This input determines which cluster to describe.
 type DescribeClusterInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the cluster to describe.
 	ClusterId *string `type:"string" required:"true"`
-
-	metadataDescribeClusterInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1175,14 +1125,10 @@ func (s DescribeClusterInput) GoString() string {
 
 // This output contains the description of the cluster.
 type DescribeClusterOutput struct {
+	_ struct{} `type:"structure"`
+
 	// This output contains the details for the requested cluster.
 	Cluster *Cluster `type:"structure"`
-
-	metadataDescribeClusterOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeClusterOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1197,6 +1143,8 @@ func (s DescribeClusterOutput) GoString() string {
 
 // The input for the DescribeJobFlows operation.
 type DescribeJobFlowsInput struct {
+	_ struct{} `type:"structure"`
+
 	// Return only job flows created after this date and time.
 	CreatedAfter *time.Time `type:"timestamp" timestampFormat:"unix"`
 
@@ -1208,12 +1156,6 @@ type DescribeJobFlowsInput struct {
 
 	// Return only job flows whose state is contained in this list.
 	JobFlowStates []*string `type:"list"`
-
-	metadataDescribeJobFlowsInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeJobFlowsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1228,14 +1170,10 @@ func (s DescribeJobFlowsInput) GoString() string {
 
 // The output for the DescribeJobFlows operation.
 type DescribeJobFlowsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of job flows matching the parameters supplied.
 	JobFlows []*JobFlowDetail `type:"list"`
-
-	metadataDescribeJobFlowsOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeJobFlowsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1250,17 +1188,13 @@ func (s DescribeJobFlowsOutput) GoString() string {
 
 // This input determines which step to describe.
 type DescribeStepInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the cluster with steps to describe.
 	ClusterId *string `type:"string" required:"true"`
 
 	// The identifier of the step to describe.
 	StepId *string `type:"string" required:"true"`
-
-	metadataDescribeStepInput `json:"-" xml:"-"`
-}
-
-type metadataDescribeStepInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1275,14 +1209,10 @@ func (s DescribeStepInput) GoString() string {
 
 // This output contains the description of the cluster step.
 type DescribeStepOutput struct {
+	_ struct{} `type:"structure"`
+
 	// The step details for the requested step identifier.
 	Step *Step `type:"structure"`
-
-	metadataDescribeStepOutput `json:"-" xml:"-"`
-}
-
-type metadataDescribeStepOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1298,6 +1228,8 @@ func (s DescribeStepOutput) GoString() string {
 // Provides information about the EC2 instances in a cluster grouped by category.
 // For example, key name, subnet ID, IAM instance profile, and so on.
 type Ec2InstanceAttributes struct {
+	_ struct{} `type:"structure"`
+
 	// A list of additional Amazon EC2 security group IDs for the master node.
 	AdditionalMasterSecurityGroups []*string `type:"list"`
 
@@ -1321,23 +1253,19 @@ type Ec2InstanceAttributes struct {
 	// type for nodes of a job flow launched in a VPC.
 	Ec2SubnetId *string `type:"string"`
 
-	// The identifier of the Amazon EC2 security group (managed by Amazon Elastic
-	// MapReduce) for the master node.
+	// The identifier of the Amazon EC2 security group for the master node.
 	EmrManagedMasterSecurityGroup *string `type:"string"`
 
-	// The identifier of the Amazon EC2 security group (managed by Amazon Elastic
-	// MapReduce) for the slave nodes.
+	// The identifier of the Amazon EC2 security group for the slave nodes.
 	EmrManagedSlaveSecurityGroup *string `type:"string"`
 
 	// The IAM role that was specified when the job flow was launched. The EC2 instances
 	// of the job flow assume this role.
 	IamInstanceProfile *string `type:"string"`
 
-	metadataEc2InstanceAttributes `json:"-" xml:"-"`
-}
-
-type metadataEc2InstanceAttributes struct {
-	SDKShapeTraits bool `type:"structure"`
+	// The identifier of the Amazon EC2 security group for the Amazon EMR service
+	// to access clusters in VPC private subnets.
+	ServiceAccessSecurityGroup *string `type:"string"`
 }
 
 // String returns the string representation
@@ -1354,6 +1282,8 @@ func (s Ec2InstanceAttributes) GoString() string {
 // The main function submits a job for Hadoop to execute and waits for the job
 // to finish or fail.
 type HadoopJarStepConfig struct {
+	_ struct{} `type:"structure"`
+
 	// A list of command line arguments passed to the JAR file's main function when
 	// executed.
 	Args []*string `type:"list"`
@@ -1368,12 +1298,6 @@ type HadoopJarStepConfig struct {
 	// A list of Java properties that are set when the step runs. You can use these
 	// properties to pass key value pairs to your main function.
 	Properties []*KeyValue `type:"list"`
-
-	metadataHadoopJarStepConfig `json:"-" xml:"-"`
-}
-
-type metadataHadoopJarStepConfig struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1390,6 +1314,8 @@ func (s HadoopJarStepConfig) GoString() string {
 // The main function submits a job for Hadoop to execute and waits for the job
 // to finish or fail.
 type HadoopStepConfig struct {
+	_ struct{} `type:"structure"`
+
 	// The list of command line arguments to pass to the JAR file's main function
 	// for execution.
 	Args []*string `type:"list"`
@@ -1404,12 +1330,6 @@ type HadoopStepConfig struct {
 	// The list of Java properties that are set when the step runs. You can use
 	// these properties to pass key value pairs to your main function.
 	Properties map[string]*string `type:"map"`
-
-	metadataHadoopStepConfig `json:"-" xml:"-"`
-}
-
-type metadataHadoopStepConfig struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1424,6 +1344,8 @@ func (s HadoopStepConfig) GoString() string {
 
 // Represents an EC2 instance provisioned as part of cluster.
 type Instance struct {
+	_ struct{} `type:"structure"`
+
 	// The unique identifier of the instance in Amazon EC2.
 	Ec2InstanceId *string `type:"string"`
 
@@ -1444,12 +1366,6 @@ type Instance struct {
 
 	// The current status of the instance.
 	Status *InstanceStatus `type:"structure"`
-
-	metadataInstance `json:"-" xml:"-"`
-}
-
-type metadataInstance struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1465,6 +1381,8 @@ func (s Instance) GoString() string {
 // This entity represents an instance group, which is a group of instances that
 // have common purpose. For example, CORE instance group is used for HDFS.
 type InstanceGroup struct {
+	_ struct{} `type:"structure"`
+
 	// The bid price for each EC2 instance in the instance group when launching
 	// nodes as Spot Instances, expressed in USD.
 	BidPrice *string `type:"string"`
@@ -1500,12 +1418,6 @@ type InstanceGroup struct {
 
 	// The current status of the instance group.
 	Status *InstanceGroupStatus `type:"structure"`
-
-	metadataInstanceGroup `json:"-" xml:"-"`
-}
-
-type metadataInstanceGroup struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1520,6 +1432,8 @@ func (s InstanceGroup) GoString() string {
 
 // Configuration defining a new instance group.
 type InstanceGroupConfig struct {
+	_ struct{} `type:"structure"`
+
 	// Bid price for each Amazon EC2 instance in the instance group when launching
 	// nodes as Spot Instances, expressed in USD.
 	BidPrice *string `type:"string"`
@@ -1545,12 +1459,6 @@ type InstanceGroupConfig struct {
 
 	// Friendly name given to the instance group.
 	Name *string `type:"string"`
-
-	metadataInstanceGroupConfig `json:"-" xml:"-"`
-}
-
-type metadataInstanceGroupConfig struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1565,6 +1473,8 @@ func (s InstanceGroupConfig) GoString() string {
 
 // Detailed information about an instance group.
 type InstanceGroupDetail struct {
+	_ struct{} `type:"structure"`
+
 	// Bid price for EC2 Instances when launching nodes as Spot Instances, expressed
 	// in USD.
 	BidPrice *string `type:"string"`
@@ -1608,12 +1518,6 @@ type InstanceGroupDetail struct {
 	// State of instance group. The following values are deprecated: STARTING, TERMINATED,
 	// and FAILED.
 	State *string `type:"string" required:"true" enum:"InstanceGroupState"`
-
-	metadataInstanceGroupDetail `json:"-" xml:"-"`
-}
-
-type metadataInstanceGroupDetail struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1628,6 +1532,8 @@ func (s InstanceGroupDetail) GoString() string {
 
 // Modify an instance group size.
 type InstanceGroupModifyConfig struct {
+	_ struct{} `type:"structure"`
+
 	// The EC2 InstanceIds to terminate. For advanced users only. Once you terminate
 	// the instances, the instance group will not return to its original requested
 	// size.
@@ -1638,12 +1544,6 @@ type InstanceGroupModifyConfig struct {
 
 	// Unique ID of the instance group to expand or shrink.
 	InstanceGroupId *string `type:"string" required:"true"`
-
-	metadataInstanceGroupModifyConfig `json:"-" xml:"-"`
-}
-
-type metadataInstanceGroupModifyConfig struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1658,17 +1558,13 @@ func (s InstanceGroupModifyConfig) GoString() string {
 
 // The status change reason details for the instance group.
 type InstanceGroupStateChangeReason struct {
+	_ struct{} `type:"structure"`
+
 	// The programmable code for the state change reason.
 	Code *string `type:"string" enum:"InstanceGroupStateChangeReasonCode"`
 
 	// The status change reason description.
 	Message *string `type:"string"`
-
-	metadataInstanceGroupStateChangeReason `json:"-" xml:"-"`
-}
-
-type metadataInstanceGroupStateChangeReason struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1683,6 +1579,8 @@ func (s InstanceGroupStateChangeReason) GoString() string {
 
 // The details of the instance group status.
 type InstanceGroupStatus struct {
+	_ struct{} `type:"structure"`
+
 	// The current state of the instance group.
 	State *string `type:"string" enum:"InstanceGroupState"`
 
@@ -1691,12 +1589,6 @@ type InstanceGroupStatus struct {
 
 	// The timeline of the instance group status over time.
 	Timeline *InstanceGroupTimeline `type:"structure"`
-
-	metadataInstanceGroupStatus `json:"-" xml:"-"`
-}
-
-type metadataInstanceGroupStatus struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1711,6 +1603,8 @@ func (s InstanceGroupStatus) GoString() string {
 
 // The timeline of the instance group lifecycle.
 type InstanceGroupTimeline struct {
+	_ struct{} `type:"structure"`
+
 	// The creation date and time of the instance group.
 	CreationDateTime *time.Time `type:"timestamp" timestampFormat:"unix"`
 
@@ -1719,12 +1613,6 @@ type InstanceGroupTimeline struct {
 
 	// The date and time when the instance group became ready to perform tasks.
 	ReadyDateTime *time.Time `type:"timestamp" timestampFormat:"unix"`
-
-	metadataInstanceGroupTimeline `json:"-" xml:"-"`
-}
-
-type metadataInstanceGroupTimeline struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1739,17 +1627,13 @@ func (s InstanceGroupTimeline) GoString() string {
 
 // The details of the status change reason for the instance.
 type InstanceStateChangeReason struct {
+	_ struct{} `type:"structure"`
+
 	// The programmable code for the state change reason.
 	Code *string `type:"string" enum:"InstanceStateChangeReasonCode"`
 
 	// The status change reason description.
 	Message *string `type:"string"`
-
-	metadataInstanceStateChangeReason `json:"-" xml:"-"`
-}
-
-type metadataInstanceStateChangeReason struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1764,6 +1648,8 @@ func (s InstanceStateChangeReason) GoString() string {
 
 // The instance status details.
 type InstanceStatus struct {
+	_ struct{} `type:"structure"`
+
 	// The current state of the instance.
 	State *string `type:"string" enum:"InstanceState"`
 
@@ -1772,12 +1658,6 @@ type InstanceStatus struct {
 
 	// The timeline of the instance status over time.
 	Timeline *InstanceTimeline `type:"structure"`
-
-	metadataInstanceStatus `json:"-" xml:"-"`
-}
-
-type metadataInstanceStatus struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1792,6 +1672,8 @@ func (s InstanceStatus) GoString() string {
 
 // The timeline of the instance lifecycle.
 type InstanceTimeline struct {
+	_ struct{} `type:"structure"`
+
 	// The creation date and time of the instance.
 	CreationDateTime *time.Time `type:"timestamp" timestampFormat:"unix"`
 
@@ -1800,12 +1682,6 @@ type InstanceTimeline struct {
 
 	// The date and time when the instance was ready to perform tasks.
 	ReadyDateTime *time.Time `type:"timestamp" timestampFormat:"unix"`
-
-	metadataInstanceTimeline `json:"-" xml:"-"`
-}
-
-type metadataInstanceTimeline struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1820,6 +1696,8 @@ func (s InstanceTimeline) GoString() string {
 
 // A description of a job flow.
 type JobFlowDetail struct {
+	_ struct{} `type:"structure"`
+
 	// The version of the AMI used to initialize Amazon EC2 instances in the job
 	// flow. For a list of AMI versions currently supported by Amazon ElasticMapReduce,
 	// go to AMI Versions Supported in Elastic MapReduce (http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/EnvironmentConfig_AMIVersion.html#ami-versions-supported)
@@ -1867,12 +1745,6 @@ type JobFlowDetail struct {
 	// the job flow can view and manage it. This value can be changed using the
 	// SetVisibleToAllUsers action.
 	VisibleToAllUsers *bool `type:"boolean"`
-
-	metadataJobFlowDetail `json:"-" xml:"-"`
-}
-
-type metadataJobFlowDetail struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1887,6 +1759,8 @@ func (s JobFlowDetail) GoString() string {
 
 // Describes the status of the job flow.
 type JobFlowExecutionStatusDetail struct {
+	_ struct{} `type:"structure"`
+
 	// The creation date and time of the job flow.
 	CreationDateTime *time.Time `type:"timestamp" timestampFormat:"unix" required:"true"`
 
@@ -1905,12 +1779,6 @@ type JobFlowExecutionStatusDetail struct {
 
 	// The state of the job flow.
 	State *string `type:"string" required:"true" enum:"JobFlowExecutionState"`
-
-	metadataJobFlowExecutionStatusDetail `json:"-" xml:"-"`
-}
-
-type metadataJobFlowExecutionStatusDetail struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -1928,6 +1796,8 @@ func (s JobFlowExecutionStatusDetail) GoString() string {
 // However, a valid alternative is to have MasterInstanceType, SlaveInstanceType,
 // and InstanceCount (all three must be present).
 type JobFlowInstancesConfig struct {
+	_ struct{} `type:"structure"`
+
 	// A list of additional Amazon EC2 security group IDs for the master node.
 	AdditionalMasterSecurityGroups []*string `type:"list"`
 
@@ -1948,12 +1818,10 @@ type JobFlowInstancesConfig struct {
 	// type for nodes of a job flow launched in a Amazon VPC.
 	Ec2SubnetId *string `type:"string"`
 
-	// The identifier of the Amazon EC2 security group (managed by Amazon ElasticMapReduce)
-	// for the master node.
+	// The identifier of the Amazon EC2 security group for the master node.
 	EmrManagedMasterSecurityGroup *string `type:"string"`
 
-	// The identifier of the Amazon EC2 security group (managed by Amazon ElasticMapReduce)
-	// for the slave nodes.
+	// The identifier of the Amazon EC2 security group for the slave nodes.
 	EmrManagedSlaveSecurityGroup *string `type:"string"`
 
 	// The Hadoop version for the job flow. Valid inputs are "0.18" (deprecated),
@@ -1979,6 +1847,10 @@ type JobFlowInstancesConfig struct {
 	// The Availability Zone the job flow will run in.
 	Placement *PlacementType `type:"structure"`
 
+	// The identifier of the Amazon EC2 security group for the Amazon EMR service
+	// to access clusters in VPC private subnets.
+	ServiceAccessSecurityGroup *string `type:"string"`
+
 	// The EC2 instance type of the slave nodes.
 	SlaveInstanceType *string `min:"1" type:"string"`
 
@@ -1986,12 +1858,6 @@ type JobFlowInstancesConfig struct {
 	// from being terminated by API call, user intervention, or in the event of
 	// a job flow error.
 	TerminationProtected *bool `type:"boolean"`
-
-	metadataJobFlowInstancesConfig `json:"-" xml:"-"`
-}
-
-type metadataJobFlowInstancesConfig struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2006,6 +1872,8 @@ func (s JobFlowInstancesConfig) GoString() string {
 
 // Specify the type of Amazon EC2 instances to run the job flow on.
 type JobFlowInstancesDetail struct {
+	_ struct{} `type:"structure"`
+
 	// The name of an Amazon EC2 key pair that can be used to ssh to the master
 	// node of job flow.
 	Ec2KeyName *string `type:"string"`
@@ -2055,12 +1923,6 @@ type JobFlowInstancesDetail struct {
 	// termination by API calls, user intervention, or in the event of a job flow
 	// error.
 	TerminationProtected *bool `type:"boolean"`
-
-	metadataJobFlowInstancesDetail `json:"-" xml:"-"`
-}
-
-type metadataJobFlowInstancesDetail struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2075,17 +1937,13 @@ func (s JobFlowInstancesDetail) GoString() string {
 
 // A key value pair.
 type KeyValue struct {
+	_ struct{} `type:"structure"`
+
 	// The unique identifier of a key value pair.
 	Key *string `type:"string"`
 
 	// The value part of the identified key.
 	Value *string `type:"string"`
-
-	metadataKeyValue `json:"-" xml:"-"`
-}
-
-type metadataKeyValue struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2100,17 +1958,13 @@ func (s KeyValue) GoString() string {
 
 // This input determines which bootstrap actions to retrieve.
 type ListBootstrapActionsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The cluster identifier for the bootstrap actions to list .
 	ClusterId *string `type:"string" required:"true"`
 
 	// The pagination token that indicates the next set of results to retrieve .
 	Marker *string `type:"string"`
-
-	metadataListBootstrapActionsInput `json:"-" xml:"-"`
-}
-
-type metadataListBootstrapActionsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2125,17 +1979,13 @@ func (s ListBootstrapActionsInput) GoString() string {
 
 // This output contains the boostrap actions detail .
 type ListBootstrapActionsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// The bootstrap actions associated with the cluster .
 	BootstrapActions []*Command `type:"list"`
 
 	// The pagination token that indicates the next set of results to retrieve .
 	Marker *string `type:"string"`
-
-	metadataListBootstrapActionsOutput `json:"-" xml:"-"`
-}
-
-type metadataListBootstrapActionsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2151,6 +2001,8 @@ func (s ListBootstrapActionsOutput) GoString() string {
 // This input determines how the ListClusters action filters the list of clusters
 // that it returns.
 type ListClustersInput struct {
+	_ struct{} `type:"structure"`
+
 	// The cluster state filters to apply when listing clusters.
 	ClusterStates []*string `type:"list"`
 
@@ -2162,12 +2014,6 @@ type ListClustersInput struct {
 
 	// The pagination token that indicates the next set of results to retrieve.
 	Marker *string `type:"string"`
-
-	metadataListClustersInput `json:"-" xml:"-"`
-}
-
-type metadataListClustersInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2183,17 +2029,13 @@ func (s ListClustersInput) GoString() string {
 // This contains a ClusterSummaryList with the cluster details; for example,
 // the cluster IDs, names, and status.
 type ListClustersOutput struct {
+	_ struct{} `type:"structure"`
+
 	// The list of clusters for the account based on the given filters.
 	Clusters []*ClusterSummary `type:"list"`
 
 	// The pagination token that indicates the next set of results to retrieve.
 	Marker *string `type:"string"`
-
-	metadataListClustersOutput `json:"-" xml:"-"`
-}
-
-type metadataListClustersOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2208,17 +2050,13 @@ func (s ListClustersOutput) GoString() string {
 
 // This input determines which instance groups to retrieve.
 type ListInstanceGroupsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the cluster for which to list the instance groups.
 	ClusterId *string `type:"string" required:"true"`
 
 	// The pagination token that indicates the next set of results to retrieve.
 	Marker *string `type:"string"`
-
-	metadataListInstanceGroupsInput `json:"-" xml:"-"`
-}
-
-type metadataListInstanceGroupsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2233,17 +2071,13 @@ func (s ListInstanceGroupsInput) GoString() string {
 
 // This input determines which instance groups to retrieve.
 type ListInstanceGroupsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// The list of instance groups for the cluster and given filters.
 	InstanceGroups []*InstanceGroup `type:"list"`
 
 	// The pagination token that indicates the next set of results to retrieve.
 	Marker *string `type:"string"`
-
-	metadataListInstanceGroupsOutput `json:"-" xml:"-"`
-}
-
-type metadataListInstanceGroupsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2258,6 +2092,8 @@ func (s ListInstanceGroupsOutput) GoString() string {
 
 // This input determines which instances to list.
 type ListInstancesInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the cluster for which to list the instances.
 	ClusterId *string `type:"string" required:"true"`
 
@@ -2269,12 +2105,6 @@ type ListInstancesInput struct {
 
 	// The pagination token that indicates the next set of results to retrieve.
 	Marker *string `type:"string"`
-
-	metadataListInstancesInput `json:"-" xml:"-"`
-}
-
-type metadataListInstancesInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2289,17 +2119,13 @@ func (s ListInstancesInput) GoString() string {
 
 // This output contains the list of instances.
 type ListInstancesOutput struct {
+	_ struct{} `type:"structure"`
+
 	// The list of instances for the cluster and given filters.
 	Instances []*Instance `type:"list"`
 
 	// The pagination token that indicates the next set of results to retrieve.
 	Marker *string `type:"string"`
-
-	metadataListInstancesOutput `json:"-" xml:"-"`
-}
-
-type metadataListInstancesOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2314,6 +2140,8 @@ func (s ListInstancesOutput) GoString() string {
 
 // This input determines which steps to list.
 type ListStepsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The identifier of the cluster for which to list the steps.
 	ClusterId *string `type:"string" required:"true"`
 
@@ -2325,12 +2153,6 @@ type ListStepsInput struct {
 
 	// The filter to limit the step list based on certain states.
 	StepStates []*string `type:"list"`
-
-	metadataListStepsInput `json:"-" xml:"-"`
-}
-
-type metadataListStepsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2345,17 +2167,13 @@ func (s ListStepsInput) GoString() string {
 
 // This output contains the list of steps.
 type ListStepsOutput struct {
+	_ struct{} `type:"structure"`
+
 	// The pagination token that indicates the next set of results to retrieve.
 	Marker *string `type:"string"`
 
 	// The filtered list of steps for the cluster.
 	Steps []*StepSummary `type:"list"`
-
-	metadataListStepsOutput `json:"-" xml:"-"`
-}
-
-type metadataListStepsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2370,14 +2188,10 @@ func (s ListStepsOutput) GoString() string {
 
 // Change the size of some instance groups.
 type ModifyInstanceGroupsInput struct {
+	_ struct{} `type:"structure"`
+
 	// Instance groups to change.
 	InstanceGroups []*InstanceGroupModifyConfig `type:"list"`
-
-	metadataModifyInstanceGroupsInput `json:"-" xml:"-"`
-}
-
-type metadataModifyInstanceGroupsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2391,11 +2205,7 @@ func (s ModifyInstanceGroupsInput) GoString() string {
 }
 
 type ModifyInstanceGroupsOutput struct {
-	metadataModifyInstanceGroupsOutput `json:"-" xml:"-"`
-}
-
-type metadataModifyInstanceGroupsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -2410,14 +2220,10 @@ func (s ModifyInstanceGroupsOutput) GoString() string {
 
 // The Amazon EC2 location for the job flow.
 type PlacementType struct {
+	_ struct{} `type:"structure"`
+
 	// The Amazon EC2 Availability Zone for the job flow.
 	AvailabilityZone *string `type:"string" required:"true"`
-
-	metadataPlacementType `json:"-" xml:"-"`
-}
-
-type metadataPlacementType struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2432,18 +2238,14 @@ func (s PlacementType) GoString() string {
 
 // This input identifies a cluster and a list of tags to remove.
 type RemoveTagsInput struct {
+	_ struct{} `type:"structure"`
+
 	// The Amazon EMR resource identifier from which tags will be removed. This
 	// value must be a cluster identifier.
 	ResourceId *string `type:"string" required:"true"`
 
 	// A list of tag keys to remove from a resource.
 	TagKeys []*string `type:"list" required:"true"`
-
-	metadataRemoveTagsInput `json:"-" xml:"-"`
-}
-
-type metadataRemoveTagsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2458,11 +2260,7 @@ func (s RemoveTagsInput) GoString() string {
 
 // This output indicates the result of removing tags from a resource.
 type RemoveTagsOutput struct {
-	metadataRemoveTagsOutput `json:"-" xml:"-"`
-}
-
-type metadataRemoveTagsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -2477,6 +2275,8 @@ func (s RemoveTagsOutput) GoString() string {
 
 // Input to the RunJobFlow operation.
 type RunJobFlowInput struct {
+	_ struct{} `type:"structure"`
+
 	// A JSON string for selecting additional features.
 	AdditionalInfo *string `type:"string"`
 
@@ -2515,9 +2315,10 @@ type RunJobFlowInput struct {
 	// run the job flow.
 	Instances *JobFlowInstancesConfig `type:"structure" required:"true"`
 
-	// An IAM role for the job flow. The EC2 instances of the job flow assume this
-	// role. The default role is EMRJobflowDefault. In order to use the default
-	// role, you must have already created it using the CLI.
+	// Also called instance profile and EC2 role. An IAM role for an EMR cluster.
+	// The EC2 instances of the cluster assume this role. The default role is EMR_EC2_DefaultRole.
+	// In order to use the default role, you must have already created it using
+	// the CLI or console.
 	JobFlowRole *string `type:"string"`
 
 	// The location in Amazon S3 to write the log files of the job flow. If a value
@@ -2581,12 +2382,6 @@ type RunJobFlowInput struct {
 	// the job flow. If it is set to false, only the IAM user that created the job
 	// flow can view and manage it.
 	VisibleToAllUsers *bool `type:"boolean"`
-
-	metadataRunJobFlowInput `json:"-" xml:"-"`
-}
-
-type metadataRunJobFlowInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2601,14 +2396,10 @@ func (s RunJobFlowInput) GoString() string {
 
 // The result of the RunJobFlow operation.
 type RunJobFlowOutput struct {
+	_ struct{} `type:"structure"`
+
 	// An unique identifier for the job flow.
 	JobFlowId *string `type:"string"`
-
-	metadataRunJobFlowOutput `json:"-" xml:"-"`
-}
-
-type metadataRunJobFlowOutput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2623,18 +2414,14 @@ func (s RunJobFlowOutput) GoString() string {
 
 // Configuration of the script to run during a bootstrap action.
 type ScriptBootstrapActionConfig struct {
+	_ struct{} `type:"structure"`
+
 	// A list of command line arguments to pass to the bootstrap action script.
 	Args []*string `type:"list"`
 
 	// Location of the script to run during a bootstrap action. Can be either a
 	// location in Amazon S3 or on a local file system.
 	Path *string `type:"string" required:"true"`
-
-	metadataScriptBootstrapActionConfig `json:"-" xml:"-"`
-}
-
-type metadataScriptBootstrapActionConfig struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2649,6 +2436,8 @@ func (s ScriptBootstrapActionConfig) GoString() string {
 
 // The input argument to the TerminationProtection operation.
 type SetTerminationProtectionInput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of strings that uniquely identify the job flows to protect. This identifier
 	// is returned by RunJobFlow and can also be obtained from DescribeJobFlows
 	// .
@@ -2658,12 +2447,6 @@ type SetTerminationProtectionInput struct {
 	// Amazon EC2 instances in the cluster from shutting down due to API calls,
 	// user intervention, or job-flow error.
 	TerminationProtected *bool `type:"boolean" required:"true"`
-
-	metadataSetTerminationProtectionInput `json:"-" xml:"-"`
-}
-
-type metadataSetTerminationProtectionInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2677,11 +2460,7 @@ func (s SetTerminationProtectionInput) GoString() string {
 }
 
 type SetTerminationProtectionOutput struct {
-	metadataSetTerminationProtectionOutput `json:"-" xml:"-"`
-}
-
-type metadataSetTerminationProtectionOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -2696,6 +2475,8 @@ func (s SetTerminationProtectionOutput) GoString() string {
 
 // The input to the SetVisibleToAllUsers action.
 type SetVisibleToAllUsersInput struct {
+	_ struct{} `type:"structure"`
+
 	// Identifiers of the job flows to receive the new visibility setting.
 	JobFlowIds []*string `type:"list" required:"true"`
 
@@ -2705,12 +2486,6 @@ type SetVisibleToAllUsersInput struct {
 	// set, manage the job flows. If it is set to False, only the IAM user that
 	// created a job flow can view and manage it.
 	VisibleToAllUsers *bool `type:"boolean" required:"true"`
-
-	metadataSetVisibleToAllUsersInput `json:"-" xml:"-"`
-}
-
-type metadataSetVisibleToAllUsersInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2724,11 +2499,7 @@ func (s SetVisibleToAllUsersInput) GoString() string {
 }
 
 type SetVisibleToAllUsersOutput struct {
-	metadataSetVisibleToAllUsersOutput `json:"-" xml:"-"`
-}
-
-type metadataSetVisibleToAllUsersOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation
@@ -2743,6 +2514,8 @@ func (s SetVisibleToAllUsersOutput) GoString() string {
 
 // This represents a step in a cluster.
 type Step struct {
+	_ struct{} `type:"structure"`
+
 	// This specifies what action to take when the cluster step fails. Possible
 	// values are TERMINATE_CLUSTER, CANCEL_AND_WAIT, and CONTINUE.
 	ActionOnFailure *string `type:"string" enum:"ActionOnFailure"`
@@ -2758,12 +2531,6 @@ type Step struct {
 
 	// The current execution status details of the cluster step.
 	Status *StepStatus `type:"structure"`
-
-	metadataStep `json:"-" xml:"-"`
-}
-
-type metadataStep struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2778,6 +2545,8 @@ func (s Step) GoString() string {
 
 // Specification of a job flow step.
 type StepConfig struct {
+	_ struct{} `type:"structure"`
+
 	// The action to take if the job flow step fails.
 	ActionOnFailure *string `type:"string" enum:"ActionOnFailure"`
 
@@ -2786,12 +2555,6 @@ type StepConfig struct {
 
 	// The name of the job flow step.
 	Name *string `type:"string" required:"true"`
-
-	metadataStepConfig `json:"-" xml:"-"`
-}
-
-type metadataStepConfig struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2806,17 +2569,13 @@ func (s StepConfig) GoString() string {
 
 // Combines the execution state and configuration of a step.
 type StepDetail struct {
+	_ struct{} `type:"structure"`
+
 	// The description of the step status.
 	ExecutionStatusDetail *StepExecutionStatusDetail `type:"structure" required:"true"`
 
 	// The step configuration.
 	StepConfig *StepConfig `type:"structure" required:"true"`
-
-	metadataStepDetail `json:"-" xml:"-"`
-}
-
-type metadataStepDetail struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2831,6 +2590,8 @@ func (s StepDetail) GoString() string {
 
 // The execution state of a step.
 type StepExecutionStatusDetail struct {
+	_ struct{} `type:"structure"`
+
 	// The creation date and time of the step.
 	CreationDateTime *time.Time `type:"timestamp" timestampFormat:"unix" required:"true"`
 
@@ -2845,12 +2606,6 @@ type StepExecutionStatusDetail struct {
 
 	// The state of the job flow step.
 	State *string `type:"string" required:"true" enum:"StepExecutionState"`
-
-	metadataStepExecutionStatusDetail `json:"-" xml:"-"`
-}
-
-type metadataStepExecutionStatusDetail struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2865,18 +2620,14 @@ func (s StepExecutionStatusDetail) GoString() string {
 
 // The details of the step state change reason.
 type StepStateChangeReason struct {
+	_ struct{} `type:"structure"`
+
 	// The programmable code for the state change reason. Note: Currently, the service
 	// provides no code for the state change.
 	Code *string `type:"string" enum:"StepStateChangeReasonCode"`
 
 	// The descriptive message for the state change reason.
 	Message *string `type:"string"`
-
-	metadataStepStateChangeReason `json:"-" xml:"-"`
-}
-
-type metadataStepStateChangeReason struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2891,6 +2642,8 @@ func (s StepStateChangeReason) GoString() string {
 
 // The execution status details of the cluster step.
 type StepStatus struct {
+	_ struct{} `type:"structure"`
+
 	// The execution state of the cluster step.
 	State *string `type:"string" enum:"StepState"`
 
@@ -2899,12 +2652,6 @@ type StepStatus struct {
 
 	// The timeline of the cluster step status over time.
 	Timeline *StepTimeline `type:"structure"`
-
-	metadataStepStatus `json:"-" xml:"-"`
-}
-
-type metadataStepStatus struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2919,6 +2666,8 @@ func (s StepStatus) GoString() string {
 
 // The summary of the cluster step.
 type StepSummary struct {
+	_ struct{} `type:"structure"`
+
 	// This specifies what action to take when the cluster step fails. Possible
 	// values are TERMINATE_CLUSTER, CANCEL_AND_WAIT, and CONTINUE.
 	ActionOnFailure *string `type:"string" enum:"ActionOnFailure"`
@@ -2934,12 +2683,6 @@ type StepSummary struct {
 
 	// The current execution status details of the cluster step.
 	Status *StepStatus `type:"structure"`
-
-	metadataStepSummary `json:"-" xml:"-"`
-}
-
-type metadataStepSummary struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2954,6 +2697,8 @@ func (s StepSummary) GoString() string {
 
 // The timeline of the cluster step lifecycle.
 type StepTimeline struct {
+	_ struct{} `type:"structure"`
+
 	// The date and time when the cluster step was created.
 	CreationDateTime *time.Time `type:"timestamp" timestampFormat:"unix"`
 
@@ -2962,12 +2707,6 @@ type StepTimeline struct {
 
 	// The date and time when the cluster step execution started.
 	StartDateTime *time.Time `type:"timestamp" timestampFormat:"unix"`
-
-	metadataStepTimeline `json:"-" xml:"-"`
-}
-
-type metadataStepTimeline struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -2984,17 +2723,13 @@ func (s StepTimeline) GoString() string {
 // EMR accepts these arguments and forwards them to the corresponding installation
 // script as bootstrap action arguments.
 type SupportedProductConfig struct {
+	_ struct{} `type:"structure"`
+
 	// The list of user-supplied arguments.
 	Args []*string `type:"list"`
 
 	// The name of the product configuration.
 	Name *string `type:"string"`
-
-	metadataSupportedProductConfig `json:"-" xml:"-"`
-}
-
-type metadataSupportedProductConfig struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3013,6 +2748,8 @@ func (s SupportedProductConfig) GoString() string {
 // allocation costs. For more information, see Tagging Amazon EMR Resources
 // (http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-plan-tags.html).
 type Tag struct {
+	_ struct{} `type:"structure"`
+
 	// A user-defined key, which is the minimum required information for a valid
 	// tag. For more information, see Tagging Amazon EMR Resources (http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-plan-tags.html).
 	Key *string `type:"string"`
@@ -3020,12 +2757,6 @@ type Tag struct {
 	// A user-defined value, which is optional in a tag. For more information, see
 	// Tagging Amazon EMR Resources (http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-plan-tags.html).
 	Value *string `type:"string"`
-
-	metadataTag `json:"-" xml:"-"`
-}
-
-type metadataTag struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3040,14 +2771,10 @@ func (s Tag) GoString() string {
 
 // Input to the TerminateJobFlows operation.
 type TerminateJobFlowsInput struct {
+	_ struct{} `type:"structure"`
+
 	// A list of job flows to be shutdown.
 	JobFlowIds []*string `type:"list" required:"true"`
-
-	metadataTerminateJobFlowsInput `json:"-" xml:"-"`
-}
-
-type metadataTerminateJobFlowsInput struct {
-	SDKShapeTraits bool `type:"structure"`
 }
 
 // String returns the string representation
@@ -3061,11 +2788,7 @@ func (s TerminateJobFlowsInput) GoString() string {
 }
 
 type TerminateJobFlowsOutput struct {
-	metadataTerminateJobFlowsOutput `json:"-" xml:"-"`
-}
-
-type metadataTerminateJobFlowsOutput struct {
-	SDKShapeTraits bool `type:"structure"`
+	_ struct{} `type:"structure"`
 }
 
 // String returns the string representation

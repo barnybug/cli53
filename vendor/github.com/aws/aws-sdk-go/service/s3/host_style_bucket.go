@@ -24,7 +24,7 @@ func dnsCompatibleBucketName(bucket string) bool {
 // the host. This is false if S3ForcePathStyle is explicitly set or if the
 // bucket is not DNS compatible.
 func hostStyleBucketName(r *request.Request, bucket string) bool {
-	if aws.BoolValue(r.Service.Config.S3ForcePathStyle) {
+	if aws.BoolValue(r.Config.S3ForcePathStyle) {
 		return false
 	}
 
@@ -45,13 +45,13 @@ func hostStyleBucketName(r *request.Request, bucket string) bool {
 }
 
 func updateHostWithBucket(r *request.Request) {
-	b := awsutil.ValuesAtPath(r.Params, "Bucket")
+	b, _ := awsutil.ValuesAtPath(r.Params, "Bucket")
 	if len(b) == 0 {
 		return
 	}
 
-	if bucket := b[0].(string); bucket != "" && hostStyleBucketName(r, bucket) {
-		r.HTTPRequest.URL.Host = bucket + "." + r.HTTPRequest.URL.Host
+	if bucket := b[0].(*string); aws.StringValue(bucket) != "" && hostStyleBucketName(r, *bucket) {
+		r.HTTPRequest.URL.Host = *bucket + "." + r.HTTPRequest.URL.Host
 		r.HTTPRequest.URL.Path = strings.Replace(r.HTTPRequest.URL.Path, "/{Bucket}", "", -1)
 		if r.HTTPRequest.URL.Path == "" {
 			r.HTTPRequest.URL.Path = "/"
