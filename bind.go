@@ -212,6 +212,9 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 			},
 		}
 		ret = append(ret, dnsrr)
+	} else if rrset.TrafficPolicyInstanceId != nil {
+		// Warn and skip traffic policy records
+		fmt.Fprintf(os.Stderr, "Warning: Skipping traffic policy record %s\n", name)
 	} else {
 		switch *rrset.Type {
 		case "A":

@@ -15,6 +15,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/route53"
 )
 
@@ -42,7 +43,7 @@ func getService(debug bool, profile string) *route53.Route53 {
 	if debug {
 		config.LogLevel = aws.LogLevel(aws.LogDebug)
 	}
-	return route53.New(&config)
+	return route53.New(session.New(), &config)
 }
 
 func fatalIfErr(err error) {
