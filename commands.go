@@ -469,16 +469,10 @@ func deleteRecord(name string, match string, rtype string, wait bool, identifier
 
 	match = qualifyName(match, *zone.Name)
 	changes := []*route53.Change{}
-	text := ""
+
 	for _, rrset := range rrsets {
-		if rrset != nil && rrset.Name != nil {
-			lhs := []byte(*rrset.Name)
-			text = (*rrset.Name)[0:4]
-			if text == "\\052" {
-				text = "*" + string(lhs[4:])
-			}
-		}
-		if text == match && *rrset.Type == rtype && (identifier == "" || *rrset.SetIdentifier == identifier) {
+		name := aws.String(unescaper.Replace(*rrset.Name))
+		if *name == match && *rrset.Type == rtype && (identifier == "" || *rrset.SetIdentifier == identifier) {
 			change := &route53.Change{
 				Action:            aws.String("DELETE"),
 				ResourceRecordSet: rrset,
