@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/route53"
 	"github.com/barnybug/cli53"
 
@@ -24,7 +25,7 @@ func getService() *route53.Route53 {
 	config := aws.Config{}
 	// ensures throttled requests are retried
 	config.MaxRetries = aws.Int(100)
-	return route53.New(&config)
+	return route53.New(session.New(), &config)
 }
 
 func fatalIfErr(err error) {
