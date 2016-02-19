@@ -1,7 +1,7 @@
 export GO15VENDOREXPERIMENT=1
 
 exe = ./cmd/cli53
-buildargs = -ldflags '-X github.com/barnybug/cli53.version=${TRAVIS_TAG}'
+buildargs = -ldflags '-w -s -X github.com/barnybug/cli53.version=${TRAVIS_TAG}'
 
 .PHONY: all build install test coverage deps release
 
