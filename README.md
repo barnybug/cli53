@@ -68,10 +68,16 @@ Replace with an imported zone, waiting for completion:
 
 	$ cli53 import --file zonefile.txt --replace --wait example.com
 
-Manually create some records:
+Create an A record pointed to 192.168.0.1 with TTL of 60 seconds:
 
-	$ cli53 rrcreate example.com 'www 3600 A 192.168.0.1'
-	$ cli53 rrcreate --replace example.com 'www 3600 A 192.168.0.2'
+	$ cli53 rrcreate example.com 'www 60 A 192.168.0.1'
+   
+Update this A record to point to 192.168.0.2:
+
+	$ cli53 rrcreate --replace example.com 'www 60 A 192.168.0.2'
+
+Create an MX record with two servers:
+
 	$ cli53 rrcreate example.com '@ MX "10 192.168.0.1" "20 192.168.0.2"'
 
 For CNAME records, relative domains have no trailing dot, but absolute domains should:

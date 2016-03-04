@@ -10,4 +10,8 @@
 
 Please include full commands and/or bind files that demonstrate the issue, along with the output.
 
-### Have you or would you willing to contribute a fix? (potentially with assistance)
+### Was the documentation missing information you required?
+
+Please ensure you've checked: https://github.com/barnybug/cli53/blob/master/README.md
+
+### Could you contribute a fix or help testing with this issue?
