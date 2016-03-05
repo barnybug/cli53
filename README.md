@@ -76,9 +76,13 @@ Update this A record to point to 192.168.0.2:
 
 	$ cli53 rrcreate --replace example.com 'www 60 A 192.168.0.2'
 
-Create an MX record with two servers:
+Create an MX record:
 
-	$ cli53 rrcreate example.com '@ MX "10 192.168.0.1" "20 192.168.0.2"'
+	$ cli53 rrcreate example.com '@ MX 10 192.168.0.1'
+
+Note: it's not possible to create multiple records for a given name using
+rrcreate at the moment, so to create roundrobin A records or multiple MX
+preferences, you will need to create a zone file and import this.
 
 For CNAME records, relative domains have no trailing dot, but absolute domains should:
 
