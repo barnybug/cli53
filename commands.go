@@ -23,6 +23,7 @@ func createZone(name, comment, vpcId, vpcRegion string) {
 			Comment: &comment,
 		},
 	}
+
 	if vpcId != "" && vpcRegion != "" {
 		req.VPC = &route53.VPC{
 			VPCId:     aws.String(vpcId),
@@ -143,11 +144,7 @@ func (r changeSorter) Less(i, j int) bool {
 	return *r.changes[i].ResourceRecordSet.Name < *r.changes[j].ResourceRecordSet.Name
 }
 
-func importBind(name string, file string, wait bool, editauth bool, replace bool) {
-	zone := lookupZone(name)
-	records := parseBindFile(file, *zone.Name)
-	expandSelfAliases(records, zone)
-
+func groupRecords(records []dns.RR) map[Key][]dns.RR {
 	// group records by name+type and optionally identifier
 	grouped := map[Key][]dns.RR{}
 	for _, record := range records {
@@ -158,7 +155,15 @@ func importBind(name string, file string, wait bool, editauth bool, replace bool
 		key := Key{record.Header().Name, record.Header().Rrtype, identifier}
 		grouped[key] = append(grouped[key], record)
 	}
+	return grouped
+}
 
+func importBind(name string, file string, wait bool, editauth bool, replace bool) {
+	zone := lookupZone(name)
+	records := parseBindFile(file, *zone.Name)
+	expandSelfAliases(records, zone)
+
+	grouped := groupRecords(records)
 	existing := map[string]*route53.ResourceRecordSet{}
 	if replace {
 		rrsets, err := ListAllRecordSets(r53, *zone.Id)
@@ -189,8 +194,6 @@ func importBind(name string, file string, wait bool, editauth bool, replace bool
 			}
 		}
 	}
-	// sort additions so aliases are last
-	sort.Sort(changeSorter{additions})
 
 	// remaining records in existing should be deleted
 	deletions := []*route53.Change{}
@@ -201,9 +204,21 @@ func importBind(name string, file string, wait bool, editauth bool, replace bool
 		}
 		deletions = append(deletions, &change)
 	}
+
+	resp := batchChanges(additions, deletions, zone)
+	fmt.Printf("%d records imported (%d changes / %d additions / %d deletions)\n", len(records), len(additions)+len(deletions), len(additions), len(deletions))
+
+	if wait && resp != nil {
+		waitForChange(resp.ChangeInfo)
+	}
+}
+
+func batchChanges(additions, deletions []*route53.Change, zone *route53.HostedZone) *route53.ChangeResourceRecordSetsOutput {
+	// sort additions so aliases are last
+	sort.Sort(changeSorter{additions})
+
 	changes := append(deletions, additions...)
 
-	// batch changes
 	var resp *route53.ChangeResourceRecordSetsOutput
 	for i := 0; i < len(changes); i += ChangeBatchSize {
 		end := i + ChangeBatchSize
@@ -221,11 +236,7 @@ func importBind(name string, file string, wait bool, editauth bool, replace bool
 		resp, err = r53.ChangeResourceRecordSets(&req)
 		fatalIfErr(err)
 	}
-
-	fmt.Printf("%d records imported (%d changes / %d additions / %d deletions)\n", len(records), len(changes), len(additions), len(deletions))
-	if wait && resp != nil {
-		waitForChange(resp.ChangeInfo)
-	}
+	return resp
 }
 
 func UnexpandSelfAliases(records []dns.RR, zone *route53.HostedZone, full bool) {
@@ -304,7 +315,7 @@ func ExportBindToWriter(r53 *route53.Route53, zone *route53.HostedZone, full boo
 
 type createArgs struct {
 	name          string
-	record        string
+	records       []string
 	wait          bool
 	replace       bool
 	identifier    string
@@ -352,24 +363,7 @@ func (args createArgs) validate() bool {
 	return true
 }
 
-func equalStringPtrs(a, b *string) bool {
-	if a == nil && b == nil {
-		return true
-	} else if a != nil && b != nil {
-		return *a == *b
-	} else {
-		return false
-	}
-}
-
-func createRecord(args createArgs) {
-	zone := lookupZone(args.name)
-
-	origin := fmt.Sprintf("$ORIGIN %s\n", *zone.Name)
-	rr, err := dns.NewRR(origin + args.record)
-	fatalIfErr(err)
-	expandSelfAlias(rr, zone)
-	rrset := ConvertBindToRRSet([]dns.RR{rr})
+func (args createArgs) applyRRSetParams(rrset *route53.ResourceRecordSet) {
 	if args.identifier != "" {
 		rrset.SetIdentifier = aws.String(args.identifier)
 	}
@@ -395,42 +389,78 @@ func createRecord(args createArgs) {
 			ContinentCode: aws.String(args.continentCode),
 		}
 	}
+}
 
-	changes := []*route53.Change{}
-	if args.replace {
-		// add DELETE for any existing record
-		rrsets, err := ListAllRecordSets(r53, *zone.Id)
+func equalStringPtrs(a, b *string) bool {
+	if a == nil && b == nil {
+		return true
+	} else if a != nil && b != nil {
+		return *a == *b
+	} else {
+		return false
+	}
+}
+
+func parseRecordList(args []string, zone *route53.HostedZone) []dns.RR {
+	records := []dns.RR{}
+	origin := fmt.Sprintf("$ORIGIN %s\n", *zone.Name)
+	for _, text := range args {
+		record, err := dns.NewRR(origin + text)
 		fatalIfErr(err)
-		for _, candidate := range rrsets {
-			if equalStringPtrs(rrset.Name, candidate.Name) &&
-				equalStringPtrs(rrset.Type, candidate.Type) &&
-				equalStringPtrs(rrset.SetIdentifier, candidate.SetIdentifier) {
-				change := &route53.Change{
-					Action:            aws.String("DELETE"),
-					ResourceRecordSet: candidate,
+		records = append(records, record)
+	}
+	return records
+}
+
+func createRecords(args createArgs) {
+	zone := lookupZone(args.name)
+	records := parseRecordList(args.records, zone)
+	expandSelfAliases(records, zone)
+
+	grouped := groupRecords(records)
+
+	var existing []*route53.ResourceRecordSet
+	if args.replace {
+		var err error
+		existing, err = ListAllRecordSets(r53, *zone.Id)
+		fatalIfErr(err)
+	}
+
+	additions := []*route53.Change{}
+	deletions := []*route53.Change{}
+	for _, values := range grouped {
+		rrset := ConvertBindToRRSet(values)
+		args.applyRRSetParams(rrset)
+
+		change := &route53.Change{
+			Action:            aws.String("CREATE"),
+			ResourceRecordSet: rrset,
+		}
+		additions = append(additions, change)
+
+		if args.replace {
+			// add DELETE if there is an existing record
+			for _, candidate := range existing {
+				if equalStringPtrs(rrset.Name, candidate.Name) &&
+					equalStringPtrs(rrset.Type, candidate.Type) &&
+					equalStringPtrs(rrset.SetIdentifier, candidate.SetIdentifier) {
+					change := route53.Change{
+						Action:            aws.String("DELETE"),
+						ResourceRecordSet: candidate,
+					}
+					deletions = append(deletions, &change)
+					break
 				}
-				changes = append(changes, change)
-				break
 			}
 		}
 	}
 
-	change := &route53.Change{
-		Action:            aws.String("CREATE"),
-		ResourceRecordSet: rrset,
-	}
-	changes = append(changes, change)
+	resp := batchChanges(additions, deletions, zone)
 
-	req := route53.ChangeResourceRecordSetsInput{
-		HostedZoneId: zone.Id,
-		ChangeBatch: &route53.ChangeBatch{
-			Changes: changes,
-		},
+	for _, record := range records {
+		txt := strings.Replace(record.String(), "\t", " ", -1)
+		fmt.Printf("Created record: '%s'\n", txt)
 	}
-	resp, err := r53.ChangeResourceRecordSets(&req)
-	fatalIfErr(err)
-	txt := strings.Replace(rr.String(), "\t", " ", -1)
-	fmt.Printf("Created record: '%s'\n", txt)
 
 	if args.wait {
 		waitForChange(resp.ChangeInfo)
@@ -495,7 +525,6 @@ func deleteRecord(name string, match string, rtype string, wait bool, identifier
 	} else {
 		fmt.Println("Warning: no records matched - nothing deleted")
 	}
-
 }
 
 func purgeRecords(name string, wait bool) {

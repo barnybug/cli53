@@ -46,6 +46,25 @@ Feature: commands
     When I run "cli53 rrcreate $domain 'alias 86400 AWS ALIAS A www $self false'"
     Then the domain "$domain" has record "alias.$domain. 86400 AWS ALIAS A www $self false"
 
+  Scenario: I can create a round robin A record
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain 'a A 127.0.0.1' 'a A 127.0.0.2'"
+    Then the domain "$domain" has record "a.$domain. 3600 IN A 127.0.0.1"
+    And the domain "$domain" has record "a.$domain. 3600 IN A 127.0.0.2"
+
+  Scenario: I can create an MX record with multiple entries
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain 'mail MX 10 mailserver1.' 'mail MX 20 mailserver2.'"
+    Then the domain "$domain" has record "mail.$domain. 3600 IN MX 10 mailserver1."
+    And the domain "$domain" has record "mail.$domain. 3600 IN MX 20 mailserver2."
+
+  Scenario: I can replace multiple records
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain 'a A 127.0.0.1' 'mail MX 5 mailserver0.' 'mail MX 10 mailserver1.'"
+    And I run "cli53 rrcreate --replace $domain 'a A 127.0.0.2' 'mail MX 20 mailserver2.'"
+    Then the domain "$domain" has record "a.$domain. 3600 IN A 127.0.0.2"
+    And the domain "$domain" has record "mail.$domain. 3600 IN MX 20 mailserver2."
+
   Scenario: I can replace a resource record
     Given I have a domain "$domain"
     When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"

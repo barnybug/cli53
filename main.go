@@ -147,8 +147,8 @@ func Main(args []string) int {
 		{
 			Name:      "rrcreate",
 			Aliases:   []string{"rc"},
-			Usage:     "create a record",
-			ArgsUsage: "zone record",
+			Usage:     "create one or more records",
+			ArgsUsage: "zone record [record...]",
 			Flags: append(commonFlags,
 				cli.BoolFlag{
 					Name:  "wait",
@@ -189,7 +189,7 @@ func Main(args []string) int {
 			),
 			Action: func(c *cli.Context) {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
-				if len(c.Args()) != 2 {
+				if len(c.Args()) < 2 {
 					cli.ShowCommandHelp(c, "rrcreate")
 					exitCode = 1
 					return
@@ -200,7 +200,7 @@ func Main(args []string) int {
 				}
 				args := createArgs{
 					name:          c.Args()[0],
-					record:        c.Args()[1],
+					records:       c.Args()[1:],
 					wait:          c.Bool("wait"),
 					replace:       c.Bool("replace"),
 					identifier:    c.String("identifier"),
@@ -212,7 +212,7 @@ func Main(args []string) int {
 					continentCode: c.String("continent-code"),
 				}
 				if args.validate() {
-					createRecord(args)
+					createRecords(args)
 				} else {
 					exitCode = 1
 				}
