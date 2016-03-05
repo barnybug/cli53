@@ -71,7 +71,7 @@ Replace with an imported zone, waiting for completion:
 Create an A record pointed to 192.168.0.1 with TTL of 60 seconds:
 
 	$ cli53 rrcreate example.com 'www 60 A 192.168.0.1'
-   
+
 Update this A record to point to 192.168.0.2:
 
 	$ cli53 rrcreate --replace example.com 'www 60 A 192.168.0.2'
@@ -167,4 +167,4 @@ inconsistent. You have been warned!
 
 ## Changelog
 
-0.6.0 New go version released!
+See: [CHANGELOG](CHANGELOG.md)
