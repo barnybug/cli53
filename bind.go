@@ -11,6 +11,22 @@ import (
 	"github.com/miekg/dns"
 )
 
+func quoted(s []string) (out *string) {
+	quoted := make([]byte, 0, len(s)*256)
+	var t string
+	for _, t = range s {
+		quoted = append(quoted, '"')
+		quoted = append(quoted, t...)
+		quoted = append(quoted, '"', ' ')
+	}
+	if l := len(quoted); l > 1 {
+		quoted = quoted[:l-1]
+	}
+	t = string(quoted)
+	out = &t
+	return
+}
+
 func parseComment(rr dns.RR, comment string) dns.RR {
 	if strings.HasPrefix(comment, "; AWS ") {
 		kvs, err := ParseKeyValues(comment[6:])
@@ -91,14 +107,7 @@ func ConvertBindToRR(record dns.RR) []*route53.ResourceRecord {
 		}
 		return []*route53.ResourceRecord{rr}
 	case *dns.SPF:
-		rrs := []*route53.ResourceRecord{}
-		for _, txt := range record.Txt {
-			rr := &route53.ResourceRecord{
-				Value: aws.String(`"` + txt + `"`),
-			}
-			rrs = append(rrs, rr)
-		}
-		return rrs
+		return []*route53.ResourceRecord{&route53.ResourceRecord{Value: quoted(record.Txt)}}
 	case *dns.SRV:
 		value := fmt.Sprintf("%d %d %d %s", record.Priority, record.Weight, record.Port, record.Target)
 		rr := &route53.ResourceRecord{
@@ -106,14 +115,7 @@ func ConvertBindToRR(record dns.RR) []*route53.ResourceRecord {
 		}
 		return []*route53.ResourceRecord{rr}
 	case *dns.TXT:
-		rrs := []*route53.ResourceRecord{}
-		for _, txt := range record.Txt {
-			rr := &route53.ResourceRecord{
-				Value: aws.String(`"` + txt + `"`),
-			}
-			rrs = append(rrs, rr)
-		}
-		return rrs
+		return []*route53.ResourceRecord{&route53.ResourceRecord{Value: quoted(record.Txt)}}
 	default:
 		errorAndExit(fmt.Sprintf("Unsupported resource record: %s", record))
 	}
