@@ -1,3 +1,8 @@
+## 0.7.1 (2016-03-19)
+
+- Handle multiple values for SPF/TXT records correctly. Fixes #160.
+- Fix delete/replace of wildcard records. Fixes #150.
+
 ## 0.7.0 (2016-03-05)
 
 - Add support to rrcreate for creating multiple records
