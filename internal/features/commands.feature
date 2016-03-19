@@ -58,6 +58,13 @@ Feature: commands
     Then the domain "$domain" has record "mail.$domain. 3600 IN MX 10 mailserver1."
     And the domain "$domain" has record "mail.$domain. 3600 IN MX 20 mailserver2."
 
+  Scenario: I can create a TXT record with multiple values
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain 'txt TXT "a" "b"'"
+    Then the domain "$domain" has record "txt.$domain. 3600 IN TXT "a" "b""
+    And the domain "$domain" has 3 records
+    # NS+SOA+TXT
+
   Scenario: I can replace multiple records
     Given I have a domain "$domain"
     When I run "cli53 rrcreate $domain 'a A 127.0.0.1' 'mail MX 5 mailserver0.' 'mail MX 10 mailserver1.'"

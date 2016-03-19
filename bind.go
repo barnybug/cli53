@@ -50,6 +50,14 @@ func parseBindFile(file, origin string) []dns.RR {
 	return records
 }
 
+func quoteValues(vals []string) string {
+	var qvals []string
+	for _, val := range vals {
+		qvals = append(qvals, quote(val))
+	}
+	return strings.Join(qvals, " ")
+}
+
 // Convert a DNS record into a route53 ResourceRecord.
 func ConvertBindToRR(record dns.RR) []*route53.ResourceRecord {
 	switch record := record.(type) {
@@ -91,14 +99,11 @@ func ConvertBindToRR(record dns.RR) []*route53.ResourceRecord {
 		}
 		return []*route53.ResourceRecord{rr}
 	case *dns.SPF:
-		rrs := []*route53.ResourceRecord{}
-		for _, txt := range record.Txt {
-			rr := &route53.ResourceRecord{
-				Value: aws.String(`"` + txt + `"`),
-			}
-			rrs = append(rrs, rr)
+		value := quoteValues(record.Txt)
+		rr := &route53.ResourceRecord{
+			Value: aws.String(value),
 		}
-		return rrs
+		return []*route53.ResourceRecord{rr}
 	case *dns.SRV:
 		value := fmt.Sprintf("%d %d %d %s", record.Priority, record.Weight, record.Port, record.Target)
 		rr := &route53.ResourceRecord{
@@ -106,14 +111,11 @@ func ConvertBindToRR(record dns.RR) []*route53.ResourceRecord {
 		}
 		return []*route53.ResourceRecord{rr}
 	case *dns.TXT:
-		rrs := []*route53.ResourceRecord{}
-		for _, txt := range record.Txt {
-			rr := &route53.ResourceRecord{
-				Value: aws.String(`"` + txt + `"`),
-			}
-			rrs = append(rrs, rr)
+		value := quoteValues(record.Txt)
+		rr := &route53.ResourceRecord{
+			Value: aws.String(value),
 		}
-		return rrs
+		return []*route53.ResourceRecord{rr}
 	default:
 		errorAndExit(fmt.Sprintf("Unsupported resource record: %s", record))
 	}
@@ -326,21 +328,19 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 				ret = append(ret, dnsrr)
 			}
 		case "SPF":
-			// SPF records are unusual in that multiple values are stored as a single bind record.
-			txt := []string{}
 			for _, rr := range rrset.ResourceRecords {
-				txt = append(txt, unquote(*rr.Value))
+				txt := splitValues(*rr.Value)
+				dnsrr := &dns.SPF{
+					Hdr: dns.RR_Header{
+						Name:   name,
+						Rrtype: dns.TypeSPF,
+						Class:  dns.ClassINET,
+						Ttl:    uint32(*rrset.TTL),
+					},
+					Txt: txt,
+				}
+				ret = append(ret, dnsrr)
 			}
-			dnsrr := &dns.SPF{
-				Hdr: dns.RR_Header{
-					Name:   name,
-					Rrtype: dns.TypeSPF,
-					Class:  dns.ClassINET,
-					Ttl:    uint32(*rrset.TTL),
-				},
-				Txt: txt,
-			}
-			ret = append(ret, dnsrr)
 		case "SRV":
 			for _, rr := range rrset.ResourceRecords {
 				// parse value
@@ -363,21 +363,19 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 				ret = append(ret, dnsrr)
 			}
 		case "TXT":
-			// TXT records are unusual in that multiple values are stored as a single bind record.
-			txt := []string{}
 			for _, rr := range rrset.ResourceRecords {
-				txt = append(txt, unquote(*rr.Value))
+				txt := splitValues(*rr.Value)
+				dnsrr := &dns.TXT{
+					Hdr: dns.RR_Header{
+						Name:   name,
+						Rrtype: dns.TypeTXT,
+						Class:  dns.ClassINET,
+						Ttl:    uint32(*rrset.TTL),
+					},
+					Txt: txt,
+				}
+				ret = append(ret, dnsrr)
 			}
-			dnsrr := &dns.TXT{
-				Hdr: dns.RR_Header{
-					Name:   name,
-					Rrtype: dns.TypeTXT,
-					Class:  dns.ClassINET,
-					Ttl:    uint32(*rrset.TTL),
-				},
-				Txt: txt,
-			}
-			ret = append(ret, dnsrr)
 		}
 	}
 

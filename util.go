@@ -154,14 +154,16 @@ func shortenName(name, origin string) string {
 	}
 }
 
-var reOutsideQuotes = regexp.MustCompile(`"(.*)"`)
+var reQuotedValue = regexp.MustCompile(`"((?:\\"|[^"])*)"`)
 var reBackslashed = regexp.MustCompile(`\\(.)`)
 
-func unquote(s string) string {
-	// remove outside quotes
-	s = reOutsideQuotes.ReplaceAllString(s, "$1")
-	// unbackslash inside
-	return reBackslashed.ReplaceAllString(s, "$1")
+func splitValues(s string) []string {
+	ret := []string{}
+	for _, m := range reQuotedValue.FindAllStringSubmatch(s, -1) {
+		val := reBackslashed.ReplaceAllString(m[1], "$1")
+		ret = append(ret, val)
+	}
+	return ret
 }
 
 var quoter = strings.NewReplacer(`\`, `\\`, `"`, `\"`)

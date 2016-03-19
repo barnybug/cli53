@@ -58,9 +58,12 @@ func TestQuote(t *testing.T) {
 	assert.Equal(t, `"\"quo\\ted\""`, quote(`"quo\ted"`))
 }
 
-func TestUnquote(t *testing.T) {
-	assert.Equal(t, "", unquote(`""`))
-	assert.Equal(t, "abc", unquote(`"abc"`))
+func TestSplitValues(t *testing.T) {
+	assert.Equal(t, []string{}, splitValues(""))
+	assert.Equal(t, []string{""}, splitValues(`""`))
+	assert.Equal(t, []string{"abc"}, splitValues(`"abc"`))
+	assert.Equal(t, []string{"abc", "def"}, splitValues(`"abc" "def"`))
+	assert.Equal(t, []string{`a "quote" b`}, splitValues(`"a \"quote\" b"`))
 }
 
 func TestIsZoneId(t *testing.T) {
