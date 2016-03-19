@@ -79,6 +79,12 @@ Feature: commands
     Then the domain "$domain" has record "a.$domain. 3600 IN A 127.1.0.1 ; AWS routing="WEIGHTED" weight=3 identifier="One""
     And the domain "$domain" has record "a.$domain. 3600 IN A 127.0.0.2 ; AWS routing="WEIGHTED" weight=2 identifier="Two""
 
+  Scenario: I can replace a wildcard record
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain '*.wildcard A 127.0.0.1'"
+    And I run "cli53 rrcreate --replace $domain '*.wildcard A 127.0.0.2'"
+    Then the domain "$domain" has record "*.wildcard.$domain. 3600 IN A 127.0.0.2"
+
   Scenario: I can delete a resource record
     Given I have a domain "$domain"
     When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"
@@ -92,3 +98,9 @@ Feature: commands
     And I run "cli53 rrdelete -i One $domain weighted A"
     Then the domain "$domain" doesn't have record "weighted.$domain. 300 IN A 127.0.0.1 ; AWS routing="WEIGHTED" weight=1 identifier="One""
     And the domain "$domain" has record "weighted.$domain. 300 IN A 127.0.0.2 ; AWS routing="WEIGHTED" weight=2 identifier="Two""
+
+  Scenario: I can delete a wildcard record
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain '*.wildcard A 127.0.0.1'"
+    And I run "cli53 rrdelete $domain *.wildcard A"
+    Then the domain "$domain" doesn't have record "*.wildcard.$domain. 3600 IN A 127.0.0.1"

@@ -489,6 +489,12 @@ func ListAllRecordSets(r53 *route53.Route53, id string) (rrsets []*route53.Resou
 			}
 		}
 	}
+
+	// unescape wildcards
+	for _, rrset := range rrsets {
+		rrset.Name = aws.String(unescaper.Replace(*rrset.Name))
+	}
+
 	return
 }
 

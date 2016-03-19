@@ -192,7 +192,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 	// - latency
 	// - weighted
 
-	name := unescaper.Replace(*rrset.Name)
+	name := *rrset.Name
 
 	// Only resource records without routing can be represented in vanilla bind.
 	if rrset.AliasTarget != nil {
