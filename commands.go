@@ -351,6 +351,7 @@ func (args createArgs) validate() bool {
 	}
 	if args.subdivisionCode != "" && args.countryCode == "" {
 		fmt.Println("country-code must be specified if subdivision-code is specified")
+		return false
 	}
 	if extcount > 0 && args.identifier == "" {
 		fmt.Println("identifier must be set when creating an extended record")
