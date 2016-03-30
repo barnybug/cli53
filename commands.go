@@ -349,6 +349,9 @@ func (args createArgs) validate() bool {
 	if args.continentCode != "" {
 		extcount += 1
 	}
+	if args.subdivisionCode != "" && args.countryCode == "" {
+		fmt.Println("country-code must be specified if subdivision-code is specified")
+	}
 	if extcount > 0 && args.identifier == "" {
 		fmt.Println("identifier must be set when creating an extended record")
 		return false
@@ -380,18 +383,19 @@ func (args createArgs) applyRRSetParams(rrset *route53.ResourceRecordSet) {
 	if args.region != "" {
 		rrset.Region = aws.String(args.region)
 	}
-	if args.countryCode != "" {
-		rrset.GeoLocation = &route53.GeoLocation{
-			CountryCode: aws.String(args.countryCode),
-		}
-	}
 	if args.continentCode != "" {
 		rrset.GeoLocation = &route53.GeoLocation{
 			ContinentCode: aws.String(args.continentCode),
 		}
 	}
-	if args.subdivisionCode != "" {
+	if args.countryCode != "" {
 		rrset.GeoLocation = &route53.GeoLocation{
+			CountryCode: aws.String(args.countryCode),
+		}
+	}
+	if args.countryCode != "" && args.subdivisionCode != "" {
+		rrset.GeoLocation = &route53.GeoLocation{
+			CountryCode: aws.String(args.countryCode),
 			SubdivisionCode: aws.String(args.subdivisionCode),
 		}
 	}
