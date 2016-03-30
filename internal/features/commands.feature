@@ -25,6 +25,11 @@ Feature: commands
     When I run "cli53 rrcreate -i Africa --continent-code AF $domain 'geo 300 IN A 127.0.0.1'"
     Then the domain "$domain" has record "geo.$domain. 300 IN A 127.0.0.1 ; AWS routing="GEOLOCATION" continentCode="AF" identifier="Africa""
 
+  Scenario: I can create a geolocation record with a country code and subdivision code
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate -i California --country-code US --subdivision-code CA $domain 'geo 300 IN A 127.0.0.1'"
+    Then the domain "$domain" has record "geo.$domain. 300 IN A 127.0.0.1 ; AWS routing="GEOLOCATION" countryCode="US" subdivisionCode="CA" identifier="California"
+
   Scenario: I can create a latency record
     Given I have a domain "$domain"
     When I run "cli53 rrcreate -i USWest1 --region us-west-1 $domain 'latency 300 IN A 127.0.0.1'"
