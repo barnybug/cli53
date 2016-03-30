@@ -314,17 +314,18 @@ func ExportBindToWriter(r53 *route53.Route53, zone *route53.HostedZone, full boo
 }
 
 type createArgs struct {
-	name          string
-	records       []string
-	wait          bool
-	replace       bool
-	identifier    string
-	failover      string
-	healthCheckId string
-	weight        *int
-	region        string
-	countryCode   string
-	continentCode string
+	name            string
+	records         []string
+	wait            bool
+	replace         bool
+	identifier      string
+	failover        string
+	healthCheckId   string
+	weight          *int
+	region          string
+	countryCode     string
+	continentCode   string
+	subdivisionCode string
 }
 
 func (args createArgs) validate() bool {
@@ -387,6 +388,11 @@ func (args createArgs) applyRRSetParams(rrset *route53.ResourceRecordSet) {
 	if args.continentCode != "" {
 		rrset.GeoLocation = &route53.GeoLocation{
 			ContinentCode: aws.String(args.continentCode),
+		}
+	}
+	if args.subdivisionCode != "" {
+		rrset.GeoLocation = &route53.GeoLocation{
+			SubdivisionCode: aws.String(args.subdivisionCode),
 		}
 	}
 }

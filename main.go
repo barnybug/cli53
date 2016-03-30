@@ -186,6 +186,10 @@ func Main(args []string) int {
 					Name:  "continent-code",
 					Usage: "continent code for geolocation routing",
 				},
+				cli.StringFlag{
+					Name:  "subdivision-code",
+					Usage: "subdivision code for geolocation routing",
+				},
 			),
 			Action: func(c *cli.Context) {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
@@ -199,17 +203,18 @@ func Main(args []string) int {
 					weight = aws.Int(c.Int("weight"))
 				}
 				args := createArgs{
-					name:          c.Args()[0],
-					records:       c.Args()[1:],
-					wait:          c.Bool("wait"),
-					replace:       c.Bool("replace"),
-					identifier:    c.String("identifier"),
-					failover:      c.String("failover"),
-					healthCheckId: c.String("health-check"),
-					weight:        weight,
-					region:        c.String("region"),
-					countryCode:   c.String("country-code"),
-					continentCode: c.String("continent-code"),
+					name:            c.Args()[0],
+					records:         c.Args()[1:],
+					wait:            c.Bool("wait"),
+					replace:         c.Bool("replace"),
+					identifier:      c.String("identifier"),
+					failover:        c.String("failover"),
+					healthCheckId:   c.String("health-check"),
+					weight:          weight,
+					region:          c.String("region"),
+					countryCode:     c.String("country-code"),
+					continentCode:   c.String("continent-code"),
+					subdivisionCode: c.String("subdivision-code"),
 				}
 				if args.validate() {
 					createRecords(args)
