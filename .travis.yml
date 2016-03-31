@@ -23,6 +23,7 @@ deploy:
   - release/cli53-mac-amd64
   - release/cli53-windows-386.exe
   - release/cli53-windows-amd64.exe
+  - release/SHA256SUMS
   on:
     repo: barnybug/cli53
     tags: true

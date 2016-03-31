@@ -28,6 +28,7 @@ release:
 	GOOS=windows GOARCH=amd64 go build $(buildargs) -o release/cli53-windows-amd64.exe $(exe)
 	goupx release/cli53-linux-amd64
 	upx release/cli53-linux-386 release/cli53-linux-arm release/cli53-windows-386.exe
+	cd release; sha256sum cli53-* > SHA256SUMS
 
 test-unit:
 	go test
