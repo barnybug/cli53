@@ -1,3 +1,7 @@
+## 0.7.2 (2016-03-31)
+
+- Add --subdivision-code. Thanks @bensie.
+
 ## 0.7.1 (2016-03-19)
 
 - Handle multiple values for SPF/TXT records correctly. Fixes #160.
