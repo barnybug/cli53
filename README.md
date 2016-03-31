@@ -110,6 +110,11 @@ Create an alias to a CNAME:
 
 	$ cli53 rrcreate example.com 'docs AWS ALIAS CNAME mail $self false'
 
+Create some geolocation records:
+
+	$ cli53 rrcreate -i Africa --continent-code AF example.com 'geo 300 IN A 127.0.0.1'
+	$ cli53 rrcreate -i California --country-code US --subdivision-code CA example.com 'geo 300 IN A 127.0.0.2'
+
 Further documentation is available, e.g.:
 
 	$ cli53 --help
