@@ -1,5 +1,7 @@
 Please when making a pull request:
 
+- make sure changes are up to date with master.
+- please use brief, descriptive commit messages.
 - check code has been go formatted with 'go fmt'.
 - ensure you've added an integration test (under internal/features) or a unit test.
 - check the tests pass (make test).
