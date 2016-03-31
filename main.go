@@ -7,7 +7,7 @@ import (
 )
 
 var r53 *route53.Route53
-var version string /* passed in by go build */
+var version string = "undefined" /* passed in by Makefile */
 
 // Entry point for cli53 application
 func Main(args []string) int {

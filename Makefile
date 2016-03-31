@@ -1,7 +1,8 @@
 export GO15VENDOREXPERIMENT=1
 
+version := $(shell git describe --always --dirty)
 exe = ./cmd/cli53
-buildargs = -ldflags '-w -s -X github.com/barnybug/cli53.version=${TRAVIS_TAG}'
+buildargs = -ldflags '-w -s -X github.com/barnybug/cli53.version=${version}'
 
 .PHONY: all build install test coverage deps release
 
@@ -13,10 +14,10 @@ deps:
 	go get github.com/lsegal/gucumber/cmd/gucumber
 
 build:
-	go build $(exe)
+	go build $(buildargs) $(exe)
 
 install:
-	go install $(exe)
+	go install $(buildargs) $(exe)
 
 release:
 	GOOS=linux GOARCH=386 go build $(buildargs) -o release/cli53-linux-386 $(exe)
