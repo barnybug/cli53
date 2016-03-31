@@ -76,6 +76,10 @@ Update this A record to point to 192.168.0.2:
 
 	$ cli53 rrcreate --replace example.com 'www 60 A 192.168.0.2'
 
+Delete an A record
+
+    $ cli53 rd  example.com   www  A
+
 Create an MX record:
 
 	$ cli53 rrcreate example.com '@ MX 10 mail1.' '@ MX 20 mail2.'
