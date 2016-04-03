@@ -14,7 +14,7 @@ deps:
 	go get github.com/lsegal/gucumber/cmd/gucumber
 
 build:
-	go build $(buildargs) $(exe)
+	go build -i -v $(buildargs) $(exe)
 
 install:
 	go install $(buildargs) $(exe)
