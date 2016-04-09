@@ -35,14 +35,14 @@ func createZone(name, comment, vpcId, vpcRegion string) {
 	fmt.Printf("Created zone: '%s' ID: '%s'\n", *resp.HostedZone.Name, *resp.HostedZone.Id)
 }
 
-func purgeZoneRecords(id string, wait bool) {
-	rrsets, err := ListAllRecordSets(r53, id)
+func purgeZoneRecords(zone *route53.HostedZone, wait bool) {
+	rrsets, err := ListAllRecordSets(r53, *zone.Id)
 	fatalIfErr(err)
 
 	// delete all non-default SOA/NS records
 	changes := []*route53.Change{}
 	for _, rrset := range rrsets {
-		if *rrset.Type != "NS" && *rrset.Type != "SOA" {
+		if !isAuthRecord(zone, rrset) {
 			change := &route53.Change{
 				Action:            aws.String("DELETE"),
 				ResourceRecordSet: rrset,
@@ -53,7 +53,7 @@ func purgeZoneRecords(id string, wait bool) {
 
 	if len(changes) > 0 {
 		req2 := route53.ChangeResourceRecordSetsInput{
-			HostedZoneId: &id,
+			HostedZoneId: zone.Id,
 			ChangeBatch: &route53.ChangeBatch{
 				Changes: changes,
 			},
@@ -70,7 +70,7 @@ func purgeZoneRecords(id string, wait bool) {
 func deleteZone(name string, purge bool) {
 	zone := lookupZone(name)
 	if purge {
-		purgeZoneRecords(*zone.Id, false)
+		purgeZoneRecords(zone, false)
 	}
 	req := route53.DeleteHostedZoneInput{Id: zone.Id}
 	_, err := r53.DeleteHostedZone(&req)
@@ -546,5 +546,5 @@ func deleteRecord(name string, match string, rtype string, wait bool, identifier
 
 func purgeRecords(name string, wait bool) {
 	zone := lookupZone(name)
-	purgeZoneRecords(*zone.Id, wait)
+	purgeZoneRecords(zone, wait)
 }
