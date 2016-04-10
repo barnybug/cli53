@@ -1,3 +1,9 @@
+## 0.7.3 (2016-04-10)
+
+- Make replace case-insensitive. Fixes #167
+- Fix purge logic for NS records (thanks @floppym) 
+- Add sha256 checksums to releases 
+
 ## 0.7.2 (2016-03-31)
 
 - Add --subdivision-code. Thanks @bensie.
