@@ -255,7 +255,7 @@ func UnexpandSelfAliases(records []dns.RR, zone *route53.HostedZone, full bool) 
 }
 
 func exportBind(name string, full bool) {
-	zone := lookupZone(name)
+    zone := lookupZone(name)
 	ExportBindToWriter(r53, zone, full, os.Stdout)
 }
 
@@ -412,6 +412,16 @@ func equalStringPtrs(a, b *string) bool {
 	}
 }
 
+func equalCaseInsensitiveStringPtrs(a, b *string) bool {
+	if a == nil && b == nil {
+		return true
+	} else if a != nil && b != nil {
+        return strings.EqualFold(*a, *b)
+	} else {
+		return false
+	}
+}
+
 func parseRecordList(args []string, zone *route53.HostedZone) []dns.RR {
 	records := []dns.RR{}
 	origin := fmt.Sprintf("$ORIGIN %s\n", *zone.Name)
@@ -452,7 +462,7 @@ func createRecords(args createArgs) {
 		if args.replace {
 			// add DELETE if there is an existing record
 			for _, candidate := range existing {
-				if equalStringPtrs(rrset.Name, candidate.Name) &&
+				if equalCaseInsensitiveStringPtrs(rrset.Name, candidate.Name) &&
 					equalStringPtrs(rrset.Type, candidate.Type) &&
 					equalStringPtrs(rrset.SetIdentifier, candidate.SetIdentifier) {
 					change := route53.Change{

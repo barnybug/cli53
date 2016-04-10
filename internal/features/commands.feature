@@ -70,18 +70,24 @@ Feature: commands
     And the domain "$domain" has 3 records
     # NS+SOA+TXT
 
+  Scenario: I can replace a resource record
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"
+    And I run "cli53 rrcreate --replace $domain 'a A 127.0.0.2'"
+    Then the domain "$domain" has record "a.$domain. 3600 IN A 127.0.0.2"
+
+  Scenario: replace is case-insensitive
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain 'record A 127.0.0.1'"
+    And I run "cli53 rrcreate --replace $domain 'Record A 127.0.0.2'"
+    Then the domain "$domain" has record "record.$domain. 3600 IN A 127.0.0.2"
+
   Scenario: I can replace multiple records
     Given I have a domain "$domain"
     When I run "cli53 rrcreate $domain 'a A 127.0.0.1' 'mail MX 5 mailserver0.' 'mail MX 10 mailserver1.'"
     And I run "cli53 rrcreate --replace $domain 'a A 127.0.0.2' 'mail MX 20 mailserver2.'"
     Then the domain "$domain" has record "a.$domain. 3600 IN A 127.0.0.2"
     And the domain "$domain" has record "mail.$domain. 3600 IN MX 20 mailserver2."
-
-  Scenario: I can replace a resource record
-    Given I have a domain "$domain"
-    When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"
-    And I run "cli53 rrcreate --replace $domain 'a A 127.0.0.2'"
-    Then the domain "$domain" has record "a.$domain. 3600 IN A 127.0.0.2"
 
   Scenario: I can replace a weighted record
     Given I have a domain "$domain"
