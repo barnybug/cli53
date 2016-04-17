@@ -14,7 +14,7 @@ import (
 
 const ChangeBatchSize = 100
 
-func createZone(name, comment, vpcId, vpcRegion string) {
+func createZone(name, comment, vpcId, vpcRegion, delegationSetId string) {
 	callerReference := uniqueReference()
 	req := route53.CreateHostedZoneInput{
 		CallerReference: &callerReference,
@@ -30,9 +30,60 @@ func createZone(name, comment, vpcId, vpcRegion string) {
 			VPCRegion: aws.String(vpcRegion),
 		}
 	}
+	if delegationSetId != "" {
+		delegationSetId = strings.Replace(delegationSetId, "/delegationset/", "", 1)
+		req.DelegationSetId = aws.String(delegationSetId)
+	}
 	resp, err := r53.CreateHostedZone(&req)
 	fatalIfErr(err)
 	fmt.Printf("Created zone: '%s' ID: '%s'\n", *resp.HostedZone.Name, *resp.HostedZone.Id)
+}
+
+func createReusableDelegationSet(zoneId string) {
+	callerReference := uniqueReference()
+	req := route53.CreateReusableDelegationSetInput{
+		CallerReference: &callerReference,
+	}
+	if zoneId != "" {
+		req.HostedZoneId = &zoneId
+	}
+	resp, err := r53.CreateReusableDelegationSet(&req)
+	fatalIfErr(err)
+	ds := resp.DelegationSet
+	fmt.Printf("Created reusable delegation set ID: '%s'\n", *ds.Id)
+	for _, ns := range ds.NameServers {
+		fmt.Printf("Nameserver: %s\n", *ns)
+	}
+}
+
+func listReusableDelegationSets() {
+	req := route53.ListReusableDelegationSetsInput{}
+	resp, err := r53.ListReusableDelegationSets(&req)
+	fatalIfErr(err)
+	fmt.Printf("Reusable delegation sets:\n")
+	if len(resp.DelegationSets) == 0 {
+		fmt.Println("none")
+		return
+	}
+	for _, ds := range resp.DelegationSets {
+		var nameservers []string
+		for _, ns := range ds.NameServers {
+			nameservers = append(nameservers, *ns)
+		}
+		fmt.Printf("- ID: %s Nameservers: %s\n", *ds.Id, strings.Join(nameservers, ", "))
+	}
+}
+
+func deleteReusableDelegationSet(id string) {
+	if !strings.HasPrefix(id, "/delegationset/") {
+		id = "/delegationset/" + id
+	}
+	req := route53.DeleteReusableDelegationSetInput{
+		Id: &id,
+	}
+	_, err := r53.DeleteReusableDelegationSet(&req)
+	fatalIfErr(err)
+	fmt.Printf("Deleted reusable delegation set\n")
 }
 
 func purgeZoneRecords(zone *route53.HostedZone, wait bool) {

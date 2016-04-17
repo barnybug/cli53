@@ -8,6 +8,8 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"syscall"
@@ -35,8 +37,10 @@ func fatalIfErr(err error) {
 }
 
 var cleanupIds = []string{}
+var cleanupDSIds = []string{}
 var runOutput string
 var retCode int
+var backReferences []string
 
 func domainExists(name string) bool {
 	return domainId(name) != ""
@@ -50,6 +54,16 @@ func domainZone(name string) *route53.HostedZone {
 		if *zone.Name == name+"." {
 			return zone
 		}
+	}
+	return nil
+}
+
+func reusableDelegationSet(id string) *route53.DelegationSet {
+	r53 := getService()
+	req := route53.GetReusableDelegationSetInput{Id: &id}
+	resp, err := r53.GetReusableDelegationSet(&req)
+	if err == nil {
+		return resp.DelegationSet
 	}
 	return nil
 }
@@ -105,6 +119,14 @@ func cleanupDomain(r53 *route53.Route53, id string) {
 	}
 }
 
+func cleanupReusableDelegationSet(r53 *route53.Route53, id string) {
+	req := route53.DeleteReusableDelegationSetInput{Id: &id}
+	_, err := r53.DeleteReusableDelegationSet(&req)
+	if err != nil {
+		fmt.Printf("Warning: cleanup failed - %s\n", err)
+	}
+}
+
 // Split on whitespace, but leave quoted strings in tact
 func safeSplit(s string) []string {
 	split := strings.Split(s, " ")
@@ -140,6 +162,20 @@ func domain(s string) string {
 	return strings.Replace(s, "$domain", domain, -1)
 }
 
+var reMagic = regexp.MustCompile(`\$\w+`)
+
+func replaceMagics(s string) string {
+	return reMagic.ReplaceAllStringFunc(s, func(m string) string {
+		if v, ok := World[m]; ok {
+			return v.(string)
+		}
+		if i, err := strconv.Atoi(m[1:]); err == nil {
+			return backReferences[i]
+		}
+		return m
+	})
+}
+
 func coverageArgs(args []string) []string {
 	// add coverage parameters to command
 	coverage := fmt.Sprintf("coverage/%d.txt", rand.Int())
@@ -149,10 +185,12 @@ func coverageArgs(args []string) []string {
 func init() {
 	Before("", func() {
 		// randomize temporary test domain name
-		World["$domain"] = fmt.Sprintf("%s.example.com", uniqueReference())
+		World["$domain"] = fmt.Sprintf("example%s.com", uniqueReference())
 	})
 
 	After("", func() {
+		delete(World, "$domain")
+		delete(World, "$delegationSet")
 		if len(cleanupIds) > 0 {
 			// cleanup
 			r53 := getService()
@@ -160,6 +198,14 @@ func init() {
 				cleanupDomain(r53, id)
 			}
 			cleanupIds = []string{}
+		}
+		if len(cleanupDSIds) > 0 {
+			// cleanup
+			r53 := getService()
+			for _, id := range cleanupDSIds {
+				cleanupReusableDelegationSet(r53, id)
+			}
+			cleanupDSIds = []string{}
 		}
 	})
 
@@ -177,8 +223,21 @@ func init() {
 		cleanupIds = append(cleanupIds, *resp.HostedZone.Id)
 	})
 
+	Given(`^I have a delegation set$`, func() {
+		r53 := getService()
+		callerReference := uniqueReference()
+		req := route53.CreateReusableDelegationSetInput{
+			CallerReference: &callerReference,
+		}
+		resp, err := r53.CreateReusableDelegationSet(&req)
+		fatalIfErr(err)
+		id := *resp.DelegationSet.Id
+		World["$delegationSet"] = id
+		cleanupDSIds = append(cleanupDSIds, id)
+	})
+
 	When(`^I run "(.+?)"$`, func(cmd string) {
-		cmd = domain(cmd)
+		cmd = replaceMagics(cmd)
 		args := safeSplit(cmd)
 		if os.Getenv("COVERAGE") != "" {
 			args = coverageArgs(args)
@@ -283,9 +342,40 @@ func init() {
 		}
 	})
 
+	Then(`^the output matches "(.+?)"$`, func(s string) {
+		re, err := regexp.Compile(s)
+		fatalIfErr(err)
+		match := re.FindStringSubmatch(runOutput)
+		if match == nil {
+			T.Errorf("Output did not match \"%s\"", s)
+		}
+		backReferences = match
+	})
+
 	Then(`^the exit code was (\d+)$`, func(code int) {
 		if code != retCode {
 			T.Errorf("Exit code expected: %d != actual: %d", code, retCode)
+		}
+	})
+
+	Then(`^the delegation set "(.+?)" is created$`, func(id string) {
+		id = replaceMagics(id)
+		ds := reusableDelegationSet(id)
+		if ds == nil {
+			T.Errorf("Reusable delegation set %s was not created", id)
+		} else {
+			cleanupDSIds = append(cleanupDSIds, id)
+		}
+	})
+
+	Then(`^the delegation set "(.+?)" is deleted$`, func(id string) {
+		id = replaceMagics(id)
+		ds := reusableDelegationSet(id)
+		if ds == nil {
+			cleanupDSIds = []string{}
+		} else {
+			T.Errorf("Reusable delegation set %s was not deleted", id)
+			cleanupDSIds = append(cleanupDSIds, id)
 		}
 	})
 }

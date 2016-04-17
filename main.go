@@ -59,6 +59,11 @@ func Main(args []string) int {
 					Value: "",
 					Usage: "VPC region (required if vpcId is specified)",
 				},
+				cli.StringFlag{
+					Name:  "delegation-set-id",
+					Value: "",
+					Usage: "use the given delegation set",
+				},
 			),
 			Action: func(c *cli.Context) {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
@@ -67,7 +72,7 @@ func Main(args []string) int {
 					exitCode = 1
 					return
 				}
-				createZone(c.Args().First(), c.String("comment"), c.String("vpc-id"), c.String("vpc-region"))
+				createZone(c.Args().First(), c.String("comment"), c.String("vpc-id"), c.String("vpc-region"), c.String("delegation-set-id"))
 			},
 		},
 		{
@@ -273,6 +278,45 @@ func Main(args []string) int {
 					errorAndExit("You must --confirm this action")
 				}
 				purgeRecords(c.Args().First(), c.Bool("wait"))
+			},
+		},
+		{
+			Name:  "dslist",
+			Usage: "list reusable delegation sets",
+			Flags: commonFlags,
+			Action: func(c *cli.Context) {
+				r53 = getService(c.Bool("debug"), c.String("profile"))
+				listReusableDelegationSets()
+			},
+		},
+		{
+			Name:  "dscreate",
+			Usage: "create a reusable delegation set",
+			Flags: append(commonFlags,
+				cli.StringFlag{
+					Name:  "zone-id",
+					Value: "",
+					Usage: "convert the given zone delegation set (optional)",
+				},
+			),
+			Action: func(c *cli.Context) {
+				r53 = getService(c.Bool("debug"), c.String("profile"))
+				createReusableDelegationSet(c.String("zone-id"))
+			},
+		},
+		{
+			Name:      "dsdelete",
+			Usage:     "delete a reusable delegation set",
+			ArgsUsage: "id",
+			Flags:     commonFlags,
+			Action: func(c *cli.Context) {
+				r53 = getService(c.Bool("debug"), c.String("profile"))
+				if len(c.Args()) != 1 {
+					cli.ShowCommandHelp(c, "dsdelete")
+					exitCode = 1
+					return
+				}
+				deleteReusableDelegationSet(c.Args().First())
 			},
 		},
 	}
