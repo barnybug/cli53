@@ -284,7 +284,7 @@ var testConvertRRSetToBindTable = []struct {
 					Class:  ClassAWS,
 					Ttl:    uint32(86400),
 				},
-				Data: &ALIAS{
+				Data: &ALIASRdata{
 					Type:                 "A",
 					Target:               "target",
 					ZoneId:               "zoneid",

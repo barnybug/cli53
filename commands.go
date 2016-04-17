@@ -106,8 +106,11 @@ func expandSelfAliases(records []dns.RR, zone *route53.HostedZone) {
 }
 
 func expandSelfAlias(record dns.RR, zone *route53.HostedZone) {
+	if awsrr, ok := record.(*AWSRR); ok {
+		record = awsrr.RR
+	}
 	if alias, ok := record.(*dns.PrivateRR); ok {
-		rdata := alias.Data.(*ALIAS)
+		rdata := alias.Data.(*ALIASRdata)
 		if rdata.ZoneId == "$self" {
 			rdata.ZoneId = strings.Replace(*zone.Id, "/hostedzone/", "", 1)
 			rdata.Target = qualifyName(rdata.Target, *zone.Name)
@@ -242,8 +245,11 @@ func batchChanges(additions, deletions []*route53.Change, zone *route53.HostedZo
 func UnexpandSelfAliases(records []dns.RR, zone *route53.HostedZone, full bool) {
 	id := strings.Replace(*zone.Id, "/hostedzone/", "", 1)
 	for _, rr := range records {
+		if awsrr, ok := rr.(*AWSRR); ok {
+			rr = awsrr.RR
+		}
 		if alias, ok := rr.(*dns.PrivateRR); ok {
-			rdata := alias.Data.(*ALIAS)
+			rdata := alias.Data.(*ALIASRdata)
 			if rdata.ZoneId == id {
 				rdata.ZoneId = "$self"
 				if !full {
@@ -255,7 +261,7 @@ func UnexpandSelfAliases(records []dns.RR, zone *route53.HostedZone, full bool) 
 }
 
 func exportBind(name string, full bool) {
-    zone := lookupZone(name)
+	zone := lookupZone(name)
 	ExportBindToWriter(r53, zone, full, os.Stdout)
 }
 
@@ -396,7 +402,7 @@ func (args createArgs) applyRRSetParams(rrset *route53.ResourceRecordSet) {
 	}
 	if args.countryCode != "" && args.subdivisionCode != "" {
 		rrset.GeoLocation = &route53.GeoLocation{
-			CountryCode: aws.String(args.countryCode),
+			CountryCode:     aws.String(args.countryCode),
 			SubdivisionCode: aws.String(args.subdivisionCode),
 		}
 	}
@@ -416,7 +422,7 @@ func equalCaseInsensitiveStringPtrs(a, b *string) bool {
 	if a == nil && b == nil {
 		return true
 	} else if a != nil && b != nil {
-        return strings.EqualFold(*a, *b)
+		return strings.EqualFold(*a, *b)
 	} else {
 		return false
 	}

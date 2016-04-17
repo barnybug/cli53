@@ -35,6 +35,11 @@ Feature: bind files
     When I run "cli53 import --file tests/geo.txt $domain"
     Then the domain "$domain" export matches file "tests/geo.txt"
 
+  Scenario: I can import a zone with geo ALIAS records 
+    Given I have a domain "$domain"
+    When I run "cli53 import --file tests/geo_alias.txt $domain"
+    Then the domain "$domain" export matches file "tests/geo_alias.txt"
+
   Scenario: I can import a zone with latency extensions
     Given I have a domain "$domain"
     When I run "cli53 import --file tests/latency.txt $domain"

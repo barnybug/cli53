@@ -10,15 +10,15 @@ import (
 const ClassAWS = 253
 const TypeALIAS = 0x0F99
 
-type ALIAS struct {
+type ALIASRdata struct {
 	Type                 string
 	Target               string
 	ZoneId               string
 	EvaluateTargetHealth bool
 }
 
-func (rd *ALIAS) Copy(dest dns.PrivateRdata) error {
-	d := dest.(*ALIAS)
+func (rd *ALIASRdata) Copy(dest dns.PrivateRdata) error {
+	d := dest.(*ALIASRdata)
 	d.Type = rd.Type
 	d.Target = rd.Target
 	d.ZoneId = rd.ZoneId
@@ -26,11 +26,11 @@ func (rd *ALIAS) Copy(dest dns.PrivateRdata) error {
 	return nil
 }
 
-func (rd *ALIAS) Len() int {
+func (rd *ALIASRdata) Len() int {
 	return 0
 }
 
-func (rd *ALIAS) Parse(txt []string) error {
+func (rd *ALIASRdata) Parse(txt []string) error {
 	if len(txt) != 4 {
 		return errors.New("4 parts required for ALIAS: type target zoneid evaluateTargetHealth")
 	}
@@ -41,15 +41,15 @@ func (rd *ALIAS) Parse(txt []string) error {
 	return nil
 }
 
-func (rd *ALIAS) Pack(buf []byte) (int, error) {
+func (rd *ALIASRdata) Pack(buf []byte) (int, error) {
 	return 0, nil
 }
 
-func (rd *ALIAS) Unpack(buf []byte) (int, error) {
+func (rd *ALIASRdata) Unpack(buf []byte) (int, error) {
 	return 0, nil
 }
 
-func (rr *ALIAS) String() string {
+func (rr *ALIASRdata) String() string {
 	return fmt.Sprintf("%s %s %s %v",
 		rr.Type,
 		rr.Target,
@@ -58,12 +58,12 @@ func (rr *ALIAS) String() string {
 	)
 }
 
-func NewALIAS() dns.PrivateRdata { return new(ALIAS) }
+func NewALIASRdata() dns.PrivateRdata { return new(ALIASRdata) }
 
 func init() {
 	dns.StringToClass["AWS"] = ClassAWS
 	dns.ClassToString[ClassAWS] = "AWS"
-	dns.PrivateHandle("ALIAS", TypeALIAS, NewALIAS)
+	dns.PrivateHandle("ALIAS", TypeALIAS, NewALIASRdata)
 }
 
 type AWSRoute interface {

@@ -1,0 +1,3 @@
+a	300	IN	A	127.0.0.1
+geo	300	IN	A	127.0.0.2 ; AWS routing="GEOLOCATION" continentCode="AF" identifier="Africa"
+geo	86400	AWS	ALIAS	A a $self false ; AWS routing="GEOLOCATION" countryCode="GB" identifier="UK"

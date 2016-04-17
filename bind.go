@@ -29,7 +29,7 @@ func parseComment(rr dns.RR, comment string) dns.RR {
 				fmt.Printf("Warning: parse AWS extension - routing=\"%s\" not understood\n", routing)
 			}
 		} else {
-			fmt.Println("Warning: parse AWS extension: %s", err)
+			fmt.Printf("Warning: parse AWS extension: %s", err)
 		}
 	}
 	return rr
@@ -59,73 +59,63 @@ func quoteValues(vals []string) string {
 }
 
 // Convert a DNS record into a route53 ResourceRecord.
-func ConvertBindToRR(record dns.RR) []*route53.ResourceRecord {
+func ConvertBindToRR(record dns.RR) *route53.ResourceRecord {
 	switch record := record.(type) {
 	case *dns.A:
-		rr := &route53.ResourceRecord{
+		return &route53.ResourceRecord{
 			Value: aws.String(record.A.String()),
 		}
-		return []*route53.ResourceRecord{rr}
 	case *dns.AAAA:
-		rr := &route53.ResourceRecord{
+		return &route53.ResourceRecord{
 			Value: aws.String(record.AAAA.String()),
 		}
-		return []*route53.ResourceRecord{rr}
 	case *dns.CNAME:
-		rr := &route53.ResourceRecord{
+		return &route53.ResourceRecord{
 			Value: aws.String(record.Target),
 		}
-		return []*route53.ResourceRecord{rr}
 	case *dns.MX:
 		value := fmt.Sprintf("%d %s", record.Preference, record.Mx)
-		rr := &route53.ResourceRecord{
+		return &route53.ResourceRecord{
 			Value: aws.String(value),
 		}
-		return []*route53.ResourceRecord{rr}
 	case *dns.NS:
-		rr := &route53.ResourceRecord{
+		return &route53.ResourceRecord{
 			Value: aws.String(record.Ns),
 		}
-		return []*route53.ResourceRecord{rr}
 	case *dns.PTR:
-		rr := &route53.ResourceRecord{
+		return &route53.ResourceRecord{
 			Value: aws.String(record.Ptr),
 		}
-		return []*route53.ResourceRecord{rr}
 	case *dns.SOA:
 		value := fmt.Sprintf("%s %s %d %d %d %d %d", record.Ns, record.Mbox, record.Serial, record.Refresh, record.Retry, record.Expire, record.Minttl)
-		rr := &route53.ResourceRecord{
+		return &route53.ResourceRecord{
 			Value: aws.String(value),
 		}
-		return []*route53.ResourceRecord{rr}
 	case *dns.SPF:
 		value := quoteValues(record.Txt)
-		rr := &route53.ResourceRecord{
+		return &route53.ResourceRecord{
 			Value: aws.String(value),
 		}
-		return []*route53.ResourceRecord{rr}
 	case *dns.SRV:
 		value := fmt.Sprintf("%d %d %d %s", record.Priority, record.Weight, record.Port, record.Target)
-		rr := &route53.ResourceRecord{
+		return &route53.ResourceRecord{
 			Value: aws.String(value),
 		}
-		return []*route53.ResourceRecord{rr}
 	case *dns.TXT:
 		value := quoteValues(record.Txt)
-		rr := &route53.ResourceRecord{
+		return &route53.ResourceRecord{
 			Value: aws.String(value),
 		}
-		return []*route53.ResourceRecord{rr}
 	default:
 		errorAndExit(fmt.Sprintf("Unsupported resource record: %s", record))
 	}
-	return []*route53.ResourceRecord{}
+	return nil
 }
 
 func ConvertAliasToRRSet(alias *dns.PrivateRR) *route53.ResourceRecordSet {
 	// AWS ALIAS extension record
 	hdr := alias.Header()
-	rdata := alias.Data.(*ALIAS)
+	rdata := alias.Data.(*ALIASRdata)
 	return &route53.ResourceRecordSet{
 		Type: aws.String(rdata.Type),
 		Name: aws.String(hdr.Name),
@@ -140,26 +130,18 @@ func ConvertAliasToRRSet(alias *dns.PrivateRR) *route53.ResourceRecordSet {
 // Convert some DNS records into a route53 ResourceRecordSet. The records should have been
 // previously grouped by matching name, type and (if applicable) identifier.
 func ConvertBindToRRSet(records []dns.RR) *route53.ResourceRecordSet {
-	rrs := []*route53.ResourceRecord{}
-	for _, record := range records {
-		if rr, ok := record.(*dns.PrivateRR); ok {
-			return ConvertAliasToRRSet(rr)
-		} else if rec, ok := record.(*AWSRR); ok {
-			rrs = append(rrs, ConvertBindToRR(rec.RR)...)
-		} else {
-			rrs = append(rrs, ConvertBindToRR(record)...)
-		}
+	if len(records) == 0 {
+		return nil
+	}
+	hdr := records[0].Header()
+	rrset := &route53.ResourceRecordSet{
+		Type: aws.String(dns.TypeToString[hdr.Rrtype]),
+		Name: aws.String(hdr.Name),
+		TTL:  aws.Int64(int64(hdr.Ttl)),
 	}
 
-	if len(rrs) > 0 {
-		hdr := records[0].Header()
-		rrset := &route53.ResourceRecordSet{
-			Type:            aws.String(dns.Type(hdr.Rrtype).String()),
-			Name:            aws.String(hdr.Name),
-			ResourceRecords: rrs,
-			TTL:             aws.Int64(int64(hdr.Ttl)),
-		}
-		if awsrr, ok := records[0].(*AWSRR); ok {
+	for _, record := range records {
+		if awsrr, ok := record.(*AWSRR); ok {
 			switch route := awsrr.Route.(type) {
 			case *FailoverRoute:
 				rrset.Failover = aws.String(route.Failover)
@@ -178,10 +160,26 @@ func ConvertBindToRRSet(records []dns.RR) *route53.ResourceRecordSet {
 				rrset.HealthCheckId = awsrr.HealthCheckId
 			}
 			rrset.SetIdentifier = aws.String(awsrr.Identifier)
+			record = awsrr.RR
 		}
-		return rrset
+
+		if rr, ok := record.(*dns.PrivateRR); ok {
+			// 'AWS ALIAS' records do not have ResourceRecords
+			rdata := rr.Data.(*ALIASRdata)
+			rrset.Type = aws.String(rdata.Type)
+			rrset.AliasTarget = &route53.AliasTarget{
+				DNSName:              aws.String(rdata.Target),
+				HostedZoneId:         aws.String(rdata.ZoneId),
+				EvaluateTargetHealth: aws.Bool(rdata.EvaluateTargetHealth),
+			}
+			rrset.TTL = nil
+		} else {
+			rr := ConvertBindToRR(record)
+			rrset.ResourceRecords = append(rrset.ResourceRecords, rr)
+		}
 	}
-	return nil
+
+	return rrset
 }
 
 func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
@@ -206,7 +204,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 				Class:  ClassAWS,
 				Ttl:    86400,
 			},
-			Data: &ALIAS{
+			Data: &ALIASRdata{
 				*rrset.Type,
 				*alias.DNSName,
 				*alias.HostedZoneId,
