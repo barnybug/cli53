@@ -1,3 +1,8 @@
+## 0.7.4 (2016-04-17)
+
+- Reusable delegation set support (new commands: dslist, dscreate, dsdelete, and create parameters --delegation-set-id)
+- Fix import of routed ALIAS records
+
 ## 0.7.3 (2016-04-10)
 
 - Make replace case-insensitive. Fixes #167

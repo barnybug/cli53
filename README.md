@@ -18,6 +18,8 @@ Features:
 
 - create AWS extensions: failover, geolocation, latency, weighted and ALIAS records
 
+- create, delete and use reusable delegation sets
+
 ## Installation
 
 Installation is easy, just download the binary from the github releases page (builds are available for Linux, Mac and Windows):
@@ -118,6 +120,12 @@ Create some geolocation records:
 
 	$ cli53 rrcreate -i Africa --continent-code AF example.com 'geo 300 IN A 127.0.0.1'
 	$ cli53 rrcreate -i California --country-code US --subdivision-code CA example.com 'geo 300 IN A 127.0.0.2'
+	
+Create, list and then delete a reusable delegation set:
+
+	$ cli53 dscreate
+	$ cli53 dslist
+	$ cli53 dsdelete NA24DEGBDGB32
 
 Further documentation is available, e.g.:
 
