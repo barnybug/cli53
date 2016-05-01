@@ -28,6 +28,10 @@ https://github.com/barnybug/cli53/releases/latest
     $ sudo mv cli53-my-platform /usr/local/bin/cli53
     $ sudo chmod +x /usr/local/bin/cli53
 
+Alternatively, on Mac you can install it using homebrew
+
+    $ brew install cli53
+
 To configure your Amazon credentials, either place them in a file `~/.aws/credentials`:
 
 	[default]
