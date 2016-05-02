@@ -1,15 +1,17 @@
 package cli53
 
 import (
+	"fmt"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/route53"
 	"github.com/codegangsta/cli"
 )
 
 var r53 *route53.Route53
-var version string = "undefined" /* passed in by Makefile */
+var version = "undefined" /* passed in by Makefile */
 
-// Entry point for cli53 application
+// Main entry point for cli53 application
 func Main(args []string) int {
 	exitCode := 0
 
@@ -320,6 +322,9 @@ func Main(args []string) int {
 			},
 		},
 	}
-	app.Run(args)
+	err := app.Run(args)
+	if err != nil {
+		fmt.Println(err)
+	}
 	return exitCode
 }

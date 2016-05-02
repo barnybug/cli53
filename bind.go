@@ -58,7 +58,7 @@ func quoteValues(vals []string) string {
 	return strings.Join(qvals, " ")
 }
 
-// Convert a DNS record into a route53 ResourceRecord.
+// ConvertBindToRR will convert a DNS record into a route53 ResourceRecord.
 func ConvertBindToRR(record dns.RR) *route53.ResourceRecord {
 	switch record := record.(type) {
 	case *dns.A:
@@ -112,6 +112,7 @@ func ConvertBindToRR(record dns.RR) *route53.ResourceRecord {
 	return nil
 }
 
+// ConvertAliasToRRSet will convert an alias to a ResourceRecordSet.
 func ConvertAliasToRRSet(alias *dns.PrivateRR) *route53.ResourceRecordSet {
 	// AWS ALIAS extension record
 	hdr := alias.Header()
@@ -127,8 +128,9 @@ func ConvertAliasToRRSet(alias *dns.PrivateRR) *route53.ResourceRecordSet {
 	}
 }
 
-// Convert some DNS records into a route53 ResourceRecordSet. The records should have been
-// previously grouped by matching name, type and (if applicable) identifier.
+// ConvertBindToRRSet will convert some DNS records into a route53
+// ResourceRecordSet. The records should have been previously grouped
+// by matching name, type and (if applicable) identifier.
 func ConvertBindToRRSet(records []dns.RR) *route53.ResourceRecordSet {
 	if len(records) == 0 {
 		return nil
@@ -182,6 +184,7 @@ func ConvertBindToRRSet(records []dns.RR) *route53.ResourceRecordSet {
 	return rrset
 }
 
+// ConvertRRSetToBind will convert a ResourceRecordSet to an array of RR entries
 func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 	ret := []dns.RR{}
 
