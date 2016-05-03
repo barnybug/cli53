@@ -24,6 +24,10 @@ Feature: parameter validation
     When I execute "cli53 rrcreate -i id --failover PRIMARY --weight 10 $domain 'a A 127.0.0.1'"
     Then the exit code was 1
 
+  Scenario: passing --append and --replace at the same time makes no sense
+    When I execute "cli53 rrcreate --append --replace $domain 'a A 127.0.0.2'"
+    Then the exit code was 1
+
   Scenario: create requires one argument
     When I execute "cli53 create a b"
     Then the exit code was 1

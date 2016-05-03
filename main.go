@@ -162,6 +162,10 @@ func Main(args []string) int {
 					Usage: "wait for changes to become live",
 				},
 				cli.BoolFlag{
+					Name:  "append",
+					Usage: "append the record",
+				},
+				cli.BoolFlag{
 					Name:  "replace",
 					Usage: "replace the record",
 				},
@@ -213,6 +217,7 @@ func Main(args []string) int {
 					name:            c.Args()[0],
 					records:         c.Args()[1:],
 					wait:            c.Bool("wait"),
+					append:          c.Bool("append"),
 					replace:         c.Bool("replace"),
 					identifier:      c.String("identifier"),
 					failover:        c.String("failover"),

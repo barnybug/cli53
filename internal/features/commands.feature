@@ -70,6 +70,32 @@ Feature: commands
     And the domain "$domain" has 3 records
     # NS+SOA+TXT
 
+  Scenario: I cannot create the same resource record
+    Given I have a domain "$domain"
+    And I run "cli53 rrcreate $domain 'a A 127.0.0.1'"
+    When I execute "cli53 rrcreate $domain 'a A 127.0.0.2'"
+    Then the exit code was 1
+    And the output contains "already exists"
+
+  Scenario: I can append a resource record that does not exists
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate --append $domain 'a A 127.0.0.1'"
+    Then the domain "$domain" has record "a.$domain. 3600 IN A 127.0.0.1"
+
+  Scenario: I can append a resource record that already exists
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"
+    And I run "cli53 rrcreate --append $domain 'a A 127.0.0.2'"
+    Then the domain "$domain" has record "a.$domain. 3600 IN A 127.0.0.1"
+    And the domain "$domain" has record "a.$domain. 3600 IN A 127.0.0.2"
+
+  Scenario: I cannot append the same resource record
+    Given I have a domain "$domain"
+    And I run "cli53 rrcreate $domain 'a A 127.0.0.1'"
+    When I execute "cli53 rrcreate --append $domain 'a A 127.0.0.1'"
+    Then the exit code was 1
+    And the output contains "Duplicate Resource Record"
+
   Scenario: I can replace a resource record
     Given I have a domain "$domain"
     When I run "cli53 rrcreate $domain 'a A 127.0.0.1'"
