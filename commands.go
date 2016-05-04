@@ -374,6 +374,7 @@ type createArgs struct {
 	name            string
 	records         []string
 	wait            bool
+	append          bool
 	replace         bool
 	identifier      string
 	failover        string
@@ -388,6 +389,10 @@ type createArgs struct {
 func (args createArgs) validate() bool {
 	if args.failover != "" && args.failover != "PRIMARY" && args.failover != "SECONDARY" {
 		fmt.Println("failover must be PRIMARY or SECONDARY")
+		return false
+	}
+	if args.replace && args.append {
+		fmt.Println("you can only --append or --replace, not both at the same time")
 		return false
 	}
 	extcount := 0
@@ -498,7 +503,7 @@ func createRecords(args createArgs) {
 	grouped := groupRecords(records)
 
 	var existing []*route53.ResourceRecordSet
-	if args.replace {
+	if args.replace || args.append {
 		var err error
 		existing, err = ListAllRecordSets(r53, *zone.Id)
 		fatalIfErr(err)
@@ -510,13 +515,13 @@ func createRecords(args createArgs) {
 		rrset := ConvertBindToRRSet(values)
 		args.applyRRSetParams(rrset)
 
-		change := &route53.Change{
+		addChange := &route53.Change{
 			Action:            aws.String("CREATE"),
 			ResourceRecordSet: rrset,
 		}
-		additions = append(additions, change)
+		additions = append(additions, addChange)
 
-		if args.replace {
+		if args.replace || args.append {
 			// add DELETE if there is an existing record
 			for _, candidate := range existing {
 				if equalCaseInsensitiveStringPtrs(rrset.Name, candidate.Name) &&
@@ -527,6 +532,10 @@ func createRecords(args createArgs) {
 						ResourceRecordSet: candidate,
 					}
 					deletions = append(deletions, &change)
+
+					if args.append {
+						addChange.ResourceRecordSet.ResourceRecords = append(addChange.ResourceRecordSet.ResourceRecords, candidate.ResourceRecords...)
+					}
 					break
 				}
 			}
