@@ -45,3 +45,8 @@ test-coverage:
 	gocovmerge coverage/*.txt > coverage.txt
 
 test: test-unit test-integration
+
+docker-build:
+	sudo docker run --rm -v `pwd`:/go/src/github.com/barnybug/cli53 -w /go/src/github.com/barnybug/cli53 golang:1.6-alpine sh -c 'apk add --no-cache make git && make build'
+	sudo docker build -t barnybug/cli53 .
+	rm -f cli53
