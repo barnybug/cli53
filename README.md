@@ -42,6 +42,9 @@ Or set the environment variables: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY
 
 You can switch between different sets in the credentials file by passing
 `--profile` to any command, or setting the environment variable `AWS_PROFILE`.
+ For example:
+        
+        cli53 list --profile my_profile 
 
 For more information, see: http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs
 
