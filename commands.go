@@ -241,7 +241,7 @@ func importBind(name string, file string, wait bool, editauth bool, replace bool
 			} else {
 				// new record, add
 				change := route53.Change{
-					Action:            aws.String("CREATE"),
+					Action:            aws.String("UPSERT"),
 					ResourceRecordSet: rrset,
 				}
 				additions = append(additions, &change)
