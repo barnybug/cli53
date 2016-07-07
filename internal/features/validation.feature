@@ -56,6 +56,10 @@ Feature: parameter validation
     When I execute "cli53 rrpurge a b"
     Then the exit code was 1
 
+  Scenario: list expects no arguments
+    When I execute "cli53 list a"
+    Then the exit code was 1
+
   Scenario: bad usage
     When I execute "cli53 --bad list"
     Then the exit code was 1

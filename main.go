@@ -40,6 +40,10 @@ func Main(args []string) int {
 			Flags:   commonFlags,
 			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
+				if len(c.Args()) != 0 {
+					cli.ShowCommandHelp(c, "list")
+					return cli.NewExitError("No parameters expected", 1)
+				}
 				listZones()
 				return nil
 			},
