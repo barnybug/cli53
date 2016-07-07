@@ -10,8 +10,8 @@ import:
     vcs:     git
     subpackages:
       - /cmd/gucumber
-  - package: github.com/codegangsta/cli
-    repo:    https://github.com/codegangsta/cli
+  - package: github.com/urfave/cli
+    repo:    https://github.com/urfave/cli
     vcs:     git
   - package: github.com/miekg/dns
   - package: github.com/stretchr/testify

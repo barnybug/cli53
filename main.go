@@ -5,7 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/route53"
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 )
 
 var r53 *route53.Route53
