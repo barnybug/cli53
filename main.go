@@ -1,8 +1,6 @@
 package cli53
 
 import (
-	"fmt"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/route53"
 	"github.com/urfave/cli"
@@ -14,6 +12,9 @@ var version = "undefined" /* passed in by Makefile */
 // Main entry point for cli53 application
 func Main(args []string) int {
 	exitCode := 0
+	cli.OsExiter = func(c int) {
+		exitCode = c
+	}
 
 	commonFlags := []cli.Flag{
 		cli.BoolFlag{
@@ -36,9 +37,10 @@ func Main(args []string) int {
 			Aliases: []string{"l"},
 			Usage:   "list domains",
 			Flags:   commonFlags,
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
 				listZones()
+				return nil
 			},
 		},
 		{
@@ -67,14 +69,14 @@ func Main(args []string) int {
 					Usage: "use the given delegation set",
 				},
 			),
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "create")
-					exitCode = 1
-					return
+					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
 				createZone(c.Args().First(), c.String("comment"), c.String("vpc-id"), c.String("vpc-region"), c.String("delegation-set-id"))
+				return nil
 			},
 		},
 		{
@@ -87,15 +89,15 @@ func Main(args []string) int {
 					Usage: "remove any existing records on the domain (otherwise deletion will fail)",
 				},
 			),
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "delete")
-					exitCode = 1
-					return
+					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
 				domain := c.Args().First()
 				deleteZone(domain, c.Bool("purge"))
+				return nil
 			},
 		},
 		{
@@ -141,14 +143,14 @@ func Main(args []string) int {
 					Usage: "export prefixes as full names",
 				},
 			),
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "export")
-					exitCode = 1
-					return
+					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
 				exportBind(c.Args().First(), c.Bool("full"))
+				return nil
 			},
 		},
 		{
@@ -202,12 +204,11 @@ func Main(args []string) int {
 					Usage: "subdivision code for geolocation routing",
 				},
 			),
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) < 2 {
 					cli.ShowCommandHelp(c, "rrcreate")
-					exitCode = 1
-					return
+					return cli.NewExitError("Expected at least 2 parameters", 1)
 				}
 				var weight *int
 				if c.IsSet("weight") {
@@ -231,8 +232,9 @@ func Main(args []string) int {
 				if args.validate() {
 					createRecords(args)
 				} else {
-					exitCode = 1
+					return cli.NewExitError("Validation error", 1)
 				}
+				return nil
 			},
 		},
 		{
@@ -250,14 +252,14 @@ func Main(args []string) int {
 					Usage: "record set identifier to delete",
 				},
 			),
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 3 {
 					cli.ShowCommandHelp(c, "rrdelete")
-					exitCode = 1
-					return
+					return cli.NewExitError("Expected exactly 3 parameters", 1)
 				}
 				deleteRecord(c.Args()[0], c.Args()[1], c.Args()[2], c.Bool("wait"), c.String("identifier"))
+				return nil
 			},
 		},
 		{
@@ -274,26 +276,27 @@ func Main(args []string) int {
 					Usage: "wait for changes to become live",
 				},
 			),
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "rrpurge")
-					exitCode = 1
-					return
+					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
 				if !c.Bool("confirm") {
-					errorAndExit("You must --confirm this action")
+					return cli.NewExitError("You must --confirm this action", 1)
 				}
 				purgeRecords(c.Args().First(), c.Bool("wait"))
+				return nil
 			},
 		},
 		{
 			Name:  "dslist",
 			Usage: "list reusable delegation sets",
 			Flags: commonFlags,
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
 				listReusableDelegationSets()
+				return nil
 			},
 		},
 		{
@@ -306,9 +309,10 @@ func Main(args []string) int {
 					Usage: "convert the given zone delegation set (optional)",
 				},
 			),
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
 				createReusableDelegationSet(c.String("zone-id"))
+				return nil
 			},
 		},
 		{
@@ -316,20 +320,17 @@ func Main(args []string) int {
 			Usage:     "delete a reusable delegation set",
 			ArgsUsage: "id",
 			Flags:     commonFlags,
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "dsdelete")
-					exitCode = 1
-					return
+					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
 				deleteReusableDelegationSet(c.Args().First())
+				return nil
 			},
 		},
 	}
-	err := app.Run(args)
-	if err != nil {
-		fmt.Println(err)
-	}
+	app.Run(args)
 	return exitCode
 }
