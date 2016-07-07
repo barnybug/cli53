@@ -55,3 +55,7 @@ Feature: parameter validation
   Scenario: rrpurge requires one argument
     When I execute "cli53 rrpurge a b"
     Then the exit code was 1
+
+  Scenario: bad usage
+    When I execute "cli53 --bad list"
+    Then the exit code was 1

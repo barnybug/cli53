@@ -1,6 +1,8 @@
 package cli53
 
 import (
+	"fmt"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/route53"
 	"github.com/urfave/cli"
@@ -11,9 +13,8 @@ var version = "undefined" /* passed in by Makefile */
 
 // Main entry point for cli53 application
 func Main(args []string) int {
-	exitCode := 0
 	cli.OsExiter = func(c int) {
-		exitCode = c
+		// noop - don't exit
 	}
 
 	commonFlags := []cli.Flag{
@@ -123,14 +124,14 @@ func Main(args []string) int {
 					Usage: "replace all existing records",
 				},
 			),
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "import")
-					exitCode = 1
-					return
+					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
 				importBind(c.Args().First(), c.String("file"), c.Bool("wait"), c.Bool("editauth"), c.Bool("replace"))
+				return nil
 			},
 		},
 		{
@@ -331,6 +332,14 @@ func Main(args []string) int {
 			},
 		},
 	}
-	app.Run(args)
+	err := app.Run(args)
+	exitCode := 0
+	if err != nil {
+		if _, ok := err.(*cli.ExitError); !ok {
+			// Exit errors are already printed
+			fmt.Println(err)
+		}
+		exitCode = 1
+	}
 	return exitCode
 }
