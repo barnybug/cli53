@@ -61,5 +61,5 @@ Feature: parameter validation
     Then the exit code was 1
 
   Scenario: bad usage
-    When I execute "cli53 --bad list"
+    When I execute "cli53 list --bad"
     Then the exit code was 1
