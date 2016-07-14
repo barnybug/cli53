@@ -87,7 +87,7 @@ func Main(args []string) int {
 		{
 			Name:      "delete",
 			Usage:     "delete a domain",
-			ArgsUsage: "zone",
+			ArgsUsage: "name|ID",
 			Flags: append(commonFlags,
 				cli.BoolFlag{
 					Name:  "purge",
@@ -108,7 +108,7 @@ func Main(args []string) int {
 		{
 			Name:      "import",
 			Usage:     "import a bind zone file",
-			ArgsUsage: "zone",
+			ArgsUsage: "name|ID",
 			Flags: append(commonFlags,
 				cli.StringFlag{
 					Name:  "file",
@@ -141,7 +141,7 @@ func Main(args []string) int {
 		{
 			Name:      "export",
 			Usage:     "export a bind zone file (to stdout)",
-			ArgsUsage: "zone",
+			ArgsUsage: "name|ID",
 			Flags: append(commonFlags,
 				cli.BoolFlag{
 					Name:  "full, f",
@@ -270,7 +270,7 @@ func Main(args []string) int {
 		{
 			Name:      "rrpurge",
 			Usage:     "delete all the records (danger!)",
-			ArgsUsage: "zone",
+			ArgsUsage: "name|ID",
 			Flags: append(commonFlags,
 				cli.BoolFlag{
 					Name:  "confirm",
