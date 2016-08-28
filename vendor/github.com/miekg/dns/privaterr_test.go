@@ -87,7 +87,6 @@ func TestPrivateByteSlice(t *testing.T) {
 	rr1, off1, err := dns.UnpackRR(buf[:off], 0)
 	if err != nil {
 		t.Errorf("got error unpacking ISBN: %v", err)
-		return
 	}
 
 	if off1 != off {

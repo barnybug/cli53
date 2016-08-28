@@ -5,7 +5,6 @@ package dns
 import (
 	"bytes"
 	"crypto/tls"
-	"encoding/binary"
 	"io"
 	"net"
 	"sync"
@@ -321,20 +320,20 @@ func (srv *Server) ListenAndServe() error {
 	}
 	switch srv.Net {
 	case "tcp", "tcp4", "tcp6":
-		a, err := net.ResolveTCPAddr(srv.Net, addr)
-		if err != nil {
-			return err
+		a, e := net.ResolveTCPAddr(srv.Net, addr)
+		if e != nil {
+			return e
 		}
-		l, err := net.ListenTCP(srv.Net, a)
-		if err != nil {
-			return err
+		l, e := net.ListenTCP(srv.Net, a)
+		if e != nil {
+			return e
 		}
 		srv.Listener = l
 		srv.started = true
 		srv.lock.Unlock()
-		err = srv.serveTCP(l)
+		e = srv.serveTCP(l)
 		srv.lock.Lock() // to satisfy the defer at the top
-		return err
+		return e
 	case "tcp-tls", "tcp4-tls", "tcp6-tls":
 		network := "tcp"
 		if srv.Net == "tcp4-tls" {
@@ -343,24 +342,24 @@ func (srv *Server) ListenAndServe() error {
 			network = "tcp6"
 		}
 
-		l, err := tls.Listen(network, addr, srv.TLSConfig)
-		if err != nil {
-			return err
+		l, e := tls.Listen(network, addr, srv.TLSConfig)
+		if e != nil {
+			return e
 		}
 		srv.Listener = l
 		srv.started = true
 		srv.lock.Unlock()
-		err = srv.serveTCP(l)
+		e = srv.serveTCP(l)
 		srv.lock.Lock() // to satisfy the defer at the top
-		return err
+		return e
 	case "udp", "udp4", "udp6":
-		a, err := net.ResolveUDPAddr(srv.Net, addr)
-		if err != nil {
-			return err
+		a, e := net.ResolveUDPAddr(srv.Net, addr)
+		if e != nil {
+			return e
 		}
-		l, err := net.ListenUDP(srv.Net, a)
-		if err != nil {
-			return err
+		l, e := net.ListenUDP(srv.Net, a)
+		if e != nil {
+			return e
 		}
 		if e := setUDPSocketOptions(l); e != nil {
 			return e
@@ -368,9 +367,9 @@ func (srv *Server) ListenAndServe() error {
 		srv.PacketConn = l
 		srv.started = true
 		srv.lock.Unlock()
-		err = srv.serveUDP(l)
+		e = srv.serveUDP(l)
 		srv.lock.Lock() // to satisfy the defer at the top
-		return err
+		return e
 	}
 	return &Error{err: "bad network"}
 }
@@ -474,21 +473,21 @@ func (srv *Server) serveTCP(l net.Listener) error {
 	rtimeout := srv.getReadTimeout()
 	// deadline is not used here
 	for {
-		rw, err := l.Accept()
-		if err != nil {
-			if neterr, ok := err.(net.Error); ok && neterr.Temporary() {
+		rw, e := l.Accept()
+		if e != nil {
+			if neterr, ok := e.(net.Error); ok && neterr.Temporary() {
 				continue
 			}
-			return err
+			return e
 		}
-		m, err := reader.ReadTCP(rw, rtimeout)
+		m, e := reader.ReadTCP(rw, rtimeout)
 		srv.lock.RLock()
 		if !srv.started {
 			srv.lock.RUnlock()
 			return nil
 		}
 		srv.lock.RUnlock()
-		if err != nil {
+		if e != nil {
 			continue
 		}
 		srv.inFlight.Add(1)
@@ -517,14 +516,14 @@ func (srv *Server) serveUDP(l *net.UDPConn) error {
 	rtimeout := srv.getReadTimeout()
 	// deadline is not used here
 	for {
-		m, s, err := reader.ReadUDP(l, rtimeout)
+		m, s, e := reader.ReadUDP(l, rtimeout)
 		srv.lock.RLock()
 		if !srv.started {
 			srv.lock.RUnlock()
 			return nil
 		}
 		srv.lock.RUnlock()
-		if err != nil {
+		if e != nil {
 			continue
 		}
 		srv.inFlight.Add(1)
@@ -597,8 +596,8 @@ Exit:
 	if srv.IdleTimeout != nil {
 		idleTimeout = srv.IdleTimeout()
 	}
-	m, err = reader.ReadTCP(w.tcp, idleTimeout)
-	if err == nil {
+	m, e := reader.ReadTCP(w.tcp, idleTimeout)
+	if e == nil {
 		q++
 		goto Redo
 	}
@@ -616,7 +615,7 @@ func (srv *Server) readTCP(conn net.Conn, timeout time.Duration) ([]byte, error)
 		}
 		return nil, ErrShortRead
 	}
-	length := binary.BigEndian.Uint16(l)
+	length, _ := unpackUint16(l, 0)
 	if length == 0 {
 		return nil, ErrShortRead
 	}
@@ -644,10 +643,10 @@ func (srv *Server) readTCP(conn net.Conn, timeout time.Duration) ([]byte, error)
 func (srv *Server) readUDP(conn *net.UDPConn, timeout time.Duration) ([]byte, *SessionUDP, error) {
 	conn.SetReadDeadline(time.Now().Add(timeout))
 	m := make([]byte, srv.UDPSize)
-	n, s, err := ReadFromSessionUDP(conn, m)
-	if err != nil || n == 0 {
-		if err != nil {
-			return nil, nil, err
+	n, s, e := ReadFromSessionUDP(conn, m)
+	if e != nil || n == 0 {
+		if e != nil {
+			return nil, nil, e
 		}
 		return nil, nil, ErrShortRead
 	}
@@ -691,7 +690,7 @@ func (w *response) Write(m []byte) (int, error) {
 			return 0, &Error{err: "message too large"}
 		}
 		l := make([]byte, 2, 2+lm)
-		binary.BigEndian.PutUint16(l, uint16(lm))
+		l[0], l[1] = packUint16(uint16(lm))
 		m = append(l, m...)
 
 		n, err := io.Copy(w.tcp, bytes.NewReader(m))

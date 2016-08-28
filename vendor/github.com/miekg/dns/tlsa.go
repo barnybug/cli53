@@ -78,9 +78,9 @@ func TLSAName(name, service, network string) (string, error) {
 	if !IsFqdn(name) {
 		return "", ErrFqdn
 	}
-	p, err := net.LookupPort(network, service)
-	if err != nil {
-		return "", err
+	p, e := net.LookupPort(network, service)
+	if e != nil {
+		return "", e
 	}
-	return "_" + strconv.Itoa(p) + "._" + network + "." + name, nil
+	return "_" + strconv.Itoa(p) + "_" + network + "." + name, nil
 }
