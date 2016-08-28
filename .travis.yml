@@ -1,6 +1,6 @@
 language: go
 go:
-- 1.6
+- 1.7
 sudo: false
 before_install:
   - pip install --user codecov
