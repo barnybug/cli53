@@ -4,13 +4,36 @@
 package directconnect
 
 import (
+	"time"
+
 	"github.com/aws/aws-sdk-go/aws/awsutil"
 	"github.com/aws/aws-sdk-go/aws/request"
 )
 
 const opAllocateConnectionOnInterconnect = "AllocateConnectionOnInterconnect"
 
-// AllocateConnectionOnInterconnectRequest generates a request for the AllocateConnectionOnInterconnect operation.
+// AllocateConnectionOnInterconnectRequest generates a "aws/request.Request" representing the
+// client's request for the AllocateConnectionOnInterconnect operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the AllocateConnectionOnInterconnect method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the AllocateConnectionOnInterconnectRequest method.
+//    req, resp := client.AllocateConnectionOnInterconnectRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) AllocateConnectionOnInterconnectRequest(input *AllocateConnectionOnInterconnectInput) (req *request.Request, output *Connection) {
 	op := &request.Operation{
 		Name:       opAllocateConnectionOnInterconnect,
@@ -32,6 +55,8 @@ func (c *DirectConnect) AllocateConnectionOnInterconnectRequest(input *AllocateC
 //
 // Allocates a VLAN number and a specified amount of bandwidth for use by a
 // hosted connection on the given interconnect.
+//
+//  This is intended for use by AWS Direct Connect partners only.
 func (c *DirectConnect) AllocateConnectionOnInterconnect(input *AllocateConnectionOnInterconnectInput) (*Connection, error) {
 	req, out := c.AllocateConnectionOnInterconnectRequest(input)
 	err := req.Send()
@@ -40,7 +65,28 @@ func (c *DirectConnect) AllocateConnectionOnInterconnect(input *AllocateConnecti
 
 const opAllocatePrivateVirtualInterface = "AllocatePrivateVirtualInterface"
 
-// AllocatePrivateVirtualInterfaceRequest generates a request for the AllocatePrivateVirtualInterface operation.
+// AllocatePrivateVirtualInterfaceRequest generates a "aws/request.Request" representing the
+// client's request for the AllocatePrivateVirtualInterface operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the AllocatePrivateVirtualInterface method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the AllocatePrivateVirtualInterfaceRequest method.
+//    req, resp := client.AllocatePrivateVirtualInterfaceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) AllocatePrivateVirtualInterfaceRequest(input *AllocatePrivateVirtualInterfaceInput) (req *request.Request, output *VirtualInterface) {
 	op := &request.Operation{
 		Name:       opAllocatePrivateVirtualInterface,
@@ -75,7 +121,28 @@ func (c *DirectConnect) AllocatePrivateVirtualInterface(input *AllocatePrivateVi
 
 const opAllocatePublicVirtualInterface = "AllocatePublicVirtualInterface"
 
-// AllocatePublicVirtualInterfaceRequest generates a request for the AllocatePublicVirtualInterface operation.
+// AllocatePublicVirtualInterfaceRequest generates a "aws/request.Request" representing the
+// client's request for the AllocatePublicVirtualInterface operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the AllocatePublicVirtualInterface method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the AllocatePublicVirtualInterfaceRequest method.
+//    req, resp := client.AllocatePublicVirtualInterfaceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) AllocatePublicVirtualInterfaceRequest(input *AllocatePublicVirtualInterfaceInput) (req *request.Request, output *VirtualInterface) {
 	op := &request.Operation{
 		Name:       opAllocatePublicVirtualInterface,
@@ -110,7 +177,28 @@ func (c *DirectConnect) AllocatePublicVirtualInterface(input *AllocatePublicVirt
 
 const opConfirmConnection = "ConfirmConnection"
 
-// ConfirmConnectionRequest generates a request for the ConfirmConnection operation.
+// ConfirmConnectionRequest generates a "aws/request.Request" representing the
+// client's request for the ConfirmConnection operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ConfirmConnection method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ConfirmConnectionRequest method.
+//    req, resp := client.ConfirmConnectionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) ConfirmConnectionRequest(input *ConfirmConnectionInput) (req *request.Request, output *ConfirmConnectionOutput) {
 	op := &request.Operation{
 		Name:       opConfirmConnection,
@@ -141,7 +229,28 @@ func (c *DirectConnect) ConfirmConnection(input *ConfirmConnectionInput) (*Confi
 
 const opConfirmPrivateVirtualInterface = "ConfirmPrivateVirtualInterface"
 
-// ConfirmPrivateVirtualInterfaceRequest generates a request for the ConfirmPrivateVirtualInterface operation.
+// ConfirmPrivateVirtualInterfaceRequest generates a "aws/request.Request" representing the
+// client's request for the ConfirmPrivateVirtualInterface operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ConfirmPrivateVirtualInterface method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ConfirmPrivateVirtualInterfaceRequest method.
+//    req, resp := client.ConfirmPrivateVirtualInterfaceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) ConfirmPrivateVirtualInterfaceRequest(input *ConfirmPrivateVirtualInterfaceInput) (req *request.Request, output *ConfirmPrivateVirtualInterfaceOutput) {
 	op := &request.Operation{
 		Name:       opConfirmPrivateVirtualInterface,
@@ -172,7 +281,28 @@ func (c *DirectConnect) ConfirmPrivateVirtualInterface(input *ConfirmPrivateVirt
 
 const opConfirmPublicVirtualInterface = "ConfirmPublicVirtualInterface"
 
-// ConfirmPublicVirtualInterfaceRequest generates a request for the ConfirmPublicVirtualInterface operation.
+// ConfirmPublicVirtualInterfaceRequest generates a "aws/request.Request" representing the
+// client's request for the ConfirmPublicVirtualInterface operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ConfirmPublicVirtualInterface method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ConfirmPublicVirtualInterfaceRequest method.
+//    req, resp := client.ConfirmPublicVirtualInterfaceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) ConfirmPublicVirtualInterfaceRequest(input *ConfirmPublicVirtualInterfaceInput) (req *request.Request, output *ConfirmPublicVirtualInterfaceOutput) {
 	op := &request.Operation{
 		Name:       opConfirmPublicVirtualInterface,
@@ -202,7 +332,28 @@ func (c *DirectConnect) ConfirmPublicVirtualInterface(input *ConfirmPublicVirtua
 
 const opCreateConnection = "CreateConnection"
 
-// CreateConnectionRequest generates a request for the CreateConnection operation.
+// CreateConnectionRequest generates a "aws/request.Request" representing the
+// client's request for the CreateConnection operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateConnection method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateConnectionRequest method.
+//    req, resp := client.CreateConnectionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) CreateConnectionRequest(input *CreateConnectionInput) (req *request.Request, output *Connection) {
 	op := &request.Operation{
 		Name:       opCreateConnection,
@@ -238,7 +389,28 @@ func (c *DirectConnect) CreateConnection(input *CreateConnectionInput) (*Connect
 
 const opCreateInterconnect = "CreateInterconnect"
 
-// CreateInterconnectRequest generates a request for the CreateInterconnect operation.
+// CreateInterconnectRequest generates a "aws/request.Request" representing the
+// client's request for the CreateInterconnect operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateInterconnect method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateInterconnectRequest method.
+//    req, resp := client.CreateInterconnectRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) CreateInterconnectRequest(input *CreateInterconnectInput) (req *request.Request, output *Interconnect) {
 	op := &request.Operation{
 		Name:       opCreateInterconnect,
@@ -272,6 +444,8 @@ func (c *DirectConnect) CreateInterconnectRequest(input *CreateInterconnectInput
 // customer can then connect to AWS resources by creating a virtual interface
 // on their connection, using the VLAN assigned to them by the AWS Direct Connect
 // partner.
+//
+//  This is intended for use by AWS Direct Connect partners only.
 func (c *DirectConnect) CreateInterconnect(input *CreateInterconnectInput) (*Interconnect, error) {
 	req, out := c.CreateInterconnectRequest(input)
 	err := req.Send()
@@ -280,7 +454,28 @@ func (c *DirectConnect) CreateInterconnect(input *CreateInterconnectInput) (*Int
 
 const opCreatePrivateVirtualInterface = "CreatePrivateVirtualInterface"
 
-// CreatePrivateVirtualInterfaceRequest generates a request for the CreatePrivateVirtualInterface operation.
+// CreatePrivateVirtualInterfaceRequest generates a "aws/request.Request" representing the
+// client's request for the CreatePrivateVirtualInterface operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreatePrivateVirtualInterface method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreatePrivateVirtualInterfaceRequest method.
+//    req, resp := client.CreatePrivateVirtualInterfaceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) CreatePrivateVirtualInterfaceRequest(input *CreatePrivateVirtualInterfaceInput) (req *request.Request, output *VirtualInterface) {
 	op := &request.Operation{
 		Name:       opCreatePrivateVirtualInterface,
@@ -309,7 +504,28 @@ func (c *DirectConnect) CreatePrivateVirtualInterface(input *CreatePrivateVirtua
 
 const opCreatePublicVirtualInterface = "CreatePublicVirtualInterface"
 
-// CreatePublicVirtualInterfaceRequest generates a request for the CreatePublicVirtualInterface operation.
+// CreatePublicVirtualInterfaceRequest generates a "aws/request.Request" representing the
+// client's request for the CreatePublicVirtualInterface operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreatePublicVirtualInterface method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreatePublicVirtualInterfaceRequest method.
+//    req, resp := client.CreatePublicVirtualInterfaceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) CreatePublicVirtualInterfaceRequest(input *CreatePublicVirtualInterfaceInput) (req *request.Request, output *VirtualInterface) {
 	op := &request.Operation{
 		Name:       opCreatePublicVirtualInterface,
@@ -339,7 +555,28 @@ func (c *DirectConnect) CreatePublicVirtualInterface(input *CreatePublicVirtualI
 
 const opDeleteConnection = "DeleteConnection"
 
-// DeleteConnectionRequest generates a request for the DeleteConnection operation.
+// DeleteConnectionRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteConnection operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteConnection method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteConnectionRequest method.
+//    req, resp := client.DeleteConnectionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) DeleteConnectionRequest(input *DeleteConnectionInput) (req *request.Request, output *Connection) {
 	op := &request.Operation{
 		Name:       opDeleteConnection,
@@ -371,7 +608,28 @@ func (c *DirectConnect) DeleteConnection(input *DeleteConnectionInput) (*Connect
 
 const opDeleteInterconnect = "DeleteInterconnect"
 
-// DeleteInterconnectRequest generates a request for the DeleteInterconnect operation.
+// DeleteInterconnectRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteInterconnect operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteInterconnect method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteInterconnectRequest method.
+//    req, resp := client.DeleteInterconnectRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) DeleteInterconnectRequest(input *DeleteInterconnectInput) (req *request.Request, output *DeleteInterconnectOutput) {
 	op := &request.Operation{
 		Name:       opDeleteInterconnect,
@@ -390,6 +648,8 @@ func (c *DirectConnect) DeleteInterconnectRequest(input *DeleteInterconnectInput
 }
 
 // Deletes the specified interconnect.
+//
+//  This is intended for use by AWS Direct Connect partners only.
 func (c *DirectConnect) DeleteInterconnect(input *DeleteInterconnectInput) (*DeleteInterconnectOutput, error) {
 	req, out := c.DeleteInterconnectRequest(input)
 	err := req.Send()
@@ -398,7 +658,28 @@ func (c *DirectConnect) DeleteInterconnect(input *DeleteInterconnectInput) (*Del
 
 const opDeleteVirtualInterface = "DeleteVirtualInterface"
 
-// DeleteVirtualInterfaceRequest generates a request for the DeleteVirtualInterface operation.
+// DeleteVirtualInterfaceRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteVirtualInterface operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteVirtualInterface method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteVirtualInterfaceRequest method.
+//    req, resp := client.DeleteVirtualInterfaceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) DeleteVirtualInterfaceRequest(input *DeleteVirtualInterfaceInput) (req *request.Request, output *DeleteVirtualInterfaceOutput) {
 	op := &request.Operation{
 		Name:       opDeleteVirtualInterface,
@@ -423,9 +704,84 @@ func (c *DirectConnect) DeleteVirtualInterface(input *DeleteVirtualInterfaceInpu
 	return out, err
 }
 
+const opDescribeConnectionLoa = "DescribeConnectionLoa"
+
+// DescribeConnectionLoaRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeConnectionLoa operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeConnectionLoa method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeConnectionLoaRequest method.
+//    req, resp := client.DescribeConnectionLoaRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *DirectConnect) DescribeConnectionLoaRequest(input *DescribeConnectionLoaInput) (req *request.Request, output *DescribeConnectionLoaOutput) {
+	op := &request.Operation{
+		Name:       opDescribeConnectionLoa,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DescribeConnectionLoaInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &DescribeConnectionLoaOutput{}
+	req.Data = output
+	return
+}
+
+// Returns the LOA-CFA for a Connection.
+//
+// The Letter of Authorization - Connecting Facility Assignment (LOA-CFA) is
+// a document that your APN partner or service provider uses when establishing
+// your cross connect to AWS at the colocation facility. For more information,
+// see Requesting Cross Connects at AWS Direct Connect Locations (http://docs.aws.amazon.com/directconnect/latest/UserGuide/Colocation.html)
+// in the AWS Direct Connect user guide.
+func (c *DirectConnect) DescribeConnectionLoa(input *DescribeConnectionLoaInput) (*DescribeConnectionLoaOutput, error) {
+	req, out := c.DescribeConnectionLoaRequest(input)
+	err := req.Send()
+	return out, err
+}
+
 const opDescribeConnections = "DescribeConnections"
 
-// DescribeConnectionsRequest generates a request for the DescribeConnections operation.
+// DescribeConnectionsRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeConnections operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeConnections method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeConnectionsRequest method.
+//    req, resp := client.DescribeConnectionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) DescribeConnectionsRequest(input *DescribeConnectionsInput) (req *request.Request, output *Connections) {
 	op := &request.Operation{
 		Name:       opDescribeConnections,
@@ -454,7 +810,28 @@ func (c *DirectConnect) DescribeConnections(input *DescribeConnectionsInput) (*C
 
 const opDescribeConnectionsOnInterconnect = "DescribeConnectionsOnInterconnect"
 
-// DescribeConnectionsOnInterconnectRequest generates a request for the DescribeConnectionsOnInterconnect operation.
+// DescribeConnectionsOnInterconnectRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeConnectionsOnInterconnect operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeConnectionsOnInterconnect method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeConnectionsOnInterconnectRequest method.
+//    req, resp := client.DescribeConnectionsOnInterconnectRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) DescribeConnectionsOnInterconnectRequest(input *DescribeConnectionsOnInterconnectInput) (req *request.Request, output *Connections) {
 	op := &request.Operation{
 		Name:       opDescribeConnectionsOnInterconnect,
@@ -473,15 +850,92 @@ func (c *DirectConnect) DescribeConnectionsOnInterconnectRequest(input *Describe
 }
 
 // Return a list of connections that have been provisioned on the given interconnect.
+//
+//  This is intended for use by AWS Direct Connect partners only.
 func (c *DirectConnect) DescribeConnectionsOnInterconnect(input *DescribeConnectionsOnInterconnectInput) (*Connections, error) {
 	req, out := c.DescribeConnectionsOnInterconnectRequest(input)
 	err := req.Send()
 	return out, err
 }
 
+const opDescribeInterconnectLoa = "DescribeInterconnectLoa"
+
+// DescribeInterconnectLoaRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeInterconnectLoa operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeInterconnectLoa method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeInterconnectLoaRequest method.
+//    req, resp := client.DescribeInterconnectLoaRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *DirectConnect) DescribeInterconnectLoaRequest(input *DescribeInterconnectLoaInput) (req *request.Request, output *DescribeInterconnectLoaOutput) {
+	op := &request.Operation{
+		Name:       opDescribeInterconnectLoa,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DescribeInterconnectLoaInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &DescribeInterconnectLoaOutput{}
+	req.Data = output
+	return
+}
+
+// Returns the LOA-CFA for an Interconnect.
+//
+// The Letter of Authorization - Connecting Facility Assignment (LOA-CFA) is
+// a document that is used when establishing your cross connect to AWS at the
+// colocation facility. For more information, see Requesting Cross Connects
+// at AWS Direct Connect Locations (http://docs.aws.amazon.com/directconnect/latest/UserGuide/Colocation.html)
+// in the AWS Direct Connect user guide.
+func (c *DirectConnect) DescribeInterconnectLoa(input *DescribeInterconnectLoaInput) (*DescribeInterconnectLoaOutput, error) {
+	req, out := c.DescribeInterconnectLoaRequest(input)
+	err := req.Send()
+	return out, err
+}
+
 const opDescribeInterconnects = "DescribeInterconnects"
 
-// DescribeInterconnectsRequest generates a request for the DescribeInterconnects operation.
+// DescribeInterconnectsRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeInterconnects operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeInterconnects method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeInterconnectsRequest method.
+//    req, resp := client.DescribeInterconnectsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) DescribeInterconnectsRequest(input *DescribeInterconnectsInput) (req *request.Request, output *DescribeInterconnectsOutput) {
 	op := &request.Operation{
 		Name:       opDescribeInterconnects,
@@ -510,7 +964,28 @@ func (c *DirectConnect) DescribeInterconnects(input *DescribeInterconnectsInput)
 
 const opDescribeLocations = "DescribeLocations"
 
-// DescribeLocationsRequest generates a request for the DescribeLocations operation.
+// DescribeLocationsRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeLocations operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeLocations method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeLocationsRequest method.
+//    req, resp := client.DescribeLocationsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) DescribeLocationsRequest(input *DescribeLocationsInput) (req *request.Request, output *DescribeLocationsOutput) {
 	op := &request.Operation{
 		Name:       opDescribeLocations,
@@ -539,7 +1014,28 @@ func (c *DirectConnect) DescribeLocations(input *DescribeLocationsInput) (*Descr
 
 const opDescribeVirtualGateways = "DescribeVirtualGateways"
 
-// DescribeVirtualGatewaysRequest generates a request for the DescribeVirtualGateways operation.
+// DescribeVirtualGatewaysRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeVirtualGateways operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeVirtualGateways method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeVirtualGatewaysRequest method.
+//    req, resp := client.DescribeVirtualGatewaysRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) DescribeVirtualGatewaysRequest(input *DescribeVirtualGatewaysInput) (req *request.Request, output *DescribeVirtualGatewaysOutput) {
 	op := &request.Operation{
 		Name:       opDescribeVirtualGateways,
@@ -572,7 +1068,28 @@ func (c *DirectConnect) DescribeVirtualGateways(input *DescribeVirtualGatewaysIn
 
 const opDescribeVirtualInterfaces = "DescribeVirtualInterfaces"
 
-// DescribeVirtualInterfacesRequest generates a request for the DescribeVirtualInterfaces operation.
+// DescribeVirtualInterfacesRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeVirtualInterfaces operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeVirtualInterfaces method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeVirtualInterfacesRequest method.
+//    req, resp := client.DescribeVirtualInterfacesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DirectConnect) DescribeVirtualInterfacesRequest(input *DescribeVirtualInterfacesInput) (req *request.Request, output *DescribeVirtualInterfacesOutput) {
 	op := &request.Operation{
 		Name:       opDescribeVirtualInterfaces,
@@ -617,6 +1134,8 @@ type AllocateConnectionOnInterconnectInput struct {
 	// Example: "500Mbps"
 	//
 	// Default: None
+	//
+	// Values: 50M, 100M, 200M, 300M, 400M, or 500M
 	Bandwidth *string `locationName:"bandwidth" type:"string" required:"true"`
 
 	// Name of the provisioned connection.
@@ -658,6 +1177,31 @@ func (s AllocateConnectionOnInterconnectInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AllocateConnectionOnInterconnectInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AllocateConnectionOnInterconnectInput"}
+	if s.Bandwidth == nil {
+		invalidParams.Add(request.NewErrParamRequired("Bandwidth"))
+	}
+	if s.ConnectionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectionName"))
+	}
+	if s.InterconnectId == nil {
+		invalidParams.Add(request.NewErrParamRequired("InterconnectId"))
+	}
+	if s.OwnerAccount == nil {
+		invalidParams.Add(request.NewErrParamRequired("OwnerAccount"))
+	}
+	if s.Vlan == nil {
+		invalidParams.Add(request.NewErrParamRequired("Vlan"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Container for the parameters to the AllocatePrivateVirtualInterface operation.
 type AllocatePrivateVirtualInterfaceInput struct {
 	_ struct{} `type:"structure"`
@@ -686,6 +1230,30 @@ func (s AllocatePrivateVirtualInterfaceInput) String() string {
 // GoString returns the string representation
 func (s AllocatePrivateVirtualInterfaceInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AllocatePrivateVirtualInterfaceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AllocatePrivateVirtualInterfaceInput"}
+	if s.ConnectionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectionId"))
+	}
+	if s.NewPrivateVirtualInterfaceAllocation == nil {
+		invalidParams.Add(request.NewErrParamRequired("NewPrivateVirtualInterfaceAllocation"))
+	}
+	if s.OwnerAccount == nil {
+		invalidParams.Add(request.NewErrParamRequired("OwnerAccount"))
+	}
+	if s.NewPrivateVirtualInterfaceAllocation != nil {
+		if err := s.NewPrivateVirtualInterfaceAllocation.Validate(); err != nil {
+			invalidParams.AddNested("NewPrivateVirtualInterfaceAllocation", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Container for the parameters to the AllocatePublicVirtualInterface operation.
@@ -718,6 +1286,30 @@ func (s AllocatePublicVirtualInterfaceInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AllocatePublicVirtualInterfaceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AllocatePublicVirtualInterfaceInput"}
+	if s.ConnectionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectionId"))
+	}
+	if s.NewPublicVirtualInterfaceAllocation == nil {
+		invalidParams.Add(request.NewErrParamRequired("NewPublicVirtualInterfaceAllocation"))
+	}
+	if s.OwnerAccount == nil {
+		invalidParams.Add(request.NewErrParamRequired("OwnerAccount"))
+	}
+	if s.NewPublicVirtualInterfaceAllocation != nil {
+		if err := s.NewPublicVirtualInterfaceAllocation.Validate(); err != nil {
+			invalidParams.AddNested("NewPublicVirtualInterfaceAllocation", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Container for the parameters to the ConfirmConnection operation.
 type ConfirmConnectionInput struct {
 	_ struct{} `type:"structure"`
@@ -740,21 +1332,45 @@ func (s ConfirmConnectionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ConfirmConnectionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ConfirmConnectionInput"}
+	if s.ConnectionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectionId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The response received when ConfirmConnection is called.
 type ConfirmConnectionOutput struct {
 	_ struct{} `type:"structure"`
 
-	// State of the connection.  Ordering: The initial state of a hosted connection
-	// provisioned on an interconnect. The connection stays in the ordering state
-	// until the owner of the hosted connection confirms or declines the connection
-	// order. Requested: The initial state of a standard connection. The connection
+	// State of the connection.
+	//
+	//    Ordering: The initial state of a hosted connection provisioned on an
+	// interconnect. The connection stays in the ordering state until the owner
+	// of the hosted connection confirms or declines the connection order.
+	//
+	//    Requested: The initial state of a standard connection. The connection
 	// stays in the requested state until the Letter of Authorization (LOA) is sent
-	// to the customer. Pending: The connection has been approved, and is being
-	// initialized. Available: The network link is up, and the connection is ready
-	// for use. Down: The network link is down. Deleting: The connection is in the
-	// process of being deleted. Deleted: The connection has been deleted. Rejected:
-	// A hosted connection in the 'Ordering' state will enter the 'Rejected' state
-	// if it is deleted by the end customer.
+	// to the customer.
+	//
+	//    Pending: The connection has been approved, and is being initialized.
+	//
+	//    Available: The network link is up, and the connection is ready for use.
+	//
+	//    Down: The network link is down.
+	//
+	//    Deleting: The connection is in the process of being deleted.
+	//
+	//    Deleted: The connection has been deleted.
+	//
+	//    Rejected: A hosted connection in the 'Ordering' state will enter the
+	// 'Rejected' state if it is deleted by the end customer.
 	ConnectionState *string `locationName:"connectionState" type:"string" enum:"ConnectionState"`
 }
 
@@ -799,26 +1415,54 @@ func (s ConfirmPrivateVirtualInterfaceInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ConfirmPrivateVirtualInterfaceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ConfirmPrivateVirtualInterfaceInput"}
+	if s.VirtualGatewayId == nil {
+		invalidParams.Add(request.NewErrParamRequired("VirtualGatewayId"))
+	}
+	if s.VirtualInterfaceId == nil {
+		invalidParams.Add(request.NewErrParamRequired("VirtualInterfaceId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The response received when ConfirmPrivateVirtualInterface is called.
 type ConfirmPrivateVirtualInterfaceOutput struct {
 	_ struct{} `type:"structure"`
 
-	// State of the virtual interface.  Confirming: The creation of the virtual
-	// interface is pending confirmation from the virtual interface owner. If the
-	// owner of the virtual interface is different from the owner of the connection
-	// on which it is provisioned, then the virtual interface will remain in this
-	// state until it is confirmed by the virtual interface owner. Verifying: This
-	// state only applies to public virtual interfaces. Each public virtual interface
-	// needs validation before the virtual interface can be created. Pending: A
-	// virtual interface is in this state from the time that it is created until
-	// the virtual interface is ready to forward traffic. Available: A virtual interface
-	// that is able to forward traffic. Down: A virtual interface that is BGP down.
-	// Deleting: A virtual interface is in this state immediately after calling
-	// DeleteVirtualInterface until it can no longer forward traffic. Deleted: A
-	// virtual interface that cannot forward traffic. Rejected: The virtual interface
-	// owner has declined creation of the virtual interface. If a virtual interface
-	// in the 'Confirming' state is deleted by the virtual interface owner, the
-	// virtual interface will enter the 'Rejected' state.
+	// State of the virtual interface.
+	//
+	//    Confirming: The creation of the virtual interface is pending confirmation
+	// from the virtual interface owner. If the owner of the virtual interface is
+	// different from the owner of the connection on which it is provisioned, then
+	// the virtual interface will remain in this state until it is confirmed by
+	// the virtual interface owner.
+	//
+	//    Verifying: This state only applies to public virtual interfaces. Each
+	// public virtual interface needs validation before the virtual interface can
+	// be created.
+	//
+	//    Pending: A virtual interface is in this state from the time that it is
+	// created until the virtual interface is ready to forward traffic.
+	//
+	//    Available: A virtual interface that is able to forward traffic.
+	//
+	//    Down: A virtual interface that is BGP down.
+	//
+	//    Deleting: A virtual interface is in this state immediately after calling
+	// DeleteVirtualInterface until it can no longer forward traffic.
+	//
+	//    Deleted: A virtual interface that cannot forward traffic.
+	//
+	//    Rejected: The virtual interface owner has declined creation of the virtual
+	// interface. If a virtual interface in the 'Confirming' state is deleted by
+	// the virtual interface owner, the virtual interface will enter the 'Rejected'
+	// state.
 	VirtualInterfaceState *string `locationName:"virtualInterfaceState" type:"string" enum:"VirtualInterfaceState"`
 }
 
@@ -854,26 +1498,51 @@ func (s ConfirmPublicVirtualInterfaceInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ConfirmPublicVirtualInterfaceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ConfirmPublicVirtualInterfaceInput"}
+	if s.VirtualInterfaceId == nil {
+		invalidParams.Add(request.NewErrParamRequired("VirtualInterfaceId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The response received when ConfirmPublicVirtualInterface is called.
 type ConfirmPublicVirtualInterfaceOutput struct {
 	_ struct{} `type:"structure"`
 
-	// State of the virtual interface.  Confirming: The creation of the virtual
-	// interface is pending confirmation from the virtual interface owner. If the
-	// owner of the virtual interface is different from the owner of the connection
-	// on which it is provisioned, then the virtual interface will remain in this
-	// state until it is confirmed by the virtual interface owner. Verifying: This
-	// state only applies to public virtual interfaces. Each public virtual interface
-	// needs validation before the virtual interface can be created. Pending: A
-	// virtual interface is in this state from the time that it is created until
-	// the virtual interface is ready to forward traffic. Available: A virtual interface
-	// that is able to forward traffic. Down: A virtual interface that is BGP down.
-	// Deleting: A virtual interface is in this state immediately after calling
-	// DeleteVirtualInterface until it can no longer forward traffic. Deleted: A
-	// virtual interface that cannot forward traffic. Rejected: The virtual interface
-	// owner has declined creation of the virtual interface. If a virtual interface
-	// in the 'Confirming' state is deleted by the virtual interface owner, the
-	// virtual interface will enter the 'Rejected' state.
+	// State of the virtual interface.
+	//
+	//    Confirming: The creation of the virtual interface is pending confirmation
+	// from the virtual interface owner. If the owner of the virtual interface is
+	// different from the owner of the connection on which it is provisioned, then
+	// the virtual interface will remain in this state until it is confirmed by
+	// the virtual interface owner.
+	//
+	//    Verifying: This state only applies to public virtual interfaces. Each
+	// public virtual interface needs validation before the virtual interface can
+	// be created.
+	//
+	//    Pending: A virtual interface is in this state from the time that it is
+	// created until the virtual interface is ready to forward traffic.
+	//
+	//    Available: A virtual interface that is able to forward traffic.
+	//
+	//    Down: A virtual interface that is BGP down.
+	//
+	//    Deleting: A virtual interface is in this state immediately after calling
+	// DeleteVirtualInterface until it can no longer forward traffic.
+	//
+	//    Deleted: A virtual interface that cannot forward traffic.
+	//
+	//    Rejected: The virtual interface owner has declined creation of the virtual
+	// interface. If a virtual interface in the 'Confirming' state is deleted by
+	// the virtual interface owner, the virtual interface will enter the 'Rejected'
+	// state.
 	VirtualInterfaceState *string `locationName:"virtualInterfaceState" type:"string" enum:"VirtualInterfaceState"`
 }
 
@@ -913,18 +1582,32 @@ type Connection struct {
 	// Default: None
 	ConnectionName *string `locationName:"connectionName" type:"string"`
 
-	// State of the connection.  Ordering: The initial state of a hosted connection
-	// provisioned on an interconnect. The connection stays in the ordering state
-	// until the owner of the hosted connection confirms or declines the connection
-	// order. Requested: The initial state of a standard connection. The connection
+	// State of the connection.
+	//
+	//    Ordering: The initial state of a hosted connection provisioned on an
+	// interconnect. The connection stays in the ordering state until the owner
+	// of the hosted connection confirms or declines the connection order.
+	//
+	//    Requested: The initial state of a standard connection. The connection
 	// stays in the requested state until the Letter of Authorization (LOA) is sent
-	// to the customer. Pending: The connection has been approved, and is being
-	// initialized. Available: The network link is up, and the connection is ready
-	// for use. Down: The network link is down. Deleting: The connection is in the
-	// process of being deleted. Deleted: The connection has been deleted. Rejected:
-	// A hosted connection in the 'Ordering' state will enter the 'Rejected' state
-	// if it is deleted by the end customer.
+	// to the customer.
+	//
+	//    Pending: The connection has been approved, and is being initialized.
+	//
+	//    Available: The network link is up, and the connection is ready for use.
+	//
+	//    Down: The network link is down.
+	//
+	//    Deleting: The connection is in the process of being deleted.
+	//
+	//    Deleted: The connection has been deleted.
+	//
+	//    Rejected: A hosted connection in the 'Ordering' state will enter the
+	// 'Rejected' state if it is deleted by the end customer.
 	ConnectionState *string `locationName:"connectionState" type:"string" enum:"ConnectionState"`
+
+	// The time of the most recent call to DescribeConnectionLoa for this Connection.
+	LoaIssueTime *time.Time `locationName:"loaIssueTime" type:"timestamp" timestampFormat:"unix"`
 
 	// Where the connection is located.
 	//
@@ -933,8 +1616,10 @@ type Connection struct {
 	// Default: None
 	Location *string `locationName:"location" type:"string"`
 
+	// The AWS account that will own the new connection.
 	OwnerAccount *string `locationName:"ownerAccount" type:"string"`
 
+	// The name of the AWS Direct Connect service provider associated with the connection.
 	PartnerName *string `locationName:"partnerName" type:"string"`
 
 	// The AWS region where the connection is located.
@@ -1014,6 +1699,25 @@ func (s CreateConnectionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateConnectionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateConnectionInput"}
+	if s.Bandwidth == nil {
+		invalidParams.Add(request.NewErrParamRequired("Bandwidth"))
+	}
+	if s.ConnectionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectionName"))
+	}
+	if s.Location == nil {
+		invalidParams.Add(request.NewErrParamRequired("Location"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Container for the parameters to the CreateInterconnect operation.
 type CreateInterconnectInput struct {
 	_ struct{} `type:"structure"`
@@ -1052,6 +1756,25 @@ func (s CreateInterconnectInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateInterconnectInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateInterconnectInput"}
+	if s.Bandwidth == nil {
+		invalidParams.Add(request.NewErrParamRequired("Bandwidth"))
+	}
+	if s.InterconnectName == nil {
+		invalidParams.Add(request.NewErrParamRequired("InterconnectName"))
+	}
+	if s.Location == nil {
+		invalidParams.Add(request.NewErrParamRequired("Location"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Container for the parameters to the CreatePrivateVirtualInterface operation.
 type CreatePrivateVirtualInterfaceInput struct {
 	_ struct{} `type:"structure"`
@@ -1077,6 +1800,27 @@ func (s CreatePrivateVirtualInterfaceInput) String() string {
 // GoString returns the string representation
 func (s CreatePrivateVirtualInterfaceInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreatePrivateVirtualInterfaceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreatePrivateVirtualInterfaceInput"}
+	if s.ConnectionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectionId"))
+	}
+	if s.NewPrivateVirtualInterface == nil {
+		invalidParams.Add(request.NewErrParamRequired("NewPrivateVirtualInterface"))
+	}
+	if s.NewPrivateVirtualInterface != nil {
+		if err := s.NewPrivateVirtualInterface.Validate(); err != nil {
+			invalidParams.AddNested("NewPrivateVirtualInterface", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Container for the parameters to the CreatePublicVirtualInterface operation.
@@ -1106,6 +1850,27 @@ func (s CreatePublicVirtualInterfaceInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreatePublicVirtualInterfaceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreatePublicVirtualInterfaceInput"}
+	if s.ConnectionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectionId"))
+	}
+	if s.NewPublicVirtualInterface == nil {
+		invalidParams.Add(request.NewErrParamRequired("NewPublicVirtualInterface"))
+	}
+	if s.NewPublicVirtualInterface != nil {
+		if err := s.NewPublicVirtualInterface.Validate(); err != nil {
+			invalidParams.AddNested("NewPublicVirtualInterface", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Container for the parameters to the DeleteConnection operation.
 type DeleteConnectionInput struct {
 	_ struct{} `type:"structure"`
@@ -1128,6 +1893,19 @@ func (s DeleteConnectionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteConnectionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteConnectionInput"}
+	if s.ConnectionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectionId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Container for the parameters to the DeleteInterconnect operation.
 type DeleteInterconnectInput struct {
 	_ struct{} `type:"structure"`
@@ -1148,16 +1926,39 @@ func (s DeleteInterconnectInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteInterconnectInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteInterconnectInput"}
+	if s.InterconnectId == nil {
+		invalidParams.Add(request.NewErrParamRequired("InterconnectId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The response received when DeleteInterconnect is called.
 type DeleteInterconnectOutput struct {
 	_ struct{} `type:"structure"`
 
-	// State of the interconnect.  Requested: The initial state of an interconnect.
-	// The interconnect stays in the requested state until the Letter of Authorization
-	// (LOA) is sent to the customer. Pending: The interconnect has been approved,
-	// and is being initialized. Available: The network link is up, and the interconnect
-	// is ready for use. Down: The network link is down. Deleting: The interconnect
-	// is in the process of being deleted. Deleted: The interconnect has been deleted.
+	// State of the interconnect.
+	//
+	//    Requested: The initial state of an interconnect. The interconnect stays
+	// in the requested state until the Letter of Authorization (LOA) is sent to
+	// the customer.
+	//
+	//    Pending>: The interconnect has been approved, and is being initialized.
+	//
+	//    Available: The network link is up, and the interconnect is ready for
+	// use.
+	//
+	//    Down: The network link is down.
+	//
+	//    Deleting: The interconnect is in the process of being deleted.
+	//
+	//    Deleted: The interconnect has been deleted.
 	InterconnectState *string `locationName:"interconnectState" type:"string" enum:"InterconnectState"`
 }
 
@@ -1193,26 +1994,51 @@ func (s DeleteVirtualInterfaceInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteVirtualInterfaceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteVirtualInterfaceInput"}
+	if s.VirtualInterfaceId == nil {
+		invalidParams.Add(request.NewErrParamRequired("VirtualInterfaceId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The response received when DeleteVirtualInterface is called.
 type DeleteVirtualInterfaceOutput struct {
 	_ struct{} `type:"structure"`
 
-	// State of the virtual interface.  Confirming: The creation of the virtual
-	// interface is pending confirmation from the virtual interface owner. If the
-	// owner of the virtual interface is different from the owner of the connection
-	// on which it is provisioned, then the virtual interface will remain in this
-	// state until it is confirmed by the virtual interface owner. Verifying: This
-	// state only applies to public virtual interfaces. Each public virtual interface
-	// needs validation before the virtual interface can be created. Pending: A
-	// virtual interface is in this state from the time that it is created until
-	// the virtual interface is ready to forward traffic. Available: A virtual interface
-	// that is able to forward traffic. Down: A virtual interface that is BGP down.
-	// Deleting: A virtual interface is in this state immediately after calling
-	// DeleteVirtualInterface until it can no longer forward traffic. Deleted: A
-	// virtual interface that cannot forward traffic. Rejected: The virtual interface
-	// owner has declined creation of the virtual interface. If a virtual interface
-	// in the 'Confirming' state is deleted by the virtual interface owner, the
-	// virtual interface will enter the 'Rejected' state.
+	// State of the virtual interface.
+	//
+	//    Confirming: The creation of the virtual interface is pending confirmation
+	// from the virtual interface owner. If the owner of the virtual interface is
+	// different from the owner of the connection on which it is provisioned, then
+	// the virtual interface will remain in this state until it is confirmed by
+	// the virtual interface owner.
+	//
+	//    Verifying: This state only applies to public virtual interfaces. Each
+	// public virtual interface needs validation before the virtual interface can
+	// be created.
+	//
+	//    Pending: A virtual interface is in this state from the time that it is
+	// created until the virtual interface is ready to forward traffic.
+	//
+	//    Available: A virtual interface that is able to forward traffic.
+	//
+	//    Down: A virtual interface that is BGP down.
+	//
+	//    Deleting: A virtual interface is in this state immediately after calling
+	// DeleteVirtualInterface until it can no longer forward traffic.
+	//
+	//    Deleted: A virtual interface that cannot forward traffic.
+	//
+	//    Rejected: The virtual interface owner has declined creation of the virtual
+	// interface. If a virtual interface in the 'Confirming' state is deleted by
+	// the virtual interface owner, the virtual interface will enter the 'Rejected'
+	// state.
 	VirtualInterfaceState *string `locationName:"virtualInterfaceState" type:"string" enum:"VirtualInterfaceState"`
 }
 
@@ -1223,6 +2049,73 @@ func (s DeleteVirtualInterfaceOutput) String() string {
 
 // GoString returns the string representation
 func (s DeleteVirtualInterfaceOutput) GoString() string {
+	return s.String()
+}
+
+// Container for the parameters to the DescribeConnectionLoa operation.
+type DescribeConnectionLoaInput struct {
+	_ struct{} `type:"structure"`
+
+	// ID of the connection.
+	//
+	// Example: dxcon-fg5678gh
+	//
+	// Default: None
+	ConnectionId *string `locationName:"connectionId" type:"string" required:"true"`
+
+	// A standard media type indicating the content type of the LOA-CFA document.
+	// Currently, the only supported value is "application/pdf".
+	//
+	// Default: application/pdf
+	LoaContentType *string `locationName:"loaContentType" type:"string" enum:"LoaContentType"`
+
+	// The name of the APN partner or service provider who establishes connectivity
+	// on your behalf. If you supply this parameter, the LOA-CFA lists the provider
+	// name alongside your company name as the requester of the cross connect.
+	//
+	// Default: None
+	ProviderName *string `locationName:"providerName" type:"string"`
+}
+
+// String returns the string representation
+func (s DescribeConnectionLoaInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s DescribeConnectionLoaInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeConnectionLoaInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeConnectionLoaInput"}
+	if s.ConnectionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectionId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// The response received when DescribeConnectionLoa is called.
+type DescribeConnectionLoaOutput struct {
+	_ struct{} `type:"structure"`
+
+	// A structure containing the Letter of Authorization - Connecting Facility
+	// Assignment (LOA-CFA) for a connection.
+	Loa *Loa `locationName:"loa" type:"structure"`
+}
+
+// String returns the string representation
+func (s DescribeConnectionLoaOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s DescribeConnectionLoaOutput) GoString() string {
 	return s.String()
 }
 
@@ -1267,6 +2160,84 @@ func (s DescribeConnectionsOnInterconnectInput) String() string {
 
 // GoString returns the string representation
 func (s DescribeConnectionsOnInterconnectInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeConnectionsOnInterconnectInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeConnectionsOnInterconnectInput"}
+	if s.InterconnectId == nil {
+		invalidParams.Add(request.NewErrParamRequired("InterconnectId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// Container for the parameters to the DescribeInterconnectLoa operation.
+type DescribeInterconnectLoaInput struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of the interconnect.
+	//
+	// Example: dxcon-abc123
+	InterconnectId *string `locationName:"interconnectId" type:"string" required:"true"`
+
+	// A standard media type indicating the content type of the LOA-CFA document.
+	// Currently, the only supported value is "application/pdf".
+	//
+	// Default: application/pdf
+	LoaContentType *string `locationName:"loaContentType" type:"string" enum:"LoaContentType"`
+
+	// The name of the service provider who establishes connectivity on your behalf.
+	// If you supply this parameter, the LOA-CFA lists the provider name alongside
+	// your company name as the requester of the cross connect.
+	//
+	// Default: None
+	ProviderName *string `locationName:"providerName" type:"string"`
+}
+
+// String returns the string representation
+func (s DescribeInterconnectLoaInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s DescribeInterconnectLoaInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeInterconnectLoaInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeInterconnectLoaInput"}
+	if s.InterconnectId == nil {
+		invalidParams.Add(request.NewErrParamRequired("InterconnectId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// The response received when DescribeInterconnectLoa is called.
+type DescribeInterconnectLoaOutput struct {
+	_ struct{} `type:"structure"`
+
+	// A structure containing the Letter of Authorization - Connecting Facility
+	// Assignment (LOA-CFA) for a connection.
+	Loa *Loa `locationName:"loa" type:"structure"`
+}
+
+// String returns the string representation
+func (s DescribeInterconnectLoaOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s DescribeInterconnectLoaOutput) GoString() string {
 	return s.String()
 }
 
@@ -1455,13 +2426,26 @@ type Interconnect struct {
 	// Example: "1G Interconnect to AWS"
 	InterconnectName *string `locationName:"interconnectName" type:"string"`
 
-	// State of the interconnect.  Requested: The initial state of an interconnect.
-	// The interconnect stays in the requested state until the Letter of Authorization
-	// (LOA) is sent to the customer. Pending: The interconnect has been approved,
-	// and is being initialized. Available: The network link is up, and the interconnect
-	// is ready for use. Down: The network link is down. Deleting: The interconnect
-	// is in the process of being deleted. Deleted: The interconnect has been deleted.
+	// State of the interconnect.
+	//
+	//    Requested: The initial state of an interconnect. The interconnect stays
+	// in the requested state until the Letter of Authorization (LOA) is sent to
+	// the customer.
+	//
+	//    Pending>: The interconnect has been approved, and is being initialized.
+	//
+	//    Available: The network link is up, and the interconnect is ready for
+	// use.
+	//
+	//    Down: The network link is down.
+	//
+	//    Deleting: The interconnect is in the process of being deleted.
+	//
+	//    Deleted: The interconnect has been deleted.
 	InterconnectState *string `locationName:"interconnectState" type:"string" enum:"InterconnectState"`
+
+	// The time of the most recent call to DescribeInterconnectLoa for this Interconnect.
+	LoaIssueTime *time.Time `locationName:"loaIssueTime" type:"timestamp" timestampFormat:"unix"`
 
 	// Where the connection is located.
 	//
@@ -1485,6 +2469,33 @@ func (s Interconnect) String() string {
 
 // GoString returns the string representation
 func (s Interconnect) GoString() string {
+	return s.String()
+}
+
+// A structure containing the Letter of Authorization - Connecting Facility
+// Assignment (LOA-CFA) for a connection.
+type Loa struct {
+	_ struct{} `type:"structure"`
+
+	// The binary contents of the LOA-CFA document.
+	//
+	// LoaContent is automatically base64 encoded/decoded by the SDK.
+	LoaContent []byte `locationName:"loaContent" type:"blob"`
+
+	// A standard media type indicating the content type of the LOA-CFA document.
+	// Currently, the only supported value is "application/pdf".
+	//
+	// Default: application/pdf
+	LoaContentType *string `locationName:"loaContentType" type:"string" enum:"LoaContentType"`
+}
+
+// String returns the string representation
+func (s Loa) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s Loa) GoString() string {
 	return s.String()
 }
 
@@ -1562,6 +2573,28 @@ func (s NewPrivateVirtualInterface) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *NewPrivateVirtualInterface) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "NewPrivateVirtualInterface"}
+	if s.Asn == nil {
+		invalidParams.Add(request.NewErrParamRequired("Asn"))
+	}
+	if s.VirtualGatewayId == nil {
+		invalidParams.Add(request.NewErrParamRequired("VirtualGatewayId"))
+	}
+	if s.VirtualInterfaceName == nil {
+		invalidParams.Add(request.NewErrParamRequired("VirtualInterfaceName"))
+	}
+	if s.Vlan == nil {
+		invalidParams.Add(request.NewErrParamRequired("Vlan"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A structure containing information about a private virtual interface that
 // will be provisioned on a connection.
 type NewPrivateVirtualInterfaceAllocation struct {
@@ -1606,6 +2639,25 @@ func (s NewPrivateVirtualInterfaceAllocation) String() string {
 // GoString returns the string representation
 func (s NewPrivateVirtualInterfaceAllocation) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *NewPrivateVirtualInterfaceAllocation) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "NewPrivateVirtualInterfaceAllocation"}
+	if s.Asn == nil {
+		invalidParams.Add(request.NewErrParamRequired("Asn"))
+	}
+	if s.VirtualInterfaceName == nil {
+		invalidParams.Add(request.NewErrParamRequired("VirtualInterfaceName"))
+	}
+	if s.Vlan == nil {
+		invalidParams.Add(request.NewErrParamRequired("Vlan"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // A structure containing information about a new public virtual interface.
@@ -1655,6 +2707,34 @@ func (s NewPublicVirtualInterface) String() string {
 // GoString returns the string representation
 func (s NewPublicVirtualInterface) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *NewPublicVirtualInterface) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "NewPublicVirtualInterface"}
+	if s.AmazonAddress == nil {
+		invalidParams.Add(request.NewErrParamRequired("AmazonAddress"))
+	}
+	if s.Asn == nil {
+		invalidParams.Add(request.NewErrParamRequired("Asn"))
+	}
+	if s.CustomerAddress == nil {
+		invalidParams.Add(request.NewErrParamRequired("CustomerAddress"))
+	}
+	if s.RouteFilterPrefixes == nil {
+		invalidParams.Add(request.NewErrParamRequired("RouteFilterPrefixes"))
+	}
+	if s.VirtualInterfaceName == nil {
+		invalidParams.Add(request.NewErrParamRequired("VirtualInterfaceName"))
+	}
+	if s.Vlan == nil {
+		invalidParams.Add(request.NewErrParamRequired("Vlan"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // A structure containing information about a public virtual interface that
@@ -1707,6 +2787,34 @@ func (s NewPublicVirtualInterfaceAllocation) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *NewPublicVirtualInterfaceAllocation) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "NewPublicVirtualInterfaceAllocation"}
+	if s.AmazonAddress == nil {
+		invalidParams.Add(request.NewErrParamRequired("AmazonAddress"))
+	}
+	if s.Asn == nil {
+		invalidParams.Add(request.NewErrParamRequired("Asn"))
+	}
+	if s.CustomerAddress == nil {
+		invalidParams.Add(request.NewErrParamRequired("CustomerAddress"))
+	}
+	if s.RouteFilterPrefixes == nil {
+		invalidParams.Add(request.NewErrParamRequired("RouteFilterPrefixes"))
+	}
+	if s.VirtualInterfaceName == nil {
+		invalidParams.Add(request.NewErrParamRequired("VirtualInterfaceName"))
+	}
+	if s.Vlan == nil {
+		invalidParams.Add(request.NewErrParamRequired("Vlan"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A route filter prefix that the customer can advertise through Border Gateway
 // Protocol (BGP) over a public virtual interface.
 type RouteFilterPrefix struct {
@@ -1743,11 +2851,16 @@ type VirtualGateway struct {
 	// Example: vgw-123er56
 	VirtualGatewayId *string `locationName:"virtualGatewayId" type:"string"`
 
-	// State of the virtual private gateway.  Pending: This is the initial state
-	// after calling CreateVpnGateway. Available: Ready for use by a private virtual
-	// interface. Deleting: This is the initial state after calling DeleteVpnGateway.
-	// Deleted: In this state, a private virtual interface is unable to send traffic
-	// over this gateway.
+	// State of the virtual private gateway.
+	//
+	//    Pending: This is the initial state after calling CreateVpnGateway.
+	//
+	//    Available: Ready for use by a private virtual interface.
+	//
+	//    Deleting: This is the initial state after calling DeleteVpnGateway.
+	//
+	//    Deleted: In this state, a private virtual interface is unable to send
+	// traffic over this gateway.
 	VirtualGatewayState *string `locationName:"virtualGatewayState" type:"string"`
 }
 
@@ -1803,6 +2916,7 @@ type VirtualInterface struct {
 	// Default: None
 	Location *string `locationName:"location" type:"string"`
 
+	// The AWS account that will own the new virtual interface.
 	OwnerAccount *string `locationName:"ownerAccount" type:"string"`
 
 	// A list of routes to be advertised to the AWS network in this region (public
@@ -1827,22 +2941,34 @@ type VirtualInterface struct {
 	// Example: "My VPC"
 	VirtualInterfaceName *string `locationName:"virtualInterfaceName" type:"string"`
 
-	// State of the virtual interface.  Confirming: The creation of the virtual
-	// interface is pending confirmation from the virtual interface owner. If the
-	// owner of the virtual interface is different from the owner of the connection
-	// on which it is provisioned, then the virtual interface will remain in this
-	// state until it is confirmed by the virtual interface owner. Verifying: This
-	// state only applies to public virtual interfaces. Each public virtual interface
-	// needs validation before the virtual interface can be created. Pending: A
-	// virtual interface is in this state from the time that it is created until
-	// the virtual interface is ready to forward traffic. Available: A virtual interface
-	// that is able to forward traffic. Down: A virtual interface that is BGP down.
-	// Deleting: A virtual interface is in this state immediately after calling
-	// DeleteVirtualInterface until it can no longer forward traffic. Deleted: A
-	// virtual interface that cannot forward traffic. Rejected: The virtual interface
-	// owner has declined creation of the virtual interface. If a virtual interface
-	// in the 'Confirming' state is deleted by the virtual interface owner, the
-	// virtual interface will enter the 'Rejected' state.
+	// State of the virtual interface.
+	//
+	//    Confirming: The creation of the virtual interface is pending confirmation
+	// from the virtual interface owner. If the owner of the virtual interface is
+	// different from the owner of the connection on which it is provisioned, then
+	// the virtual interface will remain in this state until it is confirmed by
+	// the virtual interface owner.
+	//
+	//    Verifying: This state only applies to public virtual interfaces. Each
+	// public virtual interface needs validation before the virtual interface can
+	// be created.
+	//
+	//    Pending: A virtual interface is in this state from the time that it is
+	// created until the virtual interface is ready to forward traffic.
+	//
+	//    Available: A virtual interface that is able to forward traffic.
+	//
+	//    Down: A virtual interface that is BGP down.
+	//
+	//    Deleting: A virtual interface is in this state immediately after calling
+	// DeleteVirtualInterface until it can no longer forward traffic.
+	//
+	//    Deleted: A virtual interface that cannot forward traffic.
+	//
+	//    Rejected: The virtual interface owner has declined creation of the virtual
+	// interface. If a virtual interface in the 'Confirming' state is deleted by
+	// the virtual interface owner, the virtual interface will enter the 'Rejected'
+	// state.
 	VirtualInterfaceState *string `locationName:"virtualInterfaceState" type:"string" enum:"VirtualInterfaceState"`
 
 	// The type of virtual interface.
@@ -1867,17 +2993,28 @@ func (s VirtualInterface) GoString() string {
 	return s.String()
 }
 
-// State of the connection.  Ordering: The initial state of a hosted connection
-// provisioned on an interconnect. The connection stays in the ordering state
-// until the owner of the hosted connection confirms or declines the connection
-// order. Requested: The initial state of a standard connection. The connection
+// State of the connection.
+//
+//    Ordering: The initial state of a hosted connection provisioned on an
+// interconnect. The connection stays in the ordering state until the owner
+// of the hosted connection confirms or declines the connection order.
+//
+//    Requested: The initial state of a standard connection. The connection
 // stays in the requested state until the Letter of Authorization (LOA) is sent
-// to the customer. Pending: The connection has been approved, and is being
-// initialized. Available: The network link is up, and the connection is ready
-// for use. Down: The network link is down. Deleting: The connection is in the
-// process of being deleted. Deleted: The connection has been deleted. Rejected:
-// A hosted connection in the 'Ordering' state will enter the 'Rejected' state
-// if it is deleted by the end customer.
+// to the customer.
+//
+//    Pending: The connection has been approved, and is being initialized.
+//
+//    Available: The network link is up, and the connection is ready for use.
+//
+//    Down: The network link is down.
+//
+//    Deleting: The connection is in the process of being deleted.
+//
+//    Deleted: The connection has been deleted.
+//
+//    Rejected: A hosted connection in the 'Ordering' state will enter the
+// 'Rejected' state if it is deleted by the end customer.
 const (
 	// @enum ConnectionState
 	ConnectionStateOrdering = "ordering"
@@ -1897,12 +3034,22 @@ const (
 	ConnectionStateRejected = "rejected"
 )
 
-// State of the interconnect.  Requested: The initial state of an interconnect.
-// The interconnect stays in the requested state until the Letter of Authorization
-// (LOA) is sent to the customer. Pending: The interconnect has been approved,
-// and is being initialized. Available: The network link is up, and the interconnect
-// is ready for use. Down: The network link is down. Deleting: The interconnect
-// is in the process of being deleted. Deleted: The interconnect has been deleted.
+// State of the interconnect.
+//
+//    Requested: The initial state of an interconnect. The interconnect stays
+// in the requested state until the Letter of Authorization (LOA) is sent to
+// the customer.
+//
+//    Pending>: The interconnect has been approved, and is being initialized.
+//
+//    Available: The network link is up, and the interconnect is ready for
+// use.
+//
+//    Down: The network link is down.
+//
+//    Deleting: The interconnect is in the process of being deleted.
+//
+//    Deleted: The interconnect has been deleted.
 const (
 	// @enum InterconnectState
 	InterconnectStateRequested = "requested"
@@ -1918,22 +3065,43 @@ const (
 	InterconnectStateDeleted = "deleted"
 )
 
-// State of the virtual interface.  Confirming: The creation of the virtual
-// interface is pending confirmation from the virtual interface owner. If the
-// owner of the virtual interface is different from the owner of the connection
-// on which it is provisioned, then the virtual interface will remain in this
-// state until it is confirmed by the virtual interface owner. Verifying: This
-// state only applies to public virtual interfaces. Each public virtual interface
-// needs validation before the virtual interface can be created. Pending: A
-// virtual interface is in this state from the time that it is created until
-// the virtual interface is ready to forward traffic. Available: A virtual interface
-// that is able to forward traffic. Down: A virtual interface that is BGP down.
-// Deleting: A virtual interface is in this state immediately after calling
-// DeleteVirtualInterface until it can no longer forward traffic. Deleted: A
-// virtual interface that cannot forward traffic. Rejected: The virtual interface
-// owner has declined creation of the virtual interface. If a virtual interface
-// in the 'Confirming' state is deleted by the virtual interface owner, the
-// virtual interface will enter the 'Rejected' state.
+// A standard media type indicating the content type of the LOA-CFA document.
+// Currently, the only supported value is "application/pdf".
+//
+// Default: application/pdf
+const (
+	// @enum LoaContentType
+	LoaContentTypeApplicationPdf = "application/pdf"
+)
+
+// State of the virtual interface.
+//
+//    Confirming: The creation of the virtual interface is pending confirmation
+// from the virtual interface owner. If the owner of the virtual interface is
+// different from the owner of the connection on which it is provisioned, then
+// the virtual interface will remain in this state until it is confirmed by
+// the virtual interface owner.
+//
+//    Verifying: This state only applies to public virtual interfaces. Each
+// public virtual interface needs validation before the virtual interface can
+// be created.
+//
+//    Pending: A virtual interface is in this state from the time that it is
+// created until the virtual interface is ready to forward traffic.
+//
+//    Available: A virtual interface that is able to forward traffic.
+//
+//    Down: A virtual interface that is BGP down.
+//
+//    Deleting: A virtual interface is in this state immediately after calling
+// DeleteVirtualInterface until it can no longer forward traffic.
+//
+//    Deleted: A virtual interface that cannot forward traffic.
+//
+//    Rejected: The virtual interface owner has declined creation of the virtual
+// interface. If a virtual interface in the 'Confirming' state is deleted by
+// the virtual interface owner, the virtual interface will enter the 'Rejected'
+// state.
 const (
 	// @enum VirtualInterfaceState
 	VirtualInterfaceStateConfirming = "confirming"
@@ -1943,6 +3111,8 @@ const (
 	VirtualInterfaceStatePending = "pending"
 	// @enum VirtualInterfaceState
 	VirtualInterfaceStateAvailable = "available"
+	// @enum VirtualInterfaceState
+	VirtualInterfaceStateDown = "down"
 	// @enum VirtualInterfaceState
 	VirtualInterfaceStateDeleting = "deleting"
 	// @enum VirtualInterfaceState

@@ -16,7 +16,13 @@ var _ time.Duration
 var _ bytes.Buffer
 
 func ExampleCodeCommit_BatchGetRepositories() {
-	svc := codecommit.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
 
 	params := &codecommit.BatchGetRepositoriesInput{
 		RepositoryNames: []*string{ // Required
@@ -38,7 +44,13 @@ func ExampleCodeCommit_BatchGetRepositories() {
 }
 
 func ExampleCodeCommit_CreateBranch() {
-	svc := codecommit.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
 
 	params := &codecommit.CreateBranchInput{
 		BranchName:     aws.String("BranchName"),     // Required
@@ -59,7 +71,13 @@ func ExampleCodeCommit_CreateBranch() {
 }
 
 func ExampleCodeCommit_CreateRepository() {
-	svc := codecommit.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
 
 	params := &codecommit.CreateRepositoryInput{
 		RepositoryName:        aws.String("RepositoryName"), // Required
@@ -79,7 +97,13 @@ func ExampleCodeCommit_CreateRepository() {
 }
 
 func ExampleCodeCommit_DeleteRepository() {
-	svc := codecommit.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
 
 	params := &codecommit.DeleteRepositoryInput{
 		RepositoryName: aws.String("RepositoryName"), // Required
@@ -98,7 +122,13 @@ func ExampleCodeCommit_DeleteRepository() {
 }
 
 func ExampleCodeCommit_GetBranch() {
-	svc := codecommit.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
 
 	params := &codecommit.GetBranchInput{
 		BranchName:     aws.String("BranchName"),
@@ -117,8 +147,40 @@ func ExampleCodeCommit_GetBranch() {
 	fmt.Println(resp)
 }
 
+func ExampleCodeCommit_GetCommit() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
+
+	params := &codecommit.GetCommitInput{
+		CommitId:       aws.String("ObjectId"),       // Required
+		RepositoryName: aws.String("RepositoryName"), // Required
+	}
+	resp, err := svc.GetCommit(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleCodeCommit_GetRepository() {
-	svc := codecommit.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
 
 	params := &codecommit.GetRepositoryInput{
 		RepositoryName: aws.String("RepositoryName"), // Required
@@ -136,8 +198,39 @@ func ExampleCodeCommit_GetRepository() {
 	fmt.Println(resp)
 }
 
+func ExampleCodeCommit_GetRepositoryTriggers() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
+
+	params := &codecommit.GetRepositoryTriggersInput{
+		RepositoryName: aws.String("RepositoryName"),
+	}
+	resp, err := svc.GetRepositoryTriggers(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleCodeCommit_ListBranches() {
-	svc := codecommit.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
 
 	params := &codecommit.ListBranchesInput{
 		RepositoryName: aws.String("RepositoryName"), // Required
@@ -157,7 +250,13 @@ func ExampleCodeCommit_ListBranches() {
 }
 
 func ExampleCodeCommit_ListRepositories() {
-	svc := codecommit.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
 
 	params := &codecommit.ListRepositoriesInput{
 		NextToken: aws.String("NextToken"),
@@ -177,8 +276,96 @@ func ExampleCodeCommit_ListRepositories() {
 	fmt.Println(resp)
 }
 
+func ExampleCodeCommit_PutRepositoryTriggers() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
+
+	params := &codecommit.PutRepositoryTriggersInput{
+		RepositoryName: aws.String("RepositoryName"),
+		Triggers: []*codecommit.RepositoryTrigger{
+			{ // Required
+				Branches: []*string{
+					aws.String("BranchName"), // Required
+					// More values...
+				},
+				CustomData:     aws.String("RepositoryTriggerCustomData"),
+				DestinationArn: aws.String("Arn"),
+				Events: []*string{
+					aws.String("RepositoryTriggerEventEnum"), // Required
+					// More values...
+				},
+				Name: aws.String("RepositoryTriggerName"),
+			},
+			// More values...
+		},
+	}
+	resp, err := svc.PutRepositoryTriggers(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
+func ExampleCodeCommit_TestRepositoryTriggers() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
+
+	params := &codecommit.TestRepositoryTriggersInput{
+		RepositoryName: aws.String("RepositoryName"),
+		Triggers: []*codecommit.RepositoryTrigger{
+			{ // Required
+				Branches: []*string{
+					aws.String("BranchName"), // Required
+					// More values...
+				},
+				CustomData:     aws.String("RepositoryTriggerCustomData"),
+				DestinationArn: aws.String("Arn"),
+				Events: []*string{
+					aws.String("RepositoryTriggerEventEnum"), // Required
+					// More values...
+				},
+				Name: aws.String("RepositoryTriggerName"),
+			},
+			// More values...
+		},
+	}
+	resp, err := svc.TestRepositoryTriggers(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleCodeCommit_UpdateDefaultBranch() {
-	svc := codecommit.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
 
 	params := &codecommit.UpdateDefaultBranchInput{
 		DefaultBranchName: aws.String("BranchName"),     // Required
@@ -198,7 +385,13 @@ func ExampleCodeCommit_UpdateDefaultBranch() {
 }
 
 func ExampleCodeCommit_UpdateRepositoryDescription() {
-	svc := codecommit.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
 
 	params := &codecommit.UpdateRepositoryDescriptionInput{
 		RepositoryName:        aws.String("RepositoryName"), // Required
@@ -218,7 +411,13 @@ func ExampleCodeCommit_UpdateRepositoryDescription() {
 }
 
 func ExampleCodeCommit_UpdateRepositoryName() {
-	svc := codecommit.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := codecommit.New(sess)
 
 	params := &codecommit.UpdateRepositoryNameInput{
 		NewName: aws.String("RepositoryName"), // Required

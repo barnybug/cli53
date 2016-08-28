@@ -4,11 +4,11 @@
     "apiVersion":"2014-11-01",
     "endpointPrefix":"kms",
     "jsonVersion":"1.1",
+    "protocol":"json",
     "serviceAbbreviation":"KMS",
     "serviceFullName":"AWS Key Management Service",
     "signatureVersion":"v4",
-    "targetPrefix":"TrentService",
-    "protocol":"json"
+    "targetPrefix":"TrentService"
   },
   "operations":{
     "CancelKeyDeletion":{
@@ -20,50 +20,11 @@
       "input":{"shape":"CancelKeyDeletionRequest"},
       "output":{"shape":"CancelKeyDeletionResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "CreateAlias":{
@@ -74,68 +35,13 @@
       },
       "input":{"shape":"CreateAliasRequest"},
       "errors":[
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"AlreadyExistsException",
-          "error":{
-            "code":"AlreadyExists",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidAliasNameException",
-          "error":{
-            "code":"InvalidAliasName",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{
-            "code":"LimitExceeded",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"AlreadyExistsException"},
+        {"shape":"NotFoundException"},
+        {"shape":"InvalidAliasNameException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "CreateGrant":{
@@ -147,77 +53,14 @@
       "input":{"shape":"CreateGrantRequest"},
       "output":{"shape":"CreateGrantResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DisabledException",
-          "error":{
-            "code":"Disabled",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidGrantTokenException",
-          "error":{
-            "code":"InvalidGrantToken",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{
-            "code":"LimitExceeded",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"DisabledException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"InvalidGrantTokenException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "CreateKey":{
@@ -229,59 +72,12 @@
       "input":{"shape":"CreateKeyRequest"},
       "output":{"shape":"CreateKeyResponse"},
       "errors":[
-        {
-          "shape":"MalformedPolicyDocumentException",
-          "error":{
-            "code":"MalformedPolicyDocument",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"UnsupportedOperationException",
-          "error":{
-            "code":"UnsupportedOperation",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{
-            "code":"LimitExceeded",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"MalformedPolicyDocumentException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"LimitExceededException"}
       ]
     },
     "Decrypt":{
@@ -293,77 +89,14 @@
       "input":{"shape":"DecryptRequest"},
       "output":{"shape":"DecryptResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DisabledException",
-          "error":{
-            "code":"Disabled",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidCiphertextException",
-          "error":{
-            "code":"InvalidCiphertext",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KeyUnavailableException",
-          "error":{
-            "code":"KeyUnavailable",
-            "httpStatusCode":500
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"InvalidGrantTokenException",
-          "error":{
-            "code":"InvalidGrantToken",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"DisabledException"},
+        {"shape":"InvalidCiphertextException"},
+        {"shape":"KeyUnavailableException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"InvalidGrantTokenException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "DeleteAlias":{
@@ -374,41 +107,26 @@
       },
       "input":{"shape":"DeleteAliasRequest"},
       "errors":[
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"NotFoundException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
+      ]
+    },
+    "DeleteImportedKeyMaterial":{
+      "name":"DeleteImportedKeyMaterial",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteImportedKeyMaterialRequest"},
+      "errors":[
+        {"shape":"InvalidArnException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"NotFoundException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "DescribeKey":{
@@ -420,41 +138,10 @@
       "input":{"shape":"DescribeKeyRequest"},
       "output":{"shape":"DescribeKeyResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"}
       ]
     },
     "DisableKey":{
@@ -465,50 +152,11 @@
       },
       "input":{"shape":"DisableKeyRequest"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "DisableKeyRotation":{
@@ -519,59 +167,13 @@
       },
       "input":{"shape":"DisableKeyRotationRequest"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DisabledException",
-          "error":{
-            "code":"Disabled",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"DisabledException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"},
+        {"shape":"UnsupportedOperationException"}
       ]
     },
     "EnableKey":{
@@ -582,59 +184,12 @@
       },
       "input":{"shape":"EnableKeyRequest"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{
-            "code":"LimitExceeded",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "EnableKeyRotation":{
@@ -645,59 +200,13 @@
       },
       "input":{"shape":"EnableKeyRotationRequest"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DisabledException",
-          "error":{
-            "code":"Disabled",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"DisabledException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"},
+        {"shape":"UnsupportedOperationException"}
       ]
     },
     "Encrypt":{
@@ -709,77 +218,14 @@
       "input":{"shape":"EncryptRequest"},
       "output":{"shape":"EncryptResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DisabledException",
-          "error":{
-            "code":"Disabled",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KeyUnavailableException",
-          "error":{
-            "code":"KeyUnavailable",
-            "httpStatusCode":500
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"InvalidKeyUsageException",
-          "error":{
-            "code":"InvalidKeyUsage",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidGrantTokenException",
-          "error":{
-            "code":"InvalidGrantToken",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"DisabledException"},
+        {"shape":"KeyUnavailableException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"InvalidKeyUsageException"},
+        {"shape":"InvalidGrantTokenException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "GenerateDataKey":{
@@ -791,77 +237,14 @@
       "input":{"shape":"GenerateDataKeyRequest"},
       "output":{"shape":"GenerateDataKeyResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DisabledException",
-          "error":{
-            "code":"Disabled",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KeyUnavailableException",
-          "error":{
-            "code":"KeyUnavailable",
-            "httpStatusCode":500
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"InvalidKeyUsageException",
-          "error":{
-            "code":"InvalidKeyUsage",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidGrantTokenException",
-          "error":{
-            "code":"InvalidGrantToken",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"DisabledException"},
+        {"shape":"KeyUnavailableException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"InvalidKeyUsageException"},
+        {"shape":"InvalidGrantTokenException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "GenerateDataKeyWithoutPlaintext":{
@@ -873,77 +256,14 @@
       "input":{"shape":"GenerateDataKeyWithoutPlaintextRequest"},
       "output":{"shape":"GenerateDataKeyWithoutPlaintextResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DisabledException",
-          "error":{
-            "code":"Disabled",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KeyUnavailableException",
-          "error":{
-            "code":"KeyUnavailable",
-            "httpStatusCode":500
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"InvalidKeyUsageException",
-          "error":{
-            "code":"InvalidKeyUsage",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidGrantTokenException",
-          "error":{
-            "code":"InvalidGrantToken",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"DisabledException"},
+        {"shape":"KeyUnavailableException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"InvalidKeyUsageException"},
+        {"shape":"InvalidGrantTokenException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "GenerateRandom":{
@@ -955,23 +275,8 @@
       "input":{"shape":"GenerateRandomRequest"},
       "output":{"shape":"GenerateRandomResponse"},
       "errors":[
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        }
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"}
       ]
     },
     "GetKeyPolicy":{
@@ -983,50 +288,11 @@
       "input":{"shape":"GetKeyPolicyRequest"},
       "output":{"shape":"GetKeyPolicyResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "GetKeyRotationStatus":{
@@ -1038,50 +304,50 @@
       "input":{"shape":"GetKeyRotationStatusRequest"},
       "output":{"shape":"GetKeyRotationStatusResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"},
+        {"shape":"UnsupportedOperationException"}
+      ]
+    },
+    "GetParametersForImport":{
+      "name":"GetParametersForImport",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetParametersForImportRequest"},
+      "output":{"shape":"GetParametersForImportResponse"},
+      "errors":[
+        {"shape":"InvalidArnException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"NotFoundException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
+      ]
+    },
+    "ImportKeyMaterial":{
+      "name":"ImportKeyMaterial",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ImportKeyMaterialRequest"},
+      "output":{"shape":"ImportKeyMaterialResponse"},
+      "errors":[
+        {"shape":"InvalidArnException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"NotFoundException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"},
+        {"shape":"InvalidCiphertextException"},
+        {"shape":"IncorrectKeyMaterialException"},
+        {"shape":"ExpiredImportTokenException"},
+        {"shape":"InvalidImportTokenException"}
       ]
     },
     "ListAliases":{
@@ -1093,32 +359,9 @@
       "input":{"shape":"ListAliasesRequest"},
       "output":{"shape":"ListAliasesResponse"},
       "errors":[
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"InvalidMarkerException",
-          "error":{
-            "code":"InvalidMarker",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        }
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"InvalidMarkerException"},
+        {"shape":"KMSInternalException"}
       ]
     },
     "ListGrants":{
@@ -1130,59 +373,12 @@
       "input":{"shape":"ListGrantsRequest"},
       "output":{"shape":"ListGrantsResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"InvalidMarkerException",
-          "error":{
-            "code":"InvalidMarker",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"InvalidMarkerException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "ListKeyPolicies":{
@@ -1194,50 +390,11 @@
       "input":{"shape":"ListKeyPoliciesRequest"},
       "output":{"shape":"ListKeyPoliciesResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "ListKeys":{
@@ -1249,23 +406,8 @@
       "input":{"shape":"ListKeysRequest"},
       "output":{"shape":"ListKeysResponse"},
       "errors":[
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        }
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"}
       ]
     },
     "ListRetirableGrants":{
@@ -1277,50 +419,11 @@
       "input":{"shape":"ListRetirableGrantsRequest"},
       "output":{"shape":"ListGrantsResponse"},
       "errors":[
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"InvalidMarkerException",
-          "error":{
-            "code":"InvalidMarker",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        }
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"InvalidMarkerException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"NotFoundException"},
+        {"shape":"KMSInternalException"}
       ]
     },
     "PutKeyPolicy":{
@@ -1331,86 +434,14 @@
       },
       "input":{"shape":"PutKeyPolicyRequest"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"MalformedPolicyDocumentException",
-          "error":{
-            "code":"MalformedPolicyDocument",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"UnsupportedOperationException",
-          "error":{
-            "code":"UnsupportedOperation",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{
-            "code":"LimitExceeded",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"MalformedPolicyDocumentException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "ReEncrypt":{
@@ -1422,86 +453,15 @@
       "input":{"shape":"ReEncryptRequest"},
       "output":{"shape":"ReEncryptResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DisabledException",
-          "error":{
-            "code":"Disabled",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidCiphertextException",
-          "error":{
-            "code":"InvalidCiphertext",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KeyUnavailableException",
-          "error":{
-            "code":"KeyUnavailable",
-            "httpStatusCode":500
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"InvalidKeyUsageException",
-          "error":{
-            "code":"InvalidKeyUsage",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidGrantTokenException",
-          "error":{
-            "code":"InvalidGrantToken",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"DisabledException"},
+        {"shape":"InvalidCiphertextException"},
+        {"shape":"KeyUnavailableException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"InvalidKeyUsageException"},
+        {"shape":"InvalidGrantTokenException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "RetireGrant":{
@@ -1512,59 +472,12 @@
       },
       "input":{"shape":"RetireGrantRequest"},
       "errors":[
-        {
-          "shape":"InvalidGrantTokenException",
-          "error":{
-            "code":"InvalidGrantToken",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidGrantIdException",
-          "error":{
-            "code":"InvalidGrantId",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"InvalidGrantTokenException"},
+        {"shape":"InvalidGrantIdException"},
+        {"shape":"NotFoundException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "RevokeGrant":{
@@ -1575,59 +488,12 @@
       },
       "input":{"shape":"RevokeGrantRequest"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidGrantIdException",
-          "error":{
-            "code":"InvalidGrantId",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"InvalidGrantIdException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "ScheduleKeyDeletion":{
@@ -1639,50 +505,11 @@
       "input":{"shape":"ScheduleKeyDeletionRequest"},
       "output":{"shape":"ScheduleKeyDeletionResponse"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "UpdateAlias":{
@@ -1693,41 +520,10 @@
       },
       "input":{"shape":"UpdateAliasRequest"},
       "errors":[
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"NotFoundException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     },
     "UpdateKeyDescription":{
@@ -1738,55 +534,24 @@
       },
       "input":{"shape":"UpdateKeyDescriptionRequest"},
       "errors":[
-        {
-          "shape":"NotFoundException",
-          "error":{
-            "code":"NotFound",
-            "httpStatusCode":404,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"InvalidArnException",
-          "error":{
-            "code":"InvalidArn",
-            "httpStatusCode":400,
-            "senderFault":true
-          },
-          "exception":true
-        },
-        {
-          "shape":"DependencyTimeoutException",
-          "error":{
-            "code":"DependencyTimeout",
-            "httpStatusCode":503
-          },
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"KMSInternalException",
-          "error":{
-            "code":"KMSInternal",
-            "httpStatusCode":500
-          },
-          "exception":true
-        },
-        {
-          "shape":"KMSInvalidStateException",
-          "error":{
-            "code":"KMSInvalidStateException",
-            "httpStatusCode":409,
-            "senderFault":true
-          },
-          "exception":true
-        }
+        {"shape":"NotFoundException"},
+        {"shape":"InvalidArnException"},
+        {"shape":"DependencyTimeoutException"},
+        {"shape":"KMSInternalException"},
+        {"shape":"KMSInvalidStateException"}
       ]
     }
   },
   "shapes":{
     "AWSAccountIdType":{"type":"string"},
+    "AlgorithmSpec":{
+      "type":"string",
+      "enum":[
+        "RSAES_PKCS1_V1_5",
+        "RSAES_OAEP_SHA_1",
+        "RSAES_OAEP_SHA_256"
+      ]
+    },
     "AliasList":{
       "type":"list",
       "member":{"shape":"AliasListEntry"}
@@ -1801,8 +566,8 @@
     },
     "AliasNameType":{
       "type":"string",
-      "min":1,
       "max":256,
+      "min":1,
       "pattern":"^[a-zA-Z0-9:/_-]+$"
     },
     "AlreadyExistsException":{
@@ -1810,17 +575,12 @@
       "members":{
         "message":{"shape":"ErrorMessageType"}
       },
-      "error":{
-        "code":"AlreadyExists",
-        "httpStatusCode":400,
-        "senderFault":true
-      },
       "exception":true
     },
     "ArnType":{
       "type":"string",
-      "min":20,
-      "max":2048
+      "max":2048,
+      "min":20
     },
     "BooleanType":{"type":"boolean"},
     "CancelKeyDeletionRequest":{
@@ -1838,8 +598,8 @@
     },
     "CiphertextType":{
       "type":"blob",
-      "min":1,
-      "max":6144
+      "max":6144,
+      "min":1
     },
     "CreateAliasRequest":{
       "type":"structure",
@@ -1880,7 +640,9 @@
       "members":{
         "Policy":{"shape":"PolicyType"},
         "Description":{"shape":"DescriptionType"},
-        "KeyUsage":{"shape":"KeyUsageType"}
+        "KeyUsage":{"shape":"KeyUsageType"},
+        "Origin":{"shape":"OriginType"},
+        "BypassPolicyLockoutSafetyCheck":{"shape":"BooleanType"}
       }
     },
     "CreateKeyResponse":{
@@ -1920,14 +682,17 @@
         "AliasName":{"shape":"AliasNameType"}
       }
     },
+    "DeleteImportedKeyMaterialRequest":{
+      "type":"structure",
+      "required":["KeyId"],
+      "members":{
+        "KeyId":{"shape":"KeyIdType"}
+      }
+    },
     "DependencyTimeoutException":{
       "type":"structure",
       "members":{
         "message":{"shape":"ErrorMessageType"}
-      },
-      "error":{
-        "code":"DependencyTimeout",
-        "httpStatusCode":503
       },
       "exception":true,
       "fault":true
@@ -1948,8 +713,8 @@
     },
     "DescriptionType":{
       "type":"string",
-      "min":0,
-      "max":8192
+      "max":8192,
+      "min":0
     },
     "DisableKeyRequest":{
       "type":"structure",
@@ -1969,11 +734,6 @@
       "type":"structure",
       "members":{
         "message":{"shape":"ErrorMessageType"}
-      },
-      "error":{
-        "code":"Disabled",
-        "httpStatusCode":409,
-        "senderFault":true
       },
       "exception":true
     },
@@ -2019,6 +779,20 @@
     },
     "EncryptionContextValue":{"type":"string"},
     "ErrorMessageType":{"type":"string"},
+    "ExpirationModelType":{
+      "type":"string",
+      "enum":[
+        "KEY_MATERIAL_EXPIRES",
+        "KEY_MATERIAL_DOES_NOT_EXPIRE"
+      ]
+    },
+    "ExpiredImportTokenException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"ErrorMessageType"}
+      },
+      "exception":true
+    },
     "GenerateDataKeyRequest":{
       "type":"structure",
       "required":["KeyId"],
@@ -2098,6 +872,28 @@
         "KeyRotationEnabled":{"shape":"BooleanType"}
       }
     },
+    "GetParametersForImportRequest":{
+      "type":"structure",
+      "required":[
+        "KeyId",
+        "WrappingAlgorithm",
+        "WrappingKeySpec"
+      ],
+      "members":{
+        "KeyId":{"shape":"KeyIdType"},
+        "WrappingAlgorithm":{"shape":"AlgorithmSpec"},
+        "WrappingKeySpec":{"shape":"WrappingKeySpec"}
+      }
+    },
+    "GetParametersForImportResponse":{
+      "type":"structure",
+      "members":{
+        "KeyId":{"shape":"KeyIdType"},
+        "ImportToken":{"shape":"CiphertextType"},
+        "PublicKey":{"shape":"PlaintextType"},
+        "ParametersValidTo":{"shape":"DateType"}
+      }
+    },
     "GrantConstraints":{
       "type":"structure",
       "members":{
@@ -2107,8 +903,8 @@
     },
     "GrantIdType":{
       "type":"string",
-      "min":1,
-      "max":128
+      "max":128,
+      "min":1
     },
     "GrantList":{
       "type":"list",
@@ -2130,8 +926,8 @@
     },
     "GrantNameType":{
       "type":"string",
-      "min":1,
       "max":256,
+      "min":1,
       "pattern":"^[a-zA-Z0-9:/_-]+$"
     },
     "GrantOperation":{
@@ -2155,23 +951,45 @@
     "GrantTokenList":{
       "type":"list",
       "member":{"shape":"GrantTokenType"},
-      "min":0,
-      "max":10
+      "max":10,
+      "min":0
     },
     "GrantTokenType":{
       "type":"string",
-      "min":1,
-      "max":8192
+      "max":8192,
+      "min":1
+    },
+    "ImportKeyMaterialRequest":{
+      "type":"structure",
+      "required":[
+        "KeyId",
+        "ImportToken",
+        "EncryptedKeyMaterial"
+      ],
+      "members":{
+        "KeyId":{"shape":"KeyIdType"},
+        "ImportToken":{"shape":"CiphertextType"},
+        "EncryptedKeyMaterial":{"shape":"CiphertextType"},
+        "ValidTo":{"shape":"DateType"},
+        "ExpirationModel":{"shape":"ExpirationModelType"}
+      }
+    },
+    "ImportKeyMaterialResponse":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "IncorrectKeyMaterialException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"ErrorMessageType"}
+      },
+      "exception":true
     },
     "InvalidAliasNameException":{
       "type":"structure",
       "members":{
         "message":{"shape":"ErrorMessageType"}
-      },
-      "error":{
-        "code":"InvalidAliasName",
-        "httpStatusCode":400,
-        "senderFault":true
       },
       "exception":true
     },
@@ -2180,22 +998,12 @@
       "members":{
         "message":{"shape":"ErrorMessageType"}
       },
-      "error":{
-        "code":"InvalidArn",
-        "httpStatusCode":400,
-        "senderFault":true
-      },
       "exception":true
     },
     "InvalidCiphertextException":{
       "type":"structure",
       "members":{
         "message":{"shape":"ErrorMessageType"}
-      },
-      "error":{
-        "code":"InvalidCiphertext",
-        "httpStatusCode":400,
-        "senderFault":true
       },
       "exception":true
     },
@@ -2204,11 +1012,6 @@
       "members":{
         "message":{"shape":"ErrorMessageType"}
       },
-      "error":{
-        "code":"InvalidGrantId",
-        "httpStatusCode":400,
-        "senderFault":true
-      },
       "exception":true
     },
     "InvalidGrantTokenException":{
@@ -2216,10 +1019,12 @@
       "members":{
         "message":{"shape":"ErrorMessageType"}
       },
-      "error":{
-        "code":"InvalidGrantToken",
-        "httpStatusCode":400,
-        "senderFault":true
+      "exception":true
+    },
+    "InvalidImportTokenException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"ErrorMessageType"}
       },
       "exception":true
     },
@@ -2228,22 +1033,12 @@
       "members":{
         "message":{"shape":"ErrorMessageType"}
       },
-      "error":{
-        "code":"InvalidKeyUsage",
-        "httpStatusCode":400,
-        "senderFault":true
-      },
       "exception":true
     },
     "InvalidMarkerException":{
       "type":"structure",
       "members":{
         "message":{"shape":"ErrorMessageType"}
-      },
-      "error":{
-        "code":"InvalidMarker",
-        "httpStatusCode":400,
-        "senderFault":true
       },
       "exception":true
     },
@@ -2252,10 +1047,6 @@
       "members":{
         "message":{"shape":"ErrorMessageType"}
       },
-      "error":{
-        "code":"KMSInternal",
-        "httpStatusCode":500
-      },
       "exception":true
     },
     "KMSInvalidStateException":{
@@ -2263,17 +1054,12 @@
       "members":{
         "message":{"shape":"ErrorMessageType"}
       },
-      "error":{
-        "code":"KMSInvalidStateException",
-        "httpStatusCode":409,
-        "senderFault":true
-      },
       "exception":true
     },
     "KeyIdType":{
       "type":"string",
-      "min":1,
-      "max":256
+      "max":256,
+      "min":1
     },
     "KeyList":{
       "type":"list",
@@ -2298,7 +1084,10 @@
         "Description":{"shape":"DescriptionType"},
         "KeyUsage":{"shape":"KeyUsageType"},
         "KeyState":{"shape":"KeyState"},
-        "DeletionDate":{"shape":"DateType"}
+        "DeletionDate":{"shape":"DateType"},
+        "ValidTo":{"shape":"DateType"},
+        "Origin":{"shape":"OriginType"},
+        "ExpirationModel":{"shape":"ExpirationModelType"}
       }
     },
     "KeyState":{
@@ -2306,17 +1095,14 @@
       "enum":[
         "Enabled",
         "Disabled",
-        "PendingDeletion"
+        "PendingDeletion",
+        "PendingImport"
       ]
     },
     "KeyUnavailableException":{
       "type":"structure",
       "members":{
         "message":{"shape":"ErrorMessageType"}
-      },
-      "error":{
-        "code":"KeyUnavailable",
-        "httpStatusCode":500
       },
       "exception":true,
       "fault":true
@@ -2330,17 +1116,12 @@
       "members":{
         "message":{"shape":"ErrorMessageType"}
       },
-      "error":{
-        "code":"LimitExceeded",
-        "httpStatusCode":400,
-        "senderFault":true
-      },
       "exception":true
     },
     "LimitType":{
       "type":"integer",
-      "min":1,
-      "max":1000
+      "max":1000,
+      "min":1
     },
     "ListAliasesRequest":{
       "type":"structure",
@@ -2420,17 +1201,12 @@
       "members":{
         "message":{"shape":"ErrorMessageType"}
       },
-      "error":{
-        "code":"MalformedPolicyDocument",
-        "httpStatusCode":400,
-        "senderFault":true
-      },
       "exception":true
     },
     "MarkerType":{
       "type":"string",
-      "min":1,
       "max":320,
+      "min":1,
       "pattern":"[\\u0020-\\u00FF]*"
     },
     "NotFoundException":{
@@ -2438,27 +1214,29 @@
       "members":{
         "message":{"shape":"ErrorMessageType"}
       },
-      "error":{
-        "code":"NotFound",
-        "httpStatusCode":404,
-        "senderFault":true
-      },
       "exception":true
     },
     "NumberOfBytesType":{
       "type":"integer",
-      "min":1,
-      "max":1024
+      "max":1024,
+      "min":1
+    },
+    "OriginType":{
+      "type":"string",
+      "enum":[
+        "AWS_KMS",
+        "EXTERNAL"
+      ]
     },
     "PendingWindowInDaysType":{
       "type":"integer",
-      "min":1,
-      "max":365
+      "max":365,
+      "min":1
     },
     "PlaintextType":{
       "type":"blob",
-      "min":1,
       "max":4096,
+      "min":1,
       "sensitive":true
     },
     "PolicyNameList":{
@@ -2467,20 +1245,20 @@
     },
     "PolicyNameType":{
       "type":"string",
-      "min":1,
       "max":128,
+      "min":1,
       "pattern":"[\\w]+"
     },
     "PolicyType":{
       "type":"string",
-      "min":1,
       "max":131072,
+      "min":1,
       "pattern":"[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+"
     },
     "PrincipalIdType":{
       "type":"string",
-      "min":1,
-      "max":256
+      "max":256,
+      "min":1
     },
     "PutKeyPolicyRequest":{
       "type":"structure",
@@ -2492,7 +1270,8 @@
       "members":{
         "KeyId":{"shape":"KeyIdType"},
         "PolicyName":{"shape":"PolicyNameType"},
-        "Policy":{"shape":"PolicyType"}
+        "Policy":{"shape":"PolicyType"},
+        "BypassPolicyLockoutSafetyCheck":{"shape":"BooleanType"}
       }
     },
     "ReEncryptRequest":{
@@ -2556,11 +1335,6 @@
       "members":{
         "message":{"shape":"ErrorMessageType"}
       },
-      "error":{
-        "code":"UnsupportedOperation",
-        "httpStatusCode":400,
-        "senderFault":true
-      },
       "exception":true
     },
     "UpdateAliasRequest":{
@@ -2584,6 +1358,10 @@
         "KeyId":{"shape":"KeyIdType"},
         "Description":{"shape":"DescriptionType"}
       }
+    },
+    "WrappingKeySpec":{
+      "type":"string",
+      "enum":["RSA_2048"]
     }
   }
 }

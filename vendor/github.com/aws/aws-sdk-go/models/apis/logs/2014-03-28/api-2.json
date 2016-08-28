@@ -303,7 +303,6 @@
         {"shape":"InvalidSequenceTokenException"},
         {"shape":"DataAlreadyAcceptedException"},
         {"shape":"ResourceNotFoundException"},
-        {"shape":"OperationAbortedException"},
         {"shape":"ServiceUnavailableException"}
       ]
     },
@@ -428,6 +427,7 @@
       "exception":true
     },
     "Days":{"type":"integer"},
+    "DefaultValue":{"type":"double"},
     "DeleteDestinationRequest":{
       "type":"structure",
       "required":["destinationName"],
@@ -719,7 +719,7 @@
     },
     "FilterPattern":{
       "type":"string",
-      "max":512,
+      "max":1024,
       "min":0
     },
     "FilteredLogEvent":{
@@ -900,7 +900,8 @@
       "members":{
         "metricName":{"shape":"MetricName"},
         "metricNamespace":{"shape":"MetricNamespace"},
-        "metricValue":{"shape":"MetricValue"}
+        "metricValue":{"shape":"MetricValue"},
+        "defaultValue":{"shape":"DefaultValue"}
       }
     },
     "MetricTransformations":{

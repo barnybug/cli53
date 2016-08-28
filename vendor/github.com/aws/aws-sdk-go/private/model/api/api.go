@@ -34,6 +34,9 @@ type API struct {
 	// Set to true to not generate API service name constants
 	NoConstServiceNames bool
 
+	// Set to true to not generate validation shapes
+	NoValidataShapeMethods bool
+
 	SvcClientImportPath string
 
 	initialized bool
@@ -76,10 +79,12 @@ func (a *API) StructName() string {
 		}
 
 		name = nameRegex.ReplaceAllString(name, "")
-		switch name {
-		case "ElasticLoadBalancing":
+		switch strings.ToLower(name) {
+		case "elasticloadbalancing":
 			a.name = "ELB"
-		case "Config":
+		case "elasticloadbalancingv2":
+			a.name = "ELBV2"
+		case "config":
 			a.name = "ConfigService"
 		default:
 			a.name = name
@@ -230,6 +235,14 @@ func (a *API) APIGoCode() string {
 		a.imports["github.com/aws/aws-sdk-go/private/protocol/"+a.ProtocolPackage()] = true
 		a.imports["github.com/aws/aws-sdk-go/private/protocol"] = true
 	}
+
+	for _, op := range a.Operations {
+		if op.AuthType == "none" {
+			a.imports["github.com/aws/aws-sdk-go/aws/credentials"] = true
+			break
+		}
+	}
+
 	var buf bytes.Buffer
 	err := tplAPI.Execute(&buf, a)
 	if err != nil {
@@ -295,7 +308,7 @@ func newClient(cfg aws.Config, handlers request.Handlers, endpoint, signingRegio
     }
 
 	// Handlers
-	svc.Handlers.Sign.PushBack({{if eq .Metadata.SignatureVersion "v2"}}v2{{else}}v4{{end}}.Sign)
+	svc.Handlers.Sign.PushBackNamed({{if eq .Metadata.SignatureVersion "v2"}}v2{{else}}v4{{end}}.SignRequestHandler)
 	{{if eq .Metadata.SignatureVersion "v2"}}svc.Handlers.Sign.PushBackNamed(corehandlers.BuildContentLengthHandler)
 	{{end}}svc.Handlers.Build.PushBackNamed({{ .ProtocolPackage }}.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed({{ .ProtocolPackage }}.UnmarshalHandler)
@@ -336,7 +349,7 @@ func (a *API) ServiceGoCode() string {
 		a.imports["github.com/aws/aws-sdk-go/private/signer/v2"] = true
 		a.imports["github.com/aws/aws-sdk-go/aws/corehandlers"] = true
 	} else {
-		a.imports["github.com/aws/aws-sdk-go/private/signer/v4"] = true
+		a.imports["github.com/aws/aws-sdk-go/aws/signer/v4"] = true
 	}
 	a.imports["github.com/aws/aws-sdk-go/private/protocol/"+a.ProtocolPackage()] = true
 
@@ -407,4 +420,68 @@ func (a *API) InterfaceGoCode() string {
 // with its package name. Takes a string depicting the Config.
 func (a *API) NewAPIGoCodeWithPkgName(cfg string) string {
 	return fmt.Sprintf("%s.New(%s)", a.PackageName(), cfg)
+}
+
+// computes the validation chain for all input shapes
+func (a *API) addShapeValidations() {
+	for _, o := range a.Operations {
+		resolveShapeValidations(o.InputRef.Shape)
+	}
+}
+
+// Updates the source shape and all nested shapes with the validations that
+// could possibly be needed.
+func resolveShapeValidations(s *Shape, ancestry ...*Shape) {
+	for _, a := range ancestry {
+		if a == s {
+			return
+		}
+	}
+
+	children := []string{}
+	for _, name := range s.MemberNames() {
+		ref := s.MemberRefs[name]
+
+		if s.IsRequired(name) && !s.Validations.Has(ref, ShapeValidationRequired) {
+			s.Validations = append(s.Validations, ShapeValidation{
+				Name: name, Ref: ref, Type: ShapeValidationRequired,
+			})
+		}
+
+		if ref.Shape.Min != 0 && !s.Validations.Has(ref, ShapeValidationMinVal) {
+			s.Validations = append(s.Validations, ShapeValidation{
+				Name: name, Ref: ref, Type: ShapeValidationMinVal,
+			})
+		}
+
+		switch ref.Shape.Type {
+		case "map", "list", "structure":
+			children = append(children, name)
+		}
+	}
+
+	ancestry = append(ancestry, s)
+	for _, name := range children {
+		ref := s.MemberRefs[name]
+		nestedShape := ref.Shape.NestedShape()
+
+		var v *ShapeValidation
+		if len(nestedShape.Validations) > 0 {
+			v = &ShapeValidation{
+				Name: name, Ref: ref, Type: ShapeValidationNested,
+			}
+		} else {
+			resolveShapeValidations(nestedShape, ancestry...)
+			if len(nestedShape.Validations) > 0 {
+				v = &ShapeValidation{
+					Name: name, Ref: ref, Type: ShapeValidationNested,
+				}
+			}
+		}
+
+		if v != nil && !s.Validations.Has(v.Ref, v.Type) {
+			s.Validations = append(s.Validations, *v)
+		}
+	}
+	ancestry = ancestry[:len(ancestry)-1]
 }

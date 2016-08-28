@@ -11,6 +11,40 @@
     "targetPrefix":"DirectoryService_20150416"
   },
   "operations":{
+    "AddIpRoutes":{
+      "name":"AddIpRoutes",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"AddIpRoutesRequest"},
+      "output":{"shape":"AddIpRoutesResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"EntityAlreadyExistsException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"DirectoryUnavailableException"},
+        {"shape":"IpRouteLimitExceededException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "AddTagsToResource":{
+      "name":"AddTagsToResource",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"AddTagsToResourceRequest"},
+      "output":{"shape":"AddTagsToResourceResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"TagLimitExceededException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "ConnectDirectory":{
       "name":"ConnectDirectory",
       "http":{
@@ -55,6 +89,24 @@
         {"shape":"DirectoryUnavailableException"},
         {"shape":"EntityAlreadyExistsException"},
         {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "CreateConditionalForwarder":{
+      "name":"CreateConditionalForwarder",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateConditionalForwarderRequest"},
+      "output":{"shape":"CreateConditionalForwarderResult"},
+      "errors":[
+        {"shape":"EntityAlreadyExistsException"},
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"DirectoryUnavailableException"},
         {"shape":"InvalidParameterException"},
         {"shape":"UnsupportedOperationException"},
         {"shape":"ClientException"},
@@ -125,6 +177,23 @@
         {"shape":"UnsupportedOperationException"}
       ]
     },
+    "DeleteConditionalForwarder":{
+      "name":"DeleteConditionalForwarder",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteConditionalForwarderRequest"},
+      "output":{"shape":"DeleteConditionalForwarderResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"DirectoryUnavailableException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "DeleteDirectory":{
       "name":"DeleteDirectory",
       "http":{
@@ -170,6 +239,38 @@
         {"shape":"UnsupportedOperationException"}
       ]
     },
+    "DeregisterEventTopic":{
+      "name":"DeregisterEventTopic",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeregisterEventTopicRequest"},
+      "output":{"shape":"DeregisterEventTopicResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "DescribeConditionalForwarders":{
+      "name":"DescribeConditionalForwarders",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeConditionalForwardersRequest"},
+      "output":{"shape":"DescribeConditionalForwardersResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"DirectoryUnavailableException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"UnsupportedOperationException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "DescribeDirectories":{
       "name":"DescribeDirectories",
       "http":{
@@ -182,6 +283,21 @@
         {"shape":"EntityDoesNotExistException"},
         {"shape":"InvalidParameterException"},
         {"shape":"InvalidNextTokenException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "DescribeEventTopics":{
+      "name":"DescribeEventTopics",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeEventTopicsRequest"},
+      "output":{"shape":"DescribeEventTopicsResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidParameterException"},
         {"shape":"ClientException"},
         {"shape":"ServiceException"}
       ]
@@ -309,6 +425,84 @@
         {"shape":"ServiceException"}
       ]
     },
+    "ListIpRoutes":{
+      "name":"ListIpRoutes",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListIpRoutesRequest"},
+      "output":{"shape":"ListIpRoutesResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidNextTokenException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "ListTagsForResource":{
+      "name":"ListTagsForResource",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListTagsForResourceRequest"},
+      "output":{"shape":"ListTagsForResourceResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidNextTokenException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "RegisterEventTopic":{
+      "name":"RegisterEventTopic",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"RegisterEventTopicRequest"},
+      "output":{"shape":"RegisterEventTopicResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "RemoveIpRoutes":{
+      "name":"RemoveIpRoutes",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"RemoveIpRoutesRequest"},
+      "output":{"shape":"RemoveIpRoutesResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"DirectoryUnavailableException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "RemoveTagsFromResource":{
+      "name":"RemoveTagsFromResource",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"RemoveTagsFromResourceRequest"},
+      "output":{"shape":"RemoveTagsFromResourceResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
     "RestoreFromSnapshot":{
       "name":"RestoreFromSnapshot",
       "http":{
@@ -320,6 +514,23 @@
       "errors":[
         {"shape":"EntityDoesNotExistException"},
         {"shape":"InvalidParameterException"},
+        {"shape":"ClientException"},
+        {"shape":"ServiceException"}
+      ]
+    },
+    "UpdateConditionalForwarder":{
+      "name":"UpdateConditionalForwarder",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateConditionalForwarderRequest"},
+      "output":{"shape":"UpdateConditionalForwarderResult"},
+      "errors":[
+        {"shape":"EntityDoesNotExistException"},
+        {"shape":"DirectoryUnavailableException"},
+        {"shape":"InvalidParameterException"},
+        {"shape":"UnsupportedOperationException"},
         {"shape":"ClientException"},
         {"shape":"ServiceException"}
       ]
@@ -362,6 +573,40 @@
       "max":128,
       "min":1
     },
+    "AddIpRoutesRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "IpRoutes"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "IpRoutes":{"shape":"IpRoutes"},
+        "UpdateSecurityGroupForDirectoryControllers":{"shape":"UpdateSecurityGroupForDirectoryControllers"}
+      }
+    },
+    "AddIpRoutesResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "AddTagsToResourceRequest":{
+      "type":"structure",
+      "required":[
+        "ResourceId",
+        "Tags"
+      ],
+      "members":{
+        "ResourceId":{"shape":"ResourceId"},
+        "Tags":{"shape":"Tags"}
+      }
+    },
+    "AddTagsToResourceResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "AddedDateTime":{"type":"timestamp"},
     "AliasName":{
       "type":"string",
       "max":62,
@@ -397,6 +642,14 @@
       "type":"list",
       "member":{"shape":"AvailabilityZone"}
     },
+    "CidrIp":{
+      "type":"string",
+      "pattern":"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([1-9]|[1-2][0-9]|3[0-2]))$"
+    },
+    "CidrIps":{
+      "type":"list",
+      "member":{"shape":"CidrIp"}
+    },
     "ClientException":{
       "type":"structure",
       "members":{
@@ -425,6 +678,18 @@
       "min":8,
       "pattern":"[\\u0020-\\u00FF]+",
       "sensitive":true
+    },
+    "ConditionalForwarder":{
+      "type":"structure",
+      "members":{
+        "RemoteDomainName":{"shape":"RemoteDomainName"},
+        "DnsIpAddrs":{"shape":"DnsIpAddrs"},
+        "ReplicationScope":{"shape":"ReplicationScope"}
+      }
+    },
+    "ConditionalForwarders":{
+      "type":"list",
+      "member":{"shape":"ConditionalForwarder"}
     },
     "ConnectDirectoryRequest":{
       "type":"structure",
@@ -493,6 +758,24 @@
       "type":"structure",
       "members":{
         "Computer":{"shape":"Computer"}
+      }
+    },
+    "CreateConditionalForwarderRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "RemoteDomainName",
+        "DnsIpAddrs"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "RemoteDomainName":{"shape":"RemoteDomainName"},
+        "DnsIpAddrs":{"shape":"DnsIpAddrs"}
+      }
+    },
+    "CreateConditionalForwarderResult":{
+      "type":"structure",
+      "members":{
       }
     },
     "CreateDirectoryRequest":{
@@ -565,7 +848,8 @@
         "RemoteDomainName":{"shape":"RemoteDomainName"},
         "TrustPassword":{"shape":"TrustPassword"},
         "TrustDirection":{"shape":"TrustDirection"},
-        "TrustType":{"shape":"TrustType"}
+        "TrustType":{"shape":"TrustType"},
+        "ConditionalForwarderIpAddrs":{"shape":"DnsIpAddrs"}
       }
     },
     "CreateTrustResult":{
@@ -575,6 +859,23 @@
       }
     },
     "CreatedDateTime":{"type":"timestamp"},
+    "DeleteAssociatedConditionalForwarder":{"type":"boolean"},
+    "DeleteConditionalForwarderRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "RemoteDomainName"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "RemoteDomainName":{"shape":"RemoteDomainName"}
+      }
+    },
+    "DeleteConditionalForwarderResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "DeleteDirectoryRequest":{
       "type":"structure",
       "required":["DirectoryId"],
@@ -605,13 +906,44 @@
       "type":"structure",
       "required":["TrustId"],
       "members":{
-        "TrustId":{"shape":"TrustId"}
+        "TrustId":{"shape":"TrustId"},
+        "DeleteAssociatedConditionalForwarder":{"shape":"DeleteAssociatedConditionalForwarder"}
       }
     },
     "DeleteTrustResult":{
       "type":"structure",
       "members":{
         "TrustId":{"shape":"TrustId"}
+      }
+    },
+    "DeregisterEventTopicRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "TopicName"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "TopicName":{"shape":"TopicName"}
+      }
+    },
+    "DeregisterEventTopicResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "DescribeConditionalForwardersRequest":{
+      "type":"structure",
+      "required":["DirectoryId"],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "RemoteDomainNames":{"shape":"RemoteDomainNames"}
+      }
+    },
+    "DescribeConditionalForwardersResult":{
+      "type":"structure",
+      "members":{
+        "ConditionalForwarders":{"shape":"ConditionalForwarders"}
       }
     },
     "DescribeDirectoriesRequest":{
@@ -627,6 +959,19 @@
       "members":{
         "DirectoryDescriptions":{"shape":"DirectoryDescriptions"},
         "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "DescribeEventTopicsRequest":{
+      "type":"structure",
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "TopicNames":{"shape":"TopicNames"}
+      }
+    },
+    "DescribeEventTopicsResult":{
+      "type":"structure",
+      "members":{
+        "EventTopics":{"shape":"EventTopics"}
       }
     },
     "DescribeSnapshotsRequest":{
@@ -893,6 +1238,20 @@
       },
       "exception":true
     },
+    "EventTopic":{
+      "type":"structure",
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "TopicName":{"shape":"TopicName"},
+        "TopicArn":{"shape":"TopicArn"},
+        "CreatedDateTime":{"shape":"CreatedDateTime"},
+        "Status":{"shape":"TopicStatus"}
+      }
+    },
+    "EventTopics":{
+      "type":"list",
+      "member":{"shape":"EventTopic"}
+    },
     "ExceptionMessage":{"type":"string"},
     "GetDirectoryLimitsRequest":{
       "type":"structure",
@@ -950,11 +1309,89 @@
       "type":"list",
       "member":{"shape":"IpAddr"}
     },
+    "IpRoute":{
+      "type":"structure",
+      "members":{
+        "CidrIp":{"shape":"CidrIp"},
+        "Description":{"shape":"Description"}
+      }
+    },
+    "IpRouteInfo":{
+      "type":"structure",
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "CidrIp":{"shape":"CidrIp"},
+        "IpRouteStatusMsg":{"shape":"IpRouteStatusMsg"},
+        "AddedDateTime":{"shape":"AddedDateTime"},
+        "IpRouteStatusReason":{"shape":"IpRouteStatusReason"},
+        "Description":{"shape":"Description"}
+      }
+    },
+    "IpRouteLimitExceededException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "IpRouteStatusMsg":{
+      "type":"string",
+      "enum":[
+        "Adding",
+        "Added",
+        "Removing",
+        "Removed",
+        "AddFailed",
+        "RemoveFailed"
+      ]
+    },
+    "IpRouteStatusReason":{"type":"string"},
+    "IpRoutes":{
+      "type":"list",
+      "member":{"shape":"IpRoute"}
+    },
+    "IpRoutesInfo":{
+      "type":"list",
+      "member":{"shape":"IpRouteInfo"}
+    },
     "LastUpdatedDateTime":{"type":"timestamp"},
     "LaunchTime":{"type":"timestamp"},
     "Limit":{
       "type":"integer",
       "min":0
+    },
+    "ListIpRoutesRequest":{
+      "type":"structure",
+      "required":["DirectoryId"],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "NextToken":{"shape":"NextToken"},
+        "Limit":{"shape":"Limit"}
+      }
+    },
+    "ListIpRoutesResult":{
+      "type":"structure",
+      "members":{
+        "IpRoutesInfo":{"shape":"IpRoutesInfo"},
+        "NextToken":{"shape":"NextToken"}
+      }
+    },
+    "ListTagsForResourceRequest":{
+      "type":"structure",
+      "required":["ResourceId"],
+      "members":{
+        "ResourceId":{"shape":"ResourceId"},
+        "NextToken":{"shape":"NextToken"},
+        "Limit":{"shape":"Limit"}
+      }
+    },
+    "ListTagsForResourceResult":{
+      "type":"structure",
+      "members":{
+        "Tags":{"shape":"Tags"},
+        "NextToken":{"shape":"NextToken"}
+      }
     },
     "ManualSnapshotsLimitReached":{"type":"boolean"},
     "NextToken":{"type":"string"},
@@ -1024,13 +1461,73 @@
       "max":20,
       "min":1
     },
+    "RegisterEventTopicRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "TopicName"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "TopicName":{"shape":"TopicName"}
+      }
+    },
+    "RegisterEventTopicResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "RemoteDomainName":{
       "type":"string",
       "pattern":"^([a-zA-Z0-9]+[\\\\.-])+([a-zA-Z0-9])+[.]?$"
     },
+    "RemoteDomainNames":{
+      "type":"list",
+      "member":{"shape":"RemoteDomainName"}
+    },
+    "RemoveIpRoutesRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "CidrIps"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "CidrIps":{"shape":"CidrIps"}
+      }
+    },
+    "RemoveIpRoutesResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "RemoveTagsFromResourceRequest":{
+      "type":"structure",
+      "required":[
+        "ResourceId",
+        "TagKeys"
+      ],
+      "members":{
+        "ResourceId":{"shape":"ResourceId"},
+        "TagKeys":{"shape":"TagKeys"}
+      }
+    },
+    "RemoveTagsFromResourceResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "ReplicationScope":{
+      "type":"string",
+      "enum":["Domain"]
+    },
     "RequestId":{
       "type":"string",
       "pattern":"^([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})$"
+    },
+    "ResourceId":{
+      "type":"string",
+      "pattern":"^[d]-[0-9a-f]{10}$"
     },
     "RestoreFromSnapshotRequest":{
       "type":"structure",
@@ -1144,6 +1641,65 @@
       "type":"list",
       "member":{"shape":"SubnetId"}
     },
+    "Tag":{
+      "type":"structure",
+      "required":[
+        "Key",
+        "Value"
+      ],
+      "members":{
+        "Key":{"shape":"TagKey"},
+        "Value":{"shape":"TagValue"}
+      }
+    },
+    "TagKey":{
+      "type":"string",
+      "max":128,
+      "min":1,
+      "pattern":"^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
+    },
+    "TagKeys":{
+      "type":"list",
+      "member":{"shape":"TagKey"}
+    },
+    "TagLimitExceededException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ExceptionMessage"},
+        "RequestId":{"shape":"RequestId"}
+      },
+      "exception":true
+    },
+    "TagValue":{
+      "type":"string",
+      "max":256,
+      "min":0,
+      "pattern":"^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
+    },
+    "Tags":{
+      "type":"list",
+      "member":{"shape":"Tag"}
+    },
+    "TopicArn":{"type":"string"},
+    "TopicName":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"[a-zA-Z0-9_-]+"
+    },
+    "TopicNames":{
+      "type":"list",
+      "member":{"shape":"TopicName"}
+    },
+    "TopicStatus":{
+      "type":"string",
+      "enum":[
+        "Registered",
+        "Topic not found",
+        "Failed",
+        "Deleted"
+      ]
+    },
     "Trust":{
       "type":"structure",
       "members":{
@@ -1155,7 +1711,8 @@
         "TrustState":{"shape":"TrustState"},
         "CreatedDateTime":{"shape":"CreatedDateTime"},
         "LastUpdatedDateTime":{"shape":"LastUpdatedDateTime"},
-        "StateLastUpdatedDateTime":{"shape":"StateLastUpdatedDateTime"}
+        "StateLastUpdatedDateTime":{"shape":"StateLastUpdatedDateTime"},
+        "TrustStateReason":{"shape":"TrustStateReason"}
       }
     },
     "TrustDirection":{
@@ -1193,6 +1750,7 @@
         "Failed"
       ]
     },
+    "TrustStateReason":{"type":"string"},
     "TrustType":{
       "type":"string",
       "enum":["Forest"]
@@ -1208,6 +1766,24 @@
         "RequestId":{"shape":"RequestId"}
       },
       "exception":true
+    },
+    "UpdateConditionalForwarderRequest":{
+      "type":"structure",
+      "required":[
+        "DirectoryId",
+        "RemoteDomainName",
+        "DnsIpAddrs"
+      ],
+      "members":{
+        "DirectoryId":{"shape":"DirectoryId"},
+        "RemoteDomainName":{"shape":"RemoteDomainName"},
+        "DnsIpAddrs":{"shape":"DnsIpAddrs"}
+      }
+    },
+    "UpdateConditionalForwarderResult":{
+      "type":"structure",
+      "members":{
+      }
     },
     "UpdateRadiusRequest":{
       "type":"structure",
@@ -1225,6 +1801,7 @@
       "members":{
       }
     },
+    "UpdateSecurityGroupForDirectoryControllers":{"type":"boolean"},
     "UseSameUsername":{"type":"boolean"},
     "UserName":{
       "type":"string",

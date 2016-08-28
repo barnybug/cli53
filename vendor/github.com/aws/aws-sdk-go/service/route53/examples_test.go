@@ -16,7 +16,13 @@ var _ time.Duration
 var _ bytes.Buffer
 
 func ExampleRoute53_AssociateVPCWithHostedZone() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.AssociateVPCWithHostedZoneInput{
 		HostedZoneId: aws.String("ResourceId"), // Required
@@ -40,7 +46,13 @@ func ExampleRoute53_AssociateVPCWithHostedZone() {
 }
 
 func ExampleRoute53_ChangeResourceRecordSets() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ChangeResourceRecordSetsInput{
 		ChangeBatch: &route53.ChangeBatch{ // Required
@@ -95,7 +107,13 @@ func ExampleRoute53_ChangeResourceRecordSets() {
 }
 
 func ExampleRoute53_ChangeTagsForResource() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ChangeTagsForResourceInput{
 		ResourceId:   aws.String("TagResourceId"),   // Required
@@ -126,26 +144,42 @@ func ExampleRoute53_ChangeTagsForResource() {
 }
 
 func ExampleRoute53_CreateHealthCheck() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.CreateHealthCheckInput{
 		CallerReference: aws.String("HealthCheckNonce"), // Required
 		HealthCheckConfig: &route53.HealthCheckConfig{ // Required
 			Type: aws.String("HealthCheckType"), // Required
+			AlarmIdentifier: &route53.AlarmIdentifier{
+				Name:   aws.String("AlarmName"),        // Required
+				Region: aws.String("CloudWatchRegion"), // Required
+			},
 			ChildHealthChecks: []*string{
 				aws.String("HealthCheckId"), // Required
 				// More values...
 			},
-			FailureThreshold:         aws.Int64(1),
-			FullyQualifiedDomainName: aws.String("FullyQualifiedDomainName"),
-			HealthThreshold:          aws.Int64(1),
-			IPAddress:                aws.String("IPAddress"),
-			Inverted:                 aws.Bool(true),
-			MeasureLatency:           aws.Bool(true),
-			Port:                     aws.Int64(1),
-			RequestInterval:          aws.Int64(1),
-			ResourcePath:             aws.String("ResourcePath"),
-			SearchString:             aws.String("SearchString"),
+			EnableSNI:                    aws.Bool(true),
+			FailureThreshold:             aws.Int64(1),
+			FullyQualifiedDomainName:     aws.String("FullyQualifiedDomainName"),
+			HealthThreshold:              aws.Int64(1),
+			IPAddress:                    aws.String("IPAddress"),
+			InsufficientDataHealthStatus: aws.String("InsufficientDataHealthStatus"),
+			Inverted:                     aws.Bool(true),
+			MeasureLatency:               aws.Bool(true),
+			Port:                         aws.Int64(1),
+			Regions: []*string{
+				aws.String("HealthCheckRegion"), // Required
+				// More values...
+			},
+			RequestInterval: aws.Int64(1),
+			ResourcePath:    aws.String("ResourcePath"),
+			SearchString:    aws.String("SearchString"),
 		},
 	}
 	resp, err := svc.CreateHealthCheck(params)
@@ -162,7 +196,13 @@ func ExampleRoute53_CreateHealthCheck() {
 }
 
 func ExampleRoute53_CreateHostedZone() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.CreateHostedZoneInput{
 		CallerReference: aws.String("Nonce"),   // Required
@@ -191,7 +231,13 @@ func ExampleRoute53_CreateHostedZone() {
 }
 
 func ExampleRoute53_CreateReusableDelegationSet() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.CreateReusableDelegationSetInput{
 		CallerReference: aws.String("Nonce"), // Required
@@ -211,7 +257,13 @@ func ExampleRoute53_CreateReusableDelegationSet() {
 }
 
 func ExampleRoute53_CreateTrafficPolicy() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.CreateTrafficPolicyInput{
 		Document: aws.String("TrafficPolicyDocument"), // Required
@@ -232,7 +284,13 @@ func ExampleRoute53_CreateTrafficPolicy() {
 }
 
 func ExampleRoute53_CreateTrafficPolicyInstance() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.CreateTrafficPolicyInstanceInput{
 		HostedZoneId:         aws.String("ResourceId"),      // Required
@@ -255,7 +313,13 @@ func ExampleRoute53_CreateTrafficPolicyInstance() {
 }
 
 func ExampleRoute53_CreateTrafficPolicyVersion() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.CreateTrafficPolicyVersionInput{
 		Document: aws.String("TrafficPolicyDocument"), // Required
@@ -276,7 +340,13 @@ func ExampleRoute53_CreateTrafficPolicyVersion() {
 }
 
 func ExampleRoute53_DeleteHealthCheck() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.DeleteHealthCheckInput{
 		HealthCheckId: aws.String("HealthCheckId"), // Required
@@ -295,7 +365,13 @@ func ExampleRoute53_DeleteHealthCheck() {
 }
 
 func ExampleRoute53_DeleteHostedZone() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.DeleteHostedZoneInput{
 		Id: aws.String("ResourceId"), // Required
@@ -314,7 +390,13 @@ func ExampleRoute53_DeleteHostedZone() {
 }
 
 func ExampleRoute53_DeleteReusableDelegationSet() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.DeleteReusableDelegationSetInput{
 		Id: aws.String("ResourceId"), // Required
@@ -333,7 +415,13 @@ func ExampleRoute53_DeleteReusableDelegationSet() {
 }
 
 func ExampleRoute53_DeleteTrafficPolicy() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.DeleteTrafficPolicyInput{
 		Id:      aws.String("TrafficPolicyId"), // Required
@@ -353,7 +441,13 @@ func ExampleRoute53_DeleteTrafficPolicy() {
 }
 
 func ExampleRoute53_DeleteTrafficPolicyInstance() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.DeleteTrafficPolicyInstanceInput{
 		Id: aws.String("TrafficPolicyInstanceId"), // Required
@@ -372,7 +466,13 @@ func ExampleRoute53_DeleteTrafficPolicyInstance() {
 }
 
 func ExampleRoute53_DisassociateVPCFromHostedZone() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.DisassociateVPCFromHostedZoneInput{
 		HostedZoneId: aws.String("ResourceId"), // Required
@@ -396,7 +496,13 @@ func ExampleRoute53_DisassociateVPCFromHostedZone() {
 }
 
 func ExampleRoute53_GetChange() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.GetChangeInput{
 		Id: aws.String("ResourceId"), // Required
@@ -415,7 +521,13 @@ func ExampleRoute53_GetChange() {
 }
 
 func ExampleRoute53_GetChangeDetails() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.GetChangeDetailsInput{
 		Id: aws.String("ResourceId"), // Required
@@ -434,7 +546,13 @@ func ExampleRoute53_GetChangeDetails() {
 }
 
 func ExampleRoute53_GetCheckerIpRanges() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	var params *route53.GetCheckerIpRangesInput
 	resp, err := svc.GetCheckerIpRanges(params)
@@ -451,7 +569,13 @@ func ExampleRoute53_GetCheckerIpRanges() {
 }
 
 func ExampleRoute53_GetGeoLocation() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.GetGeoLocationInput{
 		ContinentCode:   aws.String("GeoLocationContinentCode"),
@@ -472,7 +596,13 @@ func ExampleRoute53_GetGeoLocation() {
 }
 
 func ExampleRoute53_GetHealthCheck() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.GetHealthCheckInput{
 		HealthCheckId: aws.String("HealthCheckId"), // Required
@@ -491,7 +621,13 @@ func ExampleRoute53_GetHealthCheck() {
 }
 
 func ExampleRoute53_GetHealthCheckCount() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	var params *route53.GetHealthCheckCountInput
 	resp, err := svc.GetHealthCheckCount(params)
@@ -508,7 +644,13 @@ func ExampleRoute53_GetHealthCheckCount() {
 }
 
 func ExampleRoute53_GetHealthCheckLastFailureReason() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.GetHealthCheckLastFailureReasonInput{
 		HealthCheckId: aws.String("HealthCheckId"), // Required
@@ -527,7 +669,13 @@ func ExampleRoute53_GetHealthCheckLastFailureReason() {
 }
 
 func ExampleRoute53_GetHealthCheckStatus() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.GetHealthCheckStatusInput{
 		HealthCheckId: aws.String("HealthCheckId"), // Required
@@ -546,7 +694,13 @@ func ExampleRoute53_GetHealthCheckStatus() {
 }
 
 func ExampleRoute53_GetHostedZone() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.GetHostedZoneInput{
 		Id: aws.String("ResourceId"), // Required
@@ -565,7 +719,13 @@ func ExampleRoute53_GetHostedZone() {
 }
 
 func ExampleRoute53_GetHostedZoneCount() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	var params *route53.GetHostedZoneCountInput
 	resp, err := svc.GetHostedZoneCount(params)
@@ -582,7 +742,13 @@ func ExampleRoute53_GetHostedZoneCount() {
 }
 
 func ExampleRoute53_GetReusableDelegationSet() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.GetReusableDelegationSetInput{
 		Id: aws.String("ResourceId"), // Required
@@ -601,7 +767,13 @@ func ExampleRoute53_GetReusableDelegationSet() {
 }
 
 func ExampleRoute53_GetTrafficPolicy() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.GetTrafficPolicyInput{
 		Id:      aws.String("TrafficPolicyId"), // Required
@@ -621,7 +793,13 @@ func ExampleRoute53_GetTrafficPolicy() {
 }
 
 func ExampleRoute53_GetTrafficPolicyInstance() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.GetTrafficPolicyInstanceInput{
 		Id: aws.String("TrafficPolicyInstanceId"), // Required
@@ -640,7 +818,13 @@ func ExampleRoute53_GetTrafficPolicyInstance() {
 }
 
 func ExampleRoute53_GetTrafficPolicyInstanceCount() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	var params *route53.GetTrafficPolicyInstanceCountInput
 	resp, err := svc.GetTrafficPolicyInstanceCount(params)
@@ -657,7 +841,13 @@ func ExampleRoute53_GetTrafficPolicyInstanceCount() {
 }
 
 func ExampleRoute53_ListChangeBatchesByHostedZone() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListChangeBatchesByHostedZoneInput{
 		EndDate:      aws.String("Date"),       // Required
@@ -680,7 +870,13 @@ func ExampleRoute53_ListChangeBatchesByHostedZone() {
 }
 
 func ExampleRoute53_ListChangeBatchesByRRSet() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListChangeBatchesByRRSetInput{
 		EndDate:       aws.String("Date"),       // Required
@@ -706,7 +902,13 @@ func ExampleRoute53_ListChangeBatchesByRRSet() {
 }
 
 func ExampleRoute53_ListGeoLocations() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListGeoLocationsInput{
 		MaxItems:             aws.String("PageMaxItems"),
@@ -728,7 +930,13 @@ func ExampleRoute53_ListGeoLocations() {
 }
 
 func ExampleRoute53_ListHealthChecks() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListHealthChecksInput{
 		Marker:   aws.String("PageMarker"),
@@ -748,7 +956,13 @@ func ExampleRoute53_ListHealthChecks() {
 }
 
 func ExampleRoute53_ListHostedZones() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListHostedZonesInput{
 		DelegationSetId: aws.String("ResourceId"),
@@ -769,7 +983,13 @@ func ExampleRoute53_ListHostedZones() {
 }
 
 func ExampleRoute53_ListHostedZonesByName() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListHostedZonesByNameInput{
 		DNSName:      aws.String("DNSName"),
@@ -790,7 +1010,13 @@ func ExampleRoute53_ListHostedZonesByName() {
 }
 
 func ExampleRoute53_ListResourceRecordSets() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListResourceRecordSetsInput{
 		HostedZoneId:          aws.String("ResourceId"), // Required
@@ -813,7 +1039,13 @@ func ExampleRoute53_ListResourceRecordSets() {
 }
 
 func ExampleRoute53_ListReusableDelegationSets() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListReusableDelegationSetsInput{
 		Marker:   aws.String("PageMarker"),
@@ -833,7 +1065,13 @@ func ExampleRoute53_ListReusableDelegationSets() {
 }
 
 func ExampleRoute53_ListTagsForResource() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListTagsForResourceInput{
 		ResourceId:   aws.String("TagResourceId"),   // Required
@@ -853,7 +1091,13 @@ func ExampleRoute53_ListTagsForResource() {
 }
 
 func ExampleRoute53_ListTagsForResources() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListTagsForResourcesInput{
 		ResourceIds: []*string{ // Required
@@ -876,7 +1120,13 @@ func ExampleRoute53_ListTagsForResources() {
 }
 
 func ExampleRoute53_ListTrafficPolicies() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListTrafficPoliciesInput{
 		MaxItems:              aws.String("PageMaxItems"),
@@ -896,7 +1146,13 @@ func ExampleRoute53_ListTrafficPolicies() {
 }
 
 func ExampleRoute53_ListTrafficPolicyInstances() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListTrafficPolicyInstancesInput{
 		HostedZoneIdMarker:              aws.String("ResourceId"),
@@ -918,7 +1174,13 @@ func ExampleRoute53_ListTrafficPolicyInstances() {
 }
 
 func ExampleRoute53_ListTrafficPolicyInstancesByHostedZone() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListTrafficPolicyInstancesByHostedZoneInput{
 		HostedZoneId:                    aws.String("ResourceId"), // Required
@@ -940,7 +1202,13 @@ func ExampleRoute53_ListTrafficPolicyInstancesByHostedZone() {
 }
 
 func ExampleRoute53_ListTrafficPolicyInstancesByPolicy() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListTrafficPolicyInstancesByPolicyInput{
 		TrafficPolicyId:                 aws.String("TrafficPolicyId"), // Required
@@ -964,7 +1232,13 @@ func ExampleRoute53_ListTrafficPolicyInstancesByPolicy() {
 }
 
 func ExampleRoute53_ListTrafficPolicyVersions() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.ListTrafficPolicyVersionsInput{
 		Id:                         aws.String("TrafficPolicyId"), // Required
@@ -985,23 +1259,39 @@ func ExampleRoute53_ListTrafficPolicyVersions() {
 }
 
 func ExampleRoute53_UpdateHealthCheck() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.UpdateHealthCheckInput{
 		HealthCheckId: aws.String("HealthCheckId"), // Required
+		AlarmIdentifier: &route53.AlarmIdentifier{
+			Name:   aws.String("AlarmName"),        // Required
+			Region: aws.String("CloudWatchRegion"), // Required
+		},
 		ChildHealthChecks: []*string{
 			aws.String("HealthCheckId"), // Required
 			// More values...
 		},
-		FailureThreshold:         aws.Int64(1),
-		FullyQualifiedDomainName: aws.String("FullyQualifiedDomainName"),
-		HealthCheckVersion:       aws.Int64(1),
-		HealthThreshold:          aws.Int64(1),
-		IPAddress:                aws.String("IPAddress"),
-		Inverted:                 aws.Bool(true),
-		Port:                     aws.Int64(1),
-		ResourcePath:             aws.String("ResourcePath"),
-		SearchString:             aws.String("SearchString"),
+		EnableSNI:                    aws.Bool(true),
+		FailureThreshold:             aws.Int64(1),
+		FullyQualifiedDomainName:     aws.String("FullyQualifiedDomainName"),
+		HealthCheckVersion:           aws.Int64(1),
+		HealthThreshold:              aws.Int64(1),
+		IPAddress:                    aws.String("IPAddress"),
+		InsufficientDataHealthStatus: aws.String("InsufficientDataHealthStatus"),
+		Inverted:                     aws.Bool(true),
+		Port:                         aws.Int64(1),
+		Regions: []*string{
+			aws.String("HealthCheckRegion"), // Required
+			// More values...
+		},
+		ResourcePath: aws.String("ResourcePath"),
+		SearchString: aws.String("SearchString"),
 	}
 	resp, err := svc.UpdateHealthCheck(params)
 
@@ -1017,7 +1307,13 @@ func ExampleRoute53_UpdateHealthCheck() {
 }
 
 func ExampleRoute53_UpdateHostedZoneComment() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.UpdateHostedZoneCommentInput{
 		Id:      aws.String("ResourceId"), // Required
@@ -1037,7 +1333,13 @@ func ExampleRoute53_UpdateHostedZoneComment() {
 }
 
 func ExampleRoute53_UpdateTrafficPolicyComment() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.UpdateTrafficPolicyCommentInput{
 		Comment: aws.String("TrafficPolicyComment"), // Required
@@ -1058,7 +1360,13 @@ func ExampleRoute53_UpdateTrafficPolicyComment() {
 }
 
 func ExampleRoute53_UpdateTrafficPolicyInstance() {
-	svc := route53.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := route53.New(sess)
 
 	params := &route53.UpdateTrafficPolicyInstanceInput{
 		Id:                   aws.String("TrafficPolicyInstanceId"), // Required

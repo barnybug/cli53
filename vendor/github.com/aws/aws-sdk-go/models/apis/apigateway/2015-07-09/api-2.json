@@ -3,9 +3,9 @@
   "metadata":{
     "apiVersion":"2015-07-09",
     "endpointPrefix":"apigateway",
+    "protocol":"rest-json",
     "serviceFullName":"Amazon API Gateway",
-    "signatureVersion":"v4",
-    "protocol":"rest-json"
+    "signatureVersion":"v4"
   },
   "operations":{
     "CreateApiKey":{
@@ -18,31 +18,29 @@
       "input":{"shape":"CreateApiKeyRequest"},
       "output":{"shape":"ApiKey"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"}
+      ]
+    },
+    "CreateAuthorizer":{
+      "name":"CreateAuthorizer",
+      "http":{
+        "method":"POST",
+        "requestUri":"/restapis/{restapi_id}/authorizers",
+        "responseCode":201
+      },
+      "input":{"shape":"CreateAuthorizerRequest"},
+      "output":{"shape":"Authorizer"},
+      "errors":[
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "CreateBasePathMapping":{
@@ -55,31 +53,11 @@
       "input":{"shape":"CreateBasePathMappingRequest"},
       "output":{"shape":"BasePathMapping"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"ConflictException"},
+        {"shape":"BadRequestException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "CreateDeployment":{
@@ -92,42 +70,13 @@
       "input":{"shape":"CreateDeploymentRequest"},
       "output":{"shape":"Deployment"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"ServiceUnavailableException",
-          "error":{"httpStatusCode":503},
-          "exception":true,
-          "fault":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"BadRequestException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ServiceUnavailableException"}
       ]
     },
     "CreateDomainName":{
@@ -140,21 +89,10 @@
       "input":{"shape":"CreateDomainNameRequest"},
       "output":{"shape":"DomainName"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "CreateModel":{
@@ -167,36 +105,12 @@
       "input":{"shape":"CreateModelRequest"},
       "output":{"shape":"Model"},
       "errors":[
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "CreateResource":{
@@ -209,36 +123,12 @@
       "input":{"shape":"CreateResourceRequest"},
       "output":{"shape":"Resource"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "CreateRestApi":{
@@ -251,26 +141,10 @@
       "input":{"shape":"CreateRestApiRequest"},
       "output":{"shape":"RestApi"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "CreateStage":{
@@ -283,36 +157,46 @@
       "input":{"shape":"CreateStageRequest"},
       "output":{"shape":"Stage"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"BadRequestException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "CreateUsagePlan":{
+      "name":"CreateUsagePlan",
+      "http":{
+        "method":"POST",
+        "requestUri":"/usageplans",
+        "responseCode":201
+      },
+      "input":{"shape":"CreateUsagePlanRequest"},
+      "output":{"shape":"UsagePlan"},
+      "errors":[
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"ConflictException"}
+      ]
+    },
+    "CreateUsagePlanKey":{
+      "name":"CreateUsagePlanKey",
+      "http":{
+        "method":"POST",
+        "requestUri":"/usageplans/{usageplanId}/keys",
+        "responseCode":201
+      },
+      "input":{"shape":"CreateUsagePlanKeyRequest"},
+      "output":{"shape":"UsagePlanKey"},
+      "errors":[
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "DeleteApiKey":{
@@ -324,21 +208,25 @@
       },
       "input":{"shape":"DeleteApiKeyRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "DeleteAuthorizer":{
+      "name":"DeleteAuthorizer",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/restapis/{restapi_id}/authorizers/{authorizer_id}",
+        "responseCode":202
+      },
+      "input":{"shape":"DeleteAuthorizerRequest"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"}
       ]
     },
     "DeleteBasePathMapping":{
@@ -350,21 +238,9 @@
       },
       "input":{"shape":"DeleteBasePathMappingRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "DeleteClientCertificate":{
@@ -376,26 +252,10 @@
       },
       "input":{"shape":"DeleteClientCertificateRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"BadRequestException"},
+        {"shape":"NotFoundException"}
       ]
     },
     "DeleteDeployment":{
@@ -407,26 +267,10 @@
       },
       "input":{"shape":"DeleteDeploymentRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "DeleteDomainName":{
@@ -438,21 +282,9 @@
       },
       "input":{"shape":"DeleteDomainNameRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "DeleteIntegration":{
@@ -464,21 +296,10 @@
       },
       "input":{"shape":"DeleteIntegrationRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ConflictException"}
       ]
     },
     "DeleteIntegrationResponse":{
@@ -490,21 +311,11 @@
       },
       "input":{"shape":"DeleteIntegrationResponseRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"}
       ]
     },
     "DeleteMethod":{
@@ -516,21 +327,10 @@
       },
       "input":{"shape":"DeleteMethodRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ConflictException"}
       ]
     },
     "DeleteMethodResponse":{
@@ -542,21 +342,11 @@
       },
       "input":{"shape":"DeleteMethodResponseRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"}
       ]
     },
     "DeleteModel":{
@@ -568,31 +358,11 @@
       },
       "input":{"shape":"DeleteModelRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"}
       ]
     },
     "DeleteResource":{
@@ -604,26 +374,11 @@
       },
       "input":{"shape":"DeleteResourceRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "DeleteRestApi":{
@@ -635,21 +390,10 @@
       },
       "input":{"shape":"DeleteRestApiRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"BadRequestException"}
       ]
     },
     "DeleteStage":{
@@ -661,21 +405,56 @@
       },
       "input":{"shape":"DeleteStageRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"BadRequestException"}
+      ]
+    },
+    "DeleteUsagePlan":{
+      "name":"DeleteUsagePlan",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/usageplans/{usageplanId}",
+        "responseCode":202
+      },
+      "input":{"shape":"DeleteUsagePlanRequest"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"BadRequestException"},
+        {"shape":"NotFoundException"}
+      ]
+    },
+    "DeleteUsagePlanKey":{
+      "name":"DeleteUsagePlanKey",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/usageplans/{usageplanId}/keys/{keyId}",
+        "responseCode":202
+      },
+      "input":{"shape":"DeleteUsagePlanKeyRequest"},
+      "errors":[
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "FlushStageAuthorizersCache":{
+      "name":"FlushStageAuthorizersCache",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/restapis/{restapi_id}/stages/{stage_name}/cache/authorizers",
+        "responseCode":202
+      },
+      "input":{"shape":"FlushStageAuthorizersCacheRequest"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "FlushStageCache":{
@@ -687,26 +466,10 @@
       },
       "input":{"shape":"FlushStageCacheRequest"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GenerateClientCertificate":{
@@ -719,21 +482,9 @@
       "input":{"shape":"GenerateClientCertificateRequest"},
       "output":{"shape":"ClientCertificate"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"LimitExceededException"}
       ]
     },
     "GetAccount":{
@@ -745,21 +496,9 @@
       "input":{"shape":"GetAccountRequest"},
       "output":{"shape":"Account"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetApiKey":{
@@ -771,21 +510,9 @@
       "input":{"shape":"GetApiKeyRequest"},
       "output":{"shape":"ApiKey"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetApiKeys":{
@@ -797,16 +524,38 @@
       "input":{"shape":"GetApiKeysRequest"},
       "output":{"shape":"ApiKeys"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "GetAuthorizer":{
+      "name":"GetAuthorizer",
+      "http":{
+        "method":"GET",
+        "requestUri":"/restapis/{restapi_id}/authorizers/{authorizer_id}"
+      },
+      "input":{"shape":"GetAuthorizerRequest"},
+      "output":{"shape":"Authorizer"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "GetAuthorizers":{
+      "name":"GetAuthorizers",
+      "http":{
+        "method":"GET",
+        "requestUri":"/restapis/{restapi_id}/authorizers"
+      },
+      "input":{"shape":"GetAuthorizersRequest"},
+      "output":{"shape":"Authorizers"},
+      "errors":[
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetBasePathMapping":{
@@ -818,21 +567,9 @@
       "input":{"shape":"GetBasePathMappingRequest"},
       "output":{"shape":"BasePathMapping"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetBasePathMappings":{
@@ -844,21 +581,9 @@
       "input":{"shape":"GetBasePathMappingsRequest"},
       "output":{"shape":"BasePathMappings"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetClientCertificate":{
@@ -870,21 +595,9 @@
       "input":{"shape":"GetClientCertificateRequest"},
       "output":{"shape":"ClientCertificate"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetClientCertificates":{
@@ -896,16 +609,9 @@
       "input":{"shape":"GetClientCertificatesRequest"},
       "output":{"shape":"ClientCertificates"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetDeployment":{
@@ -917,27 +623,10 @@
       "input":{"shape":"GetDeploymentRequest"},
       "output":{"shape":"Deployment"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"ServiceUnavailableException",
-          "error":{"httpStatusCode":503},
-          "exception":true,
-          "fault":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ServiceUnavailableException"}
       ]
     },
     "GetDeployments":{
@@ -949,22 +638,10 @@
       "input":{"shape":"GetDeploymentsRequest"},
       "output":{"shape":"Deployments"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"ServiceUnavailableException",
-          "error":{"httpStatusCode":503},
-          "exception":true,
-          "fault":true
-        }
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ServiceUnavailableException"}
       ]
     },
     "GetDomainName":{
@@ -976,27 +653,10 @@
       "input":{"shape":"GetDomainNameRequest"},
       "output":{"shape":"DomainName"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"ServiceUnavailableException",
-          "error":{"httpStatusCode":503},
-          "exception":true,
-          "fault":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ServiceUnavailableException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetDomainNames":{
@@ -1008,16 +668,25 @@
       "input":{"shape":"GetDomainNamesRequest"},
       "output":{"shape":"DomainNames"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "GetExport":{
+      "name":"GetExport",
+      "http":{
+        "method":"GET",
+        "requestUri":"/restapis/{restapi_id}/stages/{stage_name}/exports/{export_type}",
+        "responseCode":200
+      },
+      "input":{"shape":"GetExportRequest"},
+      "output":{"shape":"ExportResponse"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetIntegration":{
@@ -1029,21 +698,9 @@
       "input":{"shape":"GetIntegrationRequest"},
       "output":{"shape":"Integration"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetIntegrationResponse":{
@@ -1055,21 +712,9 @@
       "input":{"shape":"GetIntegrationResponseRequest"},
       "output":{"shape":"IntegrationResponse"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetMethod":{
@@ -1081,21 +726,9 @@
       "input":{"shape":"GetMethodRequest"},
       "output":{"shape":"Method"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetMethodResponse":{
@@ -1107,21 +740,9 @@
       "input":{"shape":"GetMethodResponseRequest"},
       "output":{"shape":"MethodResponse"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetModel":{
@@ -1133,21 +754,9 @@
       "input":{"shape":"GetModelRequest"},
       "output":{"shape":"Model"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetModelTemplate":{
@@ -1159,26 +768,10 @@
       "input":{"shape":"GetModelTemplateRequest"},
       "output":{"shape":"Template"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetModels":{
@@ -1190,21 +783,10 @@
       "input":{"shape":"GetModelsRequest"},
       "output":{"shape":"Models"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetResource":{
@@ -1216,21 +798,9 @@
       "input":{"shape":"GetResourceRequest"},
       "output":{"shape":"Resource"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetResources":{
@@ -1242,21 +812,10 @@
       "input":{"shape":"GetResourcesRequest"},
       "output":{"shape":"Resources"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetRestApi":{
@@ -1268,21 +827,9 @@
       "input":{"shape":"GetRestApiRequest"},
       "output":{"shape":"RestApi"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetRestApis":{
@@ -1294,16 +841,9 @@
       "input":{"shape":"GetRestApisRequest"},
       "output":{"shape":"RestApis"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetSdk":{
@@ -1316,26 +856,10 @@
       "input":{"shape":"GetSdkRequest"},
       "output":{"shape":"SdkResponse"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetStage":{
@@ -1347,21 +871,9 @@
       "input":{"shape":"GetStageRequest"},
       "output":{"shape":"Stage"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetStages":{
@@ -1373,21 +885,120 @@
       "input":{"shape":"GetStagesRequest"},
       "output":{"shape":"Stages"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "GetUsage":{
+      "name":"GetUsage",
+      "http":{
+        "method":"GET",
+        "requestUri":"/usageplans/{usageplanId}/usage"
+      },
+      "input":{"shape":"GetUsageRequest"},
+      "output":{"shape":"Usage"},
+      "errors":[
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "GetUsagePlan":{
+      "name":"GetUsagePlan",
+      "http":{
+        "method":"GET",
+        "requestUri":"/usageplans/{usageplanId}"
+      },
+      "input":{"shape":"GetUsagePlanRequest"},
+      "output":{"shape":"UsagePlan"},
+      "errors":[
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "GetUsagePlanKey":{
+      "name":"GetUsagePlanKey",
+      "http":{
+        "method":"GET",
+        "requestUri":"/usageplans/{usageplanId}/keys/{keyId}",
+        "responseCode":200
+      },
+      "input":{"shape":"GetUsagePlanKeyRequest"},
+      "output":{"shape":"UsagePlanKey"},
+      "errors":[
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "GetUsagePlanKeys":{
+      "name":"GetUsagePlanKeys",
+      "http":{
+        "method":"GET",
+        "requestUri":"/usageplans/{usageplanId}/keys"
+      },
+      "input":{"shape":"GetUsagePlanKeysRequest"},
+      "output":{"shape":"UsagePlanKeys"},
+      "errors":[
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "GetUsagePlans":{
+      "name":"GetUsagePlans",
+      "http":{
+        "method":"GET",
+        "requestUri":"/usageplans"
+      },
+      "input":{"shape":"GetUsagePlansRequest"},
+      "output":{"shape":"UsagePlans"},
+      "errors":[
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ConflictException"}
+      ]
+    },
+    "ImportApiKeys":{
+      "name":"ImportApiKeys",
+      "http":{
+        "method":"POST",
+        "requestUri":"/apikeys?mode=import",
+        "responseCode":201
+      },
+      "input":{"shape":"ImportApiKeysRequest"},
+      "output":{"shape":"ApiKeyIds"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"}
+      ]
+    },
+    "ImportRestApi":{
+      "name":"ImportRestApi",
+      "http":{
+        "method":"POST",
+        "requestUri":"/restapis?mode=import",
+        "responseCode":201
+      },
+      "input":{"shape":"ImportRestApiRequest"},
+      "output":{"shape":"RestApi"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ConflictException"}
       ]
     },
     "PutIntegration":{
@@ -1400,26 +1011,11 @@
       "input":{"shape":"PutIntegrationRequest"},
       "output":{"shape":"Integration"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "PutIntegrationResponse":{
@@ -1432,31 +1028,12 @@
       "input":{"shape":"PutIntegrationResponseRequest"},
       "output":{"shape":"IntegrationResponse"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ConflictException"}
       ]
     },
     "PutMethod":{
@@ -1469,36 +1046,12 @@
       "input":{"shape":"PutMethodRequest"},
       "output":{"shape":"Method"},
       "errors":[
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "PutMethodResponse":{
@@ -1511,36 +1064,44 @@
       "input":{"shape":"PutMethodResponseRequest"},
       "output":{"shape":"MethodResponse"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "PutRestApi":{
+      "name":"PutRestApi",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/restapis/{restapi_id}"
+      },
+      "input":{"shape":"PutRestApiRequest"},
+      "output":{"shape":"RestApi"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ConflictException"}
+      ]
+    },
+    "TestInvokeAuthorizer":{
+      "name":"TestInvokeAuthorizer",
+      "http":{
+        "method":"POST",
+        "requestUri":"/restapis/{restapi_id}/authorizers/{authorizer_id}"
+      },
+      "input":{"shape":"TestInvokeAuthorizerRequest"},
+      "output":{"shape":"TestInvokeAuthorizerResponse"},
+      "errors":[
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "TestInvokeMethod":{
@@ -1552,26 +1113,10 @@
       "input":{"shape":"TestInvokeMethodRequest"},
       "output":{"shape":"TestInvokeMethodResponse"},
       "errors":[
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"BadRequestException"},
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "UpdateAccount":{
@@ -1583,26 +1128,10 @@
       "input":{"shape":"UpdateAccountRequest"},
       "output":{"shape":"Account"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"BadRequestException"},
+        {"shape":"NotFoundException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "UpdateApiKey":{
@@ -1614,26 +1143,26 @@
       "input":{"shape":"UpdateApiKeyRequest"},
       "output":{"shape":"ApiKey"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ConflictException"}
+      ]
+    },
+    "UpdateAuthorizer":{
+      "name":"UpdateAuthorizer",
+      "http":{
+        "method":"PATCH",
+        "requestUri":"/restapis/{restapi_id}/authorizers/{authorizer_id}"
+      },
+      "input":{"shape":"UpdateAuthorizerRequest"},
+      "output":{"shape":"Authorizer"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "UpdateBasePathMapping":{
@@ -1645,31 +1174,11 @@
       "input":{"shape":"UpdateBasePathMappingRequest"},
       "output":{"shape":"BasePathMapping"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "UpdateClientCertificate":{
@@ -1681,26 +1190,10 @@
       "input":{"shape":"UpdateClientCertificateRequest"},
       "output":{"shape":"ClientCertificate"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"BadRequestException"},
+        {"shape":"NotFoundException"}
       ]
     },
     "UpdateDeployment":{
@@ -1712,32 +1205,11 @@
       "input":{"shape":"UpdateDeploymentRequest"},
       "output":{"shape":"Deployment"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"ServiceUnavailableException",
-          "error":{"httpStatusCode":503},
-          "exception":true,
-          "fault":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ServiceUnavailableException"}
       ]
     },
     "UpdateDomainName":{
@@ -1749,26 +1221,11 @@
       "input":{"shape":"UpdateDomainNameRequest"},
       "output":{"shape":"DomainName"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "UpdateIntegration":{
@@ -1780,26 +1237,11 @@
       "input":{"shape":"UpdateIntegrationRequest"},
       "output":{"shape":"Integration"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"ConflictException"}
       ]
     },
     "UpdateIntegrationResponse":{
@@ -1811,26 +1253,11 @@
       "input":{"shape":"UpdateIntegrationResponseRequest"},
       "output":{"shape":"IntegrationResponse"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "UpdateMethod":{
@@ -1842,26 +1269,11 @@
       "input":{"shape":"UpdateMethodRequest"},
       "output":{"shape":"Method"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "UpdateMethodResponse":{
@@ -1874,36 +1286,12 @@
       "input":{"shape":"UpdateMethodResponseRequest"},
       "output":{"shape":"MethodResponse"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "UpdateModel":{
@@ -1915,26 +1303,11 @@
       "input":{"shape":"UpdateModelRequest"},
       "output":{"shape":"Model"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"BadRequestException"},
+        {"shape":"ConflictException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "UpdateResource":{
@@ -1946,31 +1319,11 @@
       "input":{"shape":"UpdateResourceRequest"},
       "output":{"shape":"Resource"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "UpdateRestApi":{
@@ -1982,31 +1335,11 @@
       "input":{"shape":"UpdateRestApiRequest"},
       "output":{"shape":"RestApi"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "UpdateStage":{
@@ -2018,31 +1351,42 @@
       "input":{"shape":"UpdateStageRequest"},
       "output":{"shape":"Stage"},
       "errors":[
-        {
-          "shape":"UnauthorizedException",
-          "error":{"httpStatusCode":401},
-          "exception":true
-        },
-        {
-          "shape":"NotFoundException",
-          "error":{"httpStatusCode":404},
-          "exception":true
-        },
-        {
-          "shape":"ConflictException",
-          "error":{"httpStatusCode":409},
-          "exception":true
-        },
-        {
-          "shape":"BadRequestException",
-          "error":{"httpStatusCode":400},
-          "exception":true
-        },
-        {
-          "shape":"TooManyRequestsException",
-          "error":{"httpStatusCode":429},
-          "exception":true
-        }
+        {"shape":"UnauthorizedException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"},
+        {"shape":"BadRequestException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "UpdateUsage":{
+      "name":"UpdateUsage",
+      "http":{
+        "method":"PATCH",
+        "requestUri":"/usageplans/{usageplanId}/keys/{keyId}/usage"
+      },
+      "input":{"shape":"UpdateUsageRequest"},
+      "output":{"shape":"Usage"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"BadRequestException"},
+        {"shape":"NotFoundException"}
+      ]
+    },
+    "UpdateUsagePlan":{
+      "name":"UpdateUsagePlan",
+      "http":{
+        "method":"PATCH",
+        "requestUri":"/usageplans/{usageplanId}"
+      },
+      "input":{"shape":"UpdateUsagePlanRequest"},
+      "output":{"shape":"UsagePlan"},
+      "errors":[
+        {"shape":"UnauthorizedException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"BadRequestException"},
+        {"shape":"NotFoundException"},
+        {"shape":"ConflictException"}
       ]
     }
   },
@@ -2051,27 +1395,81 @@
       "type":"structure",
       "members":{
         "cloudwatchRoleArn":{"shape":"String"},
-        "throttleSettings":{"shape":"ThrottleSettings"}
+        "throttleSettings":{"shape":"ThrottleSettings"},
+        "features":{"shape":"ListOfString"},
+        "apiKeyVersion":{"shape":"String"}
       }
     },
     "ApiKey":{
       "type":"structure",
       "members":{
         "id":{"shape":"String"},
+        "value":{"shape":"String"},
         "name":{"shape":"String"},
         "description":{"shape":"String"},
         "enabled":{"shape":"Boolean"},
-        "stageKeys":{"shape":"ListOfString"},
         "createdDate":{"shape":"Timestamp"},
-        "lastUpdatedDate":{"shape":"Timestamp"}
+        "lastUpdatedDate":{"shape":"Timestamp"},
+        "stageKeys":{"shape":"ListOfString"}
+      }
+    },
+    "ApiKeyIds":{
+      "type":"structure",
+      "members":{
+        "ids":{"shape":"ListOfString"},
+        "warnings":{"shape":"ListOfString"}
       }
     },
     "ApiKeys":{
       "type":"structure",
       "members":{
+        "warnings":{"shape":"ListOfString"},
         "position":{"shape":"String"},
         "items":{
           "shape":"ListOfApiKey",
+          "locationName":"item"
+        }
+      }
+    },
+    "ApiKeysFormat":{
+      "type":"string",
+      "enum":["csv"]
+    },
+    "ApiStage":{
+      "type":"structure",
+      "members":{
+        "apiId":{"shape":"String"},
+        "stage":{"shape":"String"}
+      }
+    },
+    "Authorizer":{
+      "type":"structure",
+      "members":{
+        "id":{"shape":"String"},
+        "name":{"shape":"String"},
+        "type":{"shape":"AuthorizerType"},
+        "providerARNs":{"shape":"ListOfARNs"},
+        "authType":{"shape":"String"},
+        "authorizerUri":{"shape":"String"},
+        "authorizerCredentials":{"shape":"String"},
+        "identitySource":{"shape":"String"},
+        "identityValidationExpression":{"shape":"String"},
+        "authorizerResultTtlInSeconds":{"shape":"NullableInteger"}
+      }
+    },
+    "AuthorizerType":{
+      "type":"string",
+      "enum":[
+        "TOKEN",
+        "COGNITO_USER_POOLS"
+      ]
+    },
+    "Authorizers":{
+      "type":"structure",
+      "members":{
+        "position":{"shape":"String"},
+        "items":{
+          "shape":"ListOfAuthorizer",
           "locationName":"item"
         }
       }
@@ -2161,7 +1559,34 @@
         "name":{"shape":"String"},
         "description":{"shape":"String"},
         "enabled":{"shape":"Boolean"},
+        "generateDistinctId":{"shape":"Boolean"},
+        "value":{"shape":"String"},
         "stageKeys":{"shape":"ListOfStageKeys"}
+      }
+    },
+    "CreateAuthorizerRequest":{
+      "type":"structure",
+      "required":[
+        "restApiId",
+        "name",
+        "type",
+        "identitySource"
+      ],
+      "members":{
+        "restApiId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"restapi_id"
+        },
+        "name":{"shape":"String"},
+        "type":{"shape":"AuthorizerType"},
+        "providerARNs":{"shape":"ListOfARNs"},
+        "authType":{"shape":"String"},
+        "authorizerUri":{"shape":"String"},
+        "authorizerCredentials":{"shape":"String"},
+        "identitySource":{"shape":"String"},
+        "identityValidationExpression":{"shape":"String"},
+        "authorizerResultTtlInSeconds":{"shape":"NullableInteger"}
       }
     },
     "CreateBasePathMappingRequest":{
@@ -2203,20 +1628,20 @@
     },
     "CreateDomainNameRequest":{
       "type":"structure",
-      "members":{
-        "domainName":{"shape":"String"},
-        "certificateName":{"shape":"String"},
-        "certificateBody":{"shape":"String"},
-        "certificatePrivateKey":{"shape":"String"},
-        "certificateChain":{"shape":"String"}
-      },
       "required":[
         "domainName",
         "certificateName",
         "certificateBody",
         "certificatePrivateKey",
         "certificateChain"
-      ]
+      ],
+      "members":{
+        "domainName":{"shape":"String"},
+        "certificateName":{"shape":"String"},
+        "certificateBody":{"shape":"String"},
+        "certificatePrivateKey":{"shape":"String"},
+        "certificateChain":{"shape":"String"}
+      }
     },
     "CreateModelRequest":{
       "type":"structure",
@@ -2288,6 +1713,34 @@
         "variables":{"shape":"MapOfStringToString"}
       }
     },
+    "CreateUsagePlanKeyRequest":{
+      "type":"structure",
+      "required":[
+        "usagePlanId",
+        "keyId",
+        "keyType"
+      ],
+      "members":{
+        "usagePlanId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"usageplanId"
+        },
+        "keyId":{"shape":"String"},
+        "keyType":{"shape":"String"}
+      }
+    },
+    "CreateUsagePlanRequest":{
+      "type":"structure",
+      "required":["name"],
+      "members":{
+        "name":{"shape":"String"},
+        "description":{"shape":"String"},
+        "apiStages":{"shape":"ListOfApiStage"},
+        "throttle":{"shape":"ThrottleSettings"},
+        "quota":{"shape":"QuotaSettings"}
+      }
+    },
     "DeleteApiKeyRequest":{
       "type":"structure",
       "required":["apiKey"],
@@ -2296,6 +1749,25 @@
           "shape":"String",
           "location":"uri",
           "locationName":"api_Key"
+        }
+      }
+    },
+    "DeleteAuthorizerRequest":{
+      "type":"structure",
+      "required":[
+        "restApiId",
+        "authorizerId"
+      ],
+      "members":{
+        "restApiId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"restapi_id"
+        },
+        "authorizerId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"authorizer_id"
         }
       }
     },
@@ -2539,6 +2011,36 @@
         }
       }
     },
+    "DeleteUsagePlanKeyRequest":{
+      "type":"structure",
+      "required":[
+        "usagePlanId",
+        "keyId"
+      ],
+      "members":{
+        "usagePlanId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"usageplanId"
+        },
+        "keyId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"keyId"
+        }
+      }
+    },
+    "DeleteUsagePlanRequest":{
+      "type":"structure",
+      "required":["usagePlanId"],
+      "members":{
+        "usagePlanId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"usageplanId"
+        }
+      }
+    },
     "Deployment":{
       "type":"structure",
       "members":{
@@ -2578,8 +2080,29 @@
       }
     },
     "Double":{"type":"double"},
-    "FlushStageCacheRequest":{
+    "ExportResponse":{
       "type":"structure",
+      "members":{
+        "contentType":{
+          "shape":"String",
+          "location":"header",
+          "locationName":"Content-Type"
+        },
+        "contentDisposition":{
+          "shape":"String",
+          "location":"header",
+          "locationName":"Content-Disposition"
+        },
+        "body":{"shape":"Blob"}
+      },
+      "payload":"body"
+    },
+    "FlushStageAuthorizersCacheRequest":{
+      "type":"structure",
+      "required":[
+        "restApiId",
+        "stageName"
+      ],
       "members":{
         "restApiId":{
           "shape":"String",
@@ -2591,11 +2114,26 @@
           "location":"uri",
           "locationName":"stage_name"
         }
-      },
+      }
+    },
+    "FlushStageCacheRequest":{
+      "type":"structure",
       "required":[
         "restApiId",
         "stageName"
-      ]
+      ],
+      "members":{
+        "restApiId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"restapi_id"
+        },
+        "stageName":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"stage_name"
+        }
+      }
     },
     "GenerateClientCertificateRequest":{
       "type":"structure",
@@ -2616,12 +2154,67 @@
           "shape":"String",
           "location":"uri",
           "locationName":"api_Key"
+        },
+        "includeValue":{
+          "shape":"Boolean",
+          "location":"querystring",
+          "locationName":"includeValue"
         }
       }
     },
     "GetApiKeysRequest":{
       "type":"structure",
       "members":{
+        "position":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"position"
+        },
+        "limit":{
+          "shape":"NullableInteger",
+          "location":"querystring",
+          "locationName":"limit"
+        },
+        "nameQuery":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"name"
+        },
+        "includeValues":{
+          "shape":"Boolean",
+          "location":"querystring",
+          "locationName":"includeValues"
+        }
+      }
+    },
+    "GetAuthorizerRequest":{
+      "type":"structure",
+      "required":[
+        "restApiId",
+        "authorizerId"
+      ],
+      "members":{
+        "restApiId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"restapi_id"
+        },
+        "authorizerId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"authorizer_id"
+        }
+      }
+    },
+    "GetAuthorizersRequest":{
+      "type":"structure",
+      "required":["restApiId"],
+      "members":{
+        "restApiId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"restapi_id"
+        },
         "position":{
           "shape":"String",
           "location":"querystring",
@@ -2763,6 +2356,40 @@
           "shape":"NullableInteger",
           "location":"querystring",
           "locationName":"limit"
+        }
+      }
+    },
+    "GetExportRequest":{
+      "type":"structure",
+      "required":[
+        "restApiId",
+        "stageName",
+        "exportType"
+      ],
+      "members":{
+        "restApiId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"restapi_id"
+        },
+        "stageName":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"stage_name"
+        },
+        "exportType":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"export_type"
+        },
+        "parameters":{
+          "shape":"MapOfStringToString",
+          "location":"querystring"
+        },
+        "accepts":{
+          "shape":"String",
+          "location":"header",
+          "locationName":"Accept"
         }
       }
     },
@@ -3072,6 +2699,160 @@
         }
       }
     },
+    "GetUsagePlanKeyRequest":{
+      "type":"structure",
+      "required":[
+        "usagePlanId",
+        "keyId"
+      ],
+      "members":{
+        "usagePlanId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"usageplanId"
+        },
+        "keyId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"keyId"
+        }
+      }
+    },
+    "GetUsagePlanKeysRequest":{
+      "type":"structure",
+      "required":["usagePlanId"],
+      "members":{
+        "usagePlanId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"usageplanId"
+        },
+        "position":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"position"
+        },
+        "limit":{
+          "shape":"NullableInteger",
+          "location":"querystring",
+          "locationName":"limit"
+        },
+        "nameQuery":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"name"
+        }
+      }
+    },
+    "GetUsagePlanRequest":{
+      "type":"structure",
+      "required":["usagePlanId"],
+      "members":{
+        "usagePlanId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"usageplanId"
+        }
+      }
+    },
+    "GetUsagePlansRequest":{
+      "type":"structure",
+      "members":{
+        "position":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"position"
+        },
+        "keyId":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"keyId"
+        },
+        "limit":{
+          "shape":"NullableInteger",
+          "location":"querystring",
+          "locationName":"limit"
+        }
+      }
+    },
+    "GetUsageRequest":{
+      "type":"structure",
+      "required":[
+        "usagePlanId",
+        "startDate",
+        "endDate"
+      ],
+      "members":{
+        "usagePlanId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"usageplanId"
+        },
+        "keyId":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"keyId"
+        },
+        "startDate":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"startDate"
+        },
+        "endDate":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"endDate"
+        },
+        "position":{
+          "shape":"String",
+          "location":"querystring",
+          "locationName":"position"
+        },
+        "limit":{
+          "shape":"NullableInteger",
+          "location":"querystring",
+          "locationName":"limit"
+        }
+      }
+    },
+    "ImportApiKeysRequest":{
+      "type":"structure",
+      "required":[
+        "body",
+        "format"
+      ],
+      "members":{
+        "body":{"shape":"Blob"},
+        "format":{
+          "shape":"ApiKeysFormat",
+          "location":"querystring",
+          "locationName":"format"
+        },
+        "failOnWarnings":{
+          "shape":"Boolean",
+          "location":"querystring",
+          "locationName":"failonwarnings"
+        }
+      },
+      "payload":"body"
+    },
+    "ImportRestApiRequest":{
+      "type":"structure",
+      "required":["body"],
+      "members":{
+        "failOnWarnings":{
+          "shape":"Boolean",
+          "location":"querystring",
+          "locationName":"failonwarnings"
+        },
+        "parameters":{
+          "shape":"MapOfStringToString",
+          "location":"querystring"
+        },
+        "body":{"shape":"Blob"}
+      },
+      "payload":"body"
+    },
     "Integer":{"type":"integer"},
     "Integration":{
       "type":"structure",
@@ -3082,6 +2863,7 @@
         "credentials":{"shape":"String"},
         "requestParameters":{"shape":"MapOfStringToString"},
         "requestTemplates":{"shape":"MapOfStringToString"},
+        "passthroughBehavior":{"shape":"String"},
         "cacheNamespace":{"shape":"String"},
         "cacheKeyParameters":{"shape":"ListOfString"},
         "integrationResponses":{"shape":"MapOfIntegrationResponse"}
@@ -3117,9 +2899,21 @@
       "error":{"httpStatusCode":429},
       "exception":true
     },
+    "ListOfARNs":{
+      "type":"list",
+      "member":{"shape":"ProviderARN"}
+    },
     "ListOfApiKey":{
       "type":"list",
       "member":{"shape":"ApiKey"}
+    },
+    "ListOfApiStage":{
+      "type":"list",
+      "member":{"shape":"ApiStage"}
+    },
+    "ListOfAuthorizer":{
+      "type":"list",
+      "member":{"shape":"Authorizer"}
     },
     "ListOfBasePathMapping":{
       "type":"list",
@@ -3136,6 +2930,10 @@
     "ListOfDomainName":{
       "type":"list",
       "member":{"shape":"DomainName"}
+    },
+    "ListOfLong":{
+      "type":"list",
+      "member":{"shape":"Long"}
     },
     "ListOfModel":{
       "type":"list",
@@ -3165,6 +2963,18 @@
       "type":"list",
       "member":{"shape":"String"}
     },
+    "ListOfUsage":{
+      "type":"list",
+      "member":{"shape":"ListOfLong"}
+    },
+    "ListOfUsagePlan":{
+      "type":"list",
+      "member":{"shape":"UsagePlan"}
+    },
+    "ListOfUsagePlanKey":{
+      "type":"list",
+      "member":{"shape":"UsagePlanKey"}
+    },
     "Long":{"type":"long"},
     "MapOfHeaderValues":{
       "type":"map",
@@ -3175,6 +2985,11 @@
       "type":"map",
       "key":{"shape":"String"},
       "value":{"shape":"IntegrationResponse"}
+    },
+    "MapOfKeyUsages":{
+      "type":"map",
+      "key":{"shape":"String"},
+      "value":{"shape":"ListOfUsage"}
     },
     "MapOfMethod":{
       "type":"map",
@@ -3201,6 +3016,11 @@
       "key":{"shape":"String"},
       "value":{"shape":"NullableBoolean"}
     },
+    "MapOfStringToList":{
+      "type":"map",
+      "key":{"shape":"String"},
+      "value":{"shape":"ListOfString"}
+    },
     "MapOfStringToString":{
       "type":"map",
       "key":{"shape":"String"},
@@ -3211,6 +3031,7 @@
       "members":{
         "httpMethod":{"shape":"String"},
         "authorizationType":{"shape":"String"},
+        "authorizerId":{"shape":"String"},
         "apiKeyRequired":{"shape":"NullableBoolean"},
         "requestParameters":{"shape":"MapOfStringToBoolean"},
         "requestModels":{"shape":"MapOfStringToString"},
@@ -3236,7 +3057,9 @@
         "throttlingRateLimit":{"shape":"Double"},
         "cachingEnabled":{"shape":"Boolean"},
         "cacheTtlInSeconds":{"shape":"Integer"},
-        "cacheDataEncrypted":{"shape":"Boolean"}
+        "cacheDataEncrypted":{"shape":"Boolean"},
+        "requireAuthorizationForCacheControl":{"shape":"Boolean"},
+        "unauthorizedCacheControlHeaderStrategy":{"shape":"UnauthorizedCacheControlHeaderStrategy"}
       }
     },
     "MethodSnapshot":{
@@ -3290,6 +3113,7 @@
       "key":{"shape":"String"},
       "value":{"shape":"MapOfMethodSnapshot"}
     },
+    "ProviderARN":{"type":"string"},
     "PutIntegrationRequest":{
       "type":"structure",
       "required":[
@@ -3323,6 +3147,7 @@
         "credentials":{"shape":"String"},
         "requestParameters":{"shape":"MapOfStringToString"},
         "requestTemplates":{"shape":"MapOfStringToString"},
+        "passthroughBehavior":{"shape":"String"},
         "cacheNamespace":{"shape":"String"},
         "cacheKeyParameters":{"shape":"ListOfString"}
       }
@@ -3386,6 +3211,7 @@
           "locationName":"http_method"
         },
         "authorizationType":{"shape":"String"},
+        "authorizerId":{"shape":"String"},
         "apiKeyRequired":{"shape":"Boolean"},
         "requestParameters":{"shape":"MapOfStringToBoolean"},
         "requestModels":{"shape":"MapOfStringToString"}
@@ -3424,6 +3250,59 @@
         "responseModels":{"shape":"MapOfStringToString"}
       }
     },
+    "PutMode":{
+      "type":"string",
+      "enum":[
+        "merge",
+        "overwrite"
+      ]
+    },
+    "PutRestApiRequest":{
+      "type":"structure",
+      "required":[
+        "restApiId",
+        "body"
+      ],
+      "members":{
+        "restApiId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"restapi_id"
+        },
+        "mode":{
+          "shape":"PutMode",
+          "location":"querystring",
+          "locationName":"mode"
+        },
+        "failOnWarnings":{
+          "shape":"Boolean",
+          "location":"querystring",
+          "locationName":"failonwarnings"
+        },
+        "parameters":{
+          "shape":"MapOfStringToString",
+          "location":"querystring"
+        },
+        "body":{"shape":"Blob"}
+      },
+      "payload":"body"
+    },
+    "QuotaPeriodType":{
+      "type":"string",
+      "enum":[
+        "DAY",
+        "WEEK",
+        "MONTH"
+      ]
+    },
+    "QuotaSettings":{
+      "type":"structure",
+      "members":{
+        "limit":{"shape":"Integer"},
+        "offset":{"shape":"Integer"},
+        "period":{"shape":"QuotaPeriodType"}
+      }
+    },
     "Resource":{
       "type":"structure",
       "members":{
@@ -3450,7 +3329,8 @@
         "id":{"shape":"String"},
         "name":{"shape":"String"},
         "description":{"shape":"String"},
-        "createdDate":{"shape":"Timestamp"}
+        "createdDate":{"shape":"Timestamp"},
+        "warnings":{"shape":"ListOfString"}
       }
     },
     "RestApis":{
@@ -3534,6 +3414,42 @@
         "value":{"shape":"String"}
       }
     },
+    "TestInvokeAuthorizerRequest":{
+      "type":"structure",
+      "required":[
+        "restApiId",
+        "authorizerId"
+      ],
+      "members":{
+        "restApiId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"restapi_id"
+        },
+        "authorizerId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"authorizer_id"
+        },
+        "headers":{"shape":"MapOfHeaderValues"},
+        "pathWithQueryString":{"shape":"String"},
+        "body":{"shape":"String"},
+        "stageVariables":{"shape":"MapOfStringToString"},
+        "additionalContext":{"shape":"MapOfStringToString"}
+      }
+    },
+    "TestInvokeAuthorizerResponse":{
+      "type":"structure",
+      "members":{
+        "clientStatus":{"shape":"Integer"},
+        "log":{"shape":"String"},
+        "latency":{"shape":"Long"},
+        "principalId":{"shape":"String"},
+        "policy":{"shape":"String"},
+        "authorization":{"shape":"MapOfStringToList"},
+        "claims":{"shape":"MapOfStringToString"}
+      }
+    },
     "TestInvokeMethodRequest":{
       "type":"structure",
       "required":[
@@ -3595,6 +3511,14 @@
       "error":{"httpStatusCode":429},
       "exception":true
     },
+    "UnauthorizedCacheControlHeaderStrategy":{
+      "type":"string",
+      "enum":[
+        "FAIL_WITH_403",
+        "SUCCEED_WITH_RESPONSE_HEADER",
+        "SUCCEED_WITHOUT_RESPONSE_HEADER"
+      ]
+    },
     "UnauthorizedException":{
       "type":"structure",
       "members":{
@@ -3617,6 +3541,26 @@
           "shape":"String",
           "location":"uri",
           "locationName":"api_Key"
+        },
+        "patchOperations":{"shape":"ListOfPatchOperation"}
+      }
+    },
+    "UpdateAuthorizerRequest":{
+      "type":"structure",
+      "required":[
+        "restApiId",
+        "authorizerId"
+      ],
+      "members":{
+        "restApiId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"restapi_id"
+        },
+        "authorizerId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"authorizer_id"
         },
         "patchOperations":{"shape":"ListOfPatchOperation"}
       }
@@ -3871,6 +3815,91 @@
           "locationName":"stage_name"
         },
         "patchOperations":{"shape":"ListOfPatchOperation"}
+      }
+    },
+    "UpdateUsagePlanRequest":{
+      "type":"structure",
+      "required":["usagePlanId"],
+      "members":{
+        "usagePlanId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"usageplanId"
+        },
+        "patchOperations":{"shape":"ListOfPatchOperation"}
+      }
+    },
+    "UpdateUsageRequest":{
+      "type":"structure",
+      "required":[
+        "usagePlanId",
+        "keyId"
+      ],
+      "members":{
+        "usagePlanId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"usageplanId"
+        },
+        "keyId":{
+          "shape":"String",
+          "location":"uri",
+          "locationName":"keyId"
+        },
+        "patchOperations":{"shape":"ListOfPatchOperation"}
+      }
+    },
+    "Usage":{
+      "type":"structure",
+      "members":{
+        "usagePlanId":{"shape":"String"},
+        "startDate":{"shape":"String"},
+        "endDate":{"shape":"String"},
+        "position":{"shape":"String"},
+        "items":{
+          "shape":"MapOfKeyUsages",
+          "locationName":"values"
+        }
+      }
+    },
+    "UsagePlan":{
+      "type":"structure",
+      "members":{
+        "id":{"shape":"String"},
+        "name":{"shape":"String"},
+        "description":{"shape":"String"},
+        "apiStages":{"shape":"ListOfApiStage"},
+        "throttle":{"shape":"ThrottleSettings"},
+        "quota":{"shape":"QuotaSettings"}
+      }
+    },
+    "UsagePlanKey":{
+      "type":"structure",
+      "members":{
+        "id":{"shape":"String"},
+        "type":{"shape":"String"},
+        "value":{"shape":"String"},
+        "name":{"shape":"String"}
+      }
+    },
+    "UsagePlanKeys":{
+      "type":"structure",
+      "members":{
+        "position":{"shape":"String"},
+        "items":{
+          "shape":"ListOfUsagePlanKey",
+          "locationName":"item"
+        }
+      }
+    },
+    "UsagePlans":{
+      "type":"structure",
+      "members":{
+        "position":{"shape":"String"},
+        "items":{
+          "shape":"ListOfUsagePlan",
+          "locationName":"item"
+        }
       }
     },
     "op":{

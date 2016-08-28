@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"encoding/xml"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -15,12 +16,12 @@ import (
 	"github.com/aws/aws-sdk-go/aws/client"
 	"github.com/aws/aws-sdk-go/aws/client/metadata"
 	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/aws/signer/v4"
 	"github.com/aws/aws-sdk-go/awstesting"
+	"github.com/aws/aws-sdk-go/awstesting/unit"
 	"github.com/aws/aws-sdk-go/private/protocol"
 	"github.com/aws/aws-sdk-go/private/protocol/restjson"
 	"github.com/aws/aws-sdk-go/private/protocol/xml/xmlutil"
-	"github.com/aws/aws-sdk-go/private/signer/v4"
 	"github.com/aws/aws-sdk-go/private/util"
 	"github.com/stretchr/testify/assert"
 )
@@ -36,6 +37,7 @@ var _ = util.Trim("")
 var _ = url.Values{}
 var _ = io.EOF
 var _ = aws.String
+var _ = fmt.Println
 
 func init() {
 	protocol.RandReader = &awstesting.ZeroReader{}
@@ -78,7 +80,7 @@ func newInputService1ProtocolTestClient(cfg aws.Config, handlers request.Handler
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -97,12 +99,33 @@ func (c *InputService1ProtocolTest) newRequest(op *request.Operation, params, da
 
 const opInputService1TestCaseOperation1 = "OperationName"
 
-// InputService1TestCaseOperation1Request generates a request for the InputService1TestCaseOperation1 operation.
+// InputService1TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService1TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService1TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService1TestCaseOperation1Request method.
+//    req, resp := client.InputService1TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService1ProtocolTest) InputService1TestCaseOperation1Request(input *InputService1TestShapeInputService1TestCaseOperation1Input) (req *request.Request, output *InputService1TestShapeInputService1TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService1TestCaseOperation1,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2014-01-01/jobsByPipeline/{PipelineId}",
+		HTTPPath:   "/2014-01-01/jobs",
 	}
 
 	if input == nil {
@@ -125,8 +148,6 @@ func (c *InputService1ProtocolTest) InputService1TestCaseOperation1(input *Input
 
 type InputService1TestShapeInputService1TestCaseOperation1Input struct {
 	_ struct{} `type:"structure"`
-
-	PipelineId *string `location:"uri" type:"string"`
 }
 
 type InputService1TestShapeInputService1TestCaseOperation1Output struct {
@@ -170,7 +191,7 @@ func newInputService2ProtocolTestClient(cfg aws.Config, handlers request.Handler
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -189,7 +210,28 @@ func (c *InputService2ProtocolTest) newRequest(op *request.Operation, params, da
 
 const opInputService2TestCaseOperation1 = "OperationName"
 
-// InputService2TestCaseOperation1Request generates a request for the InputService2TestCaseOperation1 operation.
+// InputService2TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService2TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService2TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService2TestCaseOperation1Request method.
+//    req, resp := client.InputService2TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService2ProtocolTest) InputService2TestCaseOperation1Request(input *InputService2TestShapeInputService2TestCaseOperation1Input) (req *request.Request, output *InputService2TestShapeInputService2TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService2TestCaseOperation1,
@@ -218,7 +260,7 @@ func (c *InputService2ProtocolTest) InputService2TestCaseOperation1(input *Input
 type InputService2TestShapeInputService2TestCaseOperation1Input struct {
 	_ struct{} `type:"structure"`
 
-	Foo *string `location:"uri" locationName:"PipelineId" type:"string"`
+	PipelineId *string `location:"uri" type:"string"`
 }
 
 type InputService2TestShapeInputService2TestCaseOperation1Output struct {
@@ -262,7 +304,7 @@ func newInputService3ProtocolTestClient(cfg aws.Config, handlers request.Handler
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -281,7 +323,28 @@ func (c *InputService3ProtocolTest) newRequest(op *request.Operation, params, da
 
 const opInputService3TestCaseOperation1 = "OperationName"
 
-// InputService3TestCaseOperation1Request generates a request for the InputService3TestCaseOperation1 operation.
+// InputService3TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService3TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService3TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService3TestCaseOperation1Request method.
+//    req, resp := client.InputService3TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService3ProtocolTest) InputService3TestCaseOperation1Request(input *InputService3TestShapeInputService3TestCaseOperation1Input) (req *request.Request, output *InputService3TestShapeInputService3TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService3TestCaseOperation1,
@@ -310,9 +373,7 @@ func (c *InputService3ProtocolTest) InputService3TestCaseOperation1(input *Input
 type InputService3TestShapeInputService3TestCaseOperation1Input struct {
 	_ struct{} `type:"structure"`
 
-	PipelineId *string `location:"uri" type:"string"`
-
-	QueryDoc map[string]*string `location:"querystring" type:"map"`
+	Foo *string `location:"uri" locationName:"PipelineId" type:"string"`
 }
 
 type InputService3TestShapeInputService3TestCaseOperation1Output struct {
@@ -356,7 +417,7 @@ func newInputService4ProtocolTestClient(cfg aws.Config, handlers request.Handler
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -375,12 +436,33 @@ func (c *InputService4ProtocolTest) newRequest(op *request.Operation, params, da
 
 const opInputService4TestCaseOperation1 = "OperationName"
 
-// InputService4TestCaseOperation1Request generates a request for the InputService4TestCaseOperation1 operation.
+// InputService4TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService4TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService4TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService4TestCaseOperation1Request method.
+//    req, resp := client.InputService4TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService4ProtocolTest) InputService4TestCaseOperation1Request(input *InputService4TestShapeInputService4TestCaseOperation1Input) (req *request.Request, output *InputService4TestShapeInputService4TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService4TestCaseOperation1,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2014-01-01/jobsByPipeline/{PipelineId}",
+		HTTPPath:   "/path",
 	}
 
 	if input == nil {
@@ -404,9 +486,7 @@ func (c *InputService4ProtocolTest) InputService4TestCaseOperation1(input *Input
 type InputService4TestShapeInputService4TestCaseOperation1Input struct {
 	_ struct{} `type:"structure"`
 
-	PipelineId *string `location:"uri" type:"string"`
-
-	QueryDoc map[string][]*string `location:"querystring" type:"map"`
+	Items []*string `location:"querystring" locationName:"item" type:"list"`
 }
 
 type InputService4TestShapeInputService4TestCaseOperation1Output struct {
@@ -450,7 +530,7 @@ func newInputService5ProtocolTestClient(cfg aws.Config, handlers request.Handler
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -469,7 +549,28 @@ func (c *InputService5ProtocolTest) newRequest(op *request.Operation, params, da
 
 const opInputService5TestCaseOperation1 = "OperationName"
 
-// InputService5TestCaseOperation1Request generates a request for the InputService5TestCaseOperation1 operation.
+// InputService5TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService5TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService5TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService5TestCaseOperation1Request method.
+//    req, resp := client.InputService5TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService5ProtocolTest) InputService5TestCaseOperation1Request(input *InputService5TestShapeInputService5TestCaseOperation1Input) (req *request.Request, output *InputService5TestShapeInputService5TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService5TestCaseOperation1,
@@ -498,11 +599,9 @@ func (c *InputService5ProtocolTest) InputService5TestCaseOperation1(input *Input
 type InputService5TestShapeInputService5TestCaseOperation1Input struct {
 	_ struct{} `type:"structure"`
 
-	Ascending *string `location:"querystring" locationName:"Ascending" type:"string"`
+	PipelineId *string `location:"uri" type:"string"`
 
-	PageToken *string `location:"querystring" locationName:"PageToken" type:"string"`
-
-	PipelineId *string `location:"uri" locationName:"PipelineId" type:"string"`
+	QueryDoc map[string]*string `location:"querystring" type:"map"`
 }
 
 type InputService5TestShapeInputService5TestCaseOperation1Output struct {
@@ -546,7 +645,7 @@ func newInputService6ProtocolTestClient(cfg aws.Config, handlers request.Handler
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -565,11 +664,32 @@ func (c *InputService6ProtocolTest) newRequest(op *request.Operation, params, da
 
 const opInputService6TestCaseOperation1 = "OperationName"
 
-// InputService6TestCaseOperation1Request generates a request for the InputService6TestCaseOperation1 operation.
+// InputService6TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService6TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService6TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService6TestCaseOperation1Request method.
+//    req, resp := client.InputService6TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService6ProtocolTest) InputService6TestCaseOperation1Request(input *InputService6TestShapeInputService6TestCaseOperation1Input) (req *request.Request, output *InputService6TestShapeInputService6TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService6TestCaseOperation1,
-		HTTPMethod: "POST",
+		HTTPMethod: "GET",
 		HTTPPath:   "/2014-01-01/jobsByPipeline/{PipelineId}",
 	}
 
@@ -594,25 +714,13 @@ func (c *InputService6ProtocolTest) InputService6TestCaseOperation1(input *Input
 type InputService6TestShapeInputService6TestCaseOperation1Input struct {
 	_ struct{} `type:"structure"`
 
-	Ascending *string `location:"querystring" locationName:"Ascending" type:"string"`
+	PipelineId *string `location:"uri" type:"string"`
 
-	Config *InputService6TestShapeStructType `type:"structure"`
-
-	PageToken *string `location:"querystring" locationName:"PageToken" type:"string"`
-
-	PipelineId *string `location:"uri" locationName:"PipelineId" type:"string"`
+	QueryDoc map[string][]*string `location:"querystring" type:"map"`
 }
 
 type InputService6TestShapeInputService6TestCaseOperation1Output struct {
 	_ struct{} `type:"structure"`
-}
-
-type InputService6TestShapeStructType struct {
-	_ struct{} `type:"structure"`
-
-	A *string `type:"string"`
-
-	B *string `type:"string"`
 }
 
 //The service client's operations are safe to be used concurrently.
@@ -652,7 +760,7 @@ func newInputService7ProtocolTestClient(cfg aws.Config, handlers request.Handler
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -671,11 +779,32 @@ func (c *InputService7ProtocolTest) newRequest(op *request.Operation, params, da
 
 const opInputService7TestCaseOperation1 = "OperationName"
 
-// InputService7TestCaseOperation1Request generates a request for the InputService7TestCaseOperation1 operation.
+// InputService7TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService7TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService7TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService7TestCaseOperation1Request method.
+//    req, resp := client.InputService7TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService7ProtocolTest) InputService7TestCaseOperation1Request(input *InputService7TestShapeInputService7TestCaseOperation1Input) (req *request.Request, output *InputService7TestShapeInputService7TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService7TestCaseOperation1,
-		HTTPMethod: "POST",
+		HTTPMethod: "GET",
 		HTTPPath:   "/2014-01-01/jobsByPipeline/{PipelineId}",
 	}
 
@@ -702,10 +831,6 @@ type InputService7TestShapeInputService7TestCaseOperation1Input struct {
 
 	Ascending *string `location:"querystring" locationName:"Ascending" type:"string"`
 
-	Checksum *string `location:"header" locationName:"x-amz-checksum" type:"string"`
-
-	Config *InputService7TestShapeStructType `type:"structure"`
-
 	PageToken *string `location:"querystring" locationName:"PageToken" type:"string"`
 
 	PipelineId *string `location:"uri" locationName:"PipelineId" type:"string"`
@@ -713,14 +838,6 @@ type InputService7TestShapeInputService7TestCaseOperation1Input struct {
 
 type InputService7TestShapeInputService7TestCaseOperation1Output struct {
 	_ struct{} `type:"structure"`
-}
-
-type InputService7TestShapeStructType struct {
-	_ struct{} `type:"structure"`
-
-	A *string `type:"string"`
-
-	B *string `type:"string"`
 }
 
 //The service client's operations are safe to be used concurrently.
@@ -760,7 +877,7 @@ func newInputService8ProtocolTestClient(cfg aws.Config, handlers request.Handler
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -779,12 +896,33 @@ func (c *InputService8ProtocolTest) newRequest(op *request.Operation, params, da
 
 const opInputService8TestCaseOperation1 = "OperationName"
 
-// InputService8TestCaseOperation1Request generates a request for the InputService8TestCaseOperation1 operation.
+// InputService8TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService8TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService8TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService8TestCaseOperation1Request method.
+//    req, resp := client.InputService8TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService8ProtocolTest) InputService8TestCaseOperation1Request(input *InputService8TestShapeInputService8TestCaseOperation1Input) (req *request.Request, output *InputService8TestShapeInputService8TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService8TestCaseOperation1,
 		HTTPMethod: "POST",
-		HTTPPath:   "/2014-01-01/vaults/{vaultName}/archives",
+		HTTPPath:   "/2014-01-01/jobsByPipeline/{PipelineId}",
 	}
 
 	if input == nil {
@@ -806,17 +944,27 @@ func (c *InputService8ProtocolTest) InputService8TestCaseOperation1(input *Input
 }
 
 type InputService8TestShapeInputService8TestCaseOperation1Input struct {
-	_ struct{} `type:"structure" payload:"Body"`
+	_ struct{} `type:"structure"`
 
-	Body io.ReadSeeker `locationName:"body" type:"blob"`
+	Ascending *string `location:"querystring" locationName:"Ascending" type:"string"`
 
-	Checksum *string `location:"header" locationName:"x-amz-sha256-tree-hash" type:"string"`
+	Config *InputService8TestShapeStructType `type:"structure"`
 
-	VaultName *string `location:"uri" locationName:"vaultName" type:"string" required:"true"`
+	PageToken *string `location:"querystring" locationName:"PageToken" type:"string"`
+
+	PipelineId *string `location:"uri" locationName:"PipelineId" type:"string"`
 }
 
 type InputService8TestShapeInputService8TestCaseOperation1Output struct {
 	_ struct{} `type:"structure"`
+}
+
+type InputService8TestShapeStructType struct {
+	_ struct{} `type:"structure"`
+
+	A *string `type:"string"`
+
+	B *string `type:"string"`
 }
 
 //The service client's operations are safe to be used concurrently.
@@ -856,7 +1004,7 @@ func newInputService9ProtocolTestClient(cfg aws.Config, handlers request.Handler
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -875,12 +1023,33 @@ func (c *InputService9ProtocolTest) newRequest(op *request.Operation, params, da
 
 const opInputService9TestCaseOperation1 = "OperationName"
 
-// InputService9TestCaseOperation1Request generates a request for the InputService9TestCaseOperation1 operation.
+// InputService9TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService9TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService9TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService9TestCaseOperation1Request method.
+//    req, resp := client.InputService9TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService9ProtocolTest) InputService9TestCaseOperation1Request(input *InputService9TestShapeInputService9TestCaseOperation1Input) (req *request.Request, output *InputService9TestShapeInputService9TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService9TestCaseOperation1,
 		HTTPMethod: "POST",
-		HTTPPath:   "/",
+		HTTPPath:   "/2014-01-01/jobsByPipeline/{PipelineId}",
 	}
 
 	if input == nil {
@@ -902,13 +1071,29 @@ func (c *InputService9ProtocolTest) InputService9TestCaseOperation1(input *Input
 }
 
 type InputService9TestShapeInputService9TestCaseOperation1Input struct {
-	_ struct{} `type:"structure" payload:"Foo"`
+	_ struct{} `type:"structure"`
 
-	Foo *string `locationName:"foo" type:"string"`
+	Ascending *string `location:"querystring" locationName:"Ascending" type:"string"`
+
+	Checksum *string `location:"header" locationName:"x-amz-checksum" type:"string"`
+
+	Config *InputService9TestShapeStructType `type:"structure"`
+
+	PageToken *string `location:"querystring" locationName:"PageToken" type:"string"`
+
+	PipelineId *string `location:"uri" locationName:"PipelineId" type:"string"`
 }
 
 type InputService9TestShapeInputService9TestCaseOperation1Output struct {
 	_ struct{} `type:"structure"`
+}
+
+type InputService9TestShapeStructType struct {
+	_ struct{} `type:"structure"`
+
+	A *string `type:"string"`
+
+	B *string `type:"string"`
 }
 
 //The service client's operations are safe to be used concurrently.
@@ -948,7 +1133,7 @@ func newInputService10ProtocolTestClient(cfg aws.Config, handlers request.Handle
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -967,16 +1152,37 @@ func (c *InputService10ProtocolTest) newRequest(op *request.Operation, params, d
 
 const opInputService10TestCaseOperation1 = "OperationName"
 
-// InputService10TestCaseOperation1Request generates a request for the InputService10TestCaseOperation1 operation.
-func (c *InputService10ProtocolTest) InputService10TestCaseOperation1Request(input *InputService10TestShapeInputShape) (req *request.Request, output *InputService10TestShapeInputService10TestCaseOperation1Output) {
+// InputService10TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService10TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService10TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService10TestCaseOperation1Request method.
+//    req, resp := client.InputService10TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *InputService10ProtocolTest) InputService10TestCaseOperation1Request(input *InputService10TestShapeInputService10TestCaseOperation1Input) (req *request.Request, output *InputService10TestShapeInputService10TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService10TestCaseOperation1,
 		HTTPMethod: "POST",
-		HTTPPath:   "/",
+		HTTPPath:   "/2014-01-01/vaults/{vaultName}/archives",
 	}
 
 	if input == nil {
-		input = &InputService10TestShapeInputShape{}
+		input = &InputService10TestShapeInputService10TestCaseOperation1Input{}
 	}
 
 	req = c.newRequest(op, input, output)
@@ -987,52 +1193,37 @@ func (c *InputService10ProtocolTest) InputService10TestCaseOperation1Request(inp
 	return
 }
 
-func (c *InputService10ProtocolTest) InputService10TestCaseOperation1(input *InputService10TestShapeInputShape) (*InputService10TestShapeInputService10TestCaseOperation1Output, error) {
+func (c *InputService10ProtocolTest) InputService10TestCaseOperation1(input *InputService10TestShapeInputService10TestCaseOperation1Input) (*InputService10TestShapeInputService10TestCaseOperation1Output, error) {
 	req, out := c.InputService10TestCaseOperation1Request(input)
 	err := req.Send()
 	return out, err
 }
 
-const opInputService10TestCaseOperation2 = "OperationName"
+type InputService10TestShapeInputService10TestCaseOperation1Input struct {
+	_ struct{} `type:"structure" payload:"Body"`
 
-// InputService10TestCaseOperation2Request generates a request for the InputService10TestCaseOperation2 operation.
-func (c *InputService10ProtocolTest) InputService10TestCaseOperation2Request(input *InputService10TestShapeInputShape) (req *request.Request, output *InputService10TestShapeInputService10TestCaseOperation2Output) {
-	op := &request.Operation{
-		Name:       opInputService10TestCaseOperation2,
-		HTTPMethod: "POST",
-		HTTPPath:   "/",
-	}
+	Body io.ReadSeeker `locationName:"body" type:"blob"`
 
-	if input == nil {
-		input = &InputService10TestShapeInputShape{}
-	}
+	Checksum *string `location:"header" locationName:"x-amz-sha256-tree-hash" type:"string"`
 
-	req = c.newRequest(op, input, output)
-	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
-	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
-	output = &InputService10TestShapeInputService10TestCaseOperation2Output{}
-	req.Data = output
-	return
+	VaultName *string `location:"uri" locationName:"vaultName" type:"string" required:"true"`
 }
 
-func (c *InputService10ProtocolTest) InputService10TestCaseOperation2(input *InputService10TestShapeInputShape) (*InputService10TestShapeInputService10TestCaseOperation2Output, error) {
-	req, out := c.InputService10TestCaseOperation2Request(input)
-	err := req.Send()
-	return out, err
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *InputService10TestShapeInputService10TestCaseOperation1Input) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "InputService10TestShapeInputService10TestCaseOperation1Input"}
+	if s.VaultName == nil {
+		invalidParams.Add(request.NewErrParamRequired("VaultName"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type InputService10TestShapeInputService10TestCaseOperation1Output struct {
 	_ struct{} `type:"structure"`
-}
-
-type InputService10TestShapeInputService10TestCaseOperation2Output struct {
-	_ struct{} `type:"structure"`
-}
-
-type InputService10TestShapeInputShape struct {
-	_ struct{} `type:"structure" payload:"Foo"`
-
-	Foo []byte `locationName:"foo" type:"blob"`
 }
 
 //The service client's operations are safe to be used concurrently.
@@ -1072,7 +1263,7 @@ func newInputService11ProtocolTestClient(cfg aws.Config, handlers request.Handle
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -1091,16 +1282,37 @@ func (c *InputService11ProtocolTest) newRequest(op *request.Operation, params, d
 
 const opInputService11TestCaseOperation1 = "OperationName"
 
-// InputService11TestCaseOperation1Request generates a request for the InputService11TestCaseOperation1 operation.
-func (c *InputService11ProtocolTest) InputService11TestCaseOperation1Request(input *InputService11TestShapeInputShape) (req *request.Request, output *InputService11TestShapeInputService11TestCaseOperation1Output) {
+// InputService11TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService11TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService11TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService11TestCaseOperation1Request method.
+//    req, resp := client.InputService11TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *InputService11ProtocolTest) InputService11TestCaseOperation1Request(input *InputService11TestShapeInputService11TestCaseOperation1Input) (req *request.Request, output *InputService11TestShapeInputService11TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService11TestCaseOperation1,
-		HTTPMethod: "POST",
-		HTTPPath:   "/",
+		HTTPMethod: "GET",
+		HTTPPath:   "/2014-01-01/{Foo}",
 	}
 
 	if input == nil {
-		input = &InputService11TestShapeInputShape{}
+		input = &InputService11TestShapeInputService11TestCaseOperation1Input{}
 	}
 
 	req = c.newRequest(op, input, output)
@@ -1111,58 +1323,36 @@ func (c *InputService11ProtocolTest) InputService11TestCaseOperation1Request(inp
 	return
 }
 
-func (c *InputService11ProtocolTest) InputService11TestCaseOperation1(input *InputService11TestShapeInputShape) (*InputService11TestShapeInputService11TestCaseOperation1Output, error) {
+func (c *InputService11ProtocolTest) InputService11TestCaseOperation1(input *InputService11TestShapeInputService11TestCaseOperation1Input) (*InputService11TestShapeInputService11TestCaseOperation1Output, error) {
 	req, out := c.InputService11TestCaseOperation1Request(input)
 	err := req.Send()
 	return out, err
 }
 
-const opInputService11TestCaseOperation2 = "OperationName"
+type InputService11TestShapeInputService11TestCaseOperation1Input struct {
+	_ struct{} `type:"structure"`
 
-// InputService11TestCaseOperation2Request generates a request for the InputService11TestCaseOperation2 operation.
-func (c *InputService11ProtocolTest) InputService11TestCaseOperation2Request(input *InputService11TestShapeInputShape) (req *request.Request, output *InputService11TestShapeInputService11TestCaseOperation2Output) {
-	op := &request.Operation{
-		Name:       opInputService11TestCaseOperation2,
-		HTTPMethod: "POST",
-		HTTPPath:   "/",
-	}
+	// Bar is automatically base64 encoded/decoded by the SDK.
+	Bar []byte `type:"blob"`
 
-	if input == nil {
-		input = &InputService11TestShapeInputShape{}
-	}
-
-	req = c.newRequest(op, input, output)
-	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
-	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
-	output = &InputService11TestShapeInputService11TestCaseOperation2Output{}
-	req.Data = output
-	return
+	Foo *string `location:"uri" locationName:"Foo" type:"string" required:"true"`
 }
 
-func (c *InputService11ProtocolTest) InputService11TestCaseOperation2(input *InputService11TestShapeInputShape) (*InputService11TestShapeInputService11TestCaseOperation2Output, error) {
-	req, out := c.InputService11TestCaseOperation2Request(input)
-	err := req.Send()
-	return out, err
-}
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *InputService11TestShapeInputService11TestCaseOperation1Input) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "InputService11TestShapeInputService11TestCaseOperation1Input"}
+	if s.Foo == nil {
+		invalidParams.Add(request.NewErrParamRequired("Foo"))
+	}
 
-type InputService11TestShapeFooShape struct {
-	_ struct{} `locationName:"foo" type:"structure"`
-
-	Baz *string `locationName:"baz" type:"string"`
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type InputService11TestShapeInputService11TestCaseOperation1Output struct {
 	_ struct{} `type:"structure"`
-}
-
-type InputService11TestShapeInputService11TestCaseOperation2Output struct {
-	_ struct{} `type:"structure"`
-}
-
-type InputService11TestShapeInputShape struct {
-	_ struct{} `type:"structure" payload:"Foo"`
-
-	Foo *InputService11TestShapeFooShape `locationName:"foo" type:"structure"`
 }
 
 //The service client's operations are safe to be used concurrently.
@@ -1202,7 +1392,7 @@ func newInputService12ProtocolTestClient(cfg aws.Config, handlers request.Handle
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -1221,12 +1411,33 @@ func (c *InputService12ProtocolTest) newRequest(op *request.Operation, params, d
 
 const opInputService12TestCaseOperation1 = "OperationName"
 
-// InputService12TestCaseOperation1Request generates a request for the InputService12TestCaseOperation1 operation.
+// InputService12TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService12TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService12TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService12TestCaseOperation1Request method.
+//    req, resp := client.InputService12TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService12ProtocolTest) InputService12TestCaseOperation1Request(input *InputService12TestShapeInputShape) (req *request.Request, output *InputService12TestShapeInputService12TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService12TestCaseOperation1,
 		HTTPMethod: "POST",
-		HTTPPath:   "/path",
+		HTTPPath:   "/",
 	}
 
 	if input == nil {
@@ -1249,12 +1460,33 @@ func (c *InputService12ProtocolTest) InputService12TestCaseOperation1(input *Inp
 
 const opInputService12TestCaseOperation2 = "OperationName"
 
-// InputService12TestCaseOperation2Request generates a request for the InputService12TestCaseOperation2 operation.
+// InputService12TestCaseOperation2Request generates a "aws/request.Request" representing the
+// client's request for the InputService12TestCaseOperation2 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService12TestCaseOperation2 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService12TestCaseOperation2Request method.
+//    req, resp := client.InputService12TestCaseOperation2Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService12ProtocolTest) InputService12TestCaseOperation2Request(input *InputService12TestShapeInputShape) (req *request.Request, output *InputService12TestShapeInputService12TestCaseOperation2Output) {
 	op := &request.Operation{
 		Name:       opInputService12TestCaseOperation2,
 		HTTPMethod: "POST",
-		HTTPPath:   "/path?abc=mno",
+		HTTPPath:   "/",
 	}
 
 	if input == nil {
@@ -1284,9 +1516,9 @@ type InputService12TestShapeInputService12TestCaseOperation2Output struct {
 }
 
 type InputService12TestShapeInputShape struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" payload:"Foo"`
 
-	Foo *string `location:"querystring" locationName:"param-name" type:"string"`
+	Foo []byte `locationName:"foo" type:"blob"`
 }
 
 //The service client's operations are safe to be used concurrently.
@@ -1326,7 +1558,7 @@ func newInputService13ProtocolTestClient(cfg aws.Config, handlers request.Handle
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -1345,12 +1577,33 @@ func (c *InputService13ProtocolTest) newRequest(op *request.Operation, params, d
 
 const opInputService13TestCaseOperation1 = "OperationName"
 
-// InputService13TestCaseOperation1Request generates a request for the InputService13TestCaseOperation1 operation.
+// InputService13TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService13TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService13TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService13TestCaseOperation1Request method.
+//    req, resp := client.InputService13TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService13ProtocolTest) InputService13TestCaseOperation1Request(input *InputService13TestShapeInputShape) (req *request.Request, output *InputService13TestShapeInputService13TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService13TestCaseOperation1,
 		HTTPMethod: "POST",
-		HTTPPath:   "/path",
+		HTTPPath:   "/",
 	}
 
 	if input == nil {
@@ -1373,12 +1626,33 @@ func (c *InputService13ProtocolTest) InputService13TestCaseOperation1(input *Inp
 
 const opInputService13TestCaseOperation2 = "OperationName"
 
-// InputService13TestCaseOperation2Request generates a request for the InputService13TestCaseOperation2 operation.
+// InputService13TestCaseOperation2Request generates a "aws/request.Request" representing the
+// client's request for the InputService13TestCaseOperation2 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService13TestCaseOperation2 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService13TestCaseOperation2Request method.
+//    req, resp := client.InputService13TestCaseOperation2Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService13ProtocolTest) InputService13TestCaseOperation2Request(input *InputService13TestShapeInputShape) (req *request.Request, output *InputService13TestShapeInputService13TestCaseOperation2Output) {
 	op := &request.Operation{
 		Name:       opInputService13TestCaseOperation2,
 		HTTPMethod: "POST",
-		HTTPPath:   "/path",
+		HTTPPath:   "/",
 	}
 
 	if input == nil {
@@ -1399,116 +1673,10 @@ func (c *InputService13ProtocolTest) InputService13TestCaseOperation2(input *Inp
 	return out, err
 }
 
-const opInputService13TestCaseOperation3 = "OperationName"
+type InputService13TestShapeFooShape struct {
+	_ struct{} `locationName:"foo" type:"structure"`
 
-// InputService13TestCaseOperation3Request generates a request for the InputService13TestCaseOperation3 operation.
-func (c *InputService13ProtocolTest) InputService13TestCaseOperation3Request(input *InputService13TestShapeInputShape) (req *request.Request, output *InputService13TestShapeInputService13TestCaseOperation3Output) {
-	op := &request.Operation{
-		Name:       opInputService13TestCaseOperation3,
-		HTTPMethod: "POST",
-		HTTPPath:   "/path",
-	}
-
-	if input == nil {
-		input = &InputService13TestShapeInputShape{}
-	}
-
-	req = c.newRequest(op, input, output)
-	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
-	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
-	output = &InputService13TestShapeInputService13TestCaseOperation3Output{}
-	req.Data = output
-	return
-}
-
-func (c *InputService13ProtocolTest) InputService13TestCaseOperation3(input *InputService13TestShapeInputShape) (*InputService13TestShapeInputService13TestCaseOperation3Output, error) {
-	req, out := c.InputService13TestCaseOperation3Request(input)
-	err := req.Send()
-	return out, err
-}
-
-const opInputService13TestCaseOperation4 = "OperationName"
-
-// InputService13TestCaseOperation4Request generates a request for the InputService13TestCaseOperation4 operation.
-func (c *InputService13ProtocolTest) InputService13TestCaseOperation4Request(input *InputService13TestShapeInputShape) (req *request.Request, output *InputService13TestShapeInputService13TestCaseOperation4Output) {
-	op := &request.Operation{
-		Name:       opInputService13TestCaseOperation4,
-		HTTPMethod: "POST",
-		HTTPPath:   "/path",
-	}
-
-	if input == nil {
-		input = &InputService13TestShapeInputShape{}
-	}
-
-	req = c.newRequest(op, input, output)
-	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
-	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
-	output = &InputService13TestShapeInputService13TestCaseOperation4Output{}
-	req.Data = output
-	return
-}
-
-func (c *InputService13ProtocolTest) InputService13TestCaseOperation4(input *InputService13TestShapeInputShape) (*InputService13TestShapeInputService13TestCaseOperation4Output, error) {
-	req, out := c.InputService13TestCaseOperation4Request(input)
-	err := req.Send()
-	return out, err
-}
-
-const opInputService13TestCaseOperation5 = "OperationName"
-
-// InputService13TestCaseOperation5Request generates a request for the InputService13TestCaseOperation5 operation.
-func (c *InputService13ProtocolTest) InputService13TestCaseOperation5Request(input *InputService13TestShapeInputShape) (req *request.Request, output *InputService13TestShapeInputService13TestCaseOperation5Output) {
-	op := &request.Operation{
-		Name:       opInputService13TestCaseOperation5,
-		HTTPMethod: "POST",
-		HTTPPath:   "/path",
-	}
-
-	if input == nil {
-		input = &InputService13TestShapeInputShape{}
-	}
-
-	req = c.newRequest(op, input, output)
-	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
-	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
-	output = &InputService13TestShapeInputService13TestCaseOperation5Output{}
-	req.Data = output
-	return
-}
-
-func (c *InputService13ProtocolTest) InputService13TestCaseOperation5(input *InputService13TestShapeInputShape) (*InputService13TestShapeInputService13TestCaseOperation5Output, error) {
-	req, out := c.InputService13TestCaseOperation5Request(input)
-	err := req.Send()
-	return out, err
-}
-
-const opInputService13TestCaseOperation6 = "OperationName"
-
-// InputService13TestCaseOperation6Request generates a request for the InputService13TestCaseOperation6 operation.
-func (c *InputService13ProtocolTest) InputService13TestCaseOperation6Request(input *InputService13TestShapeInputShape) (req *request.Request, output *InputService13TestShapeInputService13TestCaseOperation6Output) {
-	op := &request.Operation{
-		Name:       opInputService13TestCaseOperation6,
-		HTTPMethod: "POST",
-		HTTPPath:   "/path",
-	}
-
-	if input == nil {
-		input = &InputService13TestShapeInputShape{}
-	}
-
-	req = c.newRequest(op, input, output)
-	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
-	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
-	output = &InputService13TestShapeInputService13TestCaseOperation6Output{}
-	req.Data = output
-	return
-}
-
-func (c *InputService13ProtocolTest) InputService13TestCaseOperation6(input *InputService13TestShapeInputShape) (*InputService13TestShapeInputService13TestCaseOperation6Output, error) {
-	req, out := c.InputService13TestCaseOperation6Request(input)
-	err := req.Send()
-	return out, err
+	Baz *string `locationName:"baz" type:"string"`
 }
 
 type InputService13TestShapeInputService13TestCaseOperation1Output struct {
@@ -1519,38 +1687,10 @@ type InputService13TestShapeInputService13TestCaseOperation2Output struct {
 	_ struct{} `type:"structure"`
 }
 
-type InputService13TestShapeInputService13TestCaseOperation3Output struct {
-	_ struct{} `type:"structure"`
-}
-
-type InputService13TestShapeInputService13TestCaseOperation4Output struct {
-	_ struct{} `type:"structure"`
-}
-
-type InputService13TestShapeInputService13TestCaseOperation5Output struct {
-	_ struct{} `type:"structure"`
-}
-
-type InputService13TestShapeInputService13TestCaseOperation6Output struct {
-	_ struct{} `type:"structure"`
-}
-
 type InputService13TestShapeInputShape struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" payload:"Foo"`
 
-	RecursiveStruct *InputService13TestShapeRecursiveStructType `type:"structure"`
-}
-
-type InputService13TestShapeRecursiveStructType struct {
-	_ struct{} `type:"structure"`
-
-	NoRecurse *string `type:"string"`
-
-	RecursiveList []*InputService13TestShapeRecursiveStructType `type:"list"`
-
-	RecursiveMap map[string]*InputService13TestShapeRecursiveStructType `type:"map"`
-
-	RecursiveStruct *InputService13TestShapeRecursiveStructType `type:"structure"`
+	Foo *InputService13TestShapeFooShape `locationName:"foo" type:"structure"`
 }
 
 //The service client's operations are safe to be used concurrently.
@@ -1590,7 +1730,7 @@ func newInputService14ProtocolTestClient(cfg aws.Config, handlers request.Handle
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -1609,7 +1749,28 @@ func (c *InputService14ProtocolTest) newRequest(op *request.Operation, params, d
 
 const opInputService14TestCaseOperation1 = "OperationName"
 
-// InputService14TestCaseOperation1Request generates a request for the InputService14TestCaseOperation1 operation.
+// InputService14TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService14TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService14TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService14TestCaseOperation1Request method.
+//    req, resp := client.InputService14TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService14ProtocolTest) InputService14TestCaseOperation1Request(input *InputService14TestShapeInputShape) (req *request.Request, output *InputService14TestShapeInputService14TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService14TestCaseOperation1,
@@ -1637,12 +1798,33 @@ func (c *InputService14ProtocolTest) InputService14TestCaseOperation1(input *Inp
 
 const opInputService14TestCaseOperation2 = "OperationName"
 
-// InputService14TestCaseOperation2Request generates a request for the InputService14TestCaseOperation2 operation.
+// InputService14TestCaseOperation2Request generates a "aws/request.Request" representing the
+// client's request for the InputService14TestCaseOperation2 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService14TestCaseOperation2 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService14TestCaseOperation2Request method.
+//    req, resp := client.InputService14TestCaseOperation2Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService14ProtocolTest) InputService14TestCaseOperation2Request(input *InputService14TestShapeInputShape) (req *request.Request, output *InputService14TestShapeInputService14TestCaseOperation2Output) {
 	op := &request.Operation{
 		Name:       opInputService14TestCaseOperation2,
 		HTTPMethod: "POST",
-		HTTPPath:   "/path",
+		HTTPPath:   "/path?abc=mno",
 	}
 
 	if input == nil {
@@ -1674,9 +1856,7 @@ type InputService14TestShapeInputService14TestCaseOperation2Output struct {
 type InputService14TestShapeInputShape struct {
 	_ struct{} `type:"structure"`
 
-	TimeArg *time.Time `type:"timestamp" timestampFormat:"unix"`
-
-	TimeArgInHeader *time.Time `location:"header" locationName:"x-amz-timearg" type:"timestamp" timestampFormat:"rfc822"`
+	Foo *string `location:"querystring" locationName:"param-name" type:"string"`
 }
 
 //The service client's operations are safe to be used concurrently.
@@ -1716,7 +1896,7 @@ func newInputService15ProtocolTestClient(cfg aws.Config, handlers request.Handle
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -1735,8 +1915,29 @@ func (c *InputService15ProtocolTest) newRequest(op *request.Operation, params, d
 
 const opInputService15TestCaseOperation1 = "OperationName"
 
-// InputService15TestCaseOperation1Request generates a request for the InputService15TestCaseOperation1 operation.
-func (c *InputService15ProtocolTest) InputService15TestCaseOperation1Request(input *InputService15TestShapeInputService15TestCaseOperation1Input) (req *request.Request, output *InputService15TestShapeInputService15TestCaseOperation1Output) {
+// InputService15TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService15TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService15TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService15TestCaseOperation1Request method.
+//    req, resp := client.InputService15TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *InputService15ProtocolTest) InputService15TestCaseOperation1Request(input *InputService15TestShapeInputShape) (req *request.Request, output *InputService15TestShapeInputService15TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService15TestCaseOperation1,
 		HTTPMethod: "POST",
@@ -1744,7 +1945,7 @@ func (c *InputService15ProtocolTest) InputService15TestCaseOperation1Request(inp
 	}
 
 	if input == nil {
-		input = &InputService15TestShapeInputService15TestCaseOperation1Input{}
+		input = &InputService15TestShapeInputShape{}
 	}
 
 	req = c.newRequest(op, input, output)
@@ -1755,20 +1956,297 @@ func (c *InputService15ProtocolTest) InputService15TestCaseOperation1Request(inp
 	return
 }
 
-func (c *InputService15ProtocolTest) InputService15TestCaseOperation1(input *InputService15TestShapeInputService15TestCaseOperation1Input) (*InputService15TestShapeInputService15TestCaseOperation1Output, error) {
+func (c *InputService15ProtocolTest) InputService15TestCaseOperation1(input *InputService15TestShapeInputShape) (*InputService15TestShapeInputService15TestCaseOperation1Output, error) {
 	req, out := c.InputService15TestCaseOperation1Request(input)
 	err := req.Send()
 	return out, err
 }
 
-type InputService15TestShapeInputService15TestCaseOperation1Input struct {
-	_ struct{} `type:"structure"`
+const opInputService15TestCaseOperation2 = "OperationName"
 
-	TimeArg *time.Time `locationName:"timestamp_location" type:"timestamp" timestampFormat:"unix"`
+// InputService15TestCaseOperation2Request generates a "aws/request.Request" representing the
+// client's request for the InputService15TestCaseOperation2 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService15TestCaseOperation2 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService15TestCaseOperation2Request method.
+//    req, resp := client.InputService15TestCaseOperation2Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *InputService15ProtocolTest) InputService15TestCaseOperation2Request(input *InputService15TestShapeInputShape) (req *request.Request, output *InputService15TestShapeInputService15TestCaseOperation2Output) {
+	op := &request.Operation{
+		Name:       opInputService15TestCaseOperation2,
+		HTTPMethod: "POST",
+		HTTPPath:   "/path",
+	}
+
+	if input == nil {
+		input = &InputService15TestShapeInputShape{}
+	}
+
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
+	output = &InputService15TestShapeInputService15TestCaseOperation2Output{}
+	req.Data = output
+	return
+}
+
+func (c *InputService15ProtocolTest) InputService15TestCaseOperation2(input *InputService15TestShapeInputShape) (*InputService15TestShapeInputService15TestCaseOperation2Output, error) {
+	req, out := c.InputService15TestCaseOperation2Request(input)
+	err := req.Send()
+	return out, err
+}
+
+const opInputService15TestCaseOperation3 = "OperationName"
+
+// InputService15TestCaseOperation3Request generates a "aws/request.Request" representing the
+// client's request for the InputService15TestCaseOperation3 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService15TestCaseOperation3 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService15TestCaseOperation3Request method.
+//    req, resp := client.InputService15TestCaseOperation3Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *InputService15ProtocolTest) InputService15TestCaseOperation3Request(input *InputService15TestShapeInputShape) (req *request.Request, output *InputService15TestShapeInputService15TestCaseOperation3Output) {
+	op := &request.Operation{
+		Name:       opInputService15TestCaseOperation3,
+		HTTPMethod: "POST",
+		HTTPPath:   "/path",
+	}
+
+	if input == nil {
+		input = &InputService15TestShapeInputShape{}
+	}
+
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
+	output = &InputService15TestShapeInputService15TestCaseOperation3Output{}
+	req.Data = output
+	return
+}
+
+func (c *InputService15ProtocolTest) InputService15TestCaseOperation3(input *InputService15TestShapeInputShape) (*InputService15TestShapeInputService15TestCaseOperation3Output, error) {
+	req, out := c.InputService15TestCaseOperation3Request(input)
+	err := req.Send()
+	return out, err
+}
+
+const opInputService15TestCaseOperation4 = "OperationName"
+
+// InputService15TestCaseOperation4Request generates a "aws/request.Request" representing the
+// client's request for the InputService15TestCaseOperation4 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService15TestCaseOperation4 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService15TestCaseOperation4Request method.
+//    req, resp := client.InputService15TestCaseOperation4Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *InputService15ProtocolTest) InputService15TestCaseOperation4Request(input *InputService15TestShapeInputShape) (req *request.Request, output *InputService15TestShapeInputService15TestCaseOperation4Output) {
+	op := &request.Operation{
+		Name:       opInputService15TestCaseOperation4,
+		HTTPMethod: "POST",
+		HTTPPath:   "/path",
+	}
+
+	if input == nil {
+		input = &InputService15TestShapeInputShape{}
+	}
+
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
+	output = &InputService15TestShapeInputService15TestCaseOperation4Output{}
+	req.Data = output
+	return
+}
+
+func (c *InputService15ProtocolTest) InputService15TestCaseOperation4(input *InputService15TestShapeInputShape) (*InputService15TestShapeInputService15TestCaseOperation4Output, error) {
+	req, out := c.InputService15TestCaseOperation4Request(input)
+	err := req.Send()
+	return out, err
+}
+
+const opInputService15TestCaseOperation5 = "OperationName"
+
+// InputService15TestCaseOperation5Request generates a "aws/request.Request" representing the
+// client's request for the InputService15TestCaseOperation5 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService15TestCaseOperation5 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService15TestCaseOperation5Request method.
+//    req, resp := client.InputService15TestCaseOperation5Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *InputService15ProtocolTest) InputService15TestCaseOperation5Request(input *InputService15TestShapeInputShape) (req *request.Request, output *InputService15TestShapeInputService15TestCaseOperation5Output) {
+	op := &request.Operation{
+		Name:       opInputService15TestCaseOperation5,
+		HTTPMethod: "POST",
+		HTTPPath:   "/path",
+	}
+
+	if input == nil {
+		input = &InputService15TestShapeInputShape{}
+	}
+
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
+	output = &InputService15TestShapeInputService15TestCaseOperation5Output{}
+	req.Data = output
+	return
+}
+
+func (c *InputService15ProtocolTest) InputService15TestCaseOperation5(input *InputService15TestShapeInputShape) (*InputService15TestShapeInputService15TestCaseOperation5Output, error) {
+	req, out := c.InputService15TestCaseOperation5Request(input)
+	err := req.Send()
+	return out, err
+}
+
+const opInputService15TestCaseOperation6 = "OperationName"
+
+// InputService15TestCaseOperation6Request generates a "aws/request.Request" representing the
+// client's request for the InputService15TestCaseOperation6 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService15TestCaseOperation6 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService15TestCaseOperation6Request method.
+//    req, resp := client.InputService15TestCaseOperation6Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *InputService15ProtocolTest) InputService15TestCaseOperation6Request(input *InputService15TestShapeInputShape) (req *request.Request, output *InputService15TestShapeInputService15TestCaseOperation6Output) {
+	op := &request.Operation{
+		Name:       opInputService15TestCaseOperation6,
+		HTTPMethod: "POST",
+		HTTPPath:   "/path",
+	}
+
+	if input == nil {
+		input = &InputService15TestShapeInputShape{}
+	}
+
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
+	output = &InputService15TestShapeInputService15TestCaseOperation6Output{}
+	req.Data = output
+	return
+}
+
+func (c *InputService15ProtocolTest) InputService15TestCaseOperation6(input *InputService15TestShapeInputShape) (*InputService15TestShapeInputService15TestCaseOperation6Output, error) {
+	req, out := c.InputService15TestCaseOperation6Request(input)
+	err := req.Send()
+	return out, err
 }
 
 type InputService15TestShapeInputService15TestCaseOperation1Output struct {
 	_ struct{} `type:"structure"`
+}
+
+type InputService15TestShapeInputService15TestCaseOperation2Output struct {
+	_ struct{} `type:"structure"`
+}
+
+type InputService15TestShapeInputService15TestCaseOperation3Output struct {
+	_ struct{} `type:"structure"`
+}
+
+type InputService15TestShapeInputService15TestCaseOperation4Output struct {
+	_ struct{} `type:"structure"`
+}
+
+type InputService15TestShapeInputService15TestCaseOperation5Output struct {
+	_ struct{} `type:"structure"`
+}
+
+type InputService15TestShapeInputService15TestCaseOperation6Output struct {
+	_ struct{} `type:"structure"`
+}
+
+type InputService15TestShapeInputShape struct {
+	_ struct{} `type:"structure"`
+
+	RecursiveStruct *InputService15TestShapeRecursiveStructType `type:"structure"`
+}
+
+type InputService15TestShapeRecursiveStructType struct {
+	_ struct{} `type:"structure"`
+
+	NoRecurse *string `type:"string"`
+
+	RecursiveList []*InputService15TestShapeRecursiveStructType `type:"list"`
+
+	RecursiveMap map[string]*InputService15TestShapeRecursiveStructType `type:"map"`
+
+	RecursiveStruct *InputService15TestShapeRecursiveStructType `type:"structure"`
 }
 
 //The service client's operations are safe to be used concurrently.
@@ -1808,7 +2286,7 @@ func newInputService16ProtocolTestClient(cfg aws.Config, handlers request.Handle
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v4.Sign)
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
 	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
 	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
@@ -1827,7 +2305,28 @@ func (c *InputService16ProtocolTest) newRequest(op *request.Operation, params, d
 
 const opInputService16TestCaseOperation1 = "OperationName"
 
-// InputService16TestCaseOperation1Request generates a request for the InputService16TestCaseOperation1 operation.
+// InputService16TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService16TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService16TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService16TestCaseOperation1Request method.
+//    req, resp := client.InputService16TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService16ProtocolTest) InputService16TestCaseOperation1Request(input *InputService16TestShapeInputShape) (req *request.Request, output *InputService16TestShapeInputService16TestCaseOperation1Output) {
 	op := &request.Operation{
 		Name:       opInputService16TestCaseOperation1,
@@ -1855,7 +2354,28 @@ func (c *InputService16ProtocolTest) InputService16TestCaseOperation1(input *Inp
 
 const opInputService16TestCaseOperation2 = "OperationName"
 
-// InputService16TestCaseOperation2Request generates a request for the InputService16TestCaseOperation2 operation.
+// InputService16TestCaseOperation2Request generates a "aws/request.Request" representing the
+// client's request for the InputService16TestCaseOperation2 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService16TestCaseOperation2 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService16TestCaseOperation2Request method.
+//    req, resp := client.InputService16TestCaseOperation2Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *InputService16ProtocolTest) InputService16TestCaseOperation2Request(input *InputService16TestShapeInputShape) (req *request.Request, output *InputService16TestShapeInputService16TestCaseOperation2Output) {
 	op := &request.Operation{
 		Name:       opInputService16TestCaseOperation2,
@@ -1892,6 +2412,400 @@ type InputService16TestShapeInputService16TestCaseOperation2Output struct {
 type InputService16TestShapeInputShape struct {
 	_ struct{} `type:"structure"`
 
+	TimeArg *time.Time `type:"timestamp" timestampFormat:"unix"`
+
+	TimeArgInHeader *time.Time `location:"header" locationName:"x-amz-timearg" type:"timestamp" timestampFormat:"rfc822"`
+}
+
+//The service client's operations are safe to be used concurrently.
+// It is not safe to mutate any of the client's properties though.
+type InputService17ProtocolTest struct {
+	*client.Client
+}
+
+// New creates a new instance of the InputService17ProtocolTest client with a session.
+// If additional configuration is needed for the client instance use the optional
+// aws.Config parameter to add your extra config.
+//
+// Example:
+//     // Create a InputService17ProtocolTest client from just a session.
+//     svc := inputservice17protocoltest.New(mySession)
+//
+//     // Create a InputService17ProtocolTest client with additional configuration
+//     svc := inputservice17protocoltest.New(mySession, aws.NewConfig().WithRegion("us-west-2"))
+func NewInputService17ProtocolTest(p client.ConfigProvider, cfgs ...*aws.Config) *InputService17ProtocolTest {
+	c := p.ClientConfig("inputservice17protocoltest", cfgs...)
+	return newInputService17ProtocolTestClient(*c.Config, c.Handlers, c.Endpoint, c.SigningRegion)
+}
+
+// newClient creates, initializes and returns a new service client instance.
+func newInputService17ProtocolTestClient(cfg aws.Config, handlers request.Handlers, endpoint, signingRegion string) *InputService17ProtocolTest {
+	svc := &InputService17ProtocolTest{
+		Client: client.New(
+			cfg,
+			metadata.ClientInfo{
+				ServiceName:   "inputservice17protocoltest",
+				SigningRegion: signingRegion,
+				Endpoint:      endpoint,
+				APIVersion:    "2014-01-01",
+			},
+			handlers,
+		),
+	}
+
+	// Handlers
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
+	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
+	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
+	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
+	svc.Handlers.UnmarshalError.PushBackNamed(restjson.UnmarshalErrorHandler)
+
+	return svc
+}
+
+// newRequest creates a new request for a InputService17ProtocolTest operation and runs any
+// custom request initialization.
+func (c *InputService17ProtocolTest) newRequest(op *request.Operation, params, data interface{}) *request.Request {
+	req := c.NewRequest(op, params, data)
+
+	return req
+}
+
+const opInputService17TestCaseOperation1 = "OperationName"
+
+// InputService17TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService17TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService17TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService17TestCaseOperation1Request method.
+//    req, resp := client.InputService17TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *InputService17ProtocolTest) InputService17TestCaseOperation1Request(input *InputService17TestShapeInputService17TestCaseOperation1Input) (req *request.Request, output *InputService17TestShapeInputService17TestCaseOperation1Output) {
+	op := &request.Operation{
+		Name:       opInputService17TestCaseOperation1,
+		HTTPMethod: "POST",
+		HTTPPath:   "/path",
+	}
+
+	if input == nil {
+		input = &InputService17TestShapeInputService17TestCaseOperation1Input{}
+	}
+
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
+	output = &InputService17TestShapeInputService17TestCaseOperation1Output{}
+	req.Data = output
+	return
+}
+
+func (c *InputService17ProtocolTest) InputService17TestCaseOperation1(input *InputService17TestShapeInputService17TestCaseOperation1Input) (*InputService17TestShapeInputService17TestCaseOperation1Output, error) {
+	req, out := c.InputService17TestCaseOperation1Request(input)
+	err := req.Send()
+	return out, err
+}
+
+type InputService17TestShapeInputService17TestCaseOperation1Input struct {
+	_ struct{} `type:"structure"`
+
+	TimeArg *time.Time `locationName:"timestamp_location" type:"timestamp" timestampFormat:"unix"`
+}
+
+type InputService17TestShapeInputService17TestCaseOperation1Output struct {
+	_ struct{} `type:"structure"`
+}
+
+//The service client's operations are safe to be used concurrently.
+// It is not safe to mutate any of the client's properties though.
+type InputService18ProtocolTest struct {
+	*client.Client
+}
+
+// New creates a new instance of the InputService18ProtocolTest client with a session.
+// If additional configuration is needed for the client instance use the optional
+// aws.Config parameter to add your extra config.
+//
+// Example:
+//     // Create a InputService18ProtocolTest client from just a session.
+//     svc := inputservice18protocoltest.New(mySession)
+//
+//     // Create a InputService18ProtocolTest client with additional configuration
+//     svc := inputservice18protocoltest.New(mySession, aws.NewConfig().WithRegion("us-west-2"))
+func NewInputService18ProtocolTest(p client.ConfigProvider, cfgs ...*aws.Config) *InputService18ProtocolTest {
+	c := p.ClientConfig("inputservice18protocoltest", cfgs...)
+	return newInputService18ProtocolTestClient(*c.Config, c.Handlers, c.Endpoint, c.SigningRegion)
+}
+
+// newClient creates, initializes and returns a new service client instance.
+func newInputService18ProtocolTestClient(cfg aws.Config, handlers request.Handlers, endpoint, signingRegion string) *InputService18ProtocolTest {
+	svc := &InputService18ProtocolTest{
+		Client: client.New(
+			cfg,
+			metadata.ClientInfo{
+				ServiceName:   "inputservice18protocoltest",
+				SigningRegion: signingRegion,
+				Endpoint:      endpoint,
+				APIVersion:    "2014-01-01",
+			},
+			handlers,
+		),
+	}
+
+	// Handlers
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
+	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
+	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
+	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
+	svc.Handlers.UnmarshalError.PushBackNamed(restjson.UnmarshalErrorHandler)
+
+	return svc
+}
+
+// newRequest creates a new request for a InputService18ProtocolTest operation and runs any
+// custom request initialization.
+func (c *InputService18ProtocolTest) newRequest(op *request.Operation, params, data interface{}) *request.Request {
+	req := c.NewRequest(op, params, data)
+
+	return req
+}
+
+const opInputService18TestCaseOperation1 = "OperationName"
+
+// InputService18TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService18TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService18TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService18TestCaseOperation1Request method.
+//    req, resp := client.InputService18TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *InputService18ProtocolTest) InputService18TestCaseOperation1Request(input *InputService18TestShapeInputService18TestCaseOperation1Input) (req *request.Request, output *InputService18TestShapeInputService18TestCaseOperation1Output) {
+	op := &request.Operation{
+		Name:       opInputService18TestCaseOperation1,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &InputService18TestShapeInputService18TestCaseOperation1Input{}
+	}
+
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
+	output = &InputService18TestShapeInputService18TestCaseOperation1Output{}
+	req.Data = output
+	return
+}
+
+func (c *InputService18ProtocolTest) InputService18TestCaseOperation1(input *InputService18TestShapeInputService18TestCaseOperation1Input) (*InputService18TestShapeInputService18TestCaseOperation1Output, error) {
+	req, out := c.InputService18TestCaseOperation1Request(input)
+	err := req.Send()
+	return out, err
+}
+
+type InputService18TestShapeInputService18TestCaseOperation1Input struct {
+	_ struct{} `type:"structure" payload:"Foo"`
+
+	Foo *string `locationName:"foo" type:"string"`
+}
+
+type InputService18TestShapeInputService18TestCaseOperation1Output struct {
+	_ struct{} `type:"structure"`
+}
+
+//The service client's operations are safe to be used concurrently.
+// It is not safe to mutate any of the client's properties though.
+type InputService19ProtocolTest struct {
+	*client.Client
+}
+
+// New creates a new instance of the InputService19ProtocolTest client with a session.
+// If additional configuration is needed for the client instance use the optional
+// aws.Config parameter to add your extra config.
+//
+// Example:
+//     // Create a InputService19ProtocolTest client from just a session.
+//     svc := inputservice19protocoltest.New(mySession)
+//
+//     // Create a InputService19ProtocolTest client with additional configuration
+//     svc := inputservice19protocoltest.New(mySession, aws.NewConfig().WithRegion("us-west-2"))
+func NewInputService19ProtocolTest(p client.ConfigProvider, cfgs ...*aws.Config) *InputService19ProtocolTest {
+	c := p.ClientConfig("inputservice19protocoltest", cfgs...)
+	return newInputService19ProtocolTestClient(*c.Config, c.Handlers, c.Endpoint, c.SigningRegion)
+}
+
+// newClient creates, initializes and returns a new service client instance.
+func newInputService19ProtocolTestClient(cfg aws.Config, handlers request.Handlers, endpoint, signingRegion string) *InputService19ProtocolTest {
+	svc := &InputService19ProtocolTest{
+		Client: client.New(
+			cfg,
+			metadata.ClientInfo{
+				ServiceName:   "inputservice19protocoltest",
+				SigningRegion: signingRegion,
+				Endpoint:      endpoint,
+				APIVersion:    "2014-01-01",
+			},
+			handlers,
+		),
+	}
+
+	// Handlers
+	svc.Handlers.Sign.PushBackNamed(v4.SignRequestHandler)
+	svc.Handlers.Build.PushBackNamed(restjson.BuildHandler)
+	svc.Handlers.Unmarshal.PushBackNamed(restjson.UnmarshalHandler)
+	svc.Handlers.UnmarshalMeta.PushBackNamed(restjson.UnmarshalMetaHandler)
+	svc.Handlers.UnmarshalError.PushBackNamed(restjson.UnmarshalErrorHandler)
+
+	return svc
+}
+
+// newRequest creates a new request for a InputService19ProtocolTest operation and runs any
+// custom request initialization.
+func (c *InputService19ProtocolTest) newRequest(op *request.Operation, params, data interface{}) *request.Request {
+	req := c.NewRequest(op, params, data)
+
+	return req
+}
+
+const opInputService19TestCaseOperation1 = "OperationName"
+
+// InputService19TestCaseOperation1Request generates a "aws/request.Request" representing the
+// client's request for the InputService19TestCaseOperation1 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService19TestCaseOperation1 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService19TestCaseOperation1Request method.
+//    req, resp := client.InputService19TestCaseOperation1Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *InputService19ProtocolTest) InputService19TestCaseOperation1Request(input *InputService19TestShapeInputShape) (req *request.Request, output *InputService19TestShapeInputService19TestCaseOperation1Output) {
+	op := &request.Operation{
+		Name:       opInputService19TestCaseOperation1,
+		HTTPMethod: "POST",
+		HTTPPath:   "/path",
+	}
+
+	if input == nil {
+		input = &InputService19TestShapeInputShape{}
+	}
+
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
+	output = &InputService19TestShapeInputService19TestCaseOperation1Output{}
+	req.Data = output
+	return
+}
+
+func (c *InputService19ProtocolTest) InputService19TestCaseOperation1(input *InputService19TestShapeInputShape) (*InputService19TestShapeInputService19TestCaseOperation1Output, error) {
+	req, out := c.InputService19TestCaseOperation1Request(input)
+	err := req.Send()
+	return out, err
+}
+
+const opInputService19TestCaseOperation2 = "OperationName"
+
+// InputService19TestCaseOperation2Request generates a "aws/request.Request" representing the
+// client's request for the InputService19TestCaseOperation2 operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InputService19TestCaseOperation2 method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InputService19TestCaseOperation2Request method.
+//    req, resp := client.InputService19TestCaseOperation2Request(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *InputService19ProtocolTest) InputService19TestCaseOperation2Request(input *InputService19TestShapeInputShape) (req *request.Request, output *InputService19TestShapeInputService19TestCaseOperation2Output) {
+	op := &request.Operation{
+		Name:       opInputService19TestCaseOperation2,
+		HTTPMethod: "POST",
+		HTTPPath:   "/path",
+	}
+
+	if input == nil {
+		input = &InputService19TestShapeInputShape{}
+	}
+
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restjson.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
+	output = &InputService19TestShapeInputService19TestCaseOperation2Output{}
+	req.Data = output
+	return
+}
+
+func (c *InputService19ProtocolTest) InputService19TestCaseOperation2(input *InputService19TestShapeInputShape) (*InputService19TestShapeInputService19TestCaseOperation2Output, error) {
+	req, out := c.InputService19TestCaseOperation2Request(input)
+	err := req.Send()
+	return out, err
+}
+
+type InputService19TestShapeInputService19TestCaseOperation1Output struct {
+	_ struct{} `type:"structure"`
+}
+
+type InputService19TestShapeInputService19TestCaseOperation2Output struct {
+	_ struct{} `type:"structure"`
+}
+
+type InputService19TestShapeInputShape struct {
+	_ struct{} `type:"structure"`
+
 	Token *string `type:"string" idempotencyToken:"true"`
 }
 
@@ -1899,13 +2813,28 @@ type InputService16TestShapeInputShape struct {
 // Tests begin here
 //
 
-func TestInputService1ProtocolTestURIParameterOnlyWithNoLocationNameCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService1ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService1TestShapeInputService1TestCaseOperation1Input{
+func TestInputService1ProtocolTestNoParametersCase1(t *testing.T) {
+	svc := NewInputService1ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	req, _ := svc.InputService1TestCaseOperation1Request(nil)
+	r := req.HTTPRequest
+
+	// build request
+	restjson.Build(req)
+	assert.NoError(t, req.Error)
+
+	// assert URL
+	awstesting.AssertURL(t, "https://test/2014-01-01/jobs", r.URL.String())
+
+	// assert headers
+
+}
+
+func TestInputService2ProtocolTestURIParameterOnlyWithNoLocationNameCase1(t *testing.T) {
+	svc := NewInputService2ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService2TestShapeInputService2TestCaseOperation1Input{
 		PipelineId: aws.String("foo"),
 	}
-	req, _ := svc.InputService1TestCaseOperation1Request(input)
+	req, _ := svc.InputService2TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -1919,13 +2848,12 @@ func TestInputService1ProtocolTestURIParameterOnlyWithNoLocationNameCase1(t *tes
 
 }
 
-func TestInputService2ProtocolTestURIParameterOnlyWithLocationNameCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService2ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService2TestShapeInputService2TestCaseOperation1Input{
+func TestInputService3ProtocolTestURIParameterOnlyWithLocationNameCase1(t *testing.T) {
+	svc := NewInputService3ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService3TestShapeInputService3TestCaseOperation1Input{
 		Foo: aws.String("bar"),
 	}
-	req, _ := svc.InputService2TestCaseOperation1Request(input)
+	req, _ := svc.InputService3TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -1939,17 +2867,38 @@ func TestInputService2ProtocolTestURIParameterOnlyWithLocationNameCase1(t *testi
 
 }
 
-func TestInputService3ProtocolTestStringToStringMapsInQuerystringCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService3ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService3TestShapeInputService3TestCaseOperation1Input{
+func TestInputService4ProtocolTestQuerystringListOfStringsCase1(t *testing.T) {
+	svc := NewInputService4ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService4TestShapeInputService4TestCaseOperation1Input{
+		Items: []*string{
+			aws.String("value1"),
+			aws.String("value2"),
+		},
+	}
+	req, _ := svc.InputService4TestCaseOperation1Request(input)
+	r := req.HTTPRequest
+
+	// build request
+	restjson.Build(req)
+	assert.NoError(t, req.Error)
+
+	// assert URL
+	awstesting.AssertURL(t, "https://test/path?item=value1&item=value2", r.URL.String())
+
+	// assert headers
+
+}
+
+func TestInputService5ProtocolTestStringToStringMapsInQuerystringCase1(t *testing.T) {
+	svc := NewInputService5ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService5TestShapeInputService5TestCaseOperation1Input{
 		PipelineId: aws.String("foo"),
 		QueryDoc: map[string]*string{
 			"bar":  aws.String("baz"),
 			"fizz": aws.String("buzz"),
 		},
 	}
-	req, _ := svc.InputService3TestCaseOperation1Request(input)
+	req, _ := svc.InputService5TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -1963,10 +2912,9 @@ func TestInputService3ProtocolTestStringToStringMapsInQuerystringCase1(t *testin
 
 }
 
-func TestInputService4ProtocolTestStringToStringListMapsInQuerystringCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService4ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService4TestShapeInputService4TestCaseOperation1Input{
+func TestInputService6ProtocolTestStringToStringListMapsInQuerystringCase1(t *testing.T) {
+	svc := NewInputService6ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService6TestShapeInputService6TestCaseOperation1Input{
 		PipelineId: aws.String("id"),
 		QueryDoc: map[string][]*string{
 			"fizz": {
@@ -1979,7 +2927,7 @@ func TestInputService4ProtocolTestStringToStringListMapsInQuerystringCase1(t *te
 			},
 		},
 	}
-	req, _ := svc.InputService4TestCaseOperation1Request(input)
+	req, _ := svc.InputService6TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -1993,15 +2941,14 @@ func TestInputService4ProtocolTestStringToStringListMapsInQuerystringCase1(t *te
 
 }
 
-func TestInputService5ProtocolTestURIParameterAndQuerystringParamsCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService5ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService5TestShapeInputService5TestCaseOperation1Input{
+func TestInputService7ProtocolTestURIParameterAndQuerystringParamsCase1(t *testing.T) {
+	svc := NewInputService7ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService7TestShapeInputService7TestCaseOperation1Input{
 		Ascending:  aws.String("true"),
 		PageToken:  aws.String("bar"),
 		PipelineId: aws.String("foo"),
 	}
-	req, _ := svc.InputService5TestCaseOperation1Request(input)
+	req, _ := svc.InputService7TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2015,19 +2962,18 @@ func TestInputService5ProtocolTestURIParameterAndQuerystringParamsCase1(t *testi
 
 }
 
-func TestInputService6ProtocolTestURIParameterQuerystringParamsAndJSONBodyCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService6ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService6TestShapeInputService6TestCaseOperation1Input{
+func TestInputService8ProtocolTestURIParameterQuerystringParamsAndJSONBodyCase1(t *testing.T) {
+	svc := NewInputService8ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService8TestShapeInputService8TestCaseOperation1Input{
 		Ascending: aws.String("true"),
-		Config: &InputService6TestShapeStructType{
+		Config: &InputService8TestShapeStructType{
 			A: aws.String("one"),
 			B: aws.String("two"),
 		},
 		PageToken:  aws.String("bar"),
 		PipelineId: aws.String("foo"),
 	}
-	req, _ := svc.InputService6TestCaseOperation1Request(input)
+	req, _ := svc.InputService8TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2046,20 +2992,19 @@ func TestInputService6ProtocolTestURIParameterQuerystringParamsAndJSONBodyCase1(
 
 }
 
-func TestInputService7ProtocolTestURIParameterQuerystringParamsHeadersAndJSONBodyCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService7ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService7TestShapeInputService7TestCaseOperation1Input{
+func TestInputService9ProtocolTestURIParameterQuerystringParamsHeadersAndJSONBodyCase1(t *testing.T) {
+	svc := NewInputService9ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService9TestShapeInputService9TestCaseOperation1Input{
 		Ascending: aws.String("true"),
 		Checksum:  aws.String("12345"),
-		Config: &InputService7TestShapeStructType{
+		Config: &InputService9TestShapeStructType{
 			A: aws.String("one"),
 			B: aws.String("two"),
 		},
 		PageToken:  aws.String("bar"),
 		PipelineId: aws.String("foo"),
 	}
-	req, _ := svc.InputService7TestCaseOperation1Request(input)
+	req, _ := svc.InputService9TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2079,15 +3024,14 @@ func TestInputService7ProtocolTestURIParameterQuerystringParamsHeadersAndJSONBod
 
 }
 
-func TestInputService8ProtocolTestStreamingPayloadCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService8ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService8TestShapeInputService8TestCaseOperation1Input{
+func TestInputService10ProtocolTestStreamingPayloadCase1(t *testing.T) {
+	svc := NewInputService10ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService10TestShapeInputService10TestCaseOperation1Input{
 		Body:      aws.ReadSeekCloser(bytes.NewBufferString("contents")),
 		Checksum:  aws.String("foo"),
 		VaultName: aws.String("name"),
 	}
-	req, _ := svc.InputService8TestCaseOperation1Request(input)
+	req, _ := svc.InputService10TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2107,13 +3051,13 @@ func TestInputService8ProtocolTestStreamingPayloadCase1(t *testing.T) {
 
 }
 
-func TestInputService9ProtocolTestStringPayloadCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService9ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService9TestShapeInputService9TestCaseOperation1Input{
-		Foo: aws.String("bar"),
+func TestInputService11ProtocolTestSerializeBlobsInBodyCase1(t *testing.T) {
+	svc := NewInputService11ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService11TestShapeInputService11TestCaseOperation1Input{
+		Bar: []byte("Blob param"),
+		Foo: aws.String("foo_name"),
 	}
-	req, _ := svc.InputService9TestCaseOperation1Request(input)
+	req, _ := svc.InputService11TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2123,22 +3067,21 @@ func TestInputService9ProtocolTestStringPayloadCase1(t *testing.T) {
 	// assert body
 	assert.NotNil(t, r.Body)
 	body, _ := ioutil.ReadAll(r.Body)
-	assert.Equal(t, `bar`, util.Trim(string(body)))
+	awstesting.AssertJSON(t, `{"Bar":"QmxvYiBwYXJhbQ=="}`, util.Trim(string(body)))
 
 	// assert URL
-	awstesting.AssertURL(t, "https://test/", r.URL.String())
+	awstesting.AssertURL(t, "https://test/2014-01-01/foo_name", r.URL.String())
 
 	// assert headers
 
 }
 
-func TestInputService10ProtocolTestBlobPayloadCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService10ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService10TestShapeInputShape{
+func TestInputService12ProtocolTestBlobPayloadCase1(t *testing.T) {
+	svc := NewInputService12ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService12TestShapeInputShape{
 		Foo: []byte("bar"),
 	}
-	req, _ := svc.InputService10TestCaseOperation1Request(input)
+	req, _ := svc.InputService12TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2157,11 +3100,10 @@ func TestInputService10ProtocolTestBlobPayloadCase1(t *testing.T) {
 
 }
 
-func TestInputService10ProtocolTestBlobPayloadCase2(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService10ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService10TestShapeInputShape{}
-	req, _ := svc.InputService10TestCaseOperation2Request(input)
+func TestInputService12ProtocolTestBlobPayloadCase2(t *testing.T) {
+	svc := NewInputService12ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService12TestShapeInputShape{}
+	req, _ := svc.InputService12TestCaseOperation2Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2175,15 +3117,14 @@ func TestInputService10ProtocolTestBlobPayloadCase2(t *testing.T) {
 
 }
 
-func TestInputService11ProtocolTestStructurePayloadCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService11ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService11TestShapeInputShape{
-		Foo: &InputService11TestShapeFooShape{
+func TestInputService13ProtocolTestStructurePayloadCase1(t *testing.T) {
+	svc := NewInputService13ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService13TestShapeInputShape{
+		Foo: &InputService13TestShapeFooShape{
 			Baz: aws.String("bar"),
 		},
 	}
-	req, _ := svc.InputService11TestCaseOperation1Request(input)
+	req, _ := svc.InputService13TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2202,11 +3143,10 @@ func TestInputService11ProtocolTestStructurePayloadCase1(t *testing.T) {
 
 }
 
-func TestInputService11ProtocolTestStructurePayloadCase2(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService11ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService11TestShapeInputShape{}
-	req, _ := svc.InputService11TestCaseOperation2Request(input)
+func TestInputService13ProtocolTestStructurePayloadCase2(t *testing.T) {
+	svc := NewInputService13ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService13TestShapeInputShape{}
+	req, _ := svc.InputService13TestCaseOperation2Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2220,11 +3160,10 @@ func TestInputService11ProtocolTestStructurePayloadCase2(t *testing.T) {
 
 }
 
-func TestInputService12ProtocolTestOmitsNullQueryParamsButSerializesEmptyStringsCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService12ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService12TestShapeInputShape{}
-	req, _ := svc.InputService12TestCaseOperation1Request(input)
+func TestInputService14ProtocolTestOmitsNullQueryParamsButSerializesEmptyStringsCase1(t *testing.T) {
+	svc := NewInputService14ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService14TestShapeInputShape{}
+	req, _ := svc.InputService14TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2238,13 +3177,12 @@ func TestInputService12ProtocolTestOmitsNullQueryParamsButSerializesEmptyStrings
 
 }
 
-func TestInputService12ProtocolTestOmitsNullQueryParamsButSerializesEmptyStringsCase2(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService12ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService12TestShapeInputShape{
+func TestInputService14ProtocolTestOmitsNullQueryParamsButSerializesEmptyStringsCase2(t *testing.T) {
+	svc := NewInputService14ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService14TestShapeInputShape{
 		Foo: aws.String(""),
 	}
-	req, _ := svc.InputService12TestCaseOperation2Request(input)
+	req, _ := svc.InputService14TestCaseOperation2Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2258,15 +3196,14 @@ func TestInputService12ProtocolTestOmitsNullQueryParamsButSerializesEmptyStrings
 
 }
 
-func TestInputService13ProtocolTestRecursiveShapesCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService13ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService13TestShapeInputShape{
-		RecursiveStruct: &InputService13TestShapeRecursiveStructType{
+func TestInputService15ProtocolTestRecursiveShapesCase1(t *testing.T) {
+	svc := NewInputService15ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService15TestShapeInputShape{
+		RecursiveStruct: &InputService15TestShapeRecursiveStructType{
 			NoRecurse: aws.String("foo"),
 		},
 	}
-	req, _ := svc.InputService13TestCaseOperation1Request(input)
+	req, _ := svc.InputService15TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2285,17 +3222,16 @@ func TestInputService13ProtocolTestRecursiveShapesCase1(t *testing.T) {
 
 }
 
-func TestInputService13ProtocolTestRecursiveShapesCase2(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService13ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService13TestShapeInputShape{
-		RecursiveStruct: &InputService13TestShapeRecursiveStructType{
-			RecursiveStruct: &InputService13TestShapeRecursiveStructType{
+func TestInputService15ProtocolTestRecursiveShapesCase2(t *testing.T) {
+	svc := NewInputService15ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService15TestShapeInputShape{
+		RecursiveStruct: &InputService15TestShapeRecursiveStructType{
+			RecursiveStruct: &InputService15TestShapeRecursiveStructType{
 				NoRecurse: aws.String("foo"),
 			},
 		},
 	}
-	req, _ := svc.InputService13TestCaseOperation2Request(input)
+	req, _ := svc.InputService15TestCaseOperation2Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2314,21 +3250,20 @@ func TestInputService13ProtocolTestRecursiveShapesCase2(t *testing.T) {
 
 }
 
-func TestInputService13ProtocolTestRecursiveShapesCase3(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService13ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService13TestShapeInputShape{
-		RecursiveStruct: &InputService13TestShapeRecursiveStructType{
-			RecursiveStruct: &InputService13TestShapeRecursiveStructType{
-				RecursiveStruct: &InputService13TestShapeRecursiveStructType{
-					RecursiveStruct: &InputService13TestShapeRecursiveStructType{
+func TestInputService15ProtocolTestRecursiveShapesCase3(t *testing.T) {
+	svc := NewInputService15ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService15TestShapeInputShape{
+		RecursiveStruct: &InputService15TestShapeRecursiveStructType{
+			RecursiveStruct: &InputService15TestShapeRecursiveStructType{
+				RecursiveStruct: &InputService15TestShapeRecursiveStructType{
+					RecursiveStruct: &InputService15TestShapeRecursiveStructType{
 						NoRecurse: aws.String("foo"),
 					},
 				},
 			},
 		},
 	}
-	req, _ := svc.InputService13TestCaseOperation3Request(input)
+	req, _ := svc.InputService15TestCaseOperation3Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2347,12 +3282,11 @@ func TestInputService13ProtocolTestRecursiveShapesCase3(t *testing.T) {
 
 }
 
-func TestInputService13ProtocolTestRecursiveShapesCase4(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService13ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService13TestShapeInputShape{
-		RecursiveStruct: &InputService13TestShapeRecursiveStructType{
-			RecursiveList: []*InputService13TestShapeRecursiveStructType{
+func TestInputService15ProtocolTestRecursiveShapesCase4(t *testing.T) {
+	svc := NewInputService15ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService15TestShapeInputShape{
+		RecursiveStruct: &InputService15TestShapeRecursiveStructType{
+			RecursiveList: []*InputService15TestShapeRecursiveStructType{
 				{
 					NoRecurse: aws.String("foo"),
 				},
@@ -2362,7 +3296,7 @@ func TestInputService13ProtocolTestRecursiveShapesCase4(t *testing.T) {
 			},
 		},
 	}
-	req, _ := svc.InputService13TestCaseOperation4Request(input)
+	req, _ := svc.InputService15TestCaseOperation4Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2381,24 +3315,23 @@ func TestInputService13ProtocolTestRecursiveShapesCase4(t *testing.T) {
 
 }
 
-func TestInputService13ProtocolTestRecursiveShapesCase5(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService13ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService13TestShapeInputShape{
-		RecursiveStruct: &InputService13TestShapeRecursiveStructType{
-			RecursiveList: []*InputService13TestShapeRecursiveStructType{
+func TestInputService15ProtocolTestRecursiveShapesCase5(t *testing.T) {
+	svc := NewInputService15ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService15TestShapeInputShape{
+		RecursiveStruct: &InputService15TestShapeRecursiveStructType{
+			RecursiveList: []*InputService15TestShapeRecursiveStructType{
 				{
 					NoRecurse: aws.String("foo"),
 				},
 				{
-					RecursiveStruct: &InputService13TestShapeRecursiveStructType{
+					RecursiveStruct: &InputService15TestShapeRecursiveStructType{
 						NoRecurse: aws.String("bar"),
 					},
 				},
 			},
 		},
 	}
-	req, _ := svc.InputService13TestCaseOperation5Request(input)
+	req, _ := svc.InputService15TestCaseOperation5Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2417,12 +3350,11 @@ func TestInputService13ProtocolTestRecursiveShapesCase5(t *testing.T) {
 
 }
 
-func TestInputService13ProtocolTestRecursiveShapesCase6(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService13ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService13TestShapeInputShape{
-		RecursiveStruct: &InputService13TestShapeRecursiveStructType{
-			RecursiveMap: map[string]*InputService13TestShapeRecursiveStructType{
+func TestInputService15ProtocolTestRecursiveShapesCase6(t *testing.T) {
+	svc := NewInputService15ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService15TestShapeInputShape{
+		RecursiveStruct: &InputService15TestShapeRecursiveStructType{
+			RecursiveMap: map[string]*InputService15TestShapeRecursiveStructType{
 				"bar": {
 					NoRecurse: aws.String("bar"),
 				},
@@ -2432,7 +3364,7 @@ func TestInputService13ProtocolTestRecursiveShapesCase6(t *testing.T) {
 			},
 		},
 	}
-	req, _ := svc.InputService13TestCaseOperation6Request(input)
+	req, _ := svc.InputService15TestCaseOperation6Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2451,13 +3383,12 @@ func TestInputService13ProtocolTestRecursiveShapesCase6(t *testing.T) {
 
 }
 
-func TestInputService14ProtocolTestTimestampValuesCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService14ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService14TestShapeInputShape{
+func TestInputService16ProtocolTestTimestampValuesCase1(t *testing.T) {
+	svc := NewInputService16ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService16TestShapeInputShape{
 		TimeArg: aws.Time(time.Unix(1422172800, 0)),
 	}
-	req, _ := svc.InputService14TestCaseOperation1Request(input)
+	req, _ := svc.InputService16TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2476,13 +3407,12 @@ func TestInputService14ProtocolTestTimestampValuesCase1(t *testing.T) {
 
 }
 
-func TestInputService14ProtocolTestTimestampValuesCase2(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService14ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService14TestShapeInputShape{
+func TestInputService16ProtocolTestTimestampValuesCase2(t *testing.T) {
+	svc := NewInputService16ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService16TestShapeInputShape{
 		TimeArgInHeader: aws.Time(time.Unix(1422172800, 0)),
 	}
-	req, _ := svc.InputService14TestCaseOperation2Request(input)
+	req, _ := svc.InputService16TestCaseOperation2Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2497,13 +3427,12 @@ func TestInputService14ProtocolTestTimestampValuesCase2(t *testing.T) {
 
 }
 
-func TestInputService15ProtocolTestNamedLocationsInJSONBodyCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService15ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService15TestShapeInputService15TestCaseOperation1Input{
+func TestInputService17ProtocolTestNamedLocationsInJSONBodyCase1(t *testing.T) {
+	svc := NewInputService17ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService17TestShapeInputService17TestCaseOperation1Input{
 		TimeArg: aws.Time(time.Unix(1422172800, 0)),
 	}
-	req, _ := svc.InputService15TestCaseOperation1Request(input)
+	req, _ := svc.InputService17TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2522,13 +3451,36 @@ func TestInputService15ProtocolTestNamedLocationsInJSONBodyCase1(t *testing.T) {
 
 }
 
-func TestInputService16ProtocolTestIdempotencyTokenAutoFillCase1(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService16ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService16TestShapeInputShape{
+func TestInputService18ProtocolTestStringPayloadCase1(t *testing.T) {
+	svc := NewInputService18ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService18TestShapeInputService18TestCaseOperation1Input{
+		Foo: aws.String("bar"),
+	}
+	req, _ := svc.InputService18TestCaseOperation1Request(input)
+	r := req.HTTPRequest
+
+	// build request
+	restjson.Build(req)
+	assert.NoError(t, req.Error)
+
+	// assert body
+	assert.NotNil(t, r.Body)
+	body, _ := ioutil.ReadAll(r.Body)
+	assert.Equal(t, `bar`, util.Trim(string(body)))
+
+	// assert URL
+	awstesting.AssertURL(t, "https://test/", r.URL.String())
+
+	// assert headers
+
+}
+
+func TestInputService19ProtocolTestIdempotencyTokenAutoFillCase1(t *testing.T) {
+	svc := NewInputService19ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService19TestShapeInputShape{
 		Token: aws.String("abc123"),
 	}
-	req, _ := svc.InputService16TestCaseOperation1Request(input)
+	req, _ := svc.InputService19TestCaseOperation1Request(input)
 	r := req.HTTPRequest
 
 	// build request
@@ -2547,11 +3499,10 @@ func TestInputService16ProtocolTestIdempotencyTokenAutoFillCase1(t *testing.T) {
 
 }
 
-func TestInputService16ProtocolTestIdempotencyTokenAutoFillCase2(t *testing.T) {
-	sess := session.New()
-	svc := NewInputService16ProtocolTest(sess, &aws.Config{Endpoint: aws.String("https://test")})
-	input := &InputService16TestShapeInputShape{}
-	req, _ := svc.InputService16TestCaseOperation2Request(input)
+func TestInputService19ProtocolTestIdempotencyTokenAutoFillCase2(t *testing.T) {
+	svc := NewInputService19ProtocolTest(unit.Session, &aws.Config{Endpoint: aws.String("https://test")})
+	input := &InputService19TestShapeInputShape{}
+	req, _ := svc.InputService19TestCaseOperation2Request(input)
 	r := req.HTTPRequest
 
 	// build request

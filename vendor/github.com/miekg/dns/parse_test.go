@@ -360,6 +360,7 @@ func TestNSEC(t *testing.T) {
 		"localhost.dnssex.nl. IN NSEC www.dnssex.nl. A RRSIG NSEC":                                                                                 "localhost.dnssex.nl.\t3600\tIN\tNSEC\twww.dnssex.nl. A RRSIG NSEC",
 		"localhost.dnssex.nl. IN NSEC www.dnssex.nl. A RRSIG NSEC TYPE65534":                                                                       "localhost.dnssex.nl.\t3600\tIN\tNSEC\twww.dnssex.nl. A RRSIG NSEC TYPE65534",
 		"localhost.dnssex.nl. IN NSEC www.dnssex.nl. A RRSIG NSec Type65534":                                                                       "localhost.dnssex.nl.\t3600\tIN\tNSEC\twww.dnssex.nl. A RRSIG NSEC TYPE65534",
+		"44ohaq2njb0idnvolt9ggthvsk1e1uv8.skydns.test. NSEC3 1 0 0 - 44OHAQ2NJB0IDNVOLT9GGTHVSK1E1UVA":                                             "44ohaq2njb0idnvolt9ggthvsk1e1uv8.skydns.test.\t3600\tIN\tNSEC3\t1 0 0 - 44OHAQ2NJB0IDNVOLT9GGTHVSK1E1UVA",
 	}
 	for i, o := range nsectests {
 		rr, err := NewRR(i)
@@ -1343,38 +1344,6 @@ func TestPrintfVerbsRdata(t *testing.T) {
 	}
 	if Field(x, 0) != "" {
 		t.Errorf("should be empty")
-	}
-}
-
-func TestParseIPSECKEY(t *testing.T) {
-	tests := []string{
-		"38.2.0.192.in-addr.arpa. 7200 IN     IPSECKEY ( 10 1 2 192.0.2.38 AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ== )",
-		"38.2.0.192.in-addr.arpa.\t7200\tIN\tIPSECKEY\t10 1 2 192.0.2.38 AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ==",
-
-		"38.2.0.192.in-addr.arpa. 7200 IN     IPSECKEY ( 10 0 2 .  AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ== )",
-		"38.2.0.192.in-addr.arpa.\t7200\tIN\tIPSECKEY\t10 0 2 . AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ==",
-
-		"38.2.0.192.in-addr.arpa. 7200 IN     IPSECKEY ( 10 1 2 192.0.2.3 AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ== )",
-		"38.2.0.192.in-addr.arpa.\t7200\tIN\tIPSECKEY\t10 1 2 192.0.2.3 AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ==",
-
-		"38.1.0.192.in-addr.arpa. 7200 IN     IPSECKEY ( 10 3 2 mygateway.example.com.  AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ== )",
-		"38.1.0.192.in-addr.arpa.\t7200\tIN\tIPSECKEY\t10 3 2 mygateway.example.com. AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ==",
-
-		"0.d.4.0.3.0.e.f.f.f.3.f.0.1.2.0 7200 IN     IPSECKEY ( 10 2 2 2001:0DB8:0:8002::2000:1 AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ== )",
-		"0.d.4.0.3.0.e.f.f.f.3.f.0.1.2.0.\t7200\tIN\tIPSECKEY\t10 2 2 2001:db8:0:8002::2000:1 AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ==",
-	}
-	for i := 0; i < len(tests)-1; i++ {
-		t1 := tests[i]
-		e1 := tests[i+1]
-		r, err := NewRR(t1)
-		if err != nil {
-			t.Errorf("failed to parse IPSECKEY %v", err)
-			continue
-		}
-		if r.String() != e1 {
-			t.Errorf("these two IPSECKEY records should match:\n%s\n%s", r.String(), e1)
-		}
-		i++
 	}
 }
 

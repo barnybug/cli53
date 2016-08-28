@@ -11,7 +11,7 @@ all: install
 deps:
 	go get github.com/pwaller/goupx
 	go get github.com/wadey/gocovmerge
-	go get github.com/lsegal/gucumber/cmd/gucumber
+	go get github.com/gucumber/gucumber/cmd/gucumber
 
 build:
 	go build -i -v $(buildargs) $(exe)

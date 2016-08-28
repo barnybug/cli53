@@ -13,6 +13,19 @@ import (
 	"testing"
 )
 
+var (
+	lastExitCode = 0
+	fakeOsExiter = func(rc int) {
+		lastExitCode = rc
+	}
+	fakeErrWriter = &bytes.Buffer{}
+)
+
+func init() {
+	OsExiter = fakeOsExiter
+	ErrWriter = fakeErrWriter
+}
+
 type opCounts struct {
 	Total, BashComplete, OnUsageError, Before, CommandNotFound, Action, After, SubCommand int
 }
@@ -908,6 +921,7 @@ func TestApp_Run_CommandWithSubcommandHasHelpTopic(t *testing.T) {
 			Name:        "foo",
 			Description: "descriptive wall of text about how it does foo things",
 			Subcommands: []Command{subCmdBar, subCmdBaz},
+			Action:      func(c *Context) error { return nil },
 		}
 
 		app.Commands = []Command{cmd}

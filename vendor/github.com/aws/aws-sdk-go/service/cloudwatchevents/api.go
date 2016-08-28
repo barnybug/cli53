@@ -4,6 +4,7 @@
 package cloudwatchevents
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/awsutil"
@@ -14,7 +15,28 @@ import (
 
 const opDeleteRule = "DeleteRule"
 
-// DeleteRuleRequest generates a request for the DeleteRule operation.
+// DeleteRuleRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteRule operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteRule method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteRuleRequest method.
+//    req, resp := client.DeleteRuleRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudWatchEvents) DeleteRuleRequest(input *DeleteRuleInput) (req *request.Request, output *DeleteRuleOutput) {
 	op := &request.Operation{
 		Name:       opDeleteRule,
@@ -37,9 +59,9 @@ func (c *CloudWatchEvents) DeleteRuleRequest(input *DeleteRuleInput) (req *reque
 // Deletes a rule. You must remove all targets from a rule using RemoveTargets
 // before you can delete the rule.
 //
-//  Note: When you make a change with this action, incoming events might still
-// continue to match to the deleted rule. Please allow a short period of time
-// for changes to take effect.
+//  Note: When you delete a rule, incoming events might still continue to match
+// to the deleted rule. Please allow a short period of time for changes to take
+// effect.
 func (c *CloudWatchEvents) DeleteRule(input *DeleteRuleInput) (*DeleteRuleOutput, error) {
 	req, out := c.DeleteRuleRequest(input)
 	err := req.Send()
@@ -48,7 +70,28 @@ func (c *CloudWatchEvents) DeleteRule(input *DeleteRuleInput) (*DeleteRuleOutput
 
 const opDescribeRule = "DescribeRule"
 
-// DescribeRuleRequest generates a request for the DescribeRule operation.
+// DescribeRuleRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeRule operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeRule method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeRuleRequest method.
+//    req, resp := client.DescribeRuleRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudWatchEvents) DescribeRuleRequest(input *DescribeRuleInput) (req *request.Request, output *DescribeRuleOutput) {
 	op := &request.Operation{
 		Name:       opDescribeRule,
@@ -75,7 +118,28 @@ func (c *CloudWatchEvents) DescribeRule(input *DescribeRuleInput) (*DescribeRule
 
 const opDisableRule = "DisableRule"
 
-// DisableRuleRequest generates a request for the DisableRule operation.
+// DisableRuleRequest generates a "aws/request.Request" representing the
+// client's request for the DisableRule operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DisableRule method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DisableRuleRequest method.
+//    req, resp := client.DisableRuleRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudWatchEvents) DisableRuleRequest(input *DisableRuleInput) (req *request.Request, output *DisableRuleOutput) {
 	op := &request.Operation{
 		Name:       opDisableRule,
@@ -98,9 +162,9 @@ func (c *CloudWatchEvents) DisableRuleRequest(input *DisableRuleInput) (req *req
 // Disables a rule. A disabled rule won't match any events, and won't self-trigger
 // if it has a schedule expression.
 //
-//  Note: When you make a change with this action, incoming events might still
-// continue to match to the disabled rule. Please allow a short period of time
-// for changes to take effect.
+//  Note: When you disable a rule, incoming events might still continue to
+// match to the disabled rule. Please allow a short period of time for changes
+// to take effect.
 func (c *CloudWatchEvents) DisableRule(input *DisableRuleInput) (*DisableRuleOutput, error) {
 	req, out := c.DisableRuleRequest(input)
 	err := req.Send()
@@ -109,7 +173,28 @@ func (c *CloudWatchEvents) DisableRule(input *DisableRuleInput) (*DisableRuleOut
 
 const opEnableRule = "EnableRule"
 
-// EnableRuleRequest generates a request for the EnableRule operation.
+// EnableRuleRequest generates a "aws/request.Request" representing the
+// client's request for the EnableRule operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the EnableRule method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the EnableRuleRequest method.
+//    req, resp := client.EnableRuleRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudWatchEvents) EnableRuleRequest(input *EnableRuleInput) (req *request.Request, output *EnableRuleOutput) {
 	op := &request.Operation{
 		Name:       opEnableRule,
@@ -131,9 +216,9 @@ func (c *CloudWatchEvents) EnableRuleRequest(input *EnableRuleInput) (req *reque
 
 // Enables a rule. If the rule does not exist, the operation fails.
 //
-//  Note: When you make a change with this action, incoming events might not
-// immediately start matching to a newly enabled rule. Please allow a short
-// period of time for changes to take effect.
+//  Note: When you enable a rule, incoming events might not immediately start
+// matching to a newly enabled rule. Please allow a short period of time for
+// changes to take effect.
 func (c *CloudWatchEvents) EnableRule(input *EnableRuleInput) (*EnableRuleOutput, error) {
 	req, out := c.EnableRuleRequest(input)
 	err := req.Send()
@@ -142,7 +227,28 @@ func (c *CloudWatchEvents) EnableRule(input *EnableRuleInput) (*EnableRuleOutput
 
 const opListRuleNamesByTarget = "ListRuleNamesByTarget"
 
-// ListRuleNamesByTargetRequest generates a request for the ListRuleNamesByTarget operation.
+// ListRuleNamesByTargetRequest generates a "aws/request.Request" representing the
+// client's request for the ListRuleNamesByTarget operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListRuleNamesByTarget method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListRuleNamesByTargetRequest method.
+//    req, resp := client.ListRuleNamesByTargetRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudWatchEvents) ListRuleNamesByTargetRequest(input *ListRuleNamesByTargetInput) (req *request.Request, output *ListRuleNamesByTargetOutput) {
 	op := &request.Operation{
 		Name:       opListRuleNamesByTarget,
@@ -160,12 +266,12 @@ func (c *CloudWatchEvents) ListRuleNamesByTargetRequest(input *ListRuleNamesByTa
 	return
 }
 
-// Lists the names of the rules that the given target is put to. Using this
-// action, you can find out which of the rules in Amazon CloudWatch Events can
-// invoke a specific target in your account. If you have more rules in your
-// account than the given limit, the results will be paginated. In that case,
-// use the next token returned in the response and repeat the ListRulesByTarget
-// action until the NextToken in the response is returned as null.
+// Lists the names of the rules that the given target is put to. You can see
+// which of the rules in Amazon CloudWatch Events can invoke a specific target
+// in your account. If you have more rules in your account than the given limit,
+// the results will be paginated. In that case, use the next token returned
+// in the response and repeat ListRulesByTarget until the NextToken in the response
+// is returned as null.
 func (c *CloudWatchEvents) ListRuleNamesByTarget(input *ListRuleNamesByTargetInput) (*ListRuleNamesByTargetOutput, error) {
 	req, out := c.ListRuleNamesByTargetRequest(input)
 	err := req.Send()
@@ -174,7 +280,28 @@ func (c *CloudWatchEvents) ListRuleNamesByTarget(input *ListRuleNamesByTargetInp
 
 const opListRules = "ListRules"
 
-// ListRulesRequest generates a request for the ListRules operation.
+// ListRulesRequest generates a "aws/request.Request" representing the
+// client's request for the ListRules operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListRules method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListRulesRequest method.
+//    req, resp := client.ListRulesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudWatchEvents) ListRulesRequest(input *ListRulesInput) (req *request.Request, output *ListRulesOutput) {
 	op := &request.Operation{
 		Name:       opListRules,
@@ -196,8 +323,7 @@ func (c *CloudWatchEvents) ListRulesRequest(input *ListRulesInput) (req *request
 // list all the rules or you can provide a prefix to match to the rule names.
 // If you have more rules in your account than the given limit, the results
 // will be paginated. In that case, use the next token returned in the response
-// and repeat the ListRules action until the NextToken in the response is returned
-// as null.
+// and repeat ListRules until the NextToken in the response is returned as null.
 func (c *CloudWatchEvents) ListRules(input *ListRulesInput) (*ListRulesOutput, error) {
 	req, out := c.ListRulesRequest(input)
 	err := req.Send()
@@ -206,7 +332,28 @@ func (c *CloudWatchEvents) ListRules(input *ListRulesInput) (*ListRulesOutput, e
 
 const opListTargetsByRule = "ListTargetsByRule"
 
-// ListTargetsByRuleRequest generates a request for the ListTargetsByRule operation.
+// ListTargetsByRuleRequest generates a "aws/request.Request" representing the
+// client's request for the ListTargetsByRule operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListTargetsByRule method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListTargetsByRuleRequest method.
+//    req, resp := client.ListTargetsByRuleRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudWatchEvents) ListTargetsByRuleRequest(input *ListTargetsByRuleInput) (req *request.Request, output *ListTargetsByRuleOutput) {
 	op := &request.Operation{
 		Name:       opListTargetsByRule,
@@ -233,7 +380,28 @@ func (c *CloudWatchEvents) ListTargetsByRule(input *ListTargetsByRuleInput) (*Li
 
 const opPutEvents = "PutEvents"
 
-// PutEventsRequest generates a request for the PutEvents operation.
+// PutEventsRequest generates a "aws/request.Request" representing the
+// client's request for the PutEvents operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the PutEvents method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the PutEventsRequest method.
+//    req, resp := client.PutEventsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudWatchEvents) PutEventsRequest(input *PutEventsInput) (req *request.Request, output *PutEventsOutput) {
 	op := &request.Operation{
 		Name:       opPutEvents,
@@ -261,7 +429,28 @@ func (c *CloudWatchEvents) PutEvents(input *PutEventsInput) (*PutEventsOutput, e
 
 const opPutRule = "PutRule"
 
-// PutRuleRequest generates a request for the PutRule operation.
+// PutRuleRequest generates a "aws/request.Request" representing the
+// client's request for the PutRule operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the PutRule method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the PutRuleRequest method.
+//    req, resp := client.PutRuleRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudWatchEvents) PutRuleRequest(input *PutRuleInput) (req *request.Request, output *PutRuleOutput) {
 	op := &request.Operation{
 		Name:       opPutRule,
@@ -282,9 +471,9 @@ func (c *CloudWatchEvents) PutRuleRequest(input *PutRuleInput) (req *request.Req
 // Creates or updates a rule. Rules are enabled by default, or based on value
 // of the State parameter. You can disable a rule using DisableRule.
 //
-//  Note: When you make a change with this action, incoming events might not
-// immediately start matching to new or updated rules. Please allow a short
-// period of time for changes to take effect.
+//  Note: When you create or update a rule, incoming events might not immediately
+// start matching to new or updated rules. Please allow a short period of time
+// for changes to take effect.
 //
 // A rule must contain at least an EventPattern or ScheduleExpression. Rules
 // with EventPatterns are triggered when a matching event is observed. Rules
@@ -305,7 +494,28 @@ func (c *CloudWatchEvents) PutRule(input *PutRuleInput) (*PutRuleOutput, error) 
 
 const opPutTargets = "PutTargets"
 
-// PutTargetsRequest generates a request for the PutTargets operation.
+// PutTargetsRequest generates a "aws/request.Request" representing the
+// client's request for the PutTargets operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the PutTargets method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the PutTargetsRequest method.
+//    req, resp := client.PutTargetsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudWatchEvents) PutTargetsRequest(input *PutTargetsInput) (req *request.Request, output *PutTargetsOutput) {
 	op := &request.Operation{
 		Name:       opPutTargets,
@@ -323,13 +533,30 @@ func (c *CloudWatchEvents) PutTargetsRequest(input *PutTargetsInput) (req *reque
 	return
 }
 
-// Adds target(s) to a rule. Updates the target(s) if they are already associated
+// Adds target(s) to a rule. Targets are the resources that can be invoked when
+// a rule is triggered. For example, AWS Lambda functions, Amazon Kinesis streams,
+// and built-in targets. Updates the target(s) if they are already associated
 // with the role. In other words, if there is already a target with the given
 // target ID, then the target associated with that ID is updated.
 //
-//  Note: When you make a change with this action, when the associated rule
-// triggers, new or updated targets might not be immediately invoked. Please
-// allow a short period of time for changes to take effect.
+// In order to be able to make API calls against the resources you own, Amazon
+// CloudWatch Events needs the appropriate permissions. For AWS Lambda and Amazon
+// SNS resources, CloudWatch Events relies on resource-based policies. For Amazon
+// Kinesis streams, CloudWatch Events relies on IAM roles. For more information,
+// see Permissions for Sending Events to Targets (http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/EventsTargetPermissions.html)
+// in the Amazon CloudWatch Developer Guide.
+//
+// Input and InputPath are mutually-exclusive and optional parameters of a
+// target. When a rule is triggered due to a matched event, if for a target:
+//
+//  Neither Input nor InputPath is specified, then the entire event is passed
+// to the target in JSON form.  InputPath is specified in the form of JSONPath
+// (e.g. $.detail), then only the part of the event specified in the path is
+// passed to the target (e.g. only the detail part of the event is passed).
+//   Input is specified in the form of a valid JSON, then the matched event
+// is overridden with this constant.   Note: When you add targets to a rule,
+// when the associated rule triggers, new or updated targets might not be immediately
+// invoked. Please allow a short period of time for changes to take effect.
 func (c *CloudWatchEvents) PutTargets(input *PutTargetsInput) (*PutTargetsOutput, error) {
 	req, out := c.PutTargetsRequest(input)
 	err := req.Send()
@@ -338,7 +565,28 @@ func (c *CloudWatchEvents) PutTargets(input *PutTargetsInput) (*PutTargetsOutput
 
 const opRemoveTargets = "RemoveTargets"
 
-// RemoveTargetsRequest generates a request for the RemoveTargets operation.
+// RemoveTargetsRequest generates a "aws/request.Request" representing the
+// client's request for the RemoveTargets operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RemoveTargets method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RemoveTargetsRequest method.
+//    req, resp := client.RemoveTargetsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudWatchEvents) RemoveTargetsRequest(input *RemoveTargetsInput) (req *request.Request, output *RemoveTargetsOutput) {
 	op := &request.Operation{
 		Name:       opRemoveTargets,
@@ -359,9 +607,9 @@ func (c *CloudWatchEvents) RemoveTargetsRequest(input *RemoveTargetsInput) (req 
 // Removes target(s) from a rule so that when the rule is triggered, those targets
 // will no longer be invoked.
 //
-//  Note: When you make a change with this action, when the associated rule
-// triggers, removed targets might still continue to be invoked. Please allow
-// a short period of time for changes to take effect.
+//  Note: When you remove a target, when the associated rule triggers, removed
+// targets might still continue to be invoked. Please allow a short period of
+// time for changes to take effect.
 func (c *CloudWatchEvents) RemoveTargets(input *RemoveTargetsInput) (*RemoveTargetsOutput, error) {
 	req, out := c.RemoveTargetsRequest(input)
 	err := req.Send()
@@ -370,7 +618,28 @@ func (c *CloudWatchEvents) RemoveTargets(input *RemoveTargetsInput) (*RemoveTarg
 
 const opTestEventPattern = "TestEventPattern"
 
-// TestEventPatternRequest generates a request for the TestEventPattern operation.
+// TestEventPatternRequest generates a "aws/request.Request" representing the
+// client's request for the TestEventPattern operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the TestEventPattern method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the TestEventPatternRequest method.
+//    req, resp := client.TestEventPatternRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudWatchEvents) TestEventPatternRequest(input *TestEventPatternInput) (req *request.Request, output *TestEventPatternOutput) {
 	op := &request.Operation{
 		Name:       opTestEventPattern,
@@ -419,6 +688,22 @@ func (s DeleteRuleInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteRuleInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteRuleInput"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type DeleteRuleOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -449,6 +734,22 @@ func (s DescribeRuleInput) String() string {
 // GoString returns the string representation
 func (s DescribeRuleInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeRuleInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeRuleInput"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The result of the DescribeRule operation.
@@ -505,6 +806,22 @@ func (s DisableRuleInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DisableRuleInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DisableRuleInput"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type DisableRuleOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -535,6 +852,22 @@ func (s EnableRuleInput) String() string {
 // GoString returns the string representation
 func (s EnableRuleInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *EnableRuleInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "EnableRuleInput"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type EnableRuleOutput struct {
@@ -575,6 +908,28 @@ func (s ListRuleNamesByTargetInput) String() string {
 // GoString returns the string representation
 func (s ListRuleNamesByTargetInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListRuleNamesByTargetInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListRuleNamesByTargetInput"}
+	if s.Limit != nil && *s.Limit < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("Limit", 1))
+	}
+	if s.NextToken != nil && len(*s.NextToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("NextToken", 1))
+	}
+	if s.TargetArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("TargetArn"))
+	}
+	if s.TargetArn != nil && len(*s.TargetArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TargetArn", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The result of the ListRuleNamesByTarget operation.
@@ -623,6 +978,25 @@ func (s ListRulesInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListRulesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListRulesInput"}
+	if s.Limit != nil && *s.Limit < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("Limit", 1))
+	}
+	if s.NamePrefix != nil && len(*s.NamePrefix) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("NamePrefix", 1))
+	}
+	if s.NextToken != nil && len(*s.NextToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("NextToken", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The result of the ListRules operation.
 type ListRulesOutput struct {
 	_ struct{} `type:"structure"`
@@ -669,6 +1043,28 @@ func (s ListTargetsByRuleInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListTargetsByRuleInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListTargetsByRuleInput"}
+	if s.Limit != nil && *s.Limit < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("Limit", 1))
+	}
+	if s.NextToken != nil && len(*s.NextToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("NextToken", 1))
+	}
+	if s.Rule == nil {
+		invalidParams.Add(request.NewErrParamRequired("Rule"))
+	}
+	if s.Rule != nil && len(*s.Rule) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Rule", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The result of the ListTargetsByRule operation.
 type ListTargetsByRuleOutput struct {
 	_ struct{} `type:"structure"`
@@ -710,6 +1106,22 @@ func (s PutEventsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PutEventsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PutEventsInput"}
+	if s.Entries == nil {
+		invalidParams.Add(request.NewErrParamRequired("Entries"))
+	}
+	if s.Entries != nil && len(s.Entries) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Entries", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The result of the PutEvents operation.
 type PutEventsOutput struct {
 	_ struct{} `type:"structure"`
@@ -734,7 +1146,7 @@ func (s PutEventsOutput) GoString() string {
 	return s.String()
 }
 
-// Contains information about the event to be used in the PutEvents action.
+// Contains information about the event to be used in PutEvents.
 type PutEventsRequestEntry struct {
 	_ struct{} `type:"structure"`
 
@@ -825,6 +1237,25 @@ func (s PutRuleInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PutRuleInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PutRuleInput"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.RoleArn != nil && len(*s.RoleArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("RoleArn", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The result of the PutRule operation.
 type PutRuleOutput struct {
 	_ struct{} `type:"structure"`
@@ -862,6 +1293,35 @@ func (s PutTargetsInput) String() string {
 // GoString returns the string representation
 func (s PutTargetsInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PutTargetsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PutTargetsInput"}
+	if s.Rule == nil {
+		invalidParams.Add(request.NewErrParamRequired("Rule"))
+	}
+	if s.Rule != nil && len(*s.Rule) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Rule", 1))
+	}
+	if s.Targets == nil {
+		invalidParams.Add(request.NewErrParamRequired("Targets"))
+	}
+	if s.Targets != nil {
+		for i, v := range s.Targets {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Targets", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The result of the PutTargets operation.
@@ -928,6 +1388,28 @@ func (s RemoveTargetsInput) String() string {
 // GoString returns the string representation
 func (s RemoveTargetsInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RemoveTargetsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RemoveTargetsInput"}
+	if s.Ids == nil {
+		invalidParams.Add(request.NewErrParamRequired("Ids"))
+	}
+	if s.Ids != nil && len(s.Ids) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Ids", 1))
+	}
+	if s.Rule == nil {
+		invalidParams.Add(request.NewErrParamRequired("Rule"))
+	}
+	if s.Rule != nil && len(*s.Rule) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Rule", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The result of the RemoveTargets operation.
@@ -1055,6 +1537,28 @@ func (s Target) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Target) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Target"}
+	if s.Arn == nil {
+		invalidParams.Add(request.NewErrParamRequired("Arn"))
+	}
+	if s.Arn != nil && len(*s.Arn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Arn", 1))
+	}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Container for the parameters to the TestEventPattern operation.
 type TestEventPatternInput struct {
 	_ struct{} `type:"structure"`
@@ -1074,6 +1578,22 @@ func (s TestEventPatternInput) String() string {
 // GoString returns the string representation
 func (s TestEventPatternInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *TestEventPatternInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "TestEventPatternInput"}
+	if s.Event == nil {
+		invalidParams.Add(request.NewErrParamRequired("Event"))
+	}
+	if s.EventPattern == nil {
+		invalidParams.Add(request.NewErrParamRequired("EventPattern"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The result of the TestEventPattern operation.

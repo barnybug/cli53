@@ -4,6 +4,8 @@
 package mobileanalytics
 
 import (
+	"fmt"
+
 	"github.com/aws/aws-sdk-go/aws/awsutil"
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/private/protocol"
@@ -12,7 +14,28 @@ import (
 
 const opPutEvents = "PutEvents"
 
-// PutEventsRequest generates a request for the PutEvents operation.
+// PutEventsRequest generates a "aws/request.Request" representing the
+// client's request for the PutEvents operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the PutEvents method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the PutEventsRequest method.
+//    req, resp := client.PutEventsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *MobileAnalytics) PutEventsRequest(input *PutEventsInput) (req *request.Request, output *PutEventsOutput) {
 	op := &request.Operation{
 		Name:       opPutEvents,
@@ -82,6 +105,33 @@ func (s Event) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Event) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Event"}
+	if s.EventType == nil {
+		invalidParams.Add(request.NewErrParamRequired("EventType"))
+	}
+	if s.EventType != nil && len(*s.EventType) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("EventType", 1))
+	}
+	if s.Timestamp == nil {
+		invalidParams.Add(request.NewErrParamRequired("Timestamp"))
+	}
+	if s.Version != nil && len(*s.Version) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Version", 1))
+	}
+	if s.Session != nil {
+		if err := s.Session.Validate(); err != nil {
+			invalidParams.AddNested("Session", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A container for the data needed for a PutEvent operation
 type PutEventsInput struct {
 	_ struct{} `type:"structure"`
@@ -105,6 +155,32 @@ func (s PutEventsInput) String() string {
 // GoString returns the string representation
 func (s PutEventsInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PutEventsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PutEventsInput"}
+	if s.ClientContext == nil {
+		invalidParams.Add(request.NewErrParamRequired("ClientContext"))
+	}
+	if s.Events == nil {
+		invalidParams.Add(request.NewErrParamRequired("Events"))
+	}
+	if s.Events != nil {
+		for i, v := range s.Events {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Events", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type PutEventsOutput struct {
@@ -148,4 +224,17 @@ func (s Session) String() string {
 // GoString returns the string representation
 func (s Session) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Session) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Session"}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }

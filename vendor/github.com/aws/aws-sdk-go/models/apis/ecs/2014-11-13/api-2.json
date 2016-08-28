@@ -502,7 +502,8 @@
         "name":{"shape":"String"},
         "image":{"shape":"String"},
         "cpu":{"shape":"Integer"},
-        "memory":{"shape":"Integer"},
+        "memory":{"shape":"BoxedInteger"},
+        "memoryReservation":{"shape":"BoxedInteger"},
         "links":{"shape":"StringList"},
         "portMappings":{"shape":"PortMappingList"},
         "essential":{"shape":"BoxedBoolean"},
@@ -878,6 +879,7 @@
       "type":"structure",
       "members":{
         "familyPrefix":{"shape":"String"},
+        "status":{"shape":"TaskDefinitionFamilyStatus"},
         "nextToken":{"shape":"String"},
         "maxResults":{"shape":"BoxedInteger"}
       }
@@ -929,6 +931,7 @@
     "LoadBalancer":{
       "type":"structure",
       "members":{
+        "targetGroupArn":{"shape":"String"},
         "loadBalancerName":{"shape":"String"},
         "containerName":{"shape":"String"},
         "containerPort":{"shape":"BoxedInteger"}
@@ -958,7 +961,9 @@
         "syslog",
         "journald",
         "gelf",
-        "fluentd"
+        "fluentd",
+        "awslogs",
+        "splunk"
       ]
     },
     "Long":{"type":"long"},
@@ -993,6 +998,14 @@
       "type":"list",
       "member":{"shape":"NetworkBinding"}
     },
+    "NetworkMode":{
+      "type":"string",
+      "enum":[
+        "bridge",
+        "host",
+        "none"
+      ]
+    },
     "NoUpdateAvailableException":{
       "type":"structure",
       "members":{
@@ -1002,8 +1015,8 @@
     "PortMapping":{
       "type":"structure",
       "members":{
-        "containerPort":{"shape":"Integer"},
-        "hostPort":{"shape":"Integer"},
+        "containerPort":{"shape":"BoxedInteger"},
+        "hostPort":{"shape":"BoxedInteger"},
         "protocol":{"shape":"TransportProtocol"}
       }
     },
@@ -1037,6 +1050,8 @@
       ],
       "members":{
         "family":{"shape":"String"},
+        "taskRoleArn":{"shape":"String"},
+        "networkMode":{"shape":"NetworkMode"},
         "containerDefinitions":{"shape":"ContainerDefinitions"},
         "volumes":{"shape":"VolumeList"}
       }
@@ -1107,7 +1122,8 @@
         "deploymentConfiguration":{"shape":"DeploymentConfiguration"},
         "deployments":{"shape":"Deployments"},
         "roleArn":{"shape":"String"},
-        "events":{"shape":"ServiceEvents"}
+        "events":{"shape":"ServiceEvents"},
+        "createdAt":{"shape":"Timestamp"}
       }
     },
     "ServiceEvent":{
@@ -1243,11 +1259,21 @@
         "taskDefinitionArn":{"shape":"String"},
         "containerDefinitions":{"shape":"ContainerDefinitions"},
         "family":{"shape":"String"},
+        "taskRoleArn":{"shape":"String"},
+        "networkMode":{"shape":"NetworkMode"},
         "revision":{"shape":"Integer"},
         "volumes":{"shape":"VolumeList"},
         "status":{"shape":"TaskDefinitionStatus"},
         "requiresAttributes":{"shape":"RequiresAttributes"}
       }
+    },
+    "TaskDefinitionFamilyStatus":{
+      "type":"string",
+      "enum":[
+        "ACTIVE",
+        "INACTIVE",
+        "ALL"
+      ]
     },
     "TaskDefinitionStatus":{
       "type":"string",
@@ -1259,7 +1285,8 @@
     "TaskOverride":{
       "type":"structure",
       "members":{
-        "containerOverrides":{"shape":"ContainerOverrides"}
+        "containerOverrides":{"shape":"ContainerOverrides"},
+        "taskRoleArn":{"shape":"String"}
       }
     },
     "Tasks":{

@@ -20,7 +20,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/route53"
 	"github.com/barnybug/cli53"
 
-	. "github.com/lsegal/gucumber"
+	. "github.com/gucumber/gucumber"
 )
 
 func getService() *route53.Route53 {

@@ -298,6 +298,7 @@
       "member":{"shape":"Application"}
     },
     "Boolean":{"type":"boolean"},
+    "BooleanObject":{"type":"boolean"},
     "BootstrapActionConfig":{
       "type":"structure",
       "required":[
@@ -480,9 +481,54 @@
         "Step":{"shape":"Step"}
       }
     },
+    "EC2InstanceIdsList":{
+      "type":"list",
+      "member":{"shape":"InstanceId"}
+    },
     "EC2InstanceIdsToTerminateList":{
       "type":"list",
       "member":{"shape":"InstanceId"}
+    },
+    "EbsBlockDevice":{
+      "type":"structure",
+      "members":{
+        "VolumeSpecification":{"shape":"VolumeSpecification"},
+        "Device":{"shape":"String"}
+      }
+    },
+    "EbsBlockDeviceConfig":{
+      "type":"structure",
+      "required":["VolumeSpecification"],
+      "members":{
+        "VolumeSpecification":{"shape":"VolumeSpecification"},
+        "VolumesPerInstance":{"shape":"Integer"}
+      }
+    },
+    "EbsBlockDeviceConfigList":{
+      "type":"list",
+      "member":{"shape":"EbsBlockDeviceConfig"}
+    },
+    "EbsBlockDeviceList":{
+      "type":"list",
+      "member":{"shape":"EbsBlockDevice"}
+    },
+    "EbsConfiguration":{
+      "type":"structure",
+      "members":{
+        "EbsBlockDeviceConfigs":{"shape":"EbsBlockDeviceConfigList"},
+        "EbsOptimized":{"shape":"BooleanObject"}
+      }
+    },
+    "EbsVolume":{
+      "type":"structure",
+      "members":{
+        "Device":{"shape":"String"},
+        "VolumeId":{"shape":"String"}
+      }
+    },
+    "EbsVolumeList":{
+      "type":"list",
+      "member":{"shape":"EbsVolume"}
     },
     "Ec2InstanceAttributes":{
       "type":"structure",
@@ -504,6 +550,14 @@
       "min":1
     },
     "ErrorMessage":{"type":"string"},
+    "FailureDetails":{
+      "type":"structure",
+      "members":{
+        "Reason":{"shape":"String"},
+        "Message":{"shape":"String"},
+        "LogFile":{"shape":"String"}
+      }
+    },
     "HadoopJarStepConfig":{
       "type":"structure",
       "required":["Jar"],
@@ -532,7 +586,9 @@
         "PublicIpAddress":{"shape":"String"},
         "PrivateDnsName":{"shape":"String"},
         "PrivateIpAddress":{"shape":"String"},
-        "Status":{"shape":"InstanceStatus"}
+        "Status":{"shape":"InstanceStatus"},
+        "InstanceGroupId":{"shape":"String"},
+        "EbsVolumes":{"shape":"EbsVolumeList"}
       }
     },
     "InstanceGroup":{
@@ -547,7 +603,10 @@
         "RequestedInstanceCount":{"shape":"Integer"},
         "RunningInstanceCount":{"shape":"Integer"},
         "Status":{"shape":"InstanceGroupStatus"},
-        "Configurations":{"shape":"ConfigurationList"}
+        "Configurations":{"shape":"ConfigurationList"},
+        "EbsBlockDevices":{"shape":"EbsBlockDeviceList"},
+        "EbsOptimized":{"shape":"BooleanObject"},
+        "ShrinkPolicy":{"shape":"ShrinkPolicy"}
       }
     },
     "InstanceGroupConfig":{
@@ -564,7 +623,8 @@
         "BidPrice":{"shape":"XmlStringMaxLen256"},
         "InstanceType":{"shape":"InstanceType"},
         "InstanceCount":{"shape":"Integer"},
-        "Configurations":{"shape":"ConfigurationList"}
+        "Configurations":{"shape":"ConfigurationList"},
+        "EbsConfiguration":{"shape":"EbsConfiguration"}
       }
     },
     "InstanceGroupConfigList":{
@@ -618,7 +678,8 @@
       "members":{
         "InstanceGroupId":{"shape":"XmlStringMaxLen256"},
         "InstanceCount":{"shape":"Integer"},
-        "EC2InstanceIdsToTerminate":{"shape":"EC2InstanceIdsToTerminateList"}
+        "EC2InstanceIdsToTerminate":{"shape":"EC2InstanceIdsToTerminateList"},
+        "ShrinkPolicy":{"shape":"ShrinkPolicy"}
       }
     },
     "InstanceGroupModifyConfigList":{
@@ -689,6 +750,14 @@
       "type":"list",
       "member":{"shape":"Instance"}
     },
+    "InstanceResizePolicy":{
+      "type":"structure",
+      "members":{
+        "InstancesToTerminate":{"shape":"EC2InstanceIdsList"},
+        "InstancesToProtect":{"shape":"EC2InstanceIdsList"},
+        "InstanceTerminationTimeout":{"shape":"Integer"}
+      }
+    },
     "InstanceRoleType":{
       "type":"string",
       "enum":[
@@ -723,6 +792,10 @@
         "BOOTSTRAP_FAILURE",
         "CLUSTER_TERMINATED"
       ]
+    },
+    "InstanceStateList":{
+      "type":"list",
+      "member":{"shape":"InstanceState"}
     },
     "InstanceStatus":{
       "type":"structure",
@@ -935,6 +1008,7 @@
         "ClusterId":{"shape":"ClusterId"},
         "InstanceGroupId":{"shape":"InstanceGroupId"},
         "InstanceGroupTypes":{"shape":"InstanceGroupTypeList"},
+        "InstanceStates":{"shape":"InstanceStateList"},
         "Marker":{"shape":"Marker"}
       }
     },
@@ -1069,6 +1143,13 @@
         "VisibleToAllUsers":{"shape":"Boolean"}
       }
     },
+    "ShrinkPolicy":{
+      "type":"structure",
+      "members":{
+        "DecommissionTimeout":{"shape":"Integer"},
+        "InstanceResizePolicy":{"shape":"InstanceResizePolicy"}
+      }
+    },
     "Step":{
       "type":"structure",
       "members":{
@@ -1172,6 +1253,7 @@
       "members":{
         "State":{"shape":"StepState"},
         "StateChangeReason":{"shape":"StepStateChangeReason"},
+        "FailureDetails":{"shape":"FailureDetails"},
         "Timeline":{"shape":"StepTimeline"}
       }
     },
@@ -1234,6 +1316,18 @@
       "required":["JobFlowIds"],
       "members":{
         "JobFlowIds":{"shape":"XmlStringList"}
+      }
+    },
+    "VolumeSpecification":{
+      "type":"structure",
+      "required":[
+        "VolumeType",
+        "SizeInGB"
+      ],
+      "members":{
+        "VolumeType":{"shape":"String"},
+        "Iops":{"shape":"Integer"},
+        "SizeInGB":{"shape":"Integer"}
       }
     },
     "XmlString":{

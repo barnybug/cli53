@@ -16,7 +16,13 @@ var _ time.Duration
 var _ bytes.Buffer
 
 func ExampleStorageGateway_ActivateGateway() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.ActivateGatewayInput{
 		ActivationKey:     aws.String("ActivationKey"),   // Required
@@ -41,7 +47,13 @@ func ExampleStorageGateway_ActivateGateway() {
 }
 
 func ExampleStorageGateway_AddCache() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.AddCacheInput{
 		DiskIds: []*string{ // Required
@@ -64,7 +76,13 @@ func ExampleStorageGateway_AddCache() {
 }
 
 func ExampleStorageGateway_AddTagsToResource() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.AddTagsToResourceInput{
 		ResourceARN: aws.String("ResourceARN"), // Required
@@ -90,7 +108,13 @@ func ExampleStorageGateway_AddTagsToResource() {
 }
 
 func ExampleStorageGateway_AddUploadBuffer() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.AddUploadBufferInput{
 		DiskIds: []*string{ // Required
@@ -113,7 +137,13 @@ func ExampleStorageGateway_AddUploadBuffer() {
 }
 
 func ExampleStorageGateway_AddWorkingStorage() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.AddWorkingStorageInput{
 		DiskIds: []*string{ // Required
@@ -136,7 +166,13 @@ func ExampleStorageGateway_AddWorkingStorage() {
 }
 
 func ExampleStorageGateway_CancelArchival() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.CancelArchivalInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -156,7 +192,13 @@ func ExampleStorageGateway_CancelArchival() {
 }
 
 func ExampleStorageGateway_CancelRetrieval() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.CancelRetrievalInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -176,7 +218,13 @@ func ExampleStorageGateway_CancelRetrieval() {
 }
 
 func ExampleStorageGateway_CreateCachediSCSIVolume() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.CreateCachediSCSIVolumeInput{
 		ClientToken:        aws.String("ClientToken"),        // Required
@@ -200,7 +248,13 @@ func ExampleStorageGateway_CreateCachediSCSIVolume() {
 }
 
 func ExampleStorageGateway_CreateSnapshot() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.CreateSnapshotInput{
 		SnapshotDescription: aws.String("SnapshotDescription"), // Required
@@ -220,7 +274,13 @@ func ExampleStorageGateway_CreateSnapshot() {
 }
 
 func ExampleStorageGateway_CreateSnapshotFromVolumeRecoveryPoint() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.CreateSnapshotFromVolumeRecoveryPointInput{
 		SnapshotDescription: aws.String("SnapshotDescription"), // Required
@@ -240,7 +300,13 @@ func ExampleStorageGateway_CreateSnapshotFromVolumeRecoveryPoint() {
 }
 
 func ExampleStorageGateway_CreateStorediSCSIVolume() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.CreateStorediSCSIVolumeInput{
 		DiskId:               aws.String("DiskId"),             // Required
@@ -263,8 +329,41 @@ func ExampleStorageGateway_CreateStorediSCSIVolume() {
 	fmt.Println(resp)
 }
 
+func ExampleStorageGateway_CreateTapeWithBarcode() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
+
+	params := &storagegateway.CreateTapeWithBarcodeInput{
+		GatewayARN:      aws.String("GatewayARN"),  // Required
+		TapeBarcode:     aws.String("TapeBarcode"), // Required
+		TapeSizeInBytes: aws.Int64(1),              // Required
+	}
+	resp, err := svc.CreateTapeWithBarcode(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleStorageGateway_CreateTapes() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.CreateTapesInput{
 		ClientToken:       aws.String("ClientToken"),       // Required
@@ -287,7 +386,13 @@ func ExampleStorageGateway_CreateTapes() {
 }
 
 func ExampleStorageGateway_DeleteBandwidthRateLimit() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DeleteBandwidthRateLimitInput{
 		BandwidthType: aws.String("BandwidthType"), // Required
@@ -307,7 +412,13 @@ func ExampleStorageGateway_DeleteBandwidthRateLimit() {
 }
 
 func ExampleStorageGateway_DeleteChapCredentials() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DeleteChapCredentialsInput{
 		InitiatorName: aws.String("IqnName"),   // Required
@@ -327,7 +438,13 @@ func ExampleStorageGateway_DeleteChapCredentials() {
 }
 
 func ExampleStorageGateway_DeleteGateway() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DeleteGatewayInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -346,7 +463,13 @@ func ExampleStorageGateway_DeleteGateway() {
 }
 
 func ExampleStorageGateway_DeleteSnapshotSchedule() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DeleteSnapshotScheduleInput{
 		VolumeARN: aws.String("VolumeARN"), // Required
@@ -365,7 +488,13 @@ func ExampleStorageGateway_DeleteSnapshotSchedule() {
 }
 
 func ExampleStorageGateway_DeleteTape() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DeleteTapeInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -385,7 +514,13 @@ func ExampleStorageGateway_DeleteTape() {
 }
 
 func ExampleStorageGateway_DeleteTapeArchive() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DeleteTapeArchiveInput{
 		TapeARN: aws.String("TapeARN"), // Required
@@ -404,7 +539,13 @@ func ExampleStorageGateway_DeleteTapeArchive() {
 }
 
 func ExampleStorageGateway_DeleteVolume() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DeleteVolumeInput{
 		VolumeARN: aws.String("VolumeARN"), // Required
@@ -423,7 +564,13 @@ func ExampleStorageGateway_DeleteVolume() {
 }
 
 func ExampleStorageGateway_DescribeBandwidthRateLimit() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeBandwidthRateLimitInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -442,7 +589,13 @@ func ExampleStorageGateway_DescribeBandwidthRateLimit() {
 }
 
 func ExampleStorageGateway_DescribeCache() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeCacheInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -461,7 +614,13 @@ func ExampleStorageGateway_DescribeCache() {
 }
 
 func ExampleStorageGateway_DescribeCachediSCSIVolumes() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeCachediSCSIVolumesInput{
 		VolumeARNs: []*string{ // Required
@@ -483,7 +642,13 @@ func ExampleStorageGateway_DescribeCachediSCSIVolumes() {
 }
 
 func ExampleStorageGateway_DescribeChapCredentials() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeChapCredentialsInput{
 		TargetARN: aws.String("TargetARN"), // Required
@@ -502,7 +667,13 @@ func ExampleStorageGateway_DescribeChapCredentials() {
 }
 
 func ExampleStorageGateway_DescribeGatewayInformation() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeGatewayInformationInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -521,7 +692,13 @@ func ExampleStorageGateway_DescribeGatewayInformation() {
 }
 
 func ExampleStorageGateway_DescribeMaintenanceStartTime() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeMaintenanceStartTimeInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -540,7 +717,13 @@ func ExampleStorageGateway_DescribeMaintenanceStartTime() {
 }
 
 func ExampleStorageGateway_DescribeSnapshotSchedule() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeSnapshotScheduleInput{
 		VolumeARN: aws.String("VolumeARN"), // Required
@@ -559,7 +742,13 @@ func ExampleStorageGateway_DescribeSnapshotSchedule() {
 }
 
 func ExampleStorageGateway_DescribeStorediSCSIVolumes() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeStorediSCSIVolumesInput{
 		VolumeARNs: []*string{ // Required
@@ -581,7 +770,13 @@ func ExampleStorageGateway_DescribeStorediSCSIVolumes() {
 }
 
 func ExampleStorageGateway_DescribeTapeArchives() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeTapeArchivesInput{
 		Limit:  aws.Int64(1),
@@ -605,7 +800,13 @@ func ExampleStorageGateway_DescribeTapeArchives() {
 }
 
 func ExampleStorageGateway_DescribeTapeRecoveryPoints() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeTapeRecoveryPointsInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -626,7 +827,13 @@ func ExampleStorageGateway_DescribeTapeRecoveryPoints() {
 }
 
 func ExampleStorageGateway_DescribeTapes() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeTapesInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -651,7 +858,13 @@ func ExampleStorageGateway_DescribeTapes() {
 }
 
 func ExampleStorageGateway_DescribeUploadBuffer() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeUploadBufferInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -670,7 +883,13 @@ func ExampleStorageGateway_DescribeUploadBuffer() {
 }
 
 func ExampleStorageGateway_DescribeVTLDevices() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeVTLDevicesInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -695,7 +914,13 @@ func ExampleStorageGateway_DescribeVTLDevices() {
 }
 
 func ExampleStorageGateway_DescribeWorkingStorage() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DescribeWorkingStorageInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -714,7 +939,13 @@ func ExampleStorageGateway_DescribeWorkingStorage() {
 }
 
 func ExampleStorageGateway_DisableGateway() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.DisableGatewayInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -733,7 +964,13 @@ func ExampleStorageGateway_DisableGateway() {
 }
 
 func ExampleStorageGateway_ListGateways() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.ListGatewaysInput{
 		Limit:  aws.Int64(1),
@@ -753,7 +990,13 @@ func ExampleStorageGateway_ListGateways() {
 }
 
 func ExampleStorageGateway_ListLocalDisks() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.ListLocalDisksInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -772,12 +1015,18 @@ func ExampleStorageGateway_ListLocalDisks() {
 }
 
 func ExampleStorageGateway_ListTagsForResource() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.ListTagsForResourceInput{
+		ResourceARN: aws.String("ResourceARN"), // Required
 		Limit:       aws.Int64(1),
 		Marker:      aws.String("Marker"),
-		ResourceARN: aws.String("ResourceARN"),
 	}
 	resp, err := svc.ListTagsForResource(params)
 
@@ -792,8 +1041,44 @@ func ExampleStorageGateway_ListTagsForResource() {
 	fmt.Println(resp)
 }
 
+func ExampleStorageGateway_ListTapes() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
+
+	params := &storagegateway.ListTapesInput{
+		Limit:  aws.Int64(1),
+		Marker: aws.String("Marker"),
+		TapeARNs: []*string{
+			aws.String("TapeARN"), // Required
+			// More values...
+		},
+	}
+	resp, err := svc.ListTapes(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleStorageGateway_ListVolumeInitiators() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.ListVolumeInitiatorsInput{
 		VolumeARN: aws.String("VolumeARN"), // Required
@@ -812,7 +1097,13 @@ func ExampleStorageGateway_ListVolumeInitiators() {
 }
 
 func ExampleStorageGateway_ListVolumeRecoveryPoints() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.ListVolumeRecoveryPointsInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -831,10 +1122,16 @@ func ExampleStorageGateway_ListVolumeRecoveryPoints() {
 }
 
 func ExampleStorageGateway_ListVolumes() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.ListVolumesInput{
-		GatewayARN: aws.String("GatewayARN"), // Required
+		GatewayARN: aws.String("GatewayARN"),
 		Limit:      aws.Int64(1),
 		Marker:     aws.String("Marker"),
 	}
@@ -852,11 +1149,17 @@ func ExampleStorageGateway_ListVolumes() {
 }
 
 func ExampleStorageGateway_RemoveTagsFromResource() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.RemoveTagsFromResourceInput{
-		ResourceARN: aws.String("ResourceARN"),
-		TagKeys: []*string{
+		ResourceARN: aws.String("ResourceARN"), // Required
+		TagKeys: []*string{ // Required
 			aws.String("TagKey"), // Required
 			// More values...
 		},
@@ -875,7 +1178,13 @@ func ExampleStorageGateway_RemoveTagsFromResource() {
 }
 
 func ExampleStorageGateway_ResetCache() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.ResetCacheInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -894,7 +1203,13 @@ func ExampleStorageGateway_ResetCache() {
 }
 
 func ExampleStorageGateway_RetrieveTapeArchive() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.RetrieveTapeArchiveInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -914,7 +1229,13 @@ func ExampleStorageGateway_RetrieveTapeArchive() {
 }
 
 func ExampleStorageGateway_RetrieveTapeRecoveryPoint() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.RetrieveTapeRecoveryPointInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -933,8 +1254,40 @@ func ExampleStorageGateway_RetrieveTapeRecoveryPoint() {
 	fmt.Println(resp)
 }
 
+func ExampleStorageGateway_SetLocalConsolePassword() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
+
+	params := &storagegateway.SetLocalConsolePasswordInput{
+		GatewayARN:           aws.String("GatewayARN"),           // Required
+		LocalConsolePassword: aws.String("LocalConsolePassword"), // Required
+	}
+	resp, err := svc.SetLocalConsolePassword(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleStorageGateway_ShutdownGateway() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.ShutdownGatewayInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -953,7 +1306,13 @@ func ExampleStorageGateway_ShutdownGateway() {
 }
 
 func ExampleStorageGateway_StartGateway() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.StartGatewayInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -972,7 +1331,13 @@ func ExampleStorageGateway_StartGateway() {
 }
 
 func ExampleStorageGateway_UpdateBandwidthRateLimit() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.UpdateBandwidthRateLimitInput{
 		GatewayARN:                           aws.String("GatewayARN"), // Required
@@ -993,7 +1358,13 @@ func ExampleStorageGateway_UpdateBandwidthRateLimit() {
 }
 
 func ExampleStorageGateway_UpdateChapCredentials() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.UpdateChapCredentialsInput{
 		InitiatorName:                 aws.String("IqnName"),    // Required
@@ -1015,7 +1386,13 @@ func ExampleStorageGateway_UpdateChapCredentials() {
 }
 
 func ExampleStorageGateway_UpdateGatewayInformation() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.UpdateGatewayInformationInput{
 		GatewayARN:      aws.String("GatewayARN"), // Required
@@ -1036,7 +1413,13 @@ func ExampleStorageGateway_UpdateGatewayInformation() {
 }
 
 func ExampleStorageGateway_UpdateGatewaySoftwareNow() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.UpdateGatewaySoftwareNowInput{
 		GatewayARN: aws.String("GatewayARN"), // Required
@@ -1055,7 +1438,13 @@ func ExampleStorageGateway_UpdateGatewaySoftwareNow() {
 }
 
 func ExampleStorageGateway_UpdateMaintenanceStartTime() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.UpdateMaintenanceStartTimeInput{
 		DayOfWeek:    aws.Int64(1),             // Required
@@ -1077,7 +1466,13 @@ func ExampleStorageGateway_UpdateMaintenanceStartTime() {
 }
 
 func ExampleStorageGateway_UpdateSnapshotSchedule() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.UpdateSnapshotScheduleInput{
 		RecurrenceInHours: aws.Int64(1),            // Required
@@ -1099,7 +1494,13 @@ func ExampleStorageGateway_UpdateSnapshotSchedule() {
 }
 
 func ExampleStorageGateway_UpdateVTLDeviceType() {
-	svc := storagegateway.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := storagegateway.New(sess)
 
 	params := &storagegateway.UpdateVTLDeviceTypeInput{
 		DeviceType:   aws.String("DeviceType"),   // Required

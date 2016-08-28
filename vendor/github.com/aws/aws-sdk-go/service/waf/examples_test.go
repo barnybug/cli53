@@ -16,7 +16,13 @@ var _ time.Duration
 var _ bytes.Buffer
 
 func ExampleWAF_CreateByteMatchSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.CreateByteMatchSetInput{
 		ChangeToken: aws.String("ChangeToken"),  // Required
@@ -36,7 +42,13 @@ func ExampleWAF_CreateByteMatchSet() {
 }
 
 func ExampleWAF_CreateIPSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.CreateIPSetInput{
 		ChangeToken: aws.String("ChangeToken"),  // Required
@@ -56,7 +68,13 @@ func ExampleWAF_CreateIPSet() {
 }
 
 func ExampleWAF_CreateRule() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.CreateRuleInput{
 		ChangeToken: aws.String("ChangeToken"),  // Required
@@ -77,7 +95,13 @@ func ExampleWAF_CreateRule() {
 }
 
 func ExampleWAF_CreateSizeConstraintSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.CreateSizeConstraintSetInput{
 		ChangeToken: aws.String("ChangeToken"),  // Required
@@ -97,7 +121,13 @@ func ExampleWAF_CreateSizeConstraintSet() {
 }
 
 func ExampleWAF_CreateSqlInjectionMatchSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.CreateSqlInjectionMatchSetInput{
 		ChangeToken: aws.String("ChangeToken"),  // Required
@@ -117,7 +147,13 @@ func ExampleWAF_CreateSqlInjectionMatchSet() {
 }
 
 func ExampleWAF_CreateWebACL() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.CreateWebACLInput{
 		ChangeToken: aws.String("ChangeToken"), // Required
@@ -140,8 +176,40 @@ func ExampleWAF_CreateWebACL() {
 	fmt.Println(resp)
 }
 
+func ExampleWAF_CreateXssMatchSet() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
+
+	params := &waf.CreateXssMatchSetInput{
+		ChangeToken: aws.String("ChangeToken"),  // Required
+		Name:        aws.String("ResourceName"), // Required
+	}
+	resp, err := svc.CreateXssMatchSet(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleWAF_DeleteByteMatchSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.DeleteByteMatchSetInput{
 		ByteMatchSetId: aws.String("ResourceId"),  // Required
@@ -161,7 +229,13 @@ func ExampleWAF_DeleteByteMatchSet() {
 }
 
 func ExampleWAF_DeleteIPSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.DeleteIPSetInput{
 		ChangeToken: aws.String("ChangeToken"), // Required
@@ -181,7 +255,13 @@ func ExampleWAF_DeleteIPSet() {
 }
 
 func ExampleWAF_DeleteRule() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.DeleteRuleInput{
 		ChangeToken: aws.String("ChangeToken"), // Required
@@ -201,7 +281,13 @@ func ExampleWAF_DeleteRule() {
 }
 
 func ExampleWAF_DeleteSizeConstraintSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.DeleteSizeConstraintSetInput{
 		ChangeToken:         aws.String("ChangeToken"), // Required
@@ -221,7 +307,13 @@ func ExampleWAF_DeleteSizeConstraintSet() {
 }
 
 func ExampleWAF_DeleteSqlInjectionMatchSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.DeleteSqlInjectionMatchSetInput{
 		ChangeToken:            aws.String("ChangeToken"), // Required
@@ -241,7 +333,13 @@ func ExampleWAF_DeleteSqlInjectionMatchSet() {
 }
 
 func ExampleWAF_DeleteWebACL() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.DeleteWebACLInput{
 		ChangeToken: aws.String("ChangeToken"), // Required
@@ -260,8 +358,40 @@ func ExampleWAF_DeleteWebACL() {
 	fmt.Println(resp)
 }
 
+func ExampleWAF_DeleteXssMatchSet() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
+
+	params := &waf.DeleteXssMatchSetInput{
+		ChangeToken:   aws.String("ChangeToken"), // Required
+		XssMatchSetId: aws.String("ResourceId"),  // Required
+	}
+	resp, err := svc.DeleteXssMatchSet(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleWAF_GetByteMatchSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.GetByteMatchSetInput{
 		ByteMatchSetId: aws.String("ResourceId"), // Required
@@ -280,7 +410,13 @@ func ExampleWAF_GetByteMatchSet() {
 }
 
 func ExampleWAF_GetChangeToken() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	var params *waf.GetChangeTokenInput
 	resp, err := svc.GetChangeToken(params)
@@ -297,7 +433,13 @@ func ExampleWAF_GetChangeToken() {
 }
 
 func ExampleWAF_GetChangeTokenStatus() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.GetChangeTokenStatusInput{
 		ChangeToken: aws.String("ChangeToken"), // Required
@@ -316,7 +458,13 @@ func ExampleWAF_GetChangeTokenStatus() {
 }
 
 func ExampleWAF_GetIPSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.GetIPSetInput{
 		IPSetId: aws.String("ResourceId"), // Required
@@ -335,7 +483,13 @@ func ExampleWAF_GetIPSet() {
 }
 
 func ExampleWAF_GetRule() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.GetRuleInput{
 		RuleId: aws.String("ResourceId"), // Required
@@ -354,7 +508,13 @@ func ExampleWAF_GetRule() {
 }
 
 func ExampleWAF_GetSampledRequests() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.GetSampledRequestsInput{
 		MaxItems: aws.Int64(1),             // Required
@@ -379,7 +539,13 @@ func ExampleWAF_GetSampledRequests() {
 }
 
 func ExampleWAF_GetSizeConstraintSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.GetSizeConstraintSetInput{
 		SizeConstraintSetId: aws.String("ResourceId"), // Required
@@ -398,7 +564,13 @@ func ExampleWAF_GetSizeConstraintSet() {
 }
 
 func ExampleWAF_GetSqlInjectionMatchSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.GetSqlInjectionMatchSetInput{
 		SqlInjectionMatchSetId: aws.String("ResourceId"), // Required
@@ -417,7 +589,13 @@ func ExampleWAF_GetSqlInjectionMatchSet() {
 }
 
 func ExampleWAF_GetWebACL() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.GetWebACLInput{
 		WebACLId: aws.String("ResourceId"), // Required
@@ -435,8 +613,39 @@ func ExampleWAF_GetWebACL() {
 	fmt.Println(resp)
 }
 
+func ExampleWAF_GetXssMatchSet() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
+
+	params := &waf.GetXssMatchSetInput{
+		XssMatchSetId: aws.String("ResourceId"), // Required
+	}
+	resp, err := svc.GetXssMatchSet(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleWAF_ListByteMatchSets() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.ListByteMatchSetsInput{
 		Limit:      aws.Int64(1), // Required
@@ -456,7 +665,13 @@ func ExampleWAF_ListByteMatchSets() {
 }
 
 func ExampleWAF_ListIPSets() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.ListIPSetsInput{
 		Limit:      aws.Int64(1), // Required
@@ -476,7 +691,13 @@ func ExampleWAF_ListIPSets() {
 }
 
 func ExampleWAF_ListRules() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.ListRulesInput{
 		Limit:      aws.Int64(1), // Required
@@ -496,7 +717,13 @@ func ExampleWAF_ListRules() {
 }
 
 func ExampleWAF_ListSizeConstraintSets() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.ListSizeConstraintSetsInput{
 		Limit:      aws.Int64(1), // Required
@@ -516,7 +743,13 @@ func ExampleWAF_ListSizeConstraintSets() {
 }
 
 func ExampleWAF_ListSqlInjectionMatchSets() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.ListSqlInjectionMatchSetsInput{
 		Limit:      aws.Int64(1), // Required
@@ -536,7 +769,13 @@ func ExampleWAF_ListSqlInjectionMatchSets() {
 }
 
 func ExampleWAF_ListWebACLs() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.ListWebACLsInput{
 		Limit:      aws.Int64(1), // Required
@@ -555,8 +794,40 @@ func ExampleWAF_ListWebACLs() {
 	fmt.Println(resp)
 }
 
+func ExampleWAF_ListXssMatchSets() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
+
+	params := &waf.ListXssMatchSetsInput{
+		Limit:      aws.Int64(1), // Required
+		NextMarker: aws.String("NextMarker"),
+	}
+	resp, err := svc.ListXssMatchSets(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleWAF_UpdateByteMatchSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.UpdateByteMatchSetInput{
 		ByteMatchSetId: aws.String("ResourceId"),  // Required
@@ -591,7 +862,13 @@ func ExampleWAF_UpdateByteMatchSet() {
 }
 
 func ExampleWAF_UpdateIPSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.UpdateIPSetInput{
 		ChangeToken: aws.String("ChangeToken"), // Required
@@ -621,7 +898,13 @@ func ExampleWAF_UpdateIPSet() {
 }
 
 func ExampleWAF_UpdateRule() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.UpdateRuleInput{
 		ChangeToken: aws.String("ChangeToken"), // Required
@@ -652,7 +935,13 @@ func ExampleWAF_UpdateRule() {
 }
 
 func ExampleWAF_UpdateSizeConstraintSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.UpdateSizeConstraintSetInput{
 		ChangeToken:         aws.String("ChangeToken"), // Required
@@ -687,7 +976,13 @@ func ExampleWAF_UpdateSizeConstraintSet() {
 }
 
 func ExampleWAF_UpdateSqlInjectionMatchSet() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.UpdateSqlInjectionMatchSetInput{
 		ChangeToken:            aws.String("ChangeToken"), // Required
@@ -720,7 +1015,13 @@ func ExampleWAF_UpdateSqlInjectionMatchSet() {
 }
 
 func ExampleWAF_UpdateWebACL() {
-	svc := waf.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
 
 	params := &waf.UpdateWebACLInput{
 		ChangeToken: aws.String("ChangeToken"), // Required
@@ -743,6 +1044,45 @@ func ExampleWAF_UpdateWebACL() {
 		},
 	}
 	resp, err := svc.UpdateWebACL(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
+func ExampleWAF_UpdateXssMatchSet() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := waf.New(sess)
+
+	params := &waf.UpdateXssMatchSetInput{
+		ChangeToken: aws.String("ChangeToken"), // Required
+		Updates: []*waf.XssMatchSetUpdate{ // Required
+			{ // Required
+				Action: aws.String("ChangeAction"), // Required
+				XssMatchTuple: &waf.XssMatchTuple{ // Required
+					FieldToMatch: &waf.FieldToMatch{ // Required
+						Type: aws.String("MatchFieldType"), // Required
+						Data: aws.String("MatchFieldData"),
+					},
+					TextTransformation: aws.String("TextTransformation"), // Required
+				},
+			},
+			// More values...
+		},
+		XssMatchSetId: aws.String("ResourceId"), // Required
+	}
+	resp, err := svc.UpdateXssMatchSet(params)
 
 	if err != nil {
 		// Print the error, cast err to awserr.Error to get the Code and

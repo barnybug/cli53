@@ -4,6 +4,7 @@
 package cloudfront
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/awsutil"
@@ -12,14 +13,35 @@ import (
 	"github.com/aws/aws-sdk-go/private/protocol/restxml"
 )
 
-const opCreateCloudFrontOriginAccessIdentity = "CreateCloudFrontOriginAccessIdentity2016_01_28"
+const opCreateCloudFrontOriginAccessIdentity = "CreateCloudFrontOriginAccessIdentity2016_08_01"
 
-// CreateCloudFrontOriginAccessIdentityRequest generates a request for the CreateCloudFrontOriginAccessIdentity operation.
+// CreateCloudFrontOriginAccessIdentityRequest generates a "aws/request.Request" representing the
+// client's request for the CreateCloudFrontOriginAccessIdentity operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateCloudFrontOriginAccessIdentity method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateCloudFrontOriginAccessIdentityRequest method.
+//    req, resp := client.CreateCloudFrontOriginAccessIdentityRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) CreateCloudFrontOriginAccessIdentityRequest(input *CreateCloudFrontOriginAccessIdentityInput) (req *request.Request, output *CreateCloudFrontOriginAccessIdentityOutput) {
 	op := &request.Operation{
 		Name:       opCreateCloudFrontOriginAccessIdentity,
 		HTTPMethod: "POST",
-		HTTPPath:   "/2016-01-28/origin-access-identity/cloudfront",
+		HTTPPath:   "/2016-08-01/origin-access-identity/cloudfront",
 	}
 
 	if input == nil {
@@ -39,14 +61,35 @@ func (c *CloudFront) CreateCloudFrontOriginAccessIdentity(input *CreateCloudFron
 	return out, err
 }
 
-const opCreateDistribution = "CreateDistribution2016_01_28"
+const opCreateDistribution = "CreateDistribution2016_08_01"
 
-// CreateDistributionRequest generates a request for the CreateDistribution operation.
+// CreateDistributionRequest generates a "aws/request.Request" representing the
+// client's request for the CreateDistribution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateDistribution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateDistributionRequest method.
+//    req, resp := client.CreateDistributionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) CreateDistributionRequest(input *CreateDistributionInput) (req *request.Request, output *CreateDistributionOutput) {
 	op := &request.Operation{
 		Name:       opCreateDistribution,
 		HTTPMethod: "POST",
-		HTTPPath:   "/2016-01-28/distribution",
+		HTTPPath:   "/2016-08-01/distribution",
 	}
 
 	if input == nil {
@@ -66,14 +109,83 @@ func (c *CloudFront) CreateDistribution(input *CreateDistributionInput) (*Create
 	return out, err
 }
 
-const opCreateInvalidation = "CreateInvalidation2016_01_28"
+const opCreateDistributionWithTags = "CreateDistributionWithTags2016_08_01"
 
-// CreateInvalidationRequest generates a request for the CreateInvalidation operation.
+// CreateDistributionWithTagsRequest generates a "aws/request.Request" representing the
+// client's request for the CreateDistributionWithTags operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateDistributionWithTags method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateDistributionWithTagsRequest method.
+//    req, resp := client.CreateDistributionWithTagsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *CloudFront) CreateDistributionWithTagsRequest(input *CreateDistributionWithTagsInput) (req *request.Request, output *CreateDistributionWithTagsOutput) {
+	op := &request.Operation{
+		Name:       opCreateDistributionWithTags,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2016-08-01/distribution?WithTags",
+	}
+
+	if input == nil {
+		input = &CreateDistributionWithTagsInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &CreateDistributionWithTagsOutput{}
+	req.Data = output
+	return
+}
+
+// Create a new distribution with tags.
+func (c *CloudFront) CreateDistributionWithTags(input *CreateDistributionWithTagsInput) (*CreateDistributionWithTagsOutput, error) {
+	req, out := c.CreateDistributionWithTagsRequest(input)
+	err := req.Send()
+	return out, err
+}
+
+const opCreateInvalidation = "CreateInvalidation2016_08_01"
+
+// CreateInvalidationRequest generates a "aws/request.Request" representing the
+// client's request for the CreateInvalidation operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateInvalidation method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateInvalidationRequest method.
+//    req, resp := client.CreateInvalidationRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) CreateInvalidationRequest(input *CreateInvalidationInput) (req *request.Request, output *CreateInvalidationOutput) {
 	op := &request.Operation{
 		Name:       opCreateInvalidation,
 		HTTPMethod: "POST",
-		HTTPPath:   "/2016-01-28/distribution/{DistributionId}/invalidation",
+		HTTPPath:   "/2016-08-01/distribution/{DistributionId}/invalidation",
 	}
 
 	if input == nil {
@@ -93,14 +205,35 @@ func (c *CloudFront) CreateInvalidation(input *CreateInvalidationInput) (*Create
 	return out, err
 }
 
-const opCreateStreamingDistribution = "CreateStreamingDistribution2016_01_28"
+const opCreateStreamingDistribution = "CreateStreamingDistribution2016_08_01"
 
-// CreateStreamingDistributionRequest generates a request for the CreateStreamingDistribution operation.
+// CreateStreamingDistributionRequest generates a "aws/request.Request" representing the
+// client's request for the CreateStreamingDistribution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateStreamingDistribution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateStreamingDistributionRequest method.
+//    req, resp := client.CreateStreamingDistributionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) CreateStreamingDistributionRequest(input *CreateStreamingDistributionInput) (req *request.Request, output *CreateStreamingDistributionOutput) {
 	op := &request.Operation{
 		Name:       opCreateStreamingDistribution,
 		HTTPMethod: "POST",
-		HTTPPath:   "/2016-01-28/streaming-distribution",
+		HTTPPath:   "/2016-08-01/streaming-distribution",
 	}
 
 	if input == nil {
@@ -120,14 +253,83 @@ func (c *CloudFront) CreateStreamingDistribution(input *CreateStreamingDistribut
 	return out, err
 }
 
-const opDeleteCloudFrontOriginAccessIdentity = "DeleteCloudFrontOriginAccessIdentity2016_01_28"
+const opCreateStreamingDistributionWithTags = "CreateStreamingDistributionWithTags2016_08_01"
 
-// DeleteCloudFrontOriginAccessIdentityRequest generates a request for the DeleteCloudFrontOriginAccessIdentity operation.
+// CreateStreamingDistributionWithTagsRequest generates a "aws/request.Request" representing the
+// client's request for the CreateStreamingDistributionWithTags operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateStreamingDistributionWithTags method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateStreamingDistributionWithTagsRequest method.
+//    req, resp := client.CreateStreamingDistributionWithTagsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *CloudFront) CreateStreamingDistributionWithTagsRequest(input *CreateStreamingDistributionWithTagsInput) (req *request.Request, output *CreateStreamingDistributionWithTagsOutput) {
+	op := &request.Operation{
+		Name:       opCreateStreamingDistributionWithTags,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2016-08-01/streaming-distribution?WithTags",
+	}
+
+	if input == nil {
+		input = &CreateStreamingDistributionWithTagsInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &CreateStreamingDistributionWithTagsOutput{}
+	req.Data = output
+	return
+}
+
+// Create a new streaming distribution with tags.
+func (c *CloudFront) CreateStreamingDistributionWithTags(input *CreateStreamingDistributionWithTagsInput) (*CreateStreamingDistributionWithTagsOutput, error) {
+	req, out := c.CreateStreamingDistributionWithTagsRequest(input)
+	err := req.Send()
+	return out, err
+}
+
+const opDeleteCloudFrontOriginAccessIdentity = "DeleteCloudFrontOriginAccessIdentity2016_08_01"
+
+// DeleteCloudFrontOriginAccessIdentityRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteCloudFrontOriginAccessIdentity operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteCloudFrontOriginAccessIdentity method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteCloudFrontOriginAccessIdentityRequest method.
+//    req, resp := client.DeleteCloudFrontOriginAccessIdentityRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) DeleteCloudFrontOriginAccessIdentityRequest(input *DeleteCloudFrontOriginAccessIdentityInput) (req *request.Request, output *DeleteCloudFrontOriginAccessIdentityOutput) {
 	op := &request.Operation{
 		Name:       opDeleteCloudFrontOriginAccessIdentity,
 		HTTPMethod: "DELETE",
-		HTTPPath:   "/2016-01-28/origin-access-identity/cloudfront/{Id}",
+		HTTPPath:   "/2016-08-01/origin-access-identity/cloudfront/{Id}",
 	}
 
 	if input == nil {
@@ -149,14 +351,35 @@ func (c *CloudFront) DeleteCloudFrontOriginAccessIdentity(input *DeleteCloudFron
 	return out, err
 }
 
-const opDeleteDistribution = "DeleteDistribution2016_01_28"
+const opDeleteDistribution = "DeleteDistribution2016_08_01"
 
-// DeleteDistributionRequest generates a request for the DeleteDistribution operation.
+// DeleteDistributionRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteDistribution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteDistribution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteDistributionRequest method.
+//    req, resp := client.DeleteDistributionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) DeleteDistributionRequest(input *DeleteDistributionInput) (req *request.Request, output *DeleteDistributionOutput) {
 	op := &request.Operation{
 		Name:       opDeleteDistribution,
 		HTTPMethod: "DELETE",
-		HTTPPath:   "/2016-01-28/distribution/{Id}",
+		HTTPPath:   "/2016-08-01/distribution/{Id}",
 	}
 
 	if input == nil {
@@ -178,14 +401,35 @@ func (c *CloudFront) DeleteDistribution(input *DeleteDistributionInput) (*Delete
 	return out, err
 }
 
-const opDeleteStreamingDistribution = "DeleteStreamingDistribution2016_01_28"
+const opDeleteStreamingDistribution = "DeleteStreamingDistribution2016_08_01"
 
-// DeleteStreamingDistributionRequest generates a request for the DeleteStreamingDistribution operation.
+// DeleteStreamingDistributionRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteStreamingDistribution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteStreamingDistribution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteStreamingDistributionRequest method.
+//    req, resp := client.DeleteStreamingDistributionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) DeleteStreamingDistributionRequest(input *DeleteStreamingDistributionInput) (req *request.Request, output *DeleteStreamingDistributionOutput) {
 	op := &request.Operation{
 		Name:       opDeleteStreamingDistribution,
 		HTTPMethod: "DELETE",
-		HTTPPath:   "/2016-01-28/streaming-distribution/{Id}",
+		HTTPPath:   "/2016-08-01/streaming-distribution/{Id}",
 	}
 
 	if input == nil {
@@ -207,14 +451,35 @@ func (c *CloudFront) DeleteStreamingDistribution(input *DeleteStreamingDistribut
 	return out, err
 }
 
-const opGetCloudFrontOriginAccessIdentity = "GetCloudFrontOriginAccessIdentity2016_01_28"
+const opGetCloudFrontOriginAccessIdentity = "GetCloudFrontOriginAccessIdentity2016_08_01"
 
-// GetCloudFrontOriginAccessIdentityRequest generates a request for the GetCloudFrontOriginAccessIdentity operation.
+// GetCloudFrontOriginAccessIdentityRequest generates a "aws/request.Request" representing the
+// client's request for the GetCloudFrontOriginAccessIdentity operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetCloudFrontOriginAccessIdentity method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetCloudFrontOriginAccessIdentityRequest method.
+//    req, resp := client.GetCloudFrontOriginAccessIdentityRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) GetCloudFrontOriginAccessIdentityRequest(input *GetCloudFrontOriginAccessIdentityInput) (req *request.Request, output *GetCloudFrontOriginAccessIdentityOutput) {
 	op := &request.Operation{
 		Name:       opGetCloudFrontOriginAccessIdentity,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2016-01-28/origin-access-identity/cloudfront/{Id}",
+		HTTPPath:   "/2016-08-01/origin-access-identity/cloudfront/{Id}",
 	}
 
 	if input == nil {
@@ -234,14 +499,35 @@ func (c *CloudFront) GetCloudFrontOriginAccessIdentity(input *GetCloudFrontOrigi
 	return out, err
 }
 
-const opGetCloudFrontOriginAccessIdentityConfig = "GetCloudFrontOriginAccessIdentityConfig2016_01_28"
+const opGetCloudFrontOriginAccessIdentityConfig = "GetCloudFrontOriginAccessIdentityConfig2016_08_01"
 
-// GetCloudFrontOriginAccessIdentityConfigRequest generates a request for the GetCloudFrontOriginAccessIdentityConfig operation.
+// GetCloudFrontOriginAccessIdentityConfigRequest generates a "aws/request.Request" representing the
+// client's request for the GetCloudFrontOriginAccessIdentityConfig operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetCloudFrontOriginAccessIdentityConfig method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetCloudFrontOriginAccessIdentityConfigRequest method.
+//    req, resp := client.GetCloudFrontOriginAccessIdentityConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) GetCloudFrontOriginAccessIdentityConfigRequest(input *GetCloudFrontOriginAccessIdentityConfigInput) (req *request.Request, output *GetCloudFrontOriginAccessIdentityConfigOutput) {
 	op := &request.Operation{
 		Name:       opGetCloudFrontOriginAccessIdentityConfig,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2016-01-28/origin-access-identity/cloudfront/{Id}/config",
+		HTTPPath:   "/2016-08-01/origin-access-identity/cloudfront/{Id}/config",
 	}
 
 	if input == nil {
@@ -261,14 +547,35 @@ func (c *CloudFront) GetCloudFrontOriginAccessIdentityConfig(input *GetCloudFron
 	return out, err
 }
 
-const opGetDistribution = "GetDistribution2016_01_28"
+const opGetDistribution = "GetDistribution2016_08_01"
 
-// GetDistributionRequest generates a request for the GetDistribution operation.
+// GetDistributionRequest generates a "aws/request.Request" representing the
+// client's request for the GetDistribution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetDistribution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetDistributionRequest method.
+//    req, resp := client.GetDistributionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) GetDistributionRequest(input *GetDistributionInput) (req *request.Request, output *GetDistributionOutput) {
 	op := &request.Operation{
 		Name:       opGetDistribution,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2016-01-28/distribution/{Id}",
+		HTTPPath:   "/2016-08-01/distribution/{Id}",
 	}
 
 	if input == nil {
@@ -288,14 +595,35 @@ func (c *CloudFront) GetDistribution(input *GetDistributionInput) (*GetDistribut
 	return out, err
 }
 
-const opGetDistributionConfig = "GetDistributionConfig2016_01_28"
+const opGetDistributionConfig = "GetDistributionConfig2016_08_01"
 
-// GetDistributionConfigRequest generates a request for the GetDistributionConfig operation.
+// GetDistributionConfigRequest generates a "aws/request.Request" representing the
+// client's request for the GetDistributionConfig operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetDistributionConfig method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetDistributionConfigRequest method.
+//    req, resp := client.GetDistributionConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) GetDistributionConfigRequest(input *GetDistributionConfigInput) (req *request.Request, output *GetDistributionConfigOutput) {
 	op := &request.Operation{
 		Name:       opGetDistributionConfig,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2016-01-28/distribution/{Id}/config",
+		HTTPPath:   "/2016-08-01/distribution/{Id}/config",
 	}
 
 	if input == nil {
@@ -315,14 +643,35 @@ func (c *CloudFront) GetDistributionConfig(input *GetDistributionConfigInput) (*
 	return out, err
 }
 
-const opGetInvalidation = "GetInvalidation2016_01_28"
+const opGetInvalidation = "GetInvalidation2016_08_01"
 
-// GetInvalidationRequest generates a request for the GetInvalidation operation.
+// GetInvalidationRequest generates a "aws/request.Request" representing the
+// client's request for the GetInvalidation operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetInvalidation method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetInvalidationRequest method.
+//    req, resp := client.GetInvalidationRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) GetInvalidationRequest(input *GetInvalidationInput) (req *request.Request, output *GetInvalidationOutput) {
 	op := &request.Operation{
 		Name:       opGetInvalidation,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2016-01-28/distribution/{DistributionId}/invalidation/{Id}",
+		HTTPPath:   "/2016-08-01/distribution/{DistributionId}/invalidation/{Id}",
 	}
 
 	if input == nil {
@@ -342,14 +691,35 @@ func (c *CloudFront) GetInvalidation(input *GetInvalidationInput) (*GetInvalidat
 	return out, err
 }
 
-const opGetStreamingDistribution = "GetStreamingDistribution2016_01_28"
+const opGetStreamingDistribution = "GetStreamingDistribution2016_08_01"
 
-// GetStreamingDistributionRequest generates a request for the GetStreamingDistribution operation.
+// GetStreamingDistributionRequest generates a "aws/request.Request" representing the
+// client's request for the GetStreamingDistribution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetStreamingDistribution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetStreamingDistributionRequest method.
+//    req, resp := client.GetStreamingDistributionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) GetStreamingDistributionRequest(input *GetStreamingDistributionInput) (req *request.Request, output *GetStreamingDistributionOutput) {
 	op := &request.Operation{
 		Name:       opGetStreamingDistribution,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2016-01-28/streaming-distribution/{Id}",
+		HTTPPath:   "/2016-08-01/streaming-distribution/{Id}",
 	}
 
 	if input == nil {
@@ -369,14 +739,35 @@ func (c *CloudFront) GetStreamingDistribution(input *GetStreamingDistributionInp
 	return out, err
 }
 
-const opGetStreamingDistributionConfig = "GetStreamingDistributionConfig2016_01_28"
+const opGetStreamingDistributionConfig = "GetStreamingDistributionConfig2016_08_01"
 
-// GetStreamingDistributionConfigRequest generates a request for the GetStreamingDistributionConfig operation.
+// GetStreamingDistributionConfigRequest generates a "aws/request.Request" representing the
+// client's request for the GetStreamingDistributionConfig operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetStreamingDistributionConfig method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetStreamingDistributionConfigRequest method.
+//    req, resp := client.GetStreamingDistributionConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) GetStreamingDistributionConfigRequest(input *GetStreamingDistributionConfigInput) (req *request.Request, output *GetStreamingDistributionConfigOutput) {
 	op := &request.Operation{
 		Name:       opGetStreamingDistributionConfig,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2016-01-28/streaming-distribution/{Id}/config",
+		HTTPPath:   "/2016-08-01/streaming-distribution/{Id}/config",
 	}
 
 	if input == nil {
@@ -396,14 +787,35 @@ func (c *CloudFront) GetStreamingDistributionConfig(input *GetStreamingDistribut
 	return out, err
 }
 
-const opListCloudFrontOriginAccessIdentities = "ListCloudFrontOriginAccessIdentities2016_01_28"
+const opListCloudFrontOriginAccessIdentities = "ListCloudFrontOriginAccessIdentities2016_08_01"
 
-// ListCloudFrontOriginAccessIdentitiesRequest generates a request for the ListCloudFrontOriginAccessIdentities operation.
+// ListCloudFrontOriginAccessIdentitiesRequest generates a "aws/request.Request" representing the
+// client's request for the ListCloudFrontOriginAccessIdentities operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListCloudFrontOriginAccessIdentities method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListCloudFrontOriginAccessIdentitiesRequest method.
+//    req, resp := client.ListCloudFrontOriginAccessIdentitiesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) ListCloudFrontOriginAccessIdentitiesRequest(input *ListCloudFrontOriginAccessIdentitiesInput) (req *request.Request, output *ListCloudFrontOriginAccessIdentitiesOutput) {
 	op := &request.Operation{
 		Name:       opListCloudFrontOriginAccessIdentities,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2016-01-28/origin-access-identity/cloudfront",
+		HTTPPath:   "/2016-08-01/origin-access-identity/cloudfront",
 		Paginator: &request.Paginator{
 			InputTokens:     []string{"Marker"},
 			OutputTokens:    []string{"CloudFrontOriginAccessIdentityList.NextMarker"},
@@ -429,6 +841,23 @@ func (c *CloudFront) ListCloudFrontOriginAccessIdentities(input *ListCloudFrontO
 	return out, err
 }
 
+// ListCloudFrontOriginAccessIdentitiesPages iterates over the pages of a ListCloudFrontOriginAccessIdentities operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListCloudFrontOriginAccessIdentities method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListCloudFrontOriginAccessIdentities operation.
+//    pageNum := 0
+//    err := client.ListCloudFrontOriginAccessIdentitiesPages(params,
+//        func(page *ListCloudFrontOriginAccessIdentitiesOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *CloudFront) ListCloudFrontOriginAccessIdentitiesPages(input *ListCloudFrontOriginAccessIdentitiesInput, fn func(p *ListCloudFrontOriginAccessIdentitiesOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListCloudFrontOriginAccessIdentitiesRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -437,14 +866,35 @@ func (c *CloudFront) ListCloudFrontOriginAccessIdentitiesPages(input *ListCloudF
 	})
 }
 
-const opListDistributions = "ListDistributions2016_01_28"
+const opListDistributions = "ListDistributions2016_08_01"
 
-// ListDistributionsRequest generates a request for the ListDistributions operation.
+// ListDistributionsRequest generates a "aws/request.Request" representing the
+// client's request for the ListDistributions operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListDistributions method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListDistributionsRequest method.
+//    req, resp := client.ListDistributionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) ListDistributionsRequest(input *ListDistributionsInput) (req *request.Request, output *ListDistributionsOutput) {
 	op := &request.Operation{
 		Name:       opListDistributions,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2016-01-28/distribution",
+		HTTPPath:   "/2016-08-01/distribution",
 		Paginator: &request.Paginator{
 			InputTokens:     []string{"Marker"},
 			OutputTokens:    []string{"DistributionList.NextMarker"},
@@ -470,6 +920,23 @@ func (c *CloudFront) ListDistributions(input *ListDistributionsInput) (*ListDist
 	return out, err
 }
 
+// ListDistributionsPages iterates over the pages of a ListDistributions operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListDistributions method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListDistributions operation.
+//    pageNum := 0
+//    err := client.ListDistributionsPages(params,
+//        func(page *ListDistributionsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *CloudFront) ListDistributionsPages(input *ListDistributionsInput, fn func(p *ListDistributionsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListDistributionsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -478,14 +945,35 @@ func (c *CloudFront) ListDistributionsPages(input *ListDistributionsInput, fn fu
 	})
 }
 
-const opListDistributionsByWebACLId = "ListDistributionsByWebACLId2016_01_28"
+const opListDistributionsByWebACLId = "ListDistributionsByWebACLId2016_08_01"
 
-// ListDistributionsByWebACLIdRequest generates a request for the ListDistributionsByWebACLId operation.
+// ListDistributionsByWebACLIdRequest generates a "aws/request.Request" representing the
+// client's request for the ListDistributionsByWebACLId operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListDistributionsByWebACLId method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListDistributionsByWebACLIdRequest method.
+//    req, resp := client.ListDistributionsByWebACLIdRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) ListDistributionsByWebACLIdRequest(input *ListDistributionsByWebACLIdInput) (req *request.Request, output *ListDistributionsByWebACLIdOutput) {
 	op := &request.Operation{
 		Name:       opListDistributionsByWebACLId,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2016-01-28/distributionsByWebACLId/{WebACLId}",
+		HTTPPath:   "/2016-08-01/distributionsByWebACLId/{WebACLId}",
 	}
 
 	if input == nil {
@@ -505,14 +993,35 @@ func (c *CloudFront) ListDistributionsByWebACLId(input *ListDistributionsByWebAC
 	return out, err
 }
 
-const opListInvalidations = "ListInvalidations2016_01_28"
+const opListInvalidations = "ListInvalidations2016_08_01"
 
-// ListInvalidationsRequest generates a request for the ListInvalidations operation.
+// ListInvalidationsRequest generates a "aws/request.Request" representing the
+// client's request for the ListInvalidations operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListInvalidations method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListInvalidationsRequest method.
+//    req, resp := client.ListInvalidationsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) ListInvalidationsRequest(input *ListInvalidationsInput) (req *request.Request, output *ListInvalidationsOutput) {
 	op := &request.Operation{
 		Name:       opListInvalidations,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2016-01-28/distribution/{DistributionId}/invalidation",
+		HTTPPath:   "/2016-08-01/distribution/{DistributionId}/invalidation",
 		Paginator: &request.Paginator{
 			InputTokens:     []string{"Marker"},
 			OutputTokens:    []string{"InvalidationList.NextMarker"},
@@ -538,6 +1047,23 @@ func (c *CloudFront) ListInvalidations(input *ListInvalidationsInput) (*ListInva
 	return out, err
 }
 
+// ListInvalidationsPages iterates over the pages of a ListInvalidations operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListInvalidations method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListInvalidations operation.
+//    pageNum := 0
+//    err := client.ListInvalidationsPages(params,
+//        func(page *ListInvalidationsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *CloudFront) ListInvalidationsPages(input *ListInvalidationsInput, fn func(p *ListInvalidationsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListInvalidationsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -546,14 +1072,35 @@ func (c *CloudFront) ListInvalidationsPages(input *ListInvalidationsInput, fn fu
 	})
 }
 
-const opListStreamingDistributions = "ListStreamingDistributions2016_01_28"
+const opListStreamingDistributions = "ListStreamingDistributions2016_08_01"
 
-// ListStreamingDistributionsRequest generates a request for the ListStreamingDistributions operation.
+// ListStreamingDistributionsRequest generates a "aws/request.Request" representing the
+// client's request for the ListStreamingDistributions operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListStreamingDistributions method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListStreamingDistributionsRequest method.
+//    req, resp := client.ListStreamingDistributionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) ListStreamingDistributionsRequest(input *ListStreamingDistributionsInput) (req *request.Request, output *ListStreamingDistributionsOutput) {
 	op := &request.Operation{
 		Name:       opListStreamingDistributions,
 		HTTPMethod: "GET",
-		HTTPPath:   "/2016-01-28/streaming-distribution",
+		HTTPPath:   "/2016-08-01/streaming-distribution",
 		Paginator: &request.Paginator{
 			InputTokens:     []string{"Marker"},
 			OutputTokens:    []string{"StreamingDistributionList.NextMarker"},
@@ -579,6 +1126,23 @@ func (c *CloudFront) ListStreamingDistributions(input *ListStreamingDistribution
 	return out, err
 }
 
+// ListStreamingDistributionsPages iterates over the pages of a ListStreamingDistributions operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListStreamingDistributions method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListStreamingDistributions operation.
+//    pageNum := 0
+//    err := client.ListStreamingDistributionsPages(params,
+//        func(page *ListStreamingDistributionsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *CloudFront) ListStreamingDistributionsPages(input *ListStreamingDistributionsInput, fn func(p *ListStreamingDistributionsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListStreamingDistributionsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -587,14 +1151,183 @@ func (c *CloudFront) ListStreamingDistributionsPages(input *ListStreamingDistrib
 	})
 }
 
-const opUpdateCloudFrontOriginAccessIdentity = "UpdateCloudFrontOriginAccessIdentity2016_01_28"
+const opListTagsForResource = "ListTagsForResource2016_08_01"
 
-// UpdateCloudFrontOriginAccessIdentityRequest generates a request for the UpdateCloudFrontOriginAccessIdentity operation.
+// ListTagsForResourceRequest generates a "aws/request.Request" representing the
+// client's request for the ListTagsForResource operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListTagsForResource method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListTagsForResourceRequest method.
+//    req, resp := client.ListTagsForResourceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *CloudFront) ListTagsForResourceRequest(input *ListTagsForResourceInput) (req *request.Request, output *ListTagsForResourceOutput) {
+	op := &request.Operation{
+		Name:       opListTagsForResource,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2016-08-01/tagging",
+	}
+
+	if input == nil {
+		input = &ListTagsForResourceInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &ListTagsForResourceOutput{}
+	req.Data = output
+	return
+}
+
+// List tags for a CloudFront resource.
+func (c *CloudFront) ListTagsForResource(input *ListTagsForResourceInput) (*ListTagsForResourceOutput, error) {
+	req, out := c.ListTagsForResourceRequest(input)
+	err := req.Send()
+	return out, err
+}
+
+const opTagResource = "TagResource2016_08_01"
+
+// TagResourceRequest generates a "aws/request.Request" representing the
+// client's request for the TagResource operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the TagResource method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the TagResourceRequest method.
+//    req, resp := client.TagResourceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *CloudFront) TagResourceRequest(input *TagResourceInput) (req *request.Request, output *TagResourceOutput) {
+	op := &request.Operation{
+		Name:       opTagResource,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2016-08-01/tagging?Operation=Tag",
+	}
+
+	if input == nil {
+		input = &TagResourceInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restxml.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
+	output = &TagResourceOutput{}
+	req.Data = output
+	return
+}
+
+// Add tags to a CloudFront resource.
+func (c *CloudFront) TagResource(input *TagResourceInput) (*TagResourceOutput, error) {
+	req, out := c.TagResourceRequest(input)
+	err := req.Send()
+	return out, err
+}
+
+const opUntagResource = "UntagResource2016_08_01"
+
+// UntagResourceRequest generates a "aws/request.Request" representing the
+// client's request for the UntagResource operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the UntagResource method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the UntagResourceRequest method.
+//    req, resp := client.UntagResourceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *CloudFront) UntagResourceRequest(input *UntagResourceInput) (req *request.Request, output *UntagResourceOutput) {
+	op := &request.Operation{
+		Name:       opUntagResource,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2016-08-01/tagging?Operation=Untag",
+	}
+
+	if input == nil {
+		input = &UntagResourceInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Remove(restxml.UnmarshalHandler)
+	req.Handlers.Unmarshal.PushBackNamed(protocol.UnmarshalDiscardBodyHandler)
+	output = &UntagResourceOutput{}
+	req.Data = output
+	return
+}
+
+// Remove tags from a CloudFront resource.
+func (c *CloudFront) UntagResource(input *UntagResourceInput) (*UntagResourceOutput, error) {
+	req, out := c.UntagResourceRequest(input)
+	err := req.Send()
+	return out, err
+}
+
+const opUpdateCloudFrontOriginAccessIdentity = "UpdateCloudFrontOriginAccessIdentity2016_08_01"
+
+// UpdateCloudFrontOriginAccessIdentityRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateCloudFrontOriginAccessIdentity operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the UpdateCloudFrontOriginAccessIdentity method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the UpdateCloudFrontOriginAccessIdentityRequest method.
+//    req, resp := client.UpdateCloudFrontOriginAccessIdentityRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) UpdateCloudFrontOriginAccessIdentityRequest(input *UpdateCloudFrontOriginAccessIdentityInput) (req *request.Request, output *UpdateCloudFrontOriginAccessIdentityOutput) {
 	op := &request.Operation{
 		Name:       opUpdateCloudFrontOriginAccessIdentity,
 		HTTPMethod: "PUT",
-		HTTPPath:   "/2016-01-28/origin-access-identity/cloudfront/{Id}/config",
+		HTTPPath:   "/2016-08-01/origin-access-identity/cloudfront/{Id}/config",
 	}
 
 	if input == nil {
@@ -614,14 +1347,35 @@ func (c *CloudFront) UpdateCloudFrontOriginAccessIdentity(input *UpdateCloudFron
 	return out, err
 }
 
-const opUpdateDistribution = "UpdateDistribution2016_01_28"
+const opUpdateDistribution = "UpdateDistribution2016_08_01"
 
-// UpdateDistributionRequest generates a request for the UpdateDistribution operation.
+// UpdateDistributionRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateDistribution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the UpdateDistribution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the UpdateDistributionRequest method.
+//    req, resp := client.UpdateDistributionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) UpdateDistributionRequest(input *UpdateDistributionInput) (req *request.Request, output *UpdateDistributionOutput) {
 	op := &request.Operation{
 		Name:       opUpdateDistribution,
 		HTTPMethod: "PUT",
-		HTTPPath:   "/2016-01-28/distribution/{Id}/config",
+		HTTPPath:   "/2016-08-01/distribution/{Id}/config",
 	}
 
 	if input == nil {
@@ -641,14 +1395,35 @@ func (c *CloudFront) UpdateDistribution(input *UpdateDistributionInput) (*Update
 	return out, err
 }
 
-const opUpdateStreamingDistribution = "UpdateStreamingDistribution2016_01_28"
+const opUpdateStreamingDistribution = "UpdateStreamingDistribution2016_08_01"
 
-// UpdateStreamingDistributionRequest generates a request for the UpdateStreamingDistribution operation.
+// UpdateStreamingDistributionRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateStreamingDistribution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the UpdateStreamingDistribution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the UpdateStreamingDistributionRequest method.
+//    req, resp := client.UpdateStreamingDistributionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CloudFront) UpdateStreamingDistributionRequest(input *UpdateStreamingDistributionInput) (req *request.Request, output *UpdateStreamingDistributionOutput) {
 	op := &request.Operation{
 		Name:       opUpdateStreamingDistribution,
 		HTTPMethod: "PUT",
-		HTTPPath:   "/2016-01-28/streaming-distribution/{Id}/config",
+		HTTPPath:   "/2016-08-01/streaming-distribution/{Id}/config",
 	}
 
 	if input == nil {
@@ -722,6 +1497,19 @@ func (s Aliases) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Aliases) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Aliases"}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A complex type that controls which HTTP methods CloudFront processes and
 // forwards to your Amazon S3 bucket or your custom origin. There are three
 // choices: - CloudFront forwards only GET and HEAD requests. - CloudFront forwards
@@ -759,6 +1547,27 @@ func (s AllowedMethods) String() string {
 // GoString returns the string representation
 func (s AllowedMethods) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AllowedMethods) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AllowedMethods"}
+	if s.Items == nil {
+		invalidParams.Add(request.NewErrParamRequired("Items"))
+	}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+	if s.CachedMethods != nil {
+		if err := s.CachedMethods.Validate(); err != nil {
+			invalidParams.AddNested("CachedMethods", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // A complex type that describes how CloudFront processes requests. You can
@@ -885,6 +1694,49 @@ func (s CacheBehavior) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CacheBehavior) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CacheBehavior"}
+	if s.ForwardedValues == nil {
+		invalidParams.Add(request.NewErrParamRequired("ForwardedValues"))
+	}
+	if s.MinTTL == nil {
+		invalidParams.Add(request.NewErrParamRequired("MinTTL"))
+	}
+	if s.PathPattern == nil {
+		invalidParams.Add(request.NewErrParamRequired("PathPattern"))
+	}
+	if s.TargetOriginId == nil {
+		invalidParams.Add(request.NewErrParamRequired("TargetOriginId"))
+	}
+	if s.TrustedSigners == nil {
+		invalidParams.Add(request.NewErrParamRequired("TrustedSigners"))
+	}
+	if s.ViewerProtocolPolicy == nil {
+		invalidParams.Add(request.NewErrParamRequired("ViewerProtocolPolicy"))
+	}
+	if s.AllowedMethods != nil {
+		if err := s.AllowedMethods.Validate(); err != nil {
+			invalidParams.AddNested("AllowedMethods", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.ForwardedValues != nil {
+		if err := s.ForwardedValues.Validate(); err != nil {
+			invalidParams.AddNested("ForwardedValues", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TrustedSigners != nil {
+		if err := s.TrustedSigners.Validate(); err != nil {
+			invalidParams.AddNested("TrustedSigners", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A complex type that contains zero or more CacheBehavior elements.
 type CacheBehaviors struct {
 	_ struct{} `type:"structure"`
@@ -905,6 +1757,29 @@ func (s CacheBehaviors) String() string {
 // GoString returns the string representation
 func (s CacheBehaviors) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CacheBehaviors) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CacheBehaviors"}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+	if s.Items != nil {
+		for i, v := range s.Items {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Items", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // A complex type that controls whether CloudFront caches the response to requests
@@ -936,6 +1811,22 @@ func (s CachedMethods) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CachedMethods) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CachedMethods"}
+	if s.Items == nil {
+		invalidParams.Add(request.NewErrParamRequired("Items"))
+	}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A complex type that specifies the whitelisted cookies, if any, that you want
 // CloudFront to forward to your origin that is associated with this cache behavior.
 type CookieNames struct {
@@ -957,6 +1848,19 @@ func (s CookieNames) String() string {
 // GoString returns the string representation
 func (s CookieNames) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CookieNames) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CookieNames"}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // A complex type that specifies the cookie preferences associated with this
@@ -985,6 +1889,24 @@ func (s CookiePreference) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CookiePreference) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CookiePreference"}
+	if s.Forward == nil {
+		invalidParams.Add(request.NewErrParamRequired("Forward"))
+	}
+	if s.WhitelistedNames != nil {
+		if err := s.WhitelistedNames.Validate(); err != nil {
+			invalidParams.AddNested("WhitelistedNames", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The request to create a new origin access identity.
 type CreateCloudFrontOriginAccessIdentityInput struct {
 	_ struct{} `type:"structure" payload:"CloudFrontOriginAccessIdentityConfig"`
@@ -1001,6 +1923,24 @@ func (s CreateCloudFrontOriginAccessIdentityInput) String() string {
 // GoString returns the string representation
 func (s CreateCloudFrontOriginAccessIdentityInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateCloudFrontOriginAccessIdentityInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateCloudFrontOriginAccessIdentityInput"}
+	if s.CloudFrontOriginAccessIdentityConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("CloudFrontOriginAccessIdentityConfig"))
+	}
+	if s.CloudFrontOriginAccessIdentityConfig != nil {
+		if err := s.CloudFrontOriginAccessIdentityConfig.Validate(); err != nil {
+			invalidParams.AddNested("CloudFrontOriginAccessIdentityConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The returned result of the corresponding request.
@@ -1046,6 +1986,24 @@ func (s CreateDistributionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateDistributionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateDistributionInput"}
+	if s.DistributionConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("DistributionConfig"))
+	}
+	if s.DistributionConfig != nil {
+		if err := s.DistributionConfig.Validate(); err != nil {
+			invalidParams.AddNested("DistributionConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The returned result of the corresponding request.
 type CreateDistributionOutput struct {
 	_ struct{} `type:"structure" payload:"Distribution"`
@@ -1071,6 +2029,67 @@ func (s CreateDistributionOutput) GoString() string {
 	return s.String()
 }
 
+// The request to create a new distribution with tags
+type CreateDistributionWithTagsInput struct {
+	_ struct{} `type:"structure" payload:"DistributionConfigWithTags"`
+
+	// The distribution's configuration information.
+	DistributionConfigWithTags *DistributionConfigWithTags `locationName:"DistributionConfigWithTags" type:"structure" required:"true"`
+}
+
+// String returns the string representation
+func (s CreateDistributionWithTagsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s CreateDistributionWithTagsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateDistributionWithTagsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateDistributionWithTagsInput"}
+	if s.DistributionConfigWithTags == nil {
+		invalidParams.Add(request.NewErrParamRequired("DistributionConfigWithTags"))
+	}
+	if s.DistributionConfigWithTags != nil {
+		if err := s.DistributionConfigWithTags.Validate(); err != nil {
+			invalidParams.AddNested("DistributionConfigWithTags", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// The returned result of the corresponding request.
+type CreateDistributionWithTagsOutput struct {
+	_ struct{} `type:"structure" payload:"Distribution"`
+
+	// The distribution's information.
+	Distribution *Distribution `type:"structure"`
+
+	// The current version of the distribution created.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// The fully qualified URI of the new distribution resource just created. For
+	// example: https://cloudfront.amazonaws.com/2010-11-01/distribution/EDFDVBD632BHDS5.
+	Location *string `location:"header" locationName:"Location" type:"string"`
+}
+
+// String returns the string representation
+func (s CreateDistributionWithTagsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s CreateDistributionWithTagsOutput) GoString() string {
+	return s.String()
+}
+
 // The request to create an invalidation.
 type CreateInvalidationInput struct {
 	_ struct{} `type:"structure" payload:"InvalidationBatch"`
@@ -1090,6 +2109,27 @@ func (s CreateInvalidationInput) String() string {
 // GoString returns the string representation
 func (s CreateInvalidationInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateInvalidationInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateInvalidationInput"}
+	if s.DistributionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DistributionId"))
+	}
+	if s.InvalidationBatch == nil {
+		invalidParams.Add(request.NewErrParamRequired("InvalidationBatch"))
+	}
+	if s.InvalidationBatch != nil {
+		if err := s.InvalidationBatch.Validate(); err != nil {
+			invalidParams.AddNested("InvalidationBatch", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The returned result of the corresponding request.
@@ -1132,6 +2172,24 @@ func (s CreateStreamingDistributionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateStreamingDistributionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateStreamingDistributionInput"}
+	if s.StreamingDistributionConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("StreamingDistributionConfig"))
+	}
+	if s.StreamingDistributionConfig != nil {
+		if err := s.StreamingDistributionConfig.Validate(); err != nil {
+			invalidParams.AddNested("StreamingDistributionConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The returned result of the corresponding request.
 type CreateStreamingDistributionOutput struct {
 	_ struct{} `type:"structure" payload:"StreamingDistribution"`
@@ -1154,6 +2212,67 @@ func (s CreateStreamingDistributionOutput) String() string {
 
 // GoString returns the string representation
 func (s CreateStreamingDistributionOutput) GoString() string {
+	return s.String()
+}
+
+// The request to create a new streaming distribution with tags.
+type CreateStreamingDistributionWithTagsInput struct {
+	_ struct{} `type:"structure" payload:"StreamingDistributionConfigWithTags"`
+
+	// The streaming distribution's configuration information.
+	StreamingDistributionConfigWithTags *StreamingDistributionConfigWithTags `locationName:"StreamingDistributionConfigWithTags" type:"structure" required:"true"`
+}
+
+// String returns the string representation
+func (s CreateStreamingDistributionWithTagsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s CreateStreamingDistributionWithTagsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateStreamingDistributionWithTagsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateStreamingDistributionWithTagsInput"}
+	if s.StreamingDistributionConfigWithTags == nil {
+		invalidParams.Add(request.NewErrParamRequired("StreamingDistributionConfigWithTags"))
+	}
+	if s.StreamingDistributionConfigWithTags != nil {
+		if err := s.StreamingDistributionConfigWithTags.Validate(); err != nil {
+			invalidParams.AddNested("StreamingDistributionConfigWithTags", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// The returned result of the corresponding request.
+type CreateStreamingDistributionWithTagsOutput struct {
+	_ struct{} `type:"structure" payload:"StreamingDistribution"`
+
+	// The current version of the streaming distribution created.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// The fully qualified URI of the new streaming distribution resource just created.
+	// For example: https://cloudfront.amazonaws.com/2010-11-01/streaming-distribution/EGTXBD79H29TRA8.
+	Location *string `location:"header" locationName:"Location" type:"string"`
+
+	// The streaming distribution's information.
+	StreamingDistribution *StreamingDistribution `type:"structure"`
+}
+
+// String returns the string representation
+func (s CreateStreamingDistributionWithTagsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s CreateStreamingDistributionWithTagsOutput) GoString() string {
 	return s.String()
 }
 
@@ -1204,6 +2323,19 @@ func (s CustomErrorResponse) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CustomErrorResponse) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CustomErrorResponse"}
+	if s.ErrorCode == nil {
+		invalidParams.Add(request.NewErrParamRequired("ErrorCode"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A complex type that contains zero or more CustomErrorResponse elements.
 type CustomErrorResponses struct {
 	_ struct{} `type:"structure"`
@@ -1226,6 +2358,29 @@ func (s CustomErrorResponses) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CustomErrorResponses) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CustomErrorResponses"}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+	if s.Items != nil {
+		for i, v := range s.Items {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Items", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A complex type that contains the list of Custom Headers for each origin.
 type CustomHeaders struct {
 	_ struct{} `type:"structure"`
@@ -1245,6 +2400,29 @@ func (s CustomHeaders) String() string {
 // GoString returns the string representation
 func (s CustomHeaders) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CustomHeaders) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CustomHeaders"}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+	if s.Items != nil {
+		for i, v := range s.Items {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Items", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // A customer origin.
@@ -1273,6 +2451,30 @@ func (s CustomOriginConfig) String() string {
 // GoString returns the string representation
 func (s CustomOriginConfig) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CustomOriginConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CustomOriginConfig"}
+	if s.HTTPPort == nil {
+		invalidParams.Add(request.NewErrParamRequired("HTTPPort"))
+	}
+	if s.HTTPSPort == nil {
+		invalidParams.Add(request.NewErrParamRequired("HTTPSPort"))
+	}
+	if s.OriginProtocolPolicy == nil {
+		invalidParams.Add(request.NewErrParamRequired("OriginProtocolPolicy"))
+	}
+	if s.OriginSslProtocols != nil {
+		if err := s.OriginSslProtocols.Validate(); err != nil {
+			invalidParams.AddNested("OriginSslProtocols", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // A complex type that describes the default cache behavior if you do not specify
@@ -1379,6 +2581,46 @@ func (s DefaultCacheBehavior) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DefaultCacheBehavior) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DefaultCacheBehavior"}
+	if s.ForwardedValues == nil {
+		invalidParams.Add(request.NewErrParamRequired("ForwardedValues"))
+	}
+	if s.MinTTL == nil {
+		invalidParams.Add(request.NewErrParamRequired("MinTTL"))
+	}
+	if s.TargetOriginId == nil {
+		invalidParams.Add(request.NewErrParamRequired("TargetOriginId"))
+	}
+	if s.TrustedSigners == nil {
+		invalidParams.Add(request.NewErrParamRequired("TrustedSigners"))
+	}
+	if s.ViewerProtocolPolicy == nil {
+		invalidParams.Add(request.NewErrParamRequired("ViewerProtocolPolicy"))
+	}
+	if s.AllowedMethods != nil {
+		if err := s.AllowedMethods.Validate(); err != nil {
+			invalidParams.AddNested("AllowedMethods", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.ForwardedValues != nil {
+		if err := s.ForwardedValues.Validate(); err != nil {
+			invalidParams.AddNested("ForwardedValues", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TrustedSigners != nil {
+		if err := s.TrustedSigners.Validate(); err != nil {
+			invalidParams.AddNested("TrustedSigners", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The request to delete a origin access identity.
 type DeleteCloudFrontOriginAccessIdentityInput struct {
 	_ struct{} `type:"structure"`
@@ -1399,6 +2641,19 @@ func (s DeleteCloudFrontOriginAccessIdentityInput) String() string {
 // GoString returns the string representation
 func (s DeleteCloudFrontOriginAccessIdentityInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteCloudFrontOriginAccessIdentityInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteCloudFrontOriginAccessIdentityInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type DeleteCloudFrontOriginAccessIdentityOutput struct {
@@ -1437,6 +2692,19 @@ func (s DeleteDistributionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteDistributionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteDistributionInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type DeleteDistributionOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -1473,6 +2741,19 @@ func (s DeleteStreamingDistributionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteStreamingDistributionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteStreamingDistributionInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type DeleteStreamingDistributionOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -1490,6 +2771,10 @@ func (s DeleteStreamingDistributionOutput) GoString() string {
 // A distribution.
 type Distribution struct {
 	_ struct{} `type:"structure"`
+
+	// The ARN (Amazon Resource Name) for the distribution. For example: arn:aws:cloudfront::123456789012:distribution/EDFDVBD632BHDS5,
+	// where 123456789012 is your AWS account Id.
+	ARN *string `type:"string" required:"true"`
 
 	// CloudFront automatically adds this element to the response only if you've
 	// set up the distribution to serve private content with signed URLs. The element
@@ -1611,6 +2896,114 @@ func (s DistributionConfig) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DistributionConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DistributionConfig"}
+	if s.CallerReference == nil {
+		invalidParams.Add(request.NewErrParamRequired("CallerReference"))
+	}
+	if s.Comment == nil {
+		invalidParams.Add(request.NewErrParamRequired("Comment"))
+	}
+	if s.DefaultCacheBehavior == nil {
+		invalidParams.Add(request.NewErrParamRequired("DefaultCacheBehavior"))
+	}
+	if s.Enabled == nil {
+		invalidParams.Add(request.NewErrParamRequired("Enabled"))
+	}
+	if s.Origins == nil {
+		invalidParams.Add(request.NewErrParamRequired("Origins"))
+	}
+	if s.Aliases != nil {
+		if err := s.Aliases.Validate(); err != nil {
+			invalidParams.AddNested("Aliases", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.CacheBehaviors != nil {
+		if err := s.CacheBehaviors.Validate(); err != nil {
+			invalidParams.AddNested("CacheBehaviors", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.CustomErrorResponses != nil {
+		if err := s.CustomErrorResponses.Validate(); err != nil {
+			invalidParams.AddNested("CustomErrorResponses", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.DefaultCacheBehavior != nil {
+		if err := s.DefaultCacheBehavior.Validate(); err != nil {
+			invalidParams.AddNested("DefaultCacheBehavior", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Logging != nil {
+		if err := s.Logging.Validate(); err != nil {
+			invalidParams.AddNested("Logging", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Origins != nil {
+		if err := s.Origins.Validate(); err != nil {
+			invalidParams.AddNested("Origins", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Restrictions != nil {
+		if err := s.Restrictions.Validate(); err != nil {
+			invalidParams.AddNested("Restrictions", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// A distribution Configuration and a list of tags to be associated with the
+// distribution.
+type DistributionConfigWithTags struct {
+	_ struct{} `type:"structure"`
+
+	// A distribution Configuration.
+	DistributionConfig *DistributionConfig `type:"structure" required:"true"`
+
+	// A complex type that contains zero or more Tag elements.
+	Tags *Tags `type:"structure" required:"true"`
+}
+
+// String returns the string representation
+func (s DistributionConfigWithTags) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s DistributionConfigWithTags) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DistributionConfigWithTags) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DistributionConfigWithTags"}
+	if s.DistributionConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("DistributionConfig"))
+	}
+	if s.Tags == nil {
+		invalidParams.Add(request.NewErrParamRequired("Tags"))
+	}
+	if s.DistributionConfig != nil {
+		if err := s.DistributionConfig.Validate(); err != nil {
+			invalidParams.AddNested("DistributionConfig", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Tags != nil {
+		if err := s.Tags.Validate(); err != nil {
+			invalidParams.AddNested("Tags", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A distribution list.
 type DistributionList struct {
 	_ struct{} `type:"structure"`
@@ -1653,6 +3046,10 @@ func (s DistributionList) GoString() string {
 // A summary of the information for an Amazon CloudFront distribution.
 type DistributionSummary struct {
 	_ struct{} `type:"structure"`
+
+	// The ARN (Amazon Resource Name) for the distribution. For example: arn:aws:cloudfront::123456789012:distribution/EDFDVBD632BHDS5,
+	// where 123456789012 is your AWS account Id.
+	ARN *string `type:"string" required:"true"`
 
 	// A complex type that contains information about CNAMEs (alternate domain names),
 	// if any, for this distribution.
@@ -1744,6 +3141,32 @@ func (s ForwardedValues) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ForwardedValues) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ForwardedValues"}
+	if s.Cookies == nil {
+		invalidParams.Add(request.NewErrParamRequired("Cookies"))
+	}
+	if s.QueryString == nil {
+		invalidParams.Add(request.NewErrParamRequired("QueryString"))
+	}
+	if s.Cookies != nil {
+		if err := s.Cookies.Validate(); err != nil {
+			invalidParams.AddNested("Cookies", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Headers != nil {
+		if err := s.Headers.Validate(); err != nil {
+			invalidParams.AddNested("Headers", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A complex type that controls the countries in which your content is distributed.
 // For more information about geo restriction, go to Customizing Error Responses
 // in the Amazon CloudFront Developer Guide. CloudFront determines the location
@@ -1788,6 +3211,22 @@ func (s GeoRestriction) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GeoRestriction) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GeoRestriction"}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+	if s.RestrictionType == nil {
+		invalidParams.Add(request.NewErrParamRequired("RestrictionType"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The request to get an origin access identity's configuration.
 type GetCloudFrontOriginAccessIdentityConfigInput struct {
 	_ struct{} `type:"structure"`
@@ -1804,6 +3243,19 @@ func (s GetCloudFrontOriginAccessIdentityConfigInput) String() string {
 // GoString returns the string representation
 func (s GetCloudFrontOriginAccessIdentityConfigInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetCloudFrontOriginAccessIdentityConfigInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetCloudFrontOriginAccessIdentityConfigInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The returned result of the corresponding request.
@@ -1843,6 +3295,19 @@ func (s GetCloudFrontOriginAccessIdentityInput) String() string {
 // GoString returns the string representation
 func (s GetCloudFrontOriginAccessIdentityInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetCloudFrontOriginAccessIdentityInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetCloudFrontOriginAccessIdentityInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The returned result of the corresponding request.
@@ -1885,6 +3350,19 @@ func (s GetDistributionConfigInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetDistributionConfigInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetDistributionConfigInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The returned result of the corresponding request.
 type GetDistributionConfigOutput struct {
 	_ struct{} `type:"structure" payload:"DistributionConfig"`
@@ -1922,6 +3400,19 @@ func (s GetDistributionInput) String() string {
 // GoString returns the string representation
 func (s GetDistributionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetDistributionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetDistributionInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The returned result of the corresponding request.
@@ -1966,6 +3457,22 @@ func (s GetInvalidationInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetInvalidationInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetInvalidationInput"}
+	if s.DistributionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DistributionId"))
+	}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The returned result of the corresponding request.
 type GetInvalidationOutput struct {
 	_ struct{} `type:"structure" payload:"Invalidation"`
@@ -2000,6 +3507,19 @@ func (s GetStreamingDistributionConfigInput) String() string {
 // GoString returns the string representation
 func (s GetStreamingDistributionConfigInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetStreamingDistributionConfigInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetStreamingDistributionConfigInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The returned result of the corresponding request.
@@ -2039,6 +3559,19 @@ func (s GetStreamingDistributionInput) String() string {
 // GoString returns the string representation
 func (s GetStreamingDistributionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetStreamingDistributionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetStreamingDistributionInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The returned result of the corresponding request.
@@ -2097,6 +3630,19 @@ func (s Headers) String() string {
 // GoString returns the string representation
 func (s Headers) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Headers) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Headers"}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // An invalidation.
@@ -2159,6 +3705,27 @@ func (s InvalidationBatch) String() string {
 // GoString returns the string representation
 func (s InvalidationBatch) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *InvalidationBatch) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "InvalidationBatch"}
+	if s.CallerReference == nil {
+		invalidParams.Add(request.NewErrParamRequired("CallerReference"))
+	}
+	if s.Paths == nil {
+		invalidParams.Add(request.NewErrParamRequired("Paths"))
+	}
+	if s.Paths != nil {
+		if err := s.Paths.Validate(); err != nil {
+			invalidParams.AddNested("Paths", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // An invalidation list.
@@ -2321,6 +3888,19 @@ func (s ListDistributionsByWebACLIdInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListDistributionsByWebACLIdInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListDistributionsByWebACLIdInput"}
+	if s.WebACLId == nil {
+		invalidParams.Add(request.NewErrParamRequired("WebACLId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The response to a request to list the distributions that are associated with
 // a specified AWS WAF web ACL.
 type ListDistributionsByWebACLIdOutput struct {
@@ -2414,6 +3994,19 @@ func (s ListInvalidationsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListInvalidationsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListInvalidationsInput"}
+	if s.DistributionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DistributionId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The returned result of the corresponding request.
 type ListInvalidationsOutput struct {
 	_ struct{} `type:"structure" payload:"InvalidationList"`
@@ -2475,6 +4068,55 @@ func (s ListStreamingDistributionsOutput) GoString() string {
 	return s.String()
 }
 
+// The request to list tags for a CloudFront resource.
+type ListTagsForResourceInput struct {
+	_ struct{} `type:"structure"`
+
+	// An ARN of a CloudFront resource.
+	Resource *string `location:"querystring" locationName:"Resource" type:"string" required:"true"`
+}
+
+// String returns the string representation
+func (s ListTagsForResourceInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s ListTagsForResourceInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListTagsForResourceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListTagsForResourceInput"}
+	if s.Resource == nil {
+		invalidParams.Add(request.NewErrParamRequired("Resource"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// The returned result of the corresponding request.
+type ListTagsForResourceOutput struct {
+	_ struct{} `type:"structure" payload:"Tags"`
+
+	// A complex type that contains zero or more Tag elements.
+	Tags *Tags `type:"structure" required:"true"`
+}
+
+// String returns the string representation
+func (s ListTagsForResourceOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s ListTagsForResourceOutput) GoString() string {
+	return s.String()
+}
+
 // A complex type that controls whether access logs are written for the distribution.
 type LoggingConfig struct {
 	_ struct{} `type:"structure"`
@@ -2513,6 +4155,28 @@ func (s LoggingConfig) String() string {
 // GoString returns the string representation
 func (s LoggingConfig) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *LoggingConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "LoggingConfig"}
+	if s.Bucket == nil {
+		invalidParams.Add(request.NewErrParamRequired("Bucket"))
+	}
+	if s.Enabled == nil {
+		invalidParams.Add(request.NewErrParamRequired("Enabled"))
+	}
+	if s.IncludeCookies == nil {
+		invalidParams.Add(request.NewErrParamRequired("IncludeCookies"))
+	}
+	if s.Prefix == nil {
+		invalidParams.Add(request.NewErrParamRequired("Prefix"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // A complex type that describes the Amazon S3 bucket or the HTTP server (for
@@ -2560,6 +4224,37 @@ func (s Origin) String() string {
 // GoString returns the string representation
 func (s Origin) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Origin) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Origin"}
+	if s.DomainName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DomainName"))
+	}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.CustomHeaders != nil {
+		if err := s.CustomHeaders.Validate(); err != nil {
+			invalidParams.AddNested("CustomHeaders", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.CustomOriginConfig != nil {
+		if err := s.CustomOriginConfig.Validate(); err != nil {
+			invalidParams.AddNested("CustomOriginConfig", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.S3OriginConfig != nil {
+		if err := s.S3OriginConfig.Validate(); err != nil {
+			invalidParams.AddNested("S3OriginConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // CloudFront origin access identity.
@@ -2617,6 +4312,22 @@ func (s OriginAccessIdentityConfig) String() string {
 // GoString returns the string representation
 func (s OriginAccessIdentityConfig) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *OriginAccessIdentityConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "OriginAccessIdentityConfig"}
+	if s.CallerReference == nil {
+		invalidParams.Add(request.NewErrParamRequired("CallerReference"))
+	}
+	if s.Comment == nil {
+		invalidParams.Add(request.NewErrParamRequired("Comment"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The CloudFrontOriginAccessIdentityList type.
@@ -2707,6 +4418,22 @@ func (s OriginCustomHeader) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *OriginCustomHeader) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "OriginCustomHeader"}
+	if s.HeaderName == nil {
+		invalidParams.Add(request.NewErrParamRequired("HeaderName"))
+	}
+	if s.HeaderValue == nil {
+		invalidParams.Add(request.NewErrParamRequired("HeaderValue"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A complex type that contains the list of SSL/TLS protocols that you want
 // CloudFront to use when communicating with your origin over HTTPS.
 type OriginSslProtocols struct {
@@ -2732,6 +4459,22 @@ func (s OriginSslProtocols) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *OriginSslProtocols) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "OriginSslProtocols"}
+	if s.Items == nil {
+		invalidParams.Add(request.NewErrParamRequired("Items"))
+	}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A complex type that contains information about origins for this distribution.
 type Origins struct {
 	_ struct{} `type:"structure"`
@@ -2751,6 +4494,32 @@ func (s Origins) String() string {
 // GoString returns the string representation
 func (s Origins) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Origins) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Origins"}
+	if s.Items != nil && len(s.Items) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Items", 1))
+	}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+	if s.Items != nil {
+		for i, v := range s.Items {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Items", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // A complex type that contains information about the objects that you want
@@ -2773,6 +4542,19 @@ func (s Paths) String() string {
 // GoString returns the string representation
 func (s Paths) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Paths) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Paths"}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // A complex type that identifies ways in which you want to restrict distribution
@@ -2799,6 +4581,24 @@ func (s Restrictions) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Restrictions) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Restrictions"}
+	if s.GeoRestriction == nil {
+		invalidParams.Add(request.NewErrParamRequired("GeoRestriction"))
+	}
+	if s.GeoRestriction != nil {
+		if err := s.GeoRestriction.Validate(); err != nil {
+			invalidParams.AddNested("GeoRestriction", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A complex type that contains information about the Amazon S3 bucket from
 // which you want CloudFront to get your media files for distribution.
 type S3Origin struct {
@@ -2819,6 +4619,22 @@ func (s S3Origin) String() string {
 // GoString returns the string representation
 func (s S3Origin) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *S3Origin) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "S3Origin"}
+	if s.DomainName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DomainName"))
+	}
+	if s.OriginAccessIdentity == nil {
+		invalidParams.Add(request.NewErrParamRequired("OriginAccessIdentity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // A complex type that contains information about the Amazon S3 origin. If the
@@ -2850,6 +4666,19 @@ func (s S3OriginConfig) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *S3OriginConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "S3OriginConfig"}
+	if s.OriginAccessIdentity == nil {
+		invalidParams.Add(request.NewErrParamRequired("OriginAccessIdentity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A complex type that lists the AWS accounts that were included in the TrustedSigners
 // complex type, as well as their active CloudFront key pair IDs, if any.
 type Signer struct {
@@ -2879,6 +4708,11 @@ func (s Signer) GoString() string {
 // A streaming distribution.
 type StreamingDistribution struct {
 	_ struct{} `type:"structure"`
+
+	// The ARN (Amazon Resource Name) for the streaming distribution. For example:
+	// arn:aws:cloudfront::123456789012:streaming-distribution/EDFDVBD632BHDS5,
+	// where 123456789012 is your AWS account Id.
+	ARN *string `type:"string" required:"true"`
 
 	// CloudFront automatically adds this element to the response only if you've
 	// set up the distribution to serve private content with signed URLs. The element
@@ -2982,6 +4816,99 @@ func (s StreamingDistributionConfig) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *StreamingDistributionConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "StreamingDistributionConfig"}
+	if s.CallerReference == nil {
+		invalidParams.Add(request.NewErrParamRequired("CallerReference"))
+	}
+	if s.Comment == nil {
+		invalidParams.Add(request.NewErrParamRequired("Comment"))
+	}
+	if s.Enabled == nil {
+		invalidParams.Add(request.NewErrParamRequired("Enabled"))
+	}
+	if s.S3Origin == nil {
+		invalidParams.Add(request.NewErrParamRequired("S3Origin"))
+	}
+	if s.TrustedSigners == nil {
+		invalidParams.Add(request.NewErrParamRequired("TrustedSigners"))
+	}
+	if s.Aliases != nil {
+		if err := s.Aliases.Validate(); err != nil {
+			invalidParams.AddNested("Aliases", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Logging != nil {
+		if err := s.Logging.Validate(); err != nil {
+			invalidParams.AddNested("Logging", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.S3Origin != nil {
+		if err := s.S3Origin.Validate(); err != nil {
+			invalidParams.AddNested("S3Origin", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TrustedSigners != nil {
+		if err := s.TrustedSigners.Validate(); err != nil {
+			invalidParams.AddNested("TrustedSigners", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// A streaming distribution Configuration and a list of tags to be associated
+// with the streaming distribution.
+type StreamingDistributionConfigWithTags struct {
+	_ struct{} `type:"structure"`
+
+	// A streaming distribution Configuration.
+	StreamingDistributionConfig *StreamingDistributionConfig `type:"structure" required:"true"`
+
+	// A complex type that contains zero or more Tag elements.
+	Tags *Tags `type:"structure" required:"true"`
+}
+
+// String returns the string representation
+func (s StreamingDistributionConfigWithTags) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s StreamingDistributionConfigWithTags) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *StreamingDistributionConfigWithTags) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "StreamingDistributionConfigWithTags"}
+	if s.StreamingDistributionConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("StreamingDistributionConfig"))
+	}
+	if s.Tags == nil {
+		invalidParams.Add(request.NewErrParamRequired("Tags"))
+	}
+	if s.StreamingDistributionConfig != nil {
+		if err := s.StreamingDistributionConfig.Validate(); err != nil {
+			invalidParams.AddNested("StreamingDistributionConfig", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Tags != nil {
+		if err := s.Tags.Validate(); err != nil {
+			invalidParams.AddNested("Tags", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A streaming distribution list.
 type StreamingDistributionList struct {
 	_ struct{} `type:"structure"`
@@ -3025,6 +4952,11 @@ func (s StreamingDistributionList) GoString() string {
 // A summary of the information for an Amazon CloudFront streaming distribution.
 type StreamingDistributionSummary struct {
 	_ struct{} `type:"structure"`
+
+	// The ARN (Amazon Resource Name) for the streaming distribution. For example:
+	// arn:aws:cloudfront::123456789012:streaming-distribution/EDFDVBD632BHDS5,
+	// where 123456789012 is your AWS account Id.
+	ARN *string `type:"string" required:"true"`
 
 	// A complex type that contains information about CNAMEs (alternate domain names),
 	// if any, for this streaming distribution.
@@ -3113,6 +5045,178 @@ func (s StreamingLoggingConfig) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *StreamingLoggingConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "StreamingLoggingConfig"}
+	if s.Bucket == nil {
+		invalidParams.Add(request.NewErrParamRequired("Bucket"))
+	}
+	if s.Enabled == nil {
+		invalidParams.Add(request.NewErrParamRequired("Enabled"))
+	}
+	if s.Prefix == nil {
+		invalidParams.Add(request.NewErrParamRequired("Prefix"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// A complex type that contains Tag key and Tag value.
+type Tag struct {
+	_ struct{} `type:"structure"`
+
+	// A string that contains Tag key. The string length should be between 1 and
+	// 128 characters. Valid characters include a-z, A-Z, 0-9, space, and the special
+	// characters _ - . : / = + @.
+	Key *string `min:"1" type:"string" required:"true"`
+
+	// A string that contains an optional Tag value. The string length should be
+	// between 0 and 256 characters. Valid characters include a-z, A-Z, 0-9, space,
+	// and the special characters _ - . : / = + @.
+	Value *string `type:"string"`
+}
+
+// String returns the string representation
+func (s Tag) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s Tag) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Tag) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Tag"}
+	if s.Key == nil {
+		invalidParams.Add(request.NewErrParamRequired("Key"))
+	}
+	if s.Key != nil && len(*s.Key) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Key", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// A complex type that contains zero or more Tag elements.
+type TagKeys struct {
+	_ struct{} `type:"structure"`
+
+	// A complex type that contains Tag key elements
+	Items []*string `locationNameList:"Key" type:"list"`
+}
+
+// String returns the string representation
+func (s TagKeys) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s TagKeys) GoString() string {
+	return s.String()
+}
+
+// The request to add tags to a CloudFront resource.
+type TagResourceInput struct {
+	_ struct{} `type:"structure" payload:"Tags"`
+
+	// An ARN of a CloudFront resource.
+	Resource *string `location:"querystring" locationName:"Resource" type:"string" required:"true"`
+
+	// A complex type that contains zero or more Tag elements.
+	Tags *Tags `locationName:"Tags" type:"structure" required:"true"`
+}
+
+// String returns the string representation
+func (s TagResourceInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s TagResourceInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *TagResourceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "TagResourceInput"}
+	if s.Resource == nil {
+		invalidParams.Add(request.NewErrParamRequired("Resource"))
+	}
+	if s.Tags == nil {
+		invalidParams.Add(request.NewErrParamRequired("Tags"))
+	}
+	if s.Tags != nil {
+		if err := s.Tags.Validate(); err != nil {
+			invalidParams.AddNested("Tags", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+type TagResourceOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation
+func (s TagResourceOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s TagResourceOutput) GoString() string {
+	return s.String()
+}
+
+// A complex type that contains zero or more Tag elements.
+type Tags struct {
+	_ struct{} `type:"structure"`
+
+	// A complex type that contains Tag elements
+	Items []*Tag `locationNameList:"Tag" type:"list"`
+}
+
+// String returns the string representation
+func (s Tags) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s Tags) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Tags) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Tags"}
+	if s.Items != nil {
+		for i, v := range s.Items {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Items", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A complex type that specifies the AWS accounts, if any, that you want to
 // allow to create signed URLs for private content. If you want to require signed
 // URLs in requests for objects in the target origin that match the PathPattern
@@ -3149,6 +5253,73 @@ func (s TrustedSigners) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *TrustedSigners) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "TrustedSigners"}
+	if s.Enabled == nil {
+		invalidParams.Add(request.NewErrParamRequired("Enabled"))
+	}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// The request to remove tags from a CloudFront resource.
+type UntagResourceInput struct {
+	_ struct{} `type:"structure" payload:"TagKeys"`
+
+	// An ARN of a CloudFront resource.
+	Resource *string `location:"querystring" locationName:"Resource" type:"string" required:"true"`
+
+	// A complex type that contains zero or more Tag key elements.
+	TagKeys *TagKeys `locationName:"TagKeys" type:"structure" required:"true"`
+}
+
+// String returns the string representation
+func (s UntagResourceInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s UntagResourceInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UntagResourceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UntagResourceInput"}
+	if s.Resource == nil {
+		invalidParams.Add(request.NewErrParamRequired("Resource"))
+	}
+	if s.TagKeys == nil {
+		invalidParams.Add(request.NewErrParamRequired("TagKeys"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+type UntagResourceOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation
+func (s UntagResourceOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s UntagResourceOutput) GoString() string {
+	return s.String()
+}
+
 // The request to update an origin access identity.
 type UpdateCloudFrontOriginAccessIdentityInput struct {
 	_ struct{} `type:"structure" payload:"CloudFrontOriginAccessIdentityConfig"`
@@ -3172,6 +5343,27 @@ func (s UpdateCloudFrontOriginAccessIdentityInput) String() string {
 // GoString returns the string representation
 func (s UpdateCloudFrontOriginAccessIdentityInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateCloudFrontOriginAccessIdentityInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateCloudFrontOriginAccessIdentityInput"}
+	if s.CloudFrontOriginAccessIdentityConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("CloudFrontOriginAccessIdentityConfig"))
+	}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.CloudFrontOriginAccessIdentityConfig != nil {
+		if err := s.CloudFrontOriginAccessIdentityConfig.Validate(); err != nil {
+			invalidParams.AddNested("CloudFrontOriginAccessIdentityConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The returned result of the corresponding request.
@@ -3220,6 +5412,27 @@ func (s UpdateDistributionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateDistributionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateDistributionInput"}
+	if s.DistributionConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("DistributionConfig"))
+	}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.DistributionConfig != nil {
+		if err := s.DistributionConfig.Validate(); err != nil {
+			invalidParams.AddNested("DistributionConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The returned result of the corresponding request.
 type UpdateDistributionOutput struct {
 	_ struct{} `type:"structure" payload:"Distribution"`
@@ -3266,6 +5479,27 @@ func (s UpdateStreamingDistributionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateStreamingDistributionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateStreamingDistributionInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.StreamingDistributionConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("StreamingDistributionConfig"))
+	}
+	if s.StreamingDistributionConfig != nil {
+		if err := s.StreamingDistributionConfig.Validate(); err != nil {
+			invalidParams.AddNested("StreamingDistributionConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The returned result of the corresponding request.
 type UpdateStreamingDistributionOutput struct {
 	_ struct{} `type:"structure" payload:"StreamingDistribution"`
@@ -3300,26 +5534,23 @@ type ViewerCertificate struct {
 
 	// Note: this field is deprecated. Please use one of [ACMCertificateArn, IAMCertificateId,
 	// CloudFrontDefaultCertificate].
-	Certificate *string `type:"string"`
+	Certificate *string `deprecated:"true" type:"string"`
 
 	// Note: this field is deprecated. Please use one of [ACMCertificateArn, IAMCertificateId,
 	// CloudFrontDefaultCertificate].
-	CertificateSource *string `type:"string" enum:"CertificateSource"`
+	CertificateSource *string `deprecated:"true" type:"string" enum:"CertificateSource"`
 
-	// Note: this field is deprecated. Please use "cloudfront" as CertificateSource
-	// and omit specifying a Certificate. If you want viewers to use HTTPS to request
-	// your objects and you're using the CloudFront domain name of your distribution
-	// in your object URLs (for example, https://d111111abcdef8.cloudfront.net/logo.jpg),
-	// set to true. Omit this value if you are setting an IAMCertificateId.
-	CloudFrontDefaultCertificate *bool `deprecated:"true" type:"boolean"`
+	// If you want viewers to use HTTPS to request your objects and you're using
+	// the CloudFront domain name of your distribution in your object URLs (for
+	// example, https://d111111abcdef8.cloudfront.net/logo.jpg), set to true. Omit
+	// this value if you are setting an ACMCertificateArn or IAMCertificateId.
+	CloudFrontDefaultCertificate *bool `type:"boolean"`
 
-	// Note: this field is deprecated. Please use "iam" as CertificateSource and
-	// specify the IAM certificate Id as the Certificate. If you want viewers to
-	// use HTTPS to request your objects and you're using an alternate domain name
-	// in your object URLs (for example, https://example.com/logo.jpg), specify
-	// the IAM certificate identifier of the custom viewer certificate for this
-	// distribution. Specify either this value or CloudFrontDefaultCertificate.
-	IAMCertificateId *string `deprecated:"true" type:"string"`
+	// If you want viewers to use HTTPS to request your objects and you're using
+	// an alternate domain name in your object URLs (for example, https://example.com/logo.jpg),
+	// specify the IAM certificate identifier of the custom viewer certificate for
+	// this distribution. Specify either this value, ACMCertificateArn, or CloudFrontDefaultCertificate.
+	IAMCertificateId *string `type:"string"`
 
 	// Specify the minimum version of the SSL protocol that you want CloudFront
 	// to use, SSLv3 or TLSv1, for HTTPS connections. CloudFront will serve your

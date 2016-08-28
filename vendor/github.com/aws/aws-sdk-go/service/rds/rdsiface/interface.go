@@ -26,6 +26,10 @@ type RDSAPI interface {
 
 	AuthorizeDBSecurityGroupIngress(*rds.AuthorizeDBSecurityGroupIngressInput) (*rds.AuthorizeDBSecurityGroupIngressOutput, error)
 
+	CopyDBClusterParameterGroupRequest(*rds.CopyDBClusterParameterGroupInput) (*request.Request, *rds.CopyDBClusterParameterGroupOutput)
+
+	CopyDBClusterParameterGroup(*rds.CopyDBClusterParameterGroupInput) (*rds.CopyDBClusterParameterGroupOutput, error)
+
 	CopyDBClusterSnapshotRequest(*rds.CopyDBClusterSnapshotInput) (*request.Request, *rds.CopyDBClusterSnapshotOutput)
 
 	CopyDBClusterSnapshot(*rds.CopyDBClusterSnapshotInput) (*rds.CopyDBClusterSnapshotOutput, error)
@@ -141,6 +145,10 @@ type RDSAPI interface {
 	DescribeDBClusterParametersRequest(*rds.DescribeDBClusterParametersInput) (*request.Request, *rds.DescribeDBClusterParametersOutput)
 
 	DescribeDBClusterParameters(*rds.DescribeDBClusterParametersInput) (*rds.DescribeDBClusterParametersOutput, error)
+
+	DescribeDBClusterSnapshotAttributesRequest(*rds.DescribeDBClusterSnapshotAttributesInput) (*request.Request, *rds.DescribeDBClusterSnapshotAttributesOutput)
+
+	DescribeDBClusterSnapshotAttributes(*rds.DescribeDBClusterSnapshotAttributesInput) (*rds.DescribeDBClusterSnapshotAttributesOutput, error)
 
 	DescribeDBClusterSnapshotsRequest(*rds.DescribeDBClusterSnapshotsInput) (*request.Request, *rds.DescribeDBClusterSnapshotsOutput)
 
@@ -284,6 +292,10 @@ type RDSAPI interface {
 
 	ModifyDBClusterParameterGroup(*rds.ModifyDBClusterParameterGroupInput) (*rds.DBClusterParameterGroupNameMessage, error)
 
+	ModifyDBClusterSnapshotAttributeRequest(*rds.ModifyDBClusterSnapshotAttributeInput) (*request.Request, *rds.ModifyDBClusterSnapshotAttributeOutput)
+
+	ModifyDBClusterSnapshotAttribute(*rds.ModifyDBClusterSnapshotAttributeInput) (*rds.ModifyDBClusterSnapshotAttributeOutput, error)
+
 	ModifyDBInstanceRequest(*rds.ModifyDBInstanceInput) (*request.Request, *rds.ModifyDBInstanceOutput)
 
 	ModifyDBInstance(*rds.ModifyDBInstanceInput) (*rds.ModifyDBInstanceOutput, error)
@@ -312,6 +324,10 @@ type RDSAPI interface {
 
 	PromoteReadReplica(*rds.PromoteReadReplicaInput) (*rds.PromoteReadReplicaOutput, error)
 
+	PromoteReadReplicaDBClusterRequest(*rds.PromoteReadReplicaDBClusterInput) (*request.Request, *rds.PromoteReadReplicaDBClusterOutput)
+
+	PromoteReadReplicaDBCluster(*rds.PromoteReadReplicaDBClusterInput) (*rds.PromoteReadReplicaDBClusterOutput, error)
+
 	PurchaseReservedDBInstancesOfferingRequest(*rds.PurchaseReservedDBInstancesOfferingInput) (*request.Request, *rds.PurchaseReservedDBInstancesOfferingOutput)
 
 	PurchaseReservedDBInstancesOffering(*rds.PurchaseReservedDBInstancesOfferingInput) (*rds.PurchaseReservedDBInstancesOfferingOutput, error)
@@ -335,6 +351,10 @@ type RDSAPI interface {
 	ResetDBParameterGroupRequest(*rds.ResetDBParameterGroupInput) (*request.Request, *rds.DBParameterGroupNameMessage)
 
 	ResetDBParameterGroup(*rds.ResetDBParameterGroupInput) (*rds.DBParameterGroupNameMessage, error)
+
+	RestoreDBClusterFromS3Request(*rds.RestoreDBClusterFromS3Input) (*request.Request, *rds.RestoreDBClusterFromS3Output)
+
+	RestoreDBClusterFromS3(*rds.RestoreDBClusterFromS3Input) (*rds.RestoreDBClusterFromS3Output, error)
 
 	RestoreDBClusterFromSnapshotRequest(*rds.RestoreDBClusterFromSnapshotInput) (*request.Request, *rds.RestoreDBClusterFromSnapshotOutput)
 

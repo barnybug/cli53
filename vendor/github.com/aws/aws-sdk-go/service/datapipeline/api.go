@@ -4,6 +4,7 @@
 package datapipeline
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/awsutil"
@@ -14,7 +15,28 @@ import (
 
 const opActivatePipeline = "ActivatePipeline"
 
-// ActivatePipelineRequest generates a request for the ActivatePipeline operation.
+// ActivatePipelineRequest generates a "aws/request.Request" representing the
+// client's request for the ActivatePipeline operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ActivatePipeline method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ActivatePipelineRequest method.
+//    req, resp := client.ActivatePipelineRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) ActivatePipelineRequest(input *ActivatePipelineInput) (req *request.Request, output *ActivatePipelineOutput) {
 	op := &request.Operation{
 		Name:       opActivatePipeline,
@@ -48,7 +70,28 @@ func (c *DataPipeline) ActivatePipeline(input *ActivatePipelineInput) (*Activate
 
 const opAddTags = "AddTags"
 
-// AddTagsRequest generates a request for the AddTags operation.
+// AddTagsRequest generates a "aws/request.Request" representing the
+// client's request for the AddTags operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the AddTags method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the AddTagsRequest method.
+//    req, resp := client.AddTagsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) AddTagsRequest(input *AddTagsInput) (req *request.Request, output *AddTagsOutput) {
 	op := &request.Operation{
 		Name:       opAddTags,
@@ -75,7 +118,28 @@ func (c *DataPipeline) AddTags(input *AddTagsInput) (*AddTagsOutput, error) {
 
 const opCreatePipeline = "CreatePipeline"
 
-// CreatePipelineRequest generates a request for the CreatePipeline operation.
+// CreatePipelineRequest generates a "aws/request.Request" representing the
+// client's request for the CreatePipeline operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreatePipeline method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreatePipelineRequest method.
+//    req, resp := client.CreatePipelineRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) CreatePipelineRequest(input *CreatePipelineInput) (req *request.Request, output *CreatePipelineOutput) {
 	op := &request.Operation{
 		Name:       opCreatePipeline,
@@ -103,7 +167,28 @@ func (c *DataPipeline) CreatePipeline(input *CreatePipelineInput) (*CreatePipeli
 
 const opDeactivatePipeline = "DeactivatePipeline"
 
-// DeactivatePipelineRequest generates a request for the DeactivatePipeline operation.
+// DeactivatePipelineRequest generates a "aws/request.Request" representing the
+// client's request for the DeactivatePipeline operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeactivatePipeline method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeactivatePipelineRequest method.
+//    req, resp := client.DeactivatePipelineRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) DeactivatePipelineRequest(input *DeactivatePipelineInput) (req *request.Request, output *DeactivatePipelineOutput) {
 	op := &request.Operation{
 		Name:       opDeactivatePipeline,
@@ -135,7 +220,28 @@ func (c *DataPipeline) DeactivatePipeline(input *DeactivatePipelineInput) (*Deac
 
 const opDeletePipeline = "DeletePipeline"
 
-// DeletePipelineRequest generates a request for the DeletePipeline operation.
+// DeletePipelineRequest generates a "aws/request.Request" representing the
+// client's request for the DeletePipeline operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeletePipeline method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeletePipelineRequest method.
+//    req, resp := client.DeletePipelineRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) DeletePipelineRequest(input *DeletePipelineInput) (req *request.Request, output *DeletePipelineOutput) {
 	op := &request.Operation{
 		Name:       opDeletePipeline,
@@ -171,7 +277,28 @@ func (c *DataPipeline) DeletePipeline(input *DeletePipelineInput) (*DeletePipeli
 
 const opDescribeObjects = "DescribeObjects"
 
-// DescribeObjectsRequest generates a request for the DescribeObjects operation.
+// DescribeObjectsRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeObjects operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeObjects method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeObjectsRequest method.
+//    req, resp := client.DescribeObjectsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) DescribeObjectsRequest(input *DescribeObjectsInput) (req *request.Request, output *DescribeObjectsOutput) {
 	op := &request.Operation{
 		Name:       opDescribeObjects,
@@ -204,6 +331,23 @@ func (c *DataPipeline) DescribeObjects(input *DescribeObjectsInput) (*DescribeOb
 	return out, err
 }
 
+// DescribeObjectsPages iterates over the pages of a DescribeObjects operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See DescribeObjects method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a DescribeObjects operation.
+//    pageNum := 0
+//    err := client.DescribeObjectsPages(params,
+//        func(page *DescribeObjectsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *DataPipeline) DescribeObjectsPages(input *DescribeObjectsInput, fn func(p *DescribeObjectsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.DescribeObjectsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -214,7 +358,28 @@ func (c *DataPipeline) DescribeObjectsPages(input *DescribeObjectsInput, fn func
 
 const opDescribePipelines = "DescribePipelines"
 
-// DescribePipelinesRequest generates a request for the DescribePipelines operation.
+// DescribePipelinesRequest generates a "aws/request.Request" representing the
+// client's request for the DescribePipelines operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribePipelines method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribePipelinesRequest method.
+//    req, resp := client.DescribePipelinesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) DescribePipelinesRequest(input *DescribePipelinesInput) (req *request.Request, output *DescribePipelinesOutput) {
 	op := &request.Operation{
 		Name:       opDescribePipelines,
@@ -249,7 +414,28 @@ func (c *DataPipeline) DescribePipelines(input *DescribePipelinesInput) (*Descri
 
 const opEvaluateExpression = "EvaluateExpression"
 
-// EvaluateExpressionRequest generates a request for the EvaluateExpression operation.
+// EvaluateExpressionRequest generates a "aws/request.Request" representing the
+// client's request for the EvaluateExpression operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the EvaluateExpression method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the EvaluateExpressionRequest method.
+//    req, resp := client.EvaluateExpressionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) EvaluateExpressionRequest(input *EvaluateExpressionInput) (req *request.Request, output *EvaluateExpressionOutput) {
 	op := &request.Operation{
 		Name:       opEvaluateExpression,
@@ -278,7 +464,28 @@ func (c *DataPipeline) EvaluateExpression(input *EvaluateExpressionInput) (*Eval
 
 const opGetPipelineDefinition = "GetPipelineDefinition"
 
-// GetPipelineDefinitionRequest generates a request for the GetPipelineDefinition operation.
+// GetPipelineDefinitionRequest generates a "aws/request.Request" representing the
+// client's request for the GetPipelineDefinition operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetPipelineDefinition method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetPipelineDefinitionRequest method.
+//    req, resp := client.GetPipelineDefinitionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) GetPipelineDefinitionRequest(input *GetPipelineDefinitionInput) (req *request.Request, output *GetPipelineDefinitionOutput) {
 	op := &request.Operation{
 		Name:       opGetPipelineDefinition,
@@ -306,7 +513,28 @@ func (c *DataPipeline) GetPipelineDefinition(input *GetPipelineDefinitionInput) 
 
 const opListPipelines = "ListPipelines"
 
-// ListPipelinesRequest generates a request for the ListPipelines operation.
+// ListPipelinesRequest generates a "aws/request.Request" representing the
+// client's request for the ListPipelines operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListPipelines method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListPipelinesRequest method.
+//    req, resp := client.ListPipelinesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) ListPipelinesRequest(input *ListPipelinesInput) (req *request.Request, output *ListPipelinesOutput) {
 	op := &request.Operation{
 		Name:       opListPipelines,
@@ -338,6 +566,23 @@ func (c *DataPipeline) ListPipelines(input *ListPipelinesInput) (*ListPipelinesO
 	return out, err
 }
 
+// ListPipelinesPages iterates over the pages of a ListPipelines operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListPipelines method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListPipelines operation.
+//    pageNum := 0
+//    err := client.ListPipelinesPages(params,
+//        func(page *ListPipelinesOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *DataPipeline) ListPipelinesPages(input *ListPipelinesInput, fn func(p *ListPipelinesOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListPipelinesRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -348,7 +593,28 @@ func (c *DataPipeline) ListPipelinesPages(input *ListPipelinesInput, fn func(p *
 
 const opPollForTask = "PollForTask"
 
-// PollForTaskRequest generates a request for the PollForTask operation.
+// PollForTaskRequest generates a "aws/request.Request" representing the
+// client's request for the PollForTask operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the PollForTask method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the PollForTaskRequest method.
+//    req, resp := client.PollForTaskRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) PollForTaskRequest(input *PollForTaskInput) (req *request.Request, output *PollForTaskOutput) {
 	op := &request.Operation{
 		Name:       opPollForTask,
@@ -388,7 +654,28 @@ func (c *DataPipeline) PollForTask(input *PollForTaskInput) (*PollForTaskOutput,
 
 const opPutPipelineDefinition = "PutPipelineDefinition"
 
-// PutPipelineDefinitionRequest generates a request for the PutPipelineDefinition operation.
+// PutPipelineDefinitionRequest generates a "aws/request.Request" representing the
+// client's request for the PutPipelineDefinition operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the PutPipelineDefinition method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the PutPipelineDefinitionRequest method.
+//    req, resp := client.PutPipelineDefinitionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) PutPipelineDefinitionRequest(input *PutPipelineDefinitionInput) (req *request.Request, output *PutPipelineDefinitionOutput) {
 	op := &request.Operation{
 		Name:       opPutPipelineDefinition,
@@ -426,7 +713,28 @@ func (c *DataPipeline) PutPipelineDefinition(input *PutPipelineDefinitionInput) 
 
 const opQueryObjects = "QueryObjects"
 
-// QueryObjectsRequest generates a request for the QueryObjects operation.
+// QueryObjectsRequest generates a "aws/request.Request" representing the
+// client's request for the QueryObjects operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the QueryObjects method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the QueryObjectsRequest method.
+//    req, resp := client.QueryObjectsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) QueryObjectsRequest(input *QueryObjectsInput) (req *request.Request, output *QueryObjectsOutput) {
 	op := &request.Operation{
 		Name:       opQueryObjects,
@@ -458,6 +766,23 @@ func (c *DataPipeline) QueryObjects(input *QueryObjectsInput) (*QueryObjectsOutp
 	return out, err
 }
 
+// QueryObjectsPages iterates over the pages of a QueryObjects operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See QueryObjects method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a QueryObjects operation.
+//    pageNum := 0
+//    err := client.QueryObjectsPages(params,
+//        func(page *QueryObjectsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *DataPipeline) QueryObjectsPages(input *QueryObjectsInput, fn func(p *QueryObjectsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.QueryObjectsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -468,7 +793,28 @@ func (c *DataPipeline) QueryObjectsPages(input *QueryObjectsInput, fn func(p *Qu
 
 const opRemoveTags = "RemoveTags"
 
-// RemoveTagsRequest generates a request for the RemoveTags operation.
+// RemoveTagsRequest generates a "aws/request.Request" representing the
+// client's request for the RemoveTags operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RemoveTags method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RemoveTagsRequest method.
+//    req, resp := client.RemoveTagsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) RemoveTagsRequest(input *RemoveTagsInput) (req *request.Request, output *RemoveTagsOutput) {
 	op := &request.Operation{
 		Name:       opRemoveTags,
@@ -495,7 +841,28 @@ func (c *DataPipeline) RemoveTags(input *RemoveTagsInput) (*RemoveTagsOutput, er
 
 const opReportTaskProgress = "ReportTaskProgress"
 
-// ReportTaskProgressRequest generates a request for the ReportTaskProgress operation.
+// ReportTaskProgressRequest generates a "aws/request.Request" representing the
+// client's request for the ReportTaskProgress operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ReportTaskProgress method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ReportTaskProgressRequest method.
+//    req, resp := client.ReportTaskProgressRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) ReportTaskProgressRequest(input *ReportTaskProgressInput) (req *request.Request, output *ReportTaskProgressOutput) {
 	op := &request.Operation{
 		Name:       opReportTaskProgress,
@@ -533,7 +900,28 @@ func (c *DataPipeline) ReportTaskProgress(input *ReportTaskProgressInput) (*Repo
 
 const opReportTaskRunnerHeartbeat = "ReportTaskRunnerHeartbeat"
 
-// ReportTaskRunnerHeartbeatRequest generates a request for the ReportTaskRunnerHeartbeat operation.
+// ReportTaskRunnerHeartbeatRequest generates a "aws/request.Request" representing the
+// client's request for the ReportTaskRunnerHeartbeat operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ReportTaskRunnerHeartbeat method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ReportTaskRunnerHeartbeatRequest method.
+//    req, resp := client.ReportTaskRunnerHeartbeatRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) ReportTaskRunnerHeartbeatRequest(input *ReportTaskRunnerHeartbeatInput) (req *request.Request, output *ReportTaskRunnerHeartbeatOutput) {
 	op := &request.Operation{
 		Name:       opReportTaskRunnerHeartbeat,
@@ -564,7 +952,28 @@ func (c *DataPipeline) ReportTaskRunnerHeartbeat(input *ReportTaskRunnerHeartbea
 
 const opSetStatus = "SetStatus"
 
-// SetStatusRequest generates a request for the SetStatus operation.
+// SetStatusRequest generates a "aws/request.Request" representing the
+// client's request for the SetStatus operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the SetStatus method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the SetStatusRequest method.
+//    req, resp := client.SetStatusRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) SetStatusRequest(input *SetStatusInput) (req *request.Request, output *SetStatusOutput) {
 	op := &request.Operation{
 		Name:       opSetStatus,
@@ -597,7 +1006,28 @@ func (c *DataPipeline) SetStatus(input *SetStatusInput) (*SetStatusOutput, error
 
 const opSetTaskStatus = "SetTaskStatus"
 
-// SetTaskStatusRequest generates a request for the SetTaskStatus operation.
+// SetTaskStatusRequest generates a "aws/request.Request" representing the
+// client's request for the SetTaskStatus operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the SetTaskStatus method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the SetTaskStatusRequest method.
+//    req, resp := client.SetTaskStatusRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) SetTaskStatusRequest(input *SetTaskStatusInput) (req *request.Request, output *SetTaskStatusOutput) {
 	op := &request.Operation{
 		Name:       opSetTaskStatus,
@@ -628,7 +1058,28 @@ func (c *DataPipeline) SetTaskStatus(input *SetTaskStatusInput) (*SetTaskStatusO
 
 const opValidatePipelineDefinition = "ValidatePipelineDefinition"
 
-// ValidatePipelineDefinitionRequest generates a request for the ValidatePipelineDefinition operation.
+// ValidatePipelineDefinitionRequest generates a "aws/request.Request" representing the
+// client's request for the ValidatePipelineDefinition operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ValidatePipelineDefinition method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ValidatePipelineDefinitionRequest method.
+//    req, resp := client.ValidatePipelineDefinitionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *DataPipeline) ValidatePipelineDefinitionRequest(input *ValidatePipelineDefinitionInput) (req *request.Request, output *ValidatePipelineDefinitionOutput) {
 	op := &request.Operation{
 		Name:       opValidatePipelineDefinition,
@@ -679,6 +1130,32 @@ func (s ActivatePipelineInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ActivatePipelineInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ActivatePipelineInput"}
+	if s.PipelineId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineId"))
+	}
+	if s.PipelineId != nil && len(*s.PipelineId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PipelineId", 1))
+	}
+	if s.ParameterValues != nil {
+		for i, v := range s.ParameterValues {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "ParameterValues", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of ActivatePipeline.
 type ActivatePipelineOutput struct {
 	_ struct{} `type:"structure"`
@@ -713,6 +1190,35 @@ func (s AddTagsInput) String() string {
 // GoString returns the string representation
 func (s AddTagsInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AddTagsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AddTagsInput"}
+	if s.PipelineId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineId"))
+	}
+	if s.PipelineId != nil && len(*s.PipelineId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PipelineId", 1))
+	}
+	if s.Tags == nil {
+		invalidParams.Add(request.NewErrParamRequired("Tags"))
+	}
+	if s.Tags != nil {
+		for i, v := range s.Tags {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Tags", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the output of AddTags.
@@ -772,6 +1278,38 @@ func (s CreatePipelineInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreatePipelineInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreatePipelineInput"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.UniqueId == nil {
+		invalidParams.Add(request.NewErrParamRequired("UniqueId"))
+	}
+	if s.UniqueId != nil && len(*s.UniqueId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("UniqueId", 1))
+	}
+	if s.Tags != nil {
+		for i, v := range s.Tags {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Tags", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of CreatePipeline.
 type CreatePipelineOutput struct {
 	_ struct{} `type:"structure"`
@@ -814,6 +1352,22 @@ func (s DeactivatePipelineInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeactivatePipelineInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeactivatePipelineInput"}
+	if s.PipelineId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineId"))
+	}
+	if s.PipelineId != nil && len(*s.PipelineId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PipelineId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of DeactivatePipeline.
 type DeactivatePipelineOutput struct {
 	_ struct{} `type:"structure"`
@@ -845,6 +1399,22 @@ func (s DeletePipelineInput) String() string {
 // GoString returns the string representation
 func (s DeletePipelineInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeletePipelineInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeletePipelineInput"}
+	if s.PipelineId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineId"))
+	}
+	if s.PipelineId != nil && len(*s.PipelineId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PipelineId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type DeletePipelineOutput struct {
@@ -893,6 +1463,25 @@ func (s DescribeObjectsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeObjectsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeObjectsInput"}
+	if s.ObjectIds == nil {
+		invalidParams.Add(request.NewErrParamRequired("ObjectIds"))
+	}
+	if s.PipelineId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineId"))
+	}
+	if s.PipelineId != nil && len(*s.PipelineId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PipelineId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of DescribeObjects.
 type DescribeObjectsOutput struct {
 	_ struct{} `type:"structure"`
@@ -938,6 +1527,19 @@ func (s DescribePipelinesInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribePipelinesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribePipelinesInput"}
+	if s.PipelineIds == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineIds"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of DescribePipelines.
 type DescribePipelinesOutput struct {
 	_ struct{} `type:"structure"`
@@ -978,6 +1580,31 @@ func (s EvaluateExpressionInput) String() string {
 // GoString returns the string representation
 func (s EvaluateExpressionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *EvaluateExpressionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "EvaluateExpressionInput"}
+	if s.Expression == nil {
+		invalidParams.Add(request.NewErrParamRequired("Expression"))
+	}
+	if s.ObjectId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ObjectId"))
+	}
+	if s.ObjectId != nil && len(*s.ObjectId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ObjectId", 1))
+	}
+	if s.PipelineId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineId"))
+	}
+	if s.PipelineId != nil && len(*s.PipelineId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PipelineId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the output of EvaluateExpression.
@@ -1024,6 +1651,25 @@ func (s Field) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Field) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Field"}
+	if s.Key == nil {
+		invalidParams.Add(request.NewErrParamRequired("Key"))
+	}
+	if s.Key != nil && len(*s.Key) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Key", 1))
+	}
+	if s.RefValue != nil && len(*s.RefValue) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("RefValue", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the parameters for GetPipelineDefinition.
 type GetPipelineDefinitionInput struct {
 	_ struct{} `type:"structure"`
@@ -1045,6 +1691,22 @@ func (s GetPipelineDefinitionInput) String() string {
 // GoString returns the string representation
 func (s GetPipelineDefinitionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetPipelineDefinitionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetPipelineDefinitionInput"}
+	if s.PipelineId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineId"))
+	}
+	if s.PipelineId != nil && len(*s.PipelineId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PipelineId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the output of GetPipelineDefinition.
@@ -1209,6 +1871,25 @@ func (s ParameterAttribute) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ParameterAttribute) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ParameterAttribute"}
+	if s.Key == nil {
+		invalidParams.Add(request.NewErrParamRequired("Key"))
+	}
+	if s.Key != nil && len(*s.Key) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Key", 1))
+	}
+	if s.StringValue == nil {
+		invalidParams.Add(request.NewErrParamRequired("StringValue"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains information about a parameter object.
 type ParameterObject struct {
 	_ struct{} `type:"structure"`
@@ -1230,6 +1911,35 @@ func (s ParameterObject) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ParameterObject) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ParameterObject"}
+	if s.Attributes == nil {
+		invalidParams.Add(request.NewErrParamRequired("Attributes"))
+	}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+	if s.Attributes != nil {
+		for i, v := range s.Attributes {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Attributes", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A value or list of parameter values.
 type ParameterValue struct {
 	_ struct{} `type:"structure"`
@@ -1249,6 +1959,25 @@ func (s ParameterValue) String() string {
 // GoString returns the string representation
 func (s ParameterValue) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ParameterValue) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ParameterValue"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+	if s.StringValue == nil {
+		invalidParams.Add(request.NewErrParamRequired("StringValue"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains pipeline metadata.
@@ -1334,6 +2063,41 @@ func (s PipelineObject) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PipelineObject) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PipelineObject"}
+	if s.Fields == nil {
+		invalidParams.Add(request.NewErrParamRequired("Fields"))
+	}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.Fields != nil {
+		for i, v := range s.Fields {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Fields", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the parameters for PollForTask.
 type PollForTaskInput struct {
 	_ struct{} `type:"structure"`
@@ -1365,6 +2129,22 @@ func (s PollForTaskInput) String() string {
 // GoString returns the string representation
 func (s PollForTaskInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PollForTaskInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PollForTaskInput"}
+	if s.Hostname != nil && len(*s.Hostname) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Hostname", 1))
+	}
+	if s.WorkerGroup == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkerGroup"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the output of PollForTask.
@@ -1414,6 +2194,55 @@ func (s PutPipelineDefinitionInput) String() string {
 // GoString returns the string representation
 func (s PutPipelineDefinitionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PutPipelineDefinitionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PutPipelineDefinitionInput"}
+	if s.PipelineId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineId"))
+	}
+	if s.PipelineId != nil && len(*s.PipelineId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PipelineId", 1))
+	}
+	if s.PipelineObjects == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineObjects"))
+	}
+	if s.ParameterObjects != nil {
+		for i, v := range s.ParameterObjects {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "ParameterObjects", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+	if s.ParameterValues != nil {
+		for i, v := range s.ParameterValues {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "ParameterValues", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+	if s.PipelineObjects != nil {
+		for i, v := range s.PipelineObjects {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "PipelineObjects", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the output of PutPipelineDefinition.
@@ -1499,6 +2328,25 @@ func (s QueryObjectsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *QueryObjectsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "QueryObjectsInput"}
+	if s.PipelineId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineId"))
+	}
+	if s.PipelineId != nil && len(*s.PipelineId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PipelineId", 1))
+	}
+	if s.Sphere == nil {
+		invalidParams.Add(request.NewErrParamRequired("Sphere"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of QueryObjects.
 type QueryObjectsOutput struct {
 	_ struct{} `type:"structure"`
@@ -1547,6 +2395,25 @@ func (s RemoveTagsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RemoveTagsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RemoveTagsInput"}
+	if s.PipelineId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineId"))
+	}
+	if s.PipelineId != nil && len(*s.PipelineId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PipelineId", 1))
+	}
+	if s.TagKeys == nil {
+		invalidParams.Add(request.NewErrParamRequired("TagKeys"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of RemoveTags.
 type RemoveTagsOutput struct {
 	_ struct{} `type:"structure"`
@@ -1583,6 +2450,32 @@ func (s ReportTaskProgressInput) String() string {
 // GoString returns the string representation
 func (s ReportTaskProgressInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ReportTaskProgressInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ReportTaskProgressInput"}
+	if s.TaskId == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskId"))
+	}
+	if s.TaskId != nil && len(*s.TaskId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TaskId", 1))
+	}
+	if s.Fields != nil {
+		for i, v := range s.Fields {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Fields", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the output of ReportTaskProgress.
@@ -1634,6 +2527,25 @@ func (s ReportTaskRunnerHeartbeatInput) String() string {
 // GoString returns the string representation
 func (s ReportTaskRunnerHeartbeatInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ReportTaskRunnerHeartbeatInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ReportTaskRunnerHeartbeatInput"}
+	if s.Hostname != nil && len(*s.Hostname) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Hostname", 1))
+	}
+	if s.TaskrunnerId == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskrunnerId"))
+	}
+	if s.TaskrunnerId != nil && len(*s.TaskrunnerId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TaskrunnerId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the output of ReportTaskRunnerHeartbeat.
@@ -1706,6 +2618,28 @@ func (s SetStatusInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *SetStatusInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "SetStatusInput"}
+	if s.ObjectIds == nil {
+		invalidParams.Add(request.NewErrParamRequired("ObjectIds"))
+	}
+	if s.PipelineId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineId"))
+	}
+	if s.PipelineId != nil && len(*s.PipelineId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PipelineId", 1))
+	}
+	if s.Status == nil {
+		invalidParams.Add(request.NewErrParamRequired("Status"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type SetStatusOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -1761,6 +2695,25 @@ func (s SetTaskStatusInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *SetTaskStatusInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "SetTaskStatusInput"}
+	if s.TaskId == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskId"))
+	}
+	if s.TaskId != nil && len(*s.TaskId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TaskId", 1))
+	}
+	if s.TaskStatus == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskStatus"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of SetTaskStatus.
 type SetTaskStatusOutput struct {
 	_ struct{} `type:"structure"`
@@ -1803,6 +2756,25 @@ func (s Tag) String() string {
 // GoString returns the string representation
 func (s Tag) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Tag) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Tag"}
+	if s.Key == nil {
+		invalidParams.Add(request.NewErrParamRequired("Key"))
+	}
+	if s.Key != nil && len(*s.Key) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Key", 1))
+	}
+	if s.Value == nil {
+		invalidParams.Add(request.NewErrParamRequired("Value"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains information about a pipeline task that is assigned to a task runner.
@@ -1860,6 +2832,55 @@ func (s ValidatePipelineDefinitionInput) String() string {
 // GoString returns the string representation
 func (s ValidatePipelineDefinitionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ValidatePipelineDefinitionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ValidatePipelineDefinitionInput"}
+	if s.PipelineId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineId"))
+	}
+	if s.PipelineId != nil && len(*s.PipelineId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PipelineId", 1))
+	}
+	if s.PipelineObjects == nil {
+		invalidParams.Add(request.NewErrParamRequired("PipelineObjects"))
+	}
+	if s.ParameterObjects != nil {
+		for i, v := range s.ParameterObjects {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "ParameterObjects", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+	if s.ParameterValues != nil {
+		for i, v := range s.ParameterValues {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "ParameterValues", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+	if s.PipelineObjects != nil {
+		for i, v := range s.PipelineObjects {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "PipelineObjects", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the output of ValidatePipelineDefinition.

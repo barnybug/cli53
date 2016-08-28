@@ -28,6 +28,23 @@
         {"shape":"InstanceNotRegisteredException"}
       ]
     },
+    "BatchGetApplicationRevisions":{
+      "name":"BatchGetApplicationRevisions",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"BatchGetApplicationRevisionsInput"},
+      "output":{"shape":"BatchGetApplicationRevisionsOutput"},
+      "errors":[
+        {"shape":"ApplicationDoesNotExistException"},
+        {"shape":"ApplicationNameRequiredException"},
+        {"shape":"InvalidApplicationNameException"},
+        {"shape":"RevisionRequiredException"},
+        {"shape":"InvalidRevisionException"},
+        {"shape":"BatchLimitExceededException"}
+      ]
+    },
     "BatchGetApplications":{
       "name":"BatchGetApplications",
       "http":{
@@ -39,7 +56,42 @@
       "errors":[
         {"shape":"ApplicationNameRequiredException"},
         {"shape":"InvalidApplicationNameException"},
-        {"shape":"ApplicationDoesNotExistException"}
+        {"shape":"ApplicationDoesNotExistException"},
+        {"shape":"BatchLimitExceededException"}
+      ]
+    },
+    "BatchGetDeploymentGroups":{
+      "name":"BatchGetDeploymentGroups",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"BatchGetDeploymentGroupsInput"},
+      "output":{"shape":"BatchGetDeploymentGroupsOutput"},
+      "errors":[
+        {"shape":"ApplicationNameRequiredException"},
+        {"shape":"InvalidApplicationNameException"},
+        {"shape":"ApplicationDoesNotExistException"},
+        {"shape":"DeploymentGroupNameRequiredException"},
+        {"shape":"InvalidDeploymentGroupNameException"},
+        {"shape":"BatchLimitExceededException"}
+      ]
+    },
+    "BatchGetDeploymentInstances":{
+      "name":"BatchGetDeploymentInstances",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"BatchGetDeploymentInstancesInput"},
+      "output":{"shape":"BatchGetDeploymentInstancesOutput"},
+      "errors":[
+        {"shape":"DeploymentIdRequiredException"},
+        {"shape":"DeploymentDoesNotExistException"},
+        {"shape":"InstanceIdRequiredException"},
+        {"shape":"InvalidDeploymentIdException"},
+        {"shape":"InvalidInstanceNameException"},
+        {"shape":"BatchLimitExceededException"}
       ]
     },
     "BatchGetDeployments":{
@@ -52,7 +104,8 @@
       "output":{"shape":"BatchGetDeploymentsOutput"},
       "errors":[
         {"shape":"DeploymentIdRequiredException"},
-        {"shape":"InvalidDeploymentIdException"}
+        {"shape":"InvalidDeploymentIdException"},
+        {"shape":"BatchLimitExceededException"}
       ]
     },
     "BatchGetOnPremisesInstances":{
@@ -65,7 +118,8 @@
       "output":{"shape":"BatchGetOnPremisesInstancesOutput"},
       "errors":[
         {"shape":"InstanceNameRequiredException"},
-        {"shape":"InvalidInstanceNameException"}
+        {"shape":"InvalidInstanceNameException"},
+        {"shape":"BatchLimitExceededException"}
       ]
     },
     "CreateApplication":{
@@ -144,7 +198,10 @@
         {"shape":"DeploymentConfigDoesNotExistException"},
         {"shape":"RoleRequiredException"},
         {"shape":"InvalidRoleException"},
-        {"shape":"DeploymentGroupLimitExceededException"}
+        {"shape":"DeploymentGroupLimitExceededException"},
+        {"shape":"LifecycleHookLimitExceededException"},
+        {"shape":"InvalidTriggerConfigException"},
+        {"shape":"TriggerTargetsLimitExceededException"}
       ]
     },
     "DeleteApplication":{
@@ -290,7 +347,8 @@
         {"shape":"DeploymentDoesNotExistException"},
         {"shape":"InstanceIdRequiredException"},
         {"shape":"InvalidDeploymentIdException"},
-        {"shape":"InstanceDoesNotExistException"}
+        {"shape":"InstanceDoesNotExistException"},
+        {"shape":"InvalidInstanceNameException"}
       ]
     },
     "GetOnPremisesInstance":{
@@ -516,7 +574,10 @@
         {"shape":"InvalidAutoScalingGroupException"},
         {"shape":"InvalidDeploymentConfigNameException"},
         {"shape":"DeploymentConfigDoesNotExistException"},
-        {"shape":"InvalidRoleException"}
+        {"shape":"InvalidRoleException"},
+        {"shape":"LifecycleHookLimitExceededException"},
+        {"shape":"InvalidTriggerConfigException"},
+        {"shape":"TriggerTargetsLimitExceededException"}
       ]
     }
   },
@@ -604,6 +665,25 @@
       "type":"list",
       "member":{"shape":"AutoScalingGroupName"}
     },
+    "BatchGetApplicationRevisionsInput":{
+      "type":"structure",
+      "required":[
+        "applicationName",
+        "revisions"
+      ],
+      "members":{
+        "applicationName":{"shape":"ApplicationName"},
+        "revisions":{"shape":"RevisionLocationList"}
+      }
+    },
+    "BatchGetApplicationRevisionsOutput":{
+      "type":"structure",
+      "members":{
+        "applicationName":{"shape":"ApplicationName"},
+        "errorMessage":{"shape":"ErrorMessage"},
+        "revisions":{"shape":"RevisionInfoList"}
+      }
+    },
     "BatchGetApplicationsInput":{
       "type":"structure",
       "members":{
@@ -614,6 +694,42 @@
       "type":"structure",
       "members":{
         "applicationsInfo":{"shape":"ApplicationsInfoList"}
+      }
+    },
+    "BatchGetDeploymentGroupsInput":{
+      "type":"structure",
+      "required":[
+        "applicationName",
+        "deploymentGroupNames"
+      ],
+      "members":{
+        "applicationName":{"shape":"ApplicationName"},
+        "deploymentGroupNames":{"shape":"DeploymentGroupsList"}
+      }
+    },
+    "BatchGetDeploymentGroupsOutput":{
+      "type":"structure",
+      "members":{
+        "deploymentGroupsInfo":{"shape":"DeploymentGroupInfoList"},
+        "errorMessage":{"shape":"ErrorMessage"}
+      }
+    },
+    "BatchGetDeploymentInstancesInput":{
+      "type":"structure",
+      "required":[
+        "deploymentId",
+        "instanceIds"
+      ],
+      "members":{
+        "deploymentId":{"shape":"DeploymentId"},
+        "instanceIds":{"shape":"InstancesList"}
+      }
+    },
+    "BatchGetDeploymentInstancesOutput":{
+      "type":"structure",
+      "members":{
+        "instancesSummary":{"shape":"InstanceSummaryList"},
+        "errorMessage":{"shape":"ErrorMessage"}
       }
     },
     "BatchGetDeploymentsInput":{
@@ -639,6 +755,12 @@
       "members":{
         "instanceInfos":{"shape":"InstanceInfoList"}
       }
+    },
+    "BatchLimitExceededException":{
+      "type":"structure",
+      "members":{
+      },
+      "exception":true
     },
     "Boolean":{"type":"boolean"},
     "BucketNameFilterRequiredException":{
@@ -697,7 +819,8 @@
         "ec2TagFilters":{"shape":"EC2TagFilterList"},
         "onPremisesInstanceTagFilters":{"shape":"TagFilterList"},
         "autoScalingGroups":{"shape":"AutoScalingGroupNameList"},
-        "serviceRoleArn":{"shape":"Role"}
+        "serviceRoleArn":{"shape":"Role"},
+        "triggerConfigurations":{"shape":"TriggerConfigList"}
       }
     },
     "CreateDeploymentGroupOutput":{
@@ -847,8 +970,13 @@
         "onPremisesInstanceTagFilters":{"shape":"TagFilterList"},
         "autoScalingGroups":{"shape":"AutoScalingGroupList"},
         "serviceRoleArn":{"shape":"Role"},
-        "targetRevision":{"shape":"RevisionLocation"}
+        "targetRevision":{"shape":"RevisionLocation"},
+        "triggerConfigurations":{"shape":"TriggerConfigList"}
       }
+    },
+    "DeploymentGroupInfoList":{
+      "type":"list",
+      "member":{"shape":"DeploymentGroupInfo"}
     },
     "DeploymentGroupLimitExceededException":{
       "type":"structure",
@@ -1231,6 +1359,10 @@
         "lifecycleEvents":{"shape":"LifecycleEventList"}
       }
     },
+    "InstanceSummaryList":{
+      "type":"list",
+      "member":{"shape":"InstanceSummary"}
+    },
     "InstancesList":{
       "type":"list",
       "member":{"shape":"InstanceId"}
@@ -1379,6 +1511,12 @@
       },
       "exception":true
     },
+    "InvalidTriggerConfigException":{
+      "type":"structure",
+      "members":{
+      },
+      "exception":true
+    },
     "Key":{"type":"string"},
     "LifecycleErrorCode":{
       "type":"string",
@@ -1416,6 +1554,12 @@
         "Skipped",
         "Unknown"
       ]
+    },
+    "LifecycleHookLimitExceededException":{
+      "type":"structure",
+      "members":{
+      },
+      "exception":true
     },
     "LifecycleMessage":{"type":"string"},
     "ListApplicationRevisionsInput":{
@@ -1602,6 +1746,17 @@
       },
       "exception":true
     },
+    "RevisionInfo":{
+      "type":"structure",
+      "members":{
+        "revisionLocation":{"shape":"RevisionLocation"},
+        "genericRevisionInfo":{"shape":"GenericRevisionInfo"}
+      }
+    },
+    "RevisionInfoList":{
+      "type":"list",
+      "member":{"shape":"RevisionInfo"}
+    },
     "RevisionLocation":{
       "type":"structure",
       "members":{
@@ -1726,6 +1881,42 @@
       }
     },
     "Timestamp":{"type":"timestamp"},
+    "TriggerConfig":{
+      "type":"structure",
+      "members":{
+        "triggerName":{"shape":"TriggerName"},
+        "triggerTargetArn":{"shape":"TriggerTargetArn"},
+        "triggerEvents":{"shape":"TriggerEventTypeList"}
+      }
+    },
+    "TriggerConfigList":{
+      "type":"list",
+      "member":{"shape":"TriggerConfig"}
+    },
+    "TriggerEventType":{
+      "type":"string",
+      "enum":[
+        "DeploymentStart",
+        "DeploymentSuccess",
+        "DeploymentFailure",
+        "DeploymentStop",
+        "InstanceStart",
+        "InstanceSuccess",
+        "InstanceFailure"
+      ]
+    },
+    "TriggerEventTypeList":{
+      "type":"list",
+      "member":{"shape":"TriggerEventType"}
+    },
+    "TriggerName":{"type":"string"},
+    "TriggerTargetArn":{"type":"string"},
+    "TriggerTargetsLimitExceededException":{
+      "type":"structure",
+      "members":{
+      },
+      "exception":true
+    },
     "UpdateApplicationInput":{
       "type":"structure",
       "members":{
@@ -1747,7 +1938,8 @@
         "ec2TagFilters":{"shape":"EC2TagFilterList"},
         "onPremisesInstanceTagFilters":{"shape":"TagFilterList"},
         "autoScalingGroups":{"shape":"AutoScalingGroupNameList"},
-        "serviceRoleArn":{"shape":"Role"}
+        "serviceRoleArn":{"shape":"Role"},
+        "triggerConfigurations":{"shape":"TriggerConfigList"}
       }
     },
     "UpdateDeploymentGroupOutput":{

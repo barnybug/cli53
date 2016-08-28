@@ -34,9 +34,17 @@ type Route53DomainsAPI interface {
 
 	EnableDomainTransferLock(*route53domains.EnableDomainTransferLockInput) (*route53domains.EnableDomainTransferLockOutput, error)
 
+	GetContactReachabilityStatusRequest(*route53domains.GetContactReachabilityStatusInput) (*request.Request, *route53domains.GetContactReachabilityStatusOutput)
+
+	GetContactReachabilityStatus(*route53domains.GetContactReachabilityStatusInput) (*route53domains.GetContactReachabilityStatusOutput, error)
+
 	GetDomainDetailRequest(*route53domains.GetDomainDetailInput) (*request.Request, *route53domains.GetDomainDetailOutput)
 
 	GetDomainDetail(*route53domains.GetDomainDetailInput) (*route53domains.GetDomainDetailOutput, error)
+
+	GetDomainSuggestionsRequest(*route53domains.GetDomainSuggestionsInput) (*request.Request, *route53domains.GetDomainSuggestionsOutput)
+
+	GetDomainSuggestions(*route53domains.GetDomainSuggestionsInput) (*route53domains.GetDomainSuggestionsOutput, error)
 
 	GetOperationDetailRequest(*route53domains.GetOperationDetailInput) (*request.Request, *route53domains.GetOperationDetailOutput)
 
@@ -62,6 +70,14 @@ type Route53DomainsAPI interface {
 
 	RegisterDomain(*route53domains.RegisterDomainInput) (*route53domains.RegisterDomainOutput, error)
 
+	RenewDomainRequest(*route53domains.RenewDomainInput) (*request.Request, *route53domains.RenewDomainOutput)
+
+	RenewDomain(*route53domains.RenewDomainInput) (*route53domains.RenewDomainOutput, error)
+
+	ResendContactReachabilityEmailRequest(*route53domains.ResendContactReachabilityEmailInput) (*request.Request, *route53domains.ResendContactReachabilityEmailOutput)
+
+	ResendContactReachabilityEmail(*route53domains.ResendContactReachabilityEmailInput) (*route53domains.ResendContactReachabilityEmailOutput, error)
+
 	RetrieveDomainAuthCodeRequest(*route53domains.RetrieveDomainAuthCodeInput) (*request.Request, *route53domains.RetrieveDomainAuthCodeOutput)
 
 	RetrieveDomainAuthCode(*route53domains.RetrieveDomainAuthCodeInput) (*route53domains.RetrieveDomainAuthCodeOutput, error)
@@ -85,6 +101,10 @@ type Route53DomainsAPI interface {
 	UpdateTagsForDomainRequest(*route53domains.UpdateTagsForDomainInput) (*request.Request, *route53domains.UpdateTagsForDomainOutput)
 
 	UpdateTagsForDomain(*route53domains.UpdateTagsForDomainInput) (*route53domains.UpdateTagsForDomainOutput, error)
+
+	ViewBillingRequest(*route53domains.ViewBillingInput) (*request.Request, *route53domains.ViewBillingOutput)
+
+	ViewBilling(*route53domains.ViewBillingInput) (*route53domains.ViewBillingOutput, error)
 }
 
 var _ Route53DomainsAPI = (*route53domains.Route53Domains)(nil)

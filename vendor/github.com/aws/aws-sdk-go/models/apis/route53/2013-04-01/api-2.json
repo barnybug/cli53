@@ -225,7 +225,8 @@
         {"shape":"NoSuchHostedZone"},
         {"shape":"HostedZoneNotEmpty"},
         {"shape":"PriorRequestNotComplete"},
-        {"shape":"InvalidInput"}
+        {"shape":"InvalidInput"},
+        {"shape":"InvalidDomainName"}
       ]
     },
     "DeleteReusableDelegationSet":{
@@ -316,7 +317,8 @@
       "errors":[
         {"shape":"NoSuchChange"},
         {"shape":"InvalidInput"}
-      ]
+      ],
+      "deprecated":true
     },
     "GetCheckerIpRanges":{
       "name":"GetCheckerIpRanges",
@@ -474,7 +476,8 @@
       "errors":[
         {"shape":"NoSuchHostedZone"},
         {"shape":"InvalidInput"}
-      ]
+      ],
+      "deprecated":true
     },
     "ListChangeBatchesByRRSet":{
       "name":"ListChangeBatchesByRRSet",
@@ -487,7 +490,8 @@
       "errors":[
         {"shape":"NoSuchHostedZone"},
         {"shape":"InvalidInput"}
-      ]
+      ],
+      "deprecated":true
     },
     "ListGeoLocations":{
       "name":"ListGeoLocations",
@@ -744,6 +748,22 @@
   },
   "shapes":{
     "AWSAccountID":{"type":"string"},
+    "AlarmIdentifier":{
+      "type":"structure",
+      "required":[
+        "Region",
+        "Name"
+      ],
+      "members":{
+        "Region":{"shape":"CloudWatchRegion"},
+        "Name":{"shape":"AlarmName"}
+      }
+    },
+    "AlarmName":{
+      "type":"string",
+      "max":256,
+      "min":1
+    },
     "AliasHealthEnabled":{"type":"boolean"},
     "AliasTarget":{
       "type":"structure",
@@ -822,7 +842,8 @@
         "Comment":{"shape":"ResourceDescription"},
         "Submitter":{"shape":"AWSAccountID"},
         "Changes":{"shape":"Changes"}
-      }
+      },
+      "deprecated":true
     },
     "ChangeBatchRecords":{
       "type":"list",
@@ -830,6 +851,7 @@
         "shape":"ChangeBatchRecord",
         "locationName":"ChangeBatchRecord"
       },
+      "deprecated":true,
       "min":1
     },
     "ChangeInfo":{
@@ -920,6 +942,54 @@
         "locationName":"ChildHealthCheck"
       },
       "max":256
+    },
+    "CloudWatchAlarmConfiguration":{
+      "type":"structure",
+      "required":[
+        "EvaluationPeriods",
+        "Threshold",
+        "ComparisonOperator",
+        "Period",
+        "MetricName",
+        "Namespace",
+        "Statistic"
+      ],
+      "members":{
+        "EvaluationPeriods":{"shape":"EvaluationPeriods"},
+        "Threshold":{"shape":"Threshold"},
+        "ComparisonOperator":{"shape":"ComparisonOperator"},
+        "Period":{"shape":"Period"},
+        "MetricName":{"shape":"MetricName"},
+        "Namespace":{"shape":"Namespace"},
+        "Statistic":{"shape":"Statistic"},
+        "Dimensions":{"shape":"DimensionList"}
+      }
+    },
+    "CloudWatchRegion":{
+      "type":"string",
+      "enum":[
+        "us-east-1",
+        "us-west-1",
+        "us-west-2",
+        "eu-central-1",
+        "eu-west-1",
+        "ap-southeast-1",
+        "ap-southeast-2",
+        "ap-northeast-1",
+        "ap-northeast-2",
+        "sa-east-1"
+      ],
+      "max":64,
+      "min":1
+    },
+    "ComparisonOperator":{
+      "type":"string",
+      "enum":[
+        "GreaterThanOrEqualToThreshold",
+        "GreaterThanThreshold",
+        "LessThanThreshold",
+        "LessThanOrEqualToThreshold"
+      ]
     },
     "ConcurrentModification":{
       "type":"structure",
@@ -1123,6 +1193,7 @@
     },
     "Date":{
       "type":"string",
+      "deprecated":true,
       "max":256
     },
     "DelegationSet":{
@@ -1274,6 +1345,30 @@
       "members":{
       }
     },
+    "Dimension":{
+      "type":"structure",
+      "required":[
+        "Name",
+        "Value"
+      ],
+      "members":{
+        "Name":{"shape":"DimensionField"},
+        "Value":{"shape":"DimensionField"}
+      }
+    },
+    "DimensionField":{
+      "type":"string",
+      "max":255,
+      "min":1
+    },
+    "DimensionList":{
+      "type":"list",
+      "member":{
+        "shape":"Dimension",
+        "locationName":"Dimension"
+      },
+      "max":10
+    },
     "DisassociateVPCComment":{"type":"string"},
     "DisassociateVPCFromHostedZoneRequest":{
       "type":"structure",
@@ -1298,6 +1393,7 @@
         "ChangeInfo":{"shape":"ChangeInfo"}
       }
     },
+    "EnableSNI":{"type":"boolean"},
     "ErrorMessage":{"type":"string"},
     "ErrorMessages":{
       "type":"list",
@@ -1305,6 +1401,10 @@
         "shape":"ErrorMessage",
         "locationName":"Message"
       }
+    },
+    "EvaluationPeriods":{
+      "type":"integer",
+      "min":1
     },
     "FailureThreshold":{
       "type":"integer",
@@ -1380,14 +1480,16 @@
           "location":"uri",
           "locationName":"Id"
         }
-      }
+      },
+      "deprecated":true
     },
     "GetChangeDetailsResponse":{
       "type":"structure",
       "required":["ChangeBatchRecord"],
       "members":{
         "ChangeBatchRecord":{"shape":"ChangeBatchRecord"}
-      }
+      },
+      "deprecated":true
     },
     "GetChangeRequest":{
       "type":"structure",
@@ -1630,7 +1732,8 @@
         "Id":{"shape":"HealthCheckId"},
         "CallerReference":{"shape":"HealthCheckNonce"},
         "HealthCheckConfig":{"shape":"HealthCheckConfig"},
-        "HealthCheckVersion":{"shape":"HealthCheckVersion"}
+        "HealthCheckVersion":{"shape":"HealthCheckVersion"},
+        "CloudWatchAlarmConfiguration":{"shape":"CloudWatchAlarmConfiguration"}
       }
     },
     "HealthCheckAlreadyExists":{
@@ -1656,7 +1759,11 @@
         "MeasureLatency":{"shape":"MeasureLatency"},
         "Inverted":{"shape":"Inverted"},
         "HealthThreshold":{"shape":"HealthThreshold"},
-        "ChildHealthChecks":{"shape":"ChildHealthCheckList"}
+        "ChildHealthChecks":{"shape":"ChildHealthCheckList"},
+        "EnableSNI":{"shape":"EnableSNI"},
+        "Regions":{"shape":"HealthCheckRegionList"},
+        "AlarmIdentifier":{"shape":"AlarmIdentifier"},
+        "InsufficientDataHealthStatus":{"shape":"InsufficientDataHealthStatus"}
       }
     },
     "HealthCheckCount":{"type":"long"},
@@ -1680,6 +1787,7 @@
     "HealthCheckObservation":{
       "type":"structure",
       "members":{
+        "Region":{"shape":"HealthCheckRegion"},
         "IPAddress":{"shape":"IPAddress"},
         "StatusReport":{"shape":"StatusReport"}
       }
@@ -1691,6 +1799,30 @@
         "locationName":"HealthCheckObservation"
       }
     },
+    "HealthCheckRegion":{
+      "type":"string",
+      "enum":[
+        "us-east-1",
+        "us-west-1",
+        "us-west-2",
+        "eu-west-1",
+        "ap-southeast-1",
+        "ap-southeast-2",
+        "ap-northeast-1",
+        "sa-east-1"
+      ],
+      "max":64,
+      "min":1
+    },
+    "HealthCheckRegionList":{
+      "type":"list",
+      "member":{
+        "shape":"HealthCheckRegion",
+        "locationName":"Region"
+      },
+      "max":64,
+      "min":1
+    },
     "HealthCheckType":{
       "type":"string",
       "enum":[
@@ -1699,7 +1831,8 @@
         "HTTP_STR_MATCH",
         "HTTPS_STR_MATCH",
         "TCP",
-        "CALCULATED"
+        "CALCULATED",
+        "CLOUDWATCH_METRIC"
       ]
     },
     "HealthCheckVersion":{
@@ -1793,6 +1926,14 @@
       },
       "error":{"httpStatusCode":400},
       "exception":true
+    },
+    "InsufficientDataHealthStatus":{
+      "type":"string",
+      "enum":[
+        "Healthy",
+        "Unhealthy",
+        "LastKnownStatus"
+      ]
     },
     "InvalidArgument":{
       "type":"structure",
@@ -1890,7 +2031,8 @@
           "location":"querystring",
           "locationName":"marker"
         }
-      }
+      },
+      "deprecated":true
     },
     "ListChangeBatchesByHostedZoneResponse":{
       "type":"structure",
@@ -1905,7 +2047,8 @@
         "IsTruncated":{"shape":"PageTruncated"},
         "ChangeBatchRecords":{"shape":"ChangeBatchRecords"},
         "NextMarker":{"shape":"PageMarker"}
-      }
+      },
+      "deprecated":true
     },
     "ListChangeBatchesByRRSetRequest":{
       "type":"structure",
@@ -1957,7 +2100,8 @@
           "location":"querystring",
           "locationName":"marker"
         }
-      }
+      },
+      "deprecated":true
     },
     "ListChangeBatchesByRRSetResponse":{
       "type":"structure",
@@ -1972,7 +2116,8 @@
         "IsTruncated":{"shape":"PageTruncated"},
         "ChangeBatchRecords":{"shape":"ChangeBatchRecords"},
         "NextMarker":{"shape":"PageMarker"}
-      }
+      },
+      "deprecated":true
     },
     "ListGeoLocationsRequest":{
       "type":"structure",
@@ -2453,6 +2598,16 @@
       "type":"string",
       "max":1024
     },
+    "MetricName":{
+      "type":"string",
+      "max":255,
+      "min":1
+    },
+    "Namespace":{
+      "type":"string",
+      "max":255,
+      "min":1
+    },
     "NoSuchChange":{
       "type":"structure",
       "members":{
@@ -2519,6 +2674,10 @@
     },
     "PageMaxItems":{"type":"string"},
     "PageTruncated":{"type":"boolean"},
+    "Period":{
+      "type":"integer",
+      "min":60
+    },
     "Port":{
       "type":"integer",
       "max":65535,
@@ -2627,8 +2786,10 @@
         "ap-southeast-1",
         "ap-southeast-2",
         "ap-northeast-1",
+        "ap-northeast-2",
         "sa-east-1",
-        "cn-north-1"
+        "cn-north-1",
+        "ap-south-1"
       ],
       "max":64,
       "min":1
@@ -2675,6 +2836,16 @@
     "SearchString":{
       "type":"string",
       "max":255
+    },
+    "Statistic":{
+      "type":"string",
+      "enum":[
+        "Average",
+        "Sum",
+        "SampleCount",
+        "Maximum",
+        "Minimum"
+      ]
     },
     "Status":{"type":"string"},
     "StatusReport":{
@@ -2742,6 +2913,7 @@
       "type":"string",
       "max":256
     },
+    "Threshold":{"type":"double"},
     "ThrottlingException":{
       "type":"structure",
       "members":{
@@ -2936,7 +3108,11 @@
         "FailureThreshold":{"shape":"FailureThreshold"},
         "Inverted":{"shape":"Inverted"},
         "HealthThreshold":{"shape":"HealthThreshold"},
-        "ChildHealthChecks":{"shape":"ChildHealthCheckList"}
+        "ChildHealthChecks":{"shape":"ChildHealthCheckList"},
+        "EnableSNI":{"shape":"EnableSNI"},
+        "Regions":{"shape":"HealthCheckRegionList"},
+        "AlarmIdentifier":{"shape":"AlarmIdentifier"},
+        "InsufficientDataHealthStatus":{"shape":"InsufficientDataHealthStatus"}
       }
     },
     "UpdateHealthCheckResponse":{
@@ -3048,7 +3224,9 @@
         "eu-central-1",
         "ap-southeast-1",
         "ap-southeast-2",
+        "ap-south-1",
         "ap-northeast-1",
+        "ap-northeast-2",
         "sa-east-1",
         "cn-north-1"
       ],

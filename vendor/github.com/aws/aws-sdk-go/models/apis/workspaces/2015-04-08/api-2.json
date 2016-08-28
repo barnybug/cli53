@@ -4,12 +4,26 @@
     "apiVersion":"2015-04-08",
     "endpointPrefix":"workspaces",
     "jsonVersion":"1.1",
+    "protocol":"json",
     "serviceFullName":"Amazon WorkSpaces",
     "signatureVersion":"v4",
-    "targetPrefix":"WorkspacesService",
-    "protocol":"json"
+    "targetPrefix":"WorkspacesService"
   },
   "operations":{
+    "CreateTags":{
+      "name":"CreateTags",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateTagsRequest"},
+      "output":{"shape":"CreateTagsResult"},
+      "errors":[
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidParameterValuesException"},
+        {"shape":"ResourceLimitExceededException"}
+      ]
+    },
     "CreateWorkspaces":{
       "name":"CreateWorkspaces",
       "http":{
@@ -19,10 +33,33 @@
       "input":{"shape":"CreateWorkspacesRequest"},
       "output":{"shape":"CreateWorkspacesResult"},
       "errors":[
-        {
-          "shape":"ResourceLimitExceededException",
-          "exception":true
-        }
+        {"shape":"ResourceLimitExceededException"},
+        {"shape":"InvalidParameterValuesException"}
+      ]
+    },
+    "DeleteTags":{
+      "name":"DeleteTags",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteTagsRequest"},
+      "output":{"shape":"DeleteTagsResult"},
+      "errors":[
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InvalidParameterValuesException"}
+      ]
+    },
+    "DescribeTags":{
+      "name":"DescribeTags",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeTagsRequest"},
+      "output":{"shape":"DescribeTagsResult"},
+      "errors":[
+        {"shape":"ResourceNotFoundException"}
       ]
     },
     "DescribeWorkspaceBundles":{
@@ -34,10 +71,7 @@
       "input":{"shape":"DescribeWorkspaceBundlesRequest"},
       "output":{"shape":"DescribeWorkspaceBundlesResult"},
       "errors":[
-        {
-          "shape":"InvalidParameterValuesException",
-          "exception":true
-        }
+        {"shape":"InvalidParameterValuesException"}
       ]
     },
     "DescribeWorkspaceDirectories":{
@@ -49,10 +83,7 @@
       "input":{"shape":"DescribeWorkspaceDirectoriesRequest"},
       "output":{"shape":"DescribeWorkspaceDirectoriesResult"},
       "errors":[
-        {
-          "shape":"InvalidParameterValuesException",
-          "exception":true
-        }
+        {"shape":"InvalidParameterValuesException"}
       ]
     },
     "DescribeWorkspaces":{
@@ -64,14 +95,38 @@
       "input":{"shape":"DescribeWorkspacesRequest"},
       "output":{"shape":"DescribeWorkspacesResult"},
       "errors":[
-        {
-          "shape":"InvalidParameterValuesException",
-          "exception":true
-        },
-        {
-          "shape":"ResourceUnavailableException",
-          "exception":true
-        }
+        {"shape":"InvalidParameterValuesException"},
+        {"shape":"ResourceUnavailableException"}
+      ]
+    },
+    "DescribeWorkspacesConnectionStatus":{
+      "name":"DescribeWorkspacesConnectionStatus",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeWorkspacesConnectionStatusRequest"},
+      "output":{"shape":"DescribeWorkspacesConnectionStatusResult"},
+      "errors":[
+        {"shape":"InvalidParameterValuesException"}
+      ]
+    },
+    "ModifyWorkspaceProperties":{
+      "name":"ModifyWorkspaceProperties",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ModifyWorkspacePropertiesRequest"},
+      "output":{"shape":"ModifyWorkspacePropertiesResult"},
+      "errors":[
+        {"shape":"InvalidParameterValuesException"},
+        {"shape":"InvalidResourceStateException"},
+        {"shape":"OperationInProgressException"},
+        {"shape":"UnsupportedWorkspaceConfigurationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ResourceUnavailableException"}
       ]
     },
     "RebootWorkspaces":{
@@ -92,6 +147,24 @@
       "input":{"shape":"RebuildWorkspacesRequest"},
       "output":{"shape":"RebuildWorkspacesResult"}
     },
+    "StartWorkspaces":{
+      "name":"StartWorkspaces",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"StartWorkspacesRequest"},
+      "output":{"shape":"StartWorkspacesResult"}
+    },
+    "StopWorkspaces":{
+      "name":"StopWorkspaces",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"StopWorkspacesRequest"},
+      "output":{"shape":"StopWorkspacesResult"}
+    },
     "TerminateWorkspaces":{
       "name":"TerminateWorkspaces",
       "http":{
@@ -107,6 +180,13 @@
       "type":"string",
       "pattern":"^arn:aws:[A-Za-z0-9][A-za-z0-9_/.-]{0,62}:[A-za-z0-9_/.-]{0,63}:[A-za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-za-z0-9_/.-]{0,127}$"
     },
+    "AccessDeniedException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"ExceptionMessage"}
+      },
+      "exception":true
+    },
     "Alias":{"type":"string"},
     "BooleanObject":{"type":"boolean"},
     "BundleId":{
@@ -116,8 +196,8 @@
     "BundleIdList":{
       "type":"list",
       "member":{"shape":"BundleId"},
-      "min":1,
-      "max":25
+      "max":25,
+      "min":1
     },
     "BundleList":{
       "type":"list",
@@ -139,6 +219,30 @@
       }
     },
     "ComputerName":{"type":"string"},
+    "ConnectionState":{
+      "type":"string",
+      "enum":[
+        "CONNECTED",
+        "DISCONNECTED",
+        "UNKNOWN"
+      ]
+    },
+    "CreateTagsRequest":{
+      "type":"structure",
+      "required":[
+        "ResourceId",
+        "Tags"
+      ],
+      "members":{
+        "ResourceId":{"shape":"NonEmptyString"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "CreateTagsResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "CreateWorkspacesRequest":{
       "type":"structure",
       "required":["Workspaces"],
@@ -162,6 +266,35 @@
         "DefaultOu":{"shape":"DefaultOu"},
         "CustomSecurityGroupId":{"shape":"SecurityGroupId"},
         "UserEnabledAsLocalAdministrator":{"shape":"BooleanObject"}
+      }
+    },
+    "DeleteTagsRequest":{
+      "type":"structure",
+      "required":[
+        "ResourceId",
+        "TagKeys"
+      ],
+      "members":{
+        "ResourceId":{"shape":"NonEmptyString"},
+        "TagKeys":{"shape":"TagKeyList"}
+      }
+    },
+    "DeleteTagsResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "DescribeTagsRequest":{
+      "type":"structure",
+      "required":["ResourceId"],
+      "members":{
+        "ResourceId":{"shape":"NonEmptyString"}
+      }
+    },
+    "DescribeTagsResult":{
+      "type":"structure",
+      "members":{
+        "TagList":{"shape":"TagList"}
       }
     },
     "DescribeWorkspaceBundlesRequest":{
@@ -193,6 +326,20 @@
         "NextToken":{"shape":"PaginationToken"}
       }
     },
+    "DescribeWorkspacesConnectionStatusRequest":{
+      "type":"structure",
+      "members":{
+        "WorkspaceIds":{"shape":"WorkspaceIdList"},
+        "NextToken":{"shape":"PaginationToken"}
+      }
+    },
+    "DescribeWorkspacesConnectionStatusResult":{
+      "type":"structure",
+      "members":{
+        "WorkspacesConnectionStatus":{"shape":"WorkspaceConnectionStatusList"},
+        "NextToken":{"shape":"PaginationToken"}
+      }
+    },
     "DescribeWorkspacesRequest":{
       "type":"structure",
       "members":{
@@ -219,8 +366,8 @@
     "DirectoryIdList":{
       "type":"list",
       "member":{"shape":"DirectoryId"},
-      "min":1,
-      "max":25
+      "max":25,
+      "min":1
     },
     "DirectoryList":{
       "type":"list",
@@ -253,6 +400,14 @@
       "type":"list",
       "member":{"shape":"FailedWorkspaceChangeRequest"}
     },
+    "FailedStartWorkspaceRequests":{
+      "type":"list",
+      "member":{"shape":"FailedWorkspaceChangeRequest"}
+    },
+    "FailedStopWorkspaceRequests":{
+      "type":"list",
+      "member":{"shape":"FailedWorkspaceChangeRequest"}
+    },
     "FailedTerminateWorkspaceRequests":{
       "type":"list",
       "member":{"shape":"FailedWorkspaceChangeRequest"}
@@ -272,20 +427,50 @@
       },
       "exception":true
     },
+    "InvalidResourceStateException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"ExceptionMessage"}
+      },
+      "exception":true
+    },
     "IpAddress":{"type":"string"},
     "Limit":{
       "type":"integer",
-      "min":1,
-      "max":25
+      "max":25,
+      "min":1
+    },
+    "ModifyWorkspacePropertiesRequest":{
+      "type":"structure",
+      "required":[
+        "WorkspaceId",
+        "WorkspaceProperties"
+      ],
+      "members":{
+        "WorkspaceId":{"shape":"WorkspaceId"},
+        "WorkspaceProperties":{"shape":"WorkspaceProperties"}
+      }
+    },
+    "ModifyWorkspacePropertiesResult":{
+      "type":"structure",
+      "members":{
+      }
     },
     "NonEmptyString":{
       "type":"string",
       "min":1
     },
+    "OperationInProgressException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"ExceptionMessage"}
+      },
+      "exception":true
+    },
     "PaginationToken":{
       "type":"string",
-      "min":1,
-      "max":63
+      "max":63,
+      "min":1
     },
     "RebootRequest":{
       "type":"structure",
@@ -297,8 +482,8 @@
     "RebootWorkspaceRequests":{
       "type":"list",
       "member":{"shape":"RebootRequest"},
-      "min":1,
-      "max":25
+      "max":25,
+      "min":1
     },
     "RebootWorkspacesRequest":{
       "type":"structure",
@@ -323,8 +508,8 @@
     "RebuildWorkspaceRequests":{
       "type":"list",
       "member":{"shape":"RebuildRequest"},
-      "min":1,
-      "max":1
+      "max":1,
+      "min":1
     },
     "RebuildWorkspacesRequest":{
       "type":"structure",
@@ -341,13 +526,21 @@
     },
     "RegistrationCode":{
       "type":"string",
-      "min":1,
-      "max":20
+      "max":20,
+      "min":1
     },
     "ResourceLimitExceededException":{
       "type":"structure",
       "members":{
         "message":{"shape":"ExceptionMessage"}
+      },
+      "exception":true
+    },
+    "ResourceNotFoundException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"ExceptionMessage"},
+        "ResourceId":{"shape":"NonEmptyString"}
       },
       "exception":true
     },
@@ -359,9 +552,67 @@
       },
       "exception":true
     },
+    "RunningMode":{
+      "type":"string",
+      "enum":[
+        "AUTO_STOP",
+        "ALWAYS_ON"
+      ]
+    },
+    "RunningModeAutoStopTimeoutInMinutes":{"type":"integer"},
     "SecurityGroupId":{
       "type":"string",
       "pattern":"^(sg-[0-9a-f]{8})$"
+    },
+    "StartRequest":{
+      "type":"structure",
+      "members":{
+        "WorkspaceId":{"shape":"WorkspaceId"}
+      }
+    },
+    "StartWorkspaceRequests":{
+      "type":"list",
+      "member":{"shape":"StartRequest"},
+      "max":25,
+      "min":1
+    },
+    "StartWorkspacesRequest":{
+      "type":"structure",
+      "required":["StartWorkspaceRequests"],
+      "members":{
+        "StartWorkspaceRequests":{"shape":"StartWorkspaceRequests"}
+      }
+    },
+    "StartWorkspacesResult":{
+      "type":"structure",
+      "members":{
+        "FailedRequests":{"shape":"FailedStartWorkspaceRequests"}
+      }
+    },
+    "StopRequest":{
+      "type":"structure",
+      "members":{
+        "WorkspaceId":{"shape":"WorkspaceId"}
+      }
+    },
+    "StopWorkspaceRequests":{
+      "type":"list",
+      "member":{"shape":"StopRequest"},
+      "max":25,
+      "min":1
+    },
+    "StopWorkspacesRequest":{
+      "type":"structure",
+      "required":["StopWorkspaceRequests"],
+      "members":{
+        "StopWorkspaceRequests":{"shape":"StopWorkspaceRequests"}
+      }
+    },
+    "StopWorkspacesResult":{
+      "type":"structure",
+      "members":{
+        "FailedRequests":{"shape":"FailedStopWorkspaceRequests"}
+      }
     },
     "SubnetId":{
       "type":"string",
@@ -370,6 +621,31 @@
     "SubnetIds":{
       "type":"list",
       "member":{"shape":"SubnetId"}
+    },
+    "Tag":{
+      "type":"structure",
+      "required":["Key"],
+      "members":{
+        "Key":{"shape":"TagKey"},
+        "Value":{"shape":"TagValue"}
+      }
+    },
+    "TagKey":{
+      "type":"string",
+      "max":127,
+      "min":1
+    },
+    "TagKeyList":{
+      "type":"list",
+      "member":{"shape":"NonEmptyString"}
+    },
+    "TagList":{
+      "type":"list",
+      "member":{"shape":"Tag"}
+    },
+    "TagValue":{
+      "type":"string",
+      "max":255
     },
     "TerminateRequest":{
       "type":"structure",
@@ -381,8 +657,8 @@
     "TerminateWorkspaceRequests":{
       "type":"list",
       "member":{"shape":"TerminateRequest"},
-      "min":1,
-      "max":25
+      "max":25,
+      "min":1
     },
     "TerminateWorkspacesRequest":{
       "type":"structure",
@@ -397,10 +673,18 @@
         "FailedRequests":{"shape":"FailedTerminateWorkspaceRequests"}
       }
     },
+    "Timestamp":{"type":"timestamp"},
+    "UnsupportedWorkspaceConfigurationException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"ExceptionMessage"}
+      },
+      "exception":true
+    },
     "UserName":{
       "type":"string",
-      "min":1,
-      "max":63
+      "max":63,
+      "min":1
     },
     "UserStorage":{
       "type":"structure",
@@ -424,7 +708,8 @@
         "ComputerName":{"shape":"ComputerName"},
         "VolumeEncryptionKey":{"shape":"VolumeEncryptionKey"},
         "UserVolumeEncryptionEnabled":{"shape":"BooleanObject"},
-        "RootVolumeEncryptionEnabled":{"shape":"BooleanObject"}
+        "RootVolumeEncryptionEnabled":{"shape":"BooleanObject"},
+        "WorkspaceProperties":{"shape":"WorkspaceProperties"}
       }
     },
     "WorkspaceBundle":{
@@ -437,6 +722,19 @@
         "UserStorage":{"shape":"UserStorage"},
         "ComputeType":{"shape":"ComputeType"}
       }
+    },
+    "WorkspaceConnectionStatus":{
+      "type":"structure",
+      "members":{
+        "WorkspaceId":{"shape":"WorkspaceId"},
+        "ConnectionState":{"shape":"ConnectionState"},
+        "ConnectionStateCheckTimestamp":{"shape":"Timestamp"},
+        "LastKnownUserConnectionTimestamp":{"shape":"Timestamp"}
+      }
+    },
+    "WorkspaceConnectionStatusList":{
+      "type":"list",
+      "member":{"shape":"WorkspaceConnectionStatus"}
     },
     "WorkspaceDirectory":{
       "type":"structure",
@@ -480,12 +778,19 @@
     "WorkspaceIdList":{
       "type":"list",
       "member":{"shape":"WorkspaceId"},
-      "min":1,
-      "max":25
+      "max":25,
+      "min":1
     },
     "WorkspaceList":{
       "type":"list",
       "member":{"shape":"Workspace"}
+    },
+    "WorkspaceProperties":{
+      "type":"structure",
+      "members":{
+        "RunningMode":{"shape":"RunningMode"},
+        "RunningModeAutoStopTimeoutInMinutes":{"shape":"RunningModeAutoStopTimeoutInMinutes"}
+      }
     },
     "WorkspaceRequest":{
       "type":"structure",
@@ -500,14 +805,16 @@
         "BundleId":{"shape":"BundleId"},
         "VolumeEncryptionKey":{"shape":"VolumeEncryptionKey"},
         "UserVolumeEncryptionEnabled":{"shape":"BooleanObject"},
-        "RootVolumeEncryptionEnabled":{"shape":"BooleanObject"}
+        "RootVolumeEncryptionEnabled":{"shape":"BooleanObject"},
+        "WorkspaceProperties":{"shape":"WorkspaceProperties"},
+        "Tags":{"shape":"TagList"}
       }
     },
     "WorkspaceRequestList":{
       "type":"list",
       "member":{"shape":"WorkspaceRequest"},
-      "min":1,
-      "max":25
+      "max":25,
+      "min":1
     },
     "WorkspaceState":{
       "type":"string",
@@ -517,10 +824,14 @@
         "IMPAIRED",
         "UNHEALTHY",
         "REBOOTING",
+        "STARTING",
         "REBUILDING",
+        "MAINTENANCE",
         "TERMINATING",
         "TERMINATED",
         "SUSPENDED",
+        "STOPPING",
+        "STOPPED",
         "ERROR"
       ]
     }

@@ -14,7 +14,28 @@ import (
 
 const opAddTagsToOnPremisesInstances = "AddTagsToOnPremisesInstances"
 
-// AddTagsToOnPremisesInstancesRequest generates a request for the AddTagsToOnPremisesInstances operation.
+// AddTagsToOnPremisesInstancesRequest generates a "aws/request.Request" representing the
+// client's request for the AddTagsToOnPremisesInstances operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the AddTagsToOnPremisesInstances method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the AddTagsToOnPremisesInstancesRequest method.
+//    req, resp := client.AddTagsToOnPremisesInstancesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) AddTagsToOnPremisesInstancesRequest(input *AddTagsToOnPremisesInstancesInput) (req *request.Request, output *AddTagsToOnPremisesInstancesOutput) {
 	op := &request.Operation{
 		Name:       opAddTagsToOnPremisesInstances,
@@ -41,9 +62,78 @@ func (c *CodeDeploy) AddTagsToOnPremisesInstances(input *AddTagsToOnPremisesInst
 	return out, err
 }
 
+const opBatchGetApplicationRevisions = "BatchGetApplicationRevisions"
+
+// BatchGetApplicationRevisionsRequest generates a "aws/request.Request" representing the
+// client's request for the BatchGetApplicationRevisions operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the BatchGetApplicationRevisions method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the BatchGetApplicationRevisionsRequest method.
+//    req, resp := client.BatchGetApplicationRevisionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *CodeDeploy) BatchGetApplicationRevisionsRequest(input *BatchGetApplicationRevisionsInput) (req *request.Request, output *BatchGetApplicationRevisionsOutput) {
+	op := &request.Operation{
+		Name:       opBatchGetApplicationRevisions,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &BatchGetApplicationRevisionsInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &BatchGetApplicationRevisionsOutput{}
+	req.Data = output
+	return
+}
+
+// Gets information about one or more application revisions.
+func (c *CodeDeploy) BatchGetApplicationRevisions(input *BatchGetApplicationRevisionsInput) (*BatchGetApplicationRevisionsOutput, error) {
+	req, out := c.BatchGetApplicationRevisionsRequest(input)
+	err := req.Send()
+	return out, err
+}
+
 const opBatchGetApplications = "BatchGetApplications"
 
-// BatchGetApplicationsRequest generates a request for the BatchGetApplications operation.
+// BatchGetApplicationsRequest generates a "aws/request.Request" representing the
+// client's request for the BatchGetApplications operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the BatchGetApplications method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the BatchGetApplicationsRequest method.
+//    req, resp := client.BatchGetApplicationsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) BatchGetApplicationsRequest(input *BatchGetApplicationsInput) (req *request.Request, output *BatchGetApplicationsOutput) {
 	op := &request.Operation{
 		Name:       opBatchGetApplications,
@@ -68,9 +158,127 @@ func (c *CodeDeploy) BatchGetApplications(input *BatchGetApplicationsInput) (*Ba
 	return out, err
 }
 
+const opBatchGetDeploymentGroups = "BatchGetDeploymentGroups"
+
+// BatchGetDeploymentGroupsRequest generates a "aws/request.Request" representing the
+// client's request for the BatchGetDeploymentGroups operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the BatchGetDeploymentGroups method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the BatchGetDeploymentGroupsRequest method.
+//    req, resp := client.BatchGetDeploymentGroupsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *CodeDeploy) BatchGetDeploymentGroupsRequest(input *BatchGetDeploymentGroupsInput) (req *request.Request, output *BatchGetDeploymentGroupsOutput) {
+	op := &request.Operation{
+		Name:       opBatchGetDeploymentGroups,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &BatchGetDeploymentGroupsInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &BatchGetDeploymentGroupsOutput{}
+	req.Data = output
+	return
+}
+
+// Get information about one or more deployment groups.
+func (c *CodeDeploy) BatchGetDeploymentGroups(input *BatchGetDeploymentGroupsInput) (*BatchGetDeploymentGroupsOutput, error) {
+	req, out := c.BatchGetDeploymentGroupsRequest(input)
+	err := req.Send()
+	return out, err
+}
+
+const opBatchGetDeploymentInstances = "BatchGetDeploymentInstances"
+
+// BatchGetDeploymentInstancesRequest generates a "aws/request.Request" representing the
+// client's request for the BatchGetDeploymentInstances operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the BatchGetDeploymentInstances method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the BatchGetDeploymentInstancesRequest method.
+//    req, resp := client.BatchGetDeploymentInstancesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+func (c *CodeDeploy) BatchGetDeploymentInstancesRequest(input *BatchGetDeploymentInstancesInput) (req *request.Request, output *BatchGetDeploymentInstancesOutput) {
+	op := &request.Operation{
+		Name:       opBatchGetDeploymentInstances,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &BatchGetDeploymentInstancesInput{}
+	}
+
+	req = c.newRequest(op, input, output)
+	output = &BatchGetDeploymentInstancesOutput{}
+	req.Data = output
+	return
+}
+
+// Gets information about one or more instance that are part of a deployment
+// group.
+func (c *CodeDeploy) BatchGetDeploymentInstances(input *BatchGetDeploymentInstancesInput) (*BatchGetDeploymentInstancesOutput, error) {
+	req, out := c.BatchGetDeploymentInstancesRequest(input)
+	err := req.Send()
+	return out, err
+}
+
 const opBatchGetDeployments = "BatchGetDeployments"
 
-// BatchGetDeploymentsRequest generates a request for the BatchGetDeployments operation.
+// BatchGetDeploymentsRequest generates a "aws/request.Request" representing the
+// client's request for the BatchGetDeployments operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the BatchGetDeployments method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the BatchGetDeploymentsRequest method.
+//    req, resp := client.BatchGetDeploymentsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) BatchGetDeploymentsRequest(input *BatchGetDeploymentsInput) (req *request.Request, output *BatchGetDeploymentsOutput) {
 	op := &request.Operation{
 		Name:       opBatchGetDeployments,
@@ -97,7 +305,28 @@ func (c *CodeDeploy) BatchGetDeployments(input *BatchGetDeploymentsInput) (*Batc
 
 const opBatchGetOnPremisesInstances = "BatchGetOnPremisesInstances"
 
-// BatchGetOnPremisesInstancesRequest generates a request for the BatchGetOnPremisesInstances operation.
+// BatchGetOnPremisesInstancesRequest generates a "aws/request.Request" representing the
+// client's request for the BatchGetOnPremisesInstances operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the BatchGetOnPremisesInstances method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the BatchGetOnPremisesInstancesRequest method.
+//    req, resp := client.BatchGetOnPremisesInstancesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) BatchGetOnPremisesInstancesRequest(input *BatchGetOnPremisesInstancesInput) (req *request.Request, output *BatchGetOnPremisesInstancesOutput) {
 	op := &request.Operation{
 		Name:       opBatchGetOnPremisesInstances,
@@ -124,7 +353,28 @@ func (c *CodeDeploy) BatchGetOnPremisesInstances(input *BatchGetOnPremisesInstan
 
 const opCreateApplication = "CreateApplication"
 
-// CreateApplicationRequest generates a request for the CreateApplication operation.
+// CreateApplicationRequest generates a "aws/request.Request" representing the
+// client's request for the CreateApplication operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateApplication method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateApplicationRequest method.
+//    req, resp := client.CreateApplicationRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) CreateApplicationRequest(input *CreateApplicationInput) (req *request.Request, output *CreateApplicationOutput) {
 	op := &request.Operation{
 		Name:       opCreateApplication,
@@ -142,7 +392,7 @@ func (c *CodeDeploy) CreateApplicationRequest(input *CreateApplicationInput) (re
 	return
 }
 
-// Creates a new application.
+// Creates an application.
 func (c *CodeDeploy) CreateApplication(input *CreateApplicationInput) (*CreateApplicationOutput, error) {
 	req, out := c.CreateApplicationRequest(input)
 	err := req.Send()
@@ -151,7 +401,28 @@ func (c *CodeDeploy) CreateApplication(input *CreateApplicationInput) (*CreateAp
 
 const opCreateDeployment = "CreateDeployment"
 
-// CreateDeploymentRequest generates a request for the CreateDeployment operation.
+// CreateDeploymentRequest generates a "aws/request.Request" representing the
+// client's request for the CreateDeployment operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateDeployment method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateDeploymentRequest method.
+//    req, resp := client.CreateDeploymentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) CreateDeploymentRequest(input *CreateDeploymentInput) (req *request.Request, output *CreateDeploymentOutput) {
 	op := &request.Operation{
 		Name:       opCreateDeployment,
@@ -178,7 +449,28 @@ func (c *CodeDeploy) CreateDeployment(input *CreateDeploymentInput) (*CreateDepl
 
 const opCreateDeploymentConfig = "CreateDeploymentConfig"
 
-// CreateDeploymentConfigRequest generates a request for the CreateDeploymentConfig operation.
+// CreateDeploymentConfigRequest generates a "aws/request.Request" representing the
+// client's request for the CreateDeploymentConfig operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateDeploymentConfig method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateDeploymentConfigRequest method.
+//    req, resp := client.CreateDeploymentConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) CreateDeploymentConfigRequest(input *CreateDeploymentConfigInput) (req *request.Request, output *CreateDeploymentConfigOutput) {
 	op := &request.Operation{
 		Name:       opCreateDeploymentConfig,
@@ -196,7 +488,7 @@ func (c *CodeDeploy) CreateDeploymentConfigRequest(input *CreateDeploymentConfig
 	return
 }
 
-// Creates a new deployment configuration.
+// Creates a deployment configuration.
 func (c *CodeDeploy) CreateDeploymentConfig(input *CreateDeploymentConfigInput) (*CreateDeploymentConfigOutput, error) {
 	req, out := c.CreateDeploymentConfigRequest(input)
 	err := req.Send()
@@ -205,7 +497,28 @@ func (c *CodeDeploy) CreateDeploymentConfig(input *CreateDeploymentConfigInput) 
 
 const opCreateDeploymentGroup = "CreateDeploymentGroup"
 
-// CreateDeploymentGroupRequest generates a request for the CreateDeploymentGroup operation.
+// CreateDeploymentGroupRequest generates a "aws/request.Request" representing the
+// client's request for the CreateDeploymentGroup operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateDeploymentGroup method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateDeploymentGroupRequest method.
+//    req, resp := client.CreateDeploymentGroupRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) CreateDeploymentGroupRequest(input *CreateDeploymentGroupInput) (req *request.Request, output *CreateDeploymentGroupOutput) {
 	op := &request.Operation{
 		Name:       opCreateDeploymentGroup,
@@ -223,7 +536,7 @@ func (c *CodeDeploy) CreateDeploymentGroupRequest(input *CreateDeploymentGroupIn
 	return
 }
 
-// Creates a new deployment group for application revisions to be deployed to.
+// Creates a deployment group to which application revisions will be deployed.
 func (c *CodeDeploy) CreateDeploymentGroup(input *CreateDeploymentGroupInput) (*CreateDeploymentGroupOutput, error) {
 	req, out := c.CreateDeploymentGroupRequest(input)
 	err := req.Send()
@@ -232,7 +545,28 @@ func (c *CodeDeploy) CreateDeploymentGroup(input *CreateDeploymentGroupInput) (*
 
 const opDeleteApplication = "DeleteApplication"
 
-// DeleteApplicationRequest generates a request for the DeleteApplication operation.
+// DeleteApplicationRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteApplication operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteApplication method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteApplicationRequest method.
+//    req, resp := client.DeleteApplicationRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) DeleteApplicationRequest(input *DeleteApplicationInput) (req *request.Request, output *DeleteApplicationOutput) {
 	op := &request.Operation{
 		Name:       opDeleteApplication,
@@ -261,7 +595,28 @@ func (c *CodeDeploy) DeleteApplication(input *DeleteApplicationInput) (*DeleteAp
 
 const opDeleteDeploymentConfig = "DeleteDeploymentConfig"
 
-// DeleteDeploymentConfigRequest generates a request for the DeleteDeploymentConfig operation.
+// DeleteDeploymentConfigRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteDeploymentConfig operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteDeploymentConfig method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteDeploymentConfigRequest method.
+//    req, resp := client.DeleteDeploymentConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) DeleteDeploymentConfigRequest(input *DeleteDeploymentConfigInput) (req *request.Request, output *DeleteDeploymentConfigOutput) {
 	op := &request.Operation{
 		Name:       opDeleteDeploymentConfig,
@@ -284,7 +639,7 @@ func (c *CodeDeploy) DeleteDeploymentConfigRequest(input *DeleteDeploymentConfig
 // Deletes a deployment configuration.
 //
 // A deployment configuration cannot be deleted if it is currently in use.
-// Also, predefined configurations cannot be deleted.
+// Predefined configurations cannot be deleted.
 func (c *CodeDeploy) DeleteDeploymentConfig(input *DeleteDeploymentConfigInput) (*DeleteDeploymentConfigOutput, error) {
 	req, out := c.DeleteDeploymentConfigRequest(input)
 	err := req.Send()
@@ -293,7 +648,28 @@ func (c *CodeDeploy) DeleteDeploymentConfig(input *DeleteDeploymentConfigInput) 
 
 const opDeleteDeploymentGroup = "DeleteDeploymentGroup"
 
-// DeleteDeploymentGroupRequest generates a request for the DeleteDeploymentGroup operation.
+// DeleteDeploymentGroupRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteDeploymentGroup operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteDeploymentGroup method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteDeploymentGroupRequest method.
+//    req, resp := client.DeleteDeploymentGroupRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) DeleteDeploymentGroupRequest(input *DeleteDeploymentGroupInput) (req *request.Request, output *DeleteDeploymentGroupOutput) {
 	op := &request.Operation{
 		Name:       opDeleteDeploymentGroup,
@@ -320,7 +696,28 @@ func (c *CodeDeploy) DeleteDeploymentGroup(input *DeleteDeploymentGroupInput) (*
 
 const opDeregisterOnPremisesInstance = "DeregisterOnPremisesInstance"
 
-// DeregisterOnPremisesInstanceRequest generates a request for the DeregisterOnPremisesInstance operation.
+// DeregisterOnPremisesInstanceRequest generates a "aws/request.Request" representing the
+// client's request for the DeregisterOnPremisesInstance operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeregisterOnPremisesInstance method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeregisterOnPremisesInstanceRequest method.
+//    req, resp := client.DeregisterOnPremisesInstanceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) DeregisterOnPremisesInstanceRequest(input *DeregisterOnPremisesInstanceInput) (req *request.Request, output *DeregisterOnPremisesInstanceOutput) {
 	op := &request.Operation{
 		Name:       opDeregisterOnPremisesInstance,
@@ -349,7 +746,28 @@ func (c *CodeDeploy) DeregisterOnPremisesInstance(input *DeregisterOnPremisesIns
 
 const opGetApplication = "GetApplication"
 
-// GetApplicationRequest generates a request for the GetApplication operation.
+// GetApplicationRequest generates a "aws/request.Request" representing the
+// client's request for the GetApplication operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetApplication method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetApplicationRequest method.
+//    req, resp := client.GetApplicationRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) GetApplicationRequest(input *GetApplicationInput) (req *request.Request, output *GetApplicationOutput) {
 	op := &request.Operation{
 		Name:       opGetApplication,
@@ -376,7 +794,28 @@ func (c *CodeDeploy) GetApplication(input *GetApplicationInput) (*GetApplication
 
 const opGetApplicationRevision = "GetApplicationRevision"
 
-// GetApplicationRevisionRequest generates a request for the GetApplicationRevision operation.
+// GetApplicationRevisionRequest generates a "aws/request.Request" representing the
+// client's request for the GetApplicationRevision operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetApplicationRevision method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetApplicationRevisionRequest method.
+//    req, resp := client.GetApplicationRevisionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) GetApplicationRevisionRequest(input *GetApplicationRevisionInput) (req *request.Request, output *GetApplicationRevisionOutput) {
 	op := &request.Operation{
 		Name:       opGetApplicationRevision,
@@ -403,7 +842,28 @@ func (c *CodeDeploy) GetApplicationRevision(input *GetApplicationRevisionInput) 
 
 const opGetDeployment = "GetDeployment"
 
-// GetDeploymentRequest generates a request for the GetDeployment operation.
+// GetDeploymentRequest generates a "aws/request.Request" representing the
+// client's request for the GetDeployment operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetDeployment method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetDeploymentRequest method.
+//    req, resp := client.GetDeploymentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) GetDeploymentRequest(input *GetDeploymentInput) (req *request.Request, output *GetDeploymentOutput) {
 	op := &request.Operation{
 		Name:       opGetDeployment,
@@ -430,7 +890,28 @@ func (c *CodeDeploy) GetDeployment(input *GetDeploymentInput) (*GetDeploymentOut
 
 const opGetDeploymentConfig = "GetDeploymentConfig"
 
-// GetDeploymentConfigRequest generates a request for the GetDeploymentConfig operation.
+// GetDeploymentConfigRequest generates a "aws/request.Request" representing the
+// client's request for the GetDeploymentConfig operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetDeploymentConfig method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetDeploymentConfigRequest method.
+//    req, resp := client.GetDeploymentConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) GetDeploymentConfigRequest(input *GetDeploymentConfigInput) (req *request.Request, output *GetDeploymentConfigOutput) {
 	op := &request.Operation{
 		Name:       opGetDeploymentConfig,
@@ -457,7 +938,28 @@ func (c *CodeDeploy) GetDeploymentConfig(input *GetDeploymentConfigInput) (*GetD
 
 const opGetDeploymentGroup = "GetDeploymentGroup"
 
-// GetDeploymentGroupRequest generates a request for the GetDeploymentGroup operation.
+// GetDeploymentGroupRequest generates a "aws/request.Request" representing the
+// client's request for the GetDeploymentGroup operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetDeploymentGroup method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetDeploymentGroupRequest method.
+//    req, resp := client.GetDeploymentGroupRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) GetDeploymentGroupRequest(input *GetDeploymentGroupInput) (req *request.Request, output *GetDeploymentGroupOutput) {
 	op := &request.Operation{
 		Name:       opGetDeploymentGroup,
@@ -484,7 +986,28 @@ func (c *CodeDeploy) GetDeploymentGroup(input *GetDeploymentGroupInput) (*GetDep
 
 const opGetDeploymentInstance = "GetDeploymentInstance"
 
-// GetDeploymentInstanceRequest generates a request for the GetDeploymentInstance operation.
+// GetDeploymentInstanceRequest generates a "aws/request.Request" representing the
+// client's request for the GetDeploymentInstance operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetDeploymentInstance method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetDeploymentInstanceRequest method.
+//    req, resp := client.GetDeploymentInstanceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) GetDeploymentInstanceRequest(input *GetDeploymentInstanceInput) (req *request.Request, output *GetDeploymentInstanceOutput) {
 	op := &request.Operation{
 		Name:       opGetDeploymentInstance,
@@ -511,7 +1034,28 @@ func (c *CodeDeploy) GetDeploymentInstance(input *GetDeploymentInstanceInput) (*
 
 const opGetOnPremisesInstance = "GetOnPremisesInstance"
 
-// GetOnPremisesInstanceRequest generates a request for the GetOnPremisesInstance operation.
+// GetOnPremisesInstanceRequest generates a "aws/request.Request" representing the
+// client's request for the GetOnPremisesInstance operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetOnPremisesInstance method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetOnPremisesInstanceRequest method.
+//    req, resp := client.GetOnPremisesInstanceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) GetOnPremisesInstanceRequest(input *GetOnPremisesInstanceInput) (req *request.Request, output *GetOnPremisesInstanceOutput) {
 	op := &request.Operation{
 		Name:       opGetOnPremisesInstance,
@@ -538,7 +1082,28 @@ func (c *CodeDeploy) GetOnPremisesInstance(input *GetOnPremisesInstanceInput) (*
 
 const opListApplicationRevisions = "ListApplicationRevisions"
 
-// ListApplicationRevisionsRequest generates a request for the ListApplicationRevisions operation.
+// ListApplicationRevisionsRequest generates a "aws/request.Request" representing the
+// client's request for the ListApplicationRevisions operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListApplicationRevisions method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListApplicationRevisionsRequest method.
+//    req, resp := client.ListApplicationRevisionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) ListApplicationRevisionsRequest(input *ListApplicationRevisionsInput) (req *request.Request, output *ListApplicationRevisionsOutput) {
 	op := &request.Operation{
 		Name:       opListApplicationRevisions,
@@ -569,6 +1134,23 @@ func (c *CodeDeploy) ListApplicationRevisions(input *ListApplicationRevisionsInp
 	return out, err
 }
 
+// ListApplicationRevisionsPages iterates over the pages of a ListApplicationRevisions operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListApplicationRevisions method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListApplicationRevisions operation.
+//    pageNum := 0
+//    err := client.ListApplicationRevisionsPages(params,
+//        func(page *ListApplicationRevisionsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *CodeDeploy) ListApplicationRevisionsPages(input *ListApplicationRevisionsInput, fn func(p *ListApplicationRevisionsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListApplicationRevisionsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -579,7 +1161,28 @@ func (c *CodeDeploy) ListApplicationRevisionsPages(input *ListApplicationRevisio
 
 const opListApplications = "ListApplications"
 
-// ListApplicationsRequest generates a request for the ListApplications operation.
+// ListApplicationsRequest generates a "aws/request.Request" representing the
+// client's request for the ListApplications operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListApplications method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListApplicationsRequest method.
+//    req, resp := client.ListApplicationsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) ListApplicationsRequest(input *ListApplicationsInput) (req *request.Request, output *ListApplicationsOutput) {
 	op := &request.Operation{
 		Name:       opListApplications,
@@ -610,6 +1213,23 @@ func (c *CodeDeploy) ListApplications(input *ListApplicationsInput) (*ListApplic
 	return out, err
 }
 
+// ListApplicationsPages iterates over the pages of a ListApplications operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListApplications method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListApplications operation.
+//    pageNum := 0
+//    err := client.ListApplicationsPages(params,
+//        func(page *ListApplicationsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *CodeDeploy) ListApplicationsPages(input *ListApplicationsInput, fn func(p *ListApplicationsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListApplicationsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -620,7 +1240,28 @@ func (c *CodeDeploy) ListApplicationsPages(input *ListApplicationsInput, fn func
 
 const opListDeploymentConfigs = "ListDeploymentConfigs"
 
-// ListDeploymentConfigsRequest generates a request for the ListDeploymentConfigs operation.
+// ListDeploymentConfigsRequest generates a "aws/request.Request" representing the
+// client's request for the ListDeploymentConfigs operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListDeploymentConfigs method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListDeploymentConfigsRequest method.
+//    req, resp := client.ListDeploymentConfigsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) ListDeploymentConfigsRequest(input *ListDeploymentConfigsInput) (req *request.Request, output *ListDeploymentConfigsOutput) {
 	op := &request.Operation{
 		Name:       opListDeploymentConfigs,
@@ -651,6 +1292,23 @@ func (c *CodeDeploy) ListDeploymentConfigs(input *ListDeploymentConfigsInput) (*
 	return out, err
 }
 
+// ListDeploymentConfigsPages iterates over the pages of a ListDeploymentConfigs operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListDeploymentConfigs method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListDeploymentConfigs operation.
+//    pageNum := 0
+//    err := client.ListDeploymentConfigsPages(params,
+//        func(page *ListDeploymentConfigsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *CodeDeploy) ListDeploymentConfigsPages(input *ListDeploymentConfigsInput, fn func(p *ListDeploymentConfigsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListDeploymentConfigsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -661,7 +1319,28 @@ func (c *CodeDeploy) ListDeploymentConfigsPages(input *ListDeploymentConfigsInpu
 
 const opListDeploymentGroups = "ListDeploymentGroups"
 
-// ListDeploymentGroupsRequest generates a request for the ListDeploymentGroups operation.
+// ListDeploymentGroupsRequest generates a "aws/request.Request" representing the
+// client's request for the ListDeploymentGroups operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListDeploymentGroups method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListDeploymentGroupsRequest method.
+//    req, resp := client.ListDeploymentGroupsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) ListDeploymentGroupsRequest(input *ListDeploymentGroupsInput) (req *request.Request, output *ListDeploymentGroupsOutput) {
 	op := &request.Operation{
 		Name:       opListDeploymentGroups,
@@ -693,6 +1372,23 @@ func (c *CodeDeploy) ListDeploymentGroups(input *ListDeploymentGroupsInput) (*Li
 	return out, err
 }
 
+// ListDeploymentGroupsPages iterates over the pages of a ListDeploymentGroups operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListDeploymentGroups method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListDeploymentGroups operation.
+//    pageNum := 0
+//    err := client.ListDeploymentGroupsPages(params,
+//        func(page *ListDeploymentGroupsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *CodeDeploy) ListDeploymentGroupsPages(input *ListDeploymentGroupsInput, fn func(p *ListDeploymentGroupsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListDeploymentGroupsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -703,7 +1399,28 @@ func (c *CodeDeploy) ListDeploymentGroupsPages(input *ListDeploymentGroupsInput,
 
 const opListDeploymentInstances = "ListDeploymentInstances"
 
-// ListDeploymentInstancesRequest generates a request for the ListDeploymentInstances operation.
+// ListDeploymentInstancesRequest generates a "aws/request.Request" representing the
+// client's request for the ListDeploymentInstances operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListDeploymentInstances method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListDeploymentInstancesRequest method.
+//    req, resp := client.ListDeploymentInstancesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) ListDeploymentInstancesRequest(input *ListDeploymentInstancesInput) (req *request.Request, output *ListDeploymentInstancesOutput) {
 	op := &request.Operation{
 		Name:       opListDeploymentInstances,
@@ -727,7 +1444,7 @@ func (c *CodeDeploy) ListDeploymentInstancesRequest(input *ListDeploymentInstanc
 	return
 }
 
-// Lists the instances for a deployment associated with the applicable IAM user
+// Lists the instance for a deployment associated with the applicable IAM user
 // or AWS account.
 func (c *CodeDeploy) ListDeploymentInstances(input *ListDeploymentInstancesInput) (*ListDeploymentInstancesOutput, error) {
 	req, out := c.ListDeploymentInstancesRequest(input)
@@ -735,6 +1452,23 @@ func (c *CodeDeploy) ListDeploymentInstances(input *ListDeploymentInstancesInput
 	return out, err
 }
 
+// ListDeploymentInstancesPages iterates over the pages of a ListDeploymentInstances operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListDeploymentInstances method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListDeploymentInstances operation.
+//    pageNum := 0
+//    err := client.ListDeploymentInstancesPages(params,
+//        func(page *ListDeploymentInstancesOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *CodeDeploy) ListDeploymentInstancesPages(input *ListDeploymentInstancesInput, fn func(p *ListDeploymentInstancesOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListDeploymentInstancesRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -745,7 +1479,28 @@ func (c *CodeDeploy) ListDeploymentInstancesPages(input *ListDeploymentInstances
 
 const opListDeployments = "ListDeployments"
 
-// ListDeploymentsRequest generates a request for the ListDeployments operation.
+// ListDeploymentsRequest generates a "aws/request.Request" representing the
+// client's request for the ListDeployments operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListDeployments method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListDeploymentsRequest method.
+//    req, resp := client.ListDeploymentsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) ListDeploymentsRequest(input *ListDeploymentsInput) (req *request.Request, output *ListDeploymentsOutput) {
 	op := &request.Operation{
 		Name:       opListDeployments,
@@ -769,7 +1524,7 @@ func (c *CodeDeploy) ListDeploymentsRequest(input *ListDeploymentsInput) (req *r
 	return
 }
 
-// Lists the deployments within a deployment group for an application registered
+// Lists the deployments in a deployment group for an application registered
 // with the applicable IAM user or AWS account.
 func (c *CodeDeploy) ListDeployments(input *ListDeploymentsInput) (*ListDeploymentsOutput, error) {
 	req, out := c.ListDeploymentsRequest(input)
@@ -777,6 +1532,23 @@ func (c *CodeDeploy) ListDeployments(input *ListDeploymentsInput) (*ListDeployme
 	return out, err
 }
 
+// ListDeploymentsPages iterates over the pages of a ListDeployments operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListDeployments method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListDeployments operation.
+//    pageNum := 0
+//    err := client.ListDeploymentsPages(params,
+//        func(page *ListDeploymentsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *CodeDeploy) ListDeploymentsPages(input *ListDeploymentsInput, fn func(p *ListDeploymentsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListDeploymentsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -787,7 +1559,28 @@ func (c *CodeDeploy) ListDeploymentsPages(input *ListDeploymentsInput, fn func(p
 
 const opListOnPremisesInstances = "ListOnPremisesInstances"
 
-// ListOnPremisesInstancesRequest generates a request for the ListOnPremisesInstances operation.
+// ListOnPremisesInstancesRequest generates a "aws/request.Request" representing the
+// client's request for the ListOnPremisesInstances operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListOnPremisesInstances method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListOnPremisesInstancesRequest method.
+//    req, resp := client.ListOnPremisesInstancesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) ListOnPremisesInstancesRequest(input *ListOnPremisesInstancesInput) (req *request.Request, output *ListOnPremisesInstancesOutput) {
 	op := &request.Operation{
 		Name:       opListOnPremisesInstances,
@@ -805,7 +1598,7 @@ func (c *CodeDeploy) ListOnPremisesInstancesRequest(input *ListOnPremisesInstanc
 	return
 }
 
-// Gets a list of one or more on-premises instance names.
+// Gets a list of names for one or more on-premises instances.
 //
 // Unless otherwise specified, both registered and deregistered on-premises
 // instance names will be listed. To list only registered or deregistered on-premises
@@ -818,7 +1611,28 @@ func (c *CodeDeploy) ListOnPremisesInstances(input *ListOnPremisesInstancesInput
 
 const opRegisterApplicationRevision = "RegisterApplicationRevision"
 
-// RegisterApplicationRevisionRequest generates a request for the RegisterApplicationRevision operation.
+// RegisterApplicationRevisionRequest generates a "aws/request.Request" representing the
+// client's request for the RegisterApplicationRevision operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RegisterApplicationRevision method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RegisterApplicationRevisionRequest method.
+//    req, resp := client.RegisterApplicationRevisionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) RegisterApplicationRevisionRequest(input *RegisterApplicationRevisionInput) (req *request.Request, output *RegisterApplicationRevisionOutput) {
 	op := &request.Operation{
 		Name:       opRegisterApplicationRevision,
@@ -847,7 +1661,28 @@ func (c *CodeDeploy) RegisterApplicationRevision(input *RegisterApplicationRevis
 
 const opRegisterOnPremisesInstance = "RegisterOnPremisesInstance"
 
-// RegisterOnPremisesInstanceRequest generates a request for the RegisterOnPremisesInstance operation.
+// RegisterOnPremisesInstanceRequest generates a "aws/request.Request" representing the
+// client's request for the RegisterOnPremisesInstance operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RegisterOnPremisesInstance method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RegisterOnPremisesInstanceRequest method.
+//    req, resp := client.RegisterOnPremisesInstanceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) RegisterOnPremisesInstanceRequest(input *RegisterOnPremisesInstanceInput) (req *request.Request, output *RegisterOnPremisesInstanceOutput) {
 	op := &request.Operation{
 		Name:       opRegisterOnPremisesInstance,
@@ -876,7 +1711,28 @@ func (c *CodeDeploy) RegisterOnPremisesInstance(input *RegisterOnPremisesInstanc
 
 const opRemoveTagsFromOnPremisesInstances = "RemoveTagsFromOnPremisesInstances"
 
-// RemoveTagsFromOnPremisesInstancesRequest generates a request for the RemoveTagsFromOnPremisesInstances operation.
+// RemoveTagsFromOnPremisesInstancesRequest generates a "aws/request.Request" representing the
+// client's request for the RemoveTagsFromOnPremisesInstances operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RemoveTagsFromOnPremisesInstances method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RemoveTagsFromOnPremisesInstancesRequest method.
+//    req, resp := client.RemoveTagsFromOnPremisesInstancesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) RemoveTagsFromOnPremisesInstancesRequest(input *RemoveTagsFromOnPremisesInstancesInput) (req *request.Request, output *RemoveTagsFromOnPremisesInstancesOutput) {
 	op := &request.Operation{
 		Name:       opRemoveTagsFromOnPremisesInstances,
@@ -905,7 +1761,28 @@ func (c *CodeDeploy) RemoveTagsFromOnPremisesInstances(input *RemoveTagsFromOnPr
 
 const opStopDeployment = "StopDeployment"
 
-// StopDeploymentRequest generates a request for the StopDeployment operation.
+// StopDeploymentRequest generates a "aws/request.Request" representing the
+// client's request for the StopDeployment operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the StopDeployment method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the StopDeploymentRequest method.
+//    req, resp := client.StopDeploymentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) StopDeploymentRequest(input *StopDeploymentInput) (req *request.Request, output *StopDeploymentOutput) {
 	op := &request.Operation{
 		Name:       opStopDeployment,
@@ -932,7 +1809,28 @@ func (c *CodeDeploy) StopDeployment(input *StopDeploymentInput) (*StopDeployment
 
 const opUpdateApplication = "UpdateApplication"
 
-// UpdateApplicationRequest generates a request for the UpdateApplication operation.
+// UpdateApplicationRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateApplication operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the UpdateApplication method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the UpdateApplicationRequest method.
+//    req, resp := client.UpdateApplicationRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) UpdateApplicationRequest(input *UpdateApplicationInput) (req *request.Request, output *UpdateApplicationOutput) {
 	op := &request.Operation{
 		Name:       opUpdateApplication,
@@ -952,7 +1850,7 @@ func (c *CodeDeploy) UpdateApplicationRequest(input *UpdateApplicationInput) (re
 	return
 }
 
-// Changes an existing application's name.
+// Changes the name of an application.
 func (c *CodeDeploy) UpdateApplication(input *UpdateApplicationInput) (*UpdateApplicationOutput, error) {
 	req, out := c.UpdateApplicationRequest(input)
 	err := req.Send()
@@ -961,7 +1859,28 @@ func (c *CodeDeploy) UpdateApplication(input *UpdateApplicationInput) (*UpdateAp
 
 const opUpdateDeploymentGroup = "UpdateDeploymentGroup"
 
-// UpdateDeploymentGroupRequest generates a request for the UpdateDeploymentGroup operation.
+// UpdateDeploymentGroupRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateDeploymentGroup operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the UpdateDeploymentGroup method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the UpdateDeploymentGroupRequest method.
+//    req, resp := client.UpdateDeploymentGroupRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *CodeDeploy) UpdateDeploymentGroupRequest(input *UpdateDeploymentGroupInput) (req *request.Request, output *UpdateDeploymentGroupOutput) {
 	op := &request.Operation{
 		Name:       opUpdateDeploymentGroup,
@@ -979,23 +1898,23 @@ func (c *CodeDeploy) UpdateDeploymentGroupRequest(input *UpdateDeploymentGroupIn
 	return
 }
 
-// Changes information about an existing deployment group.
+// Changes information about a deployment group.
 func (c *CodeDeploy) UpdateDeploymentGroup(input *UpdateDeploymentGroupInput) (*UpdateDeploymentGroupOutput, error) {
 	req, out := c.UpdateDeploymentGroupRequest(input)
 	err := req.Send()
 	return out, err
 }
 
-// Represents the input of an adds tags to on-premises instance operation.
+// Represents the input of, and adds tags to, an on-premises instance operation.
 type AddTagsToOnPremisesInstancesInput struct {
 	_ struct{} `type:"structure"`
 
-	// The names of the on-premises instances to add tags to.
+	// The names of the on-premises instances to which to add tags.
 	InstanceNames []*string `locationName:"instanceNames" type:"list" required:"true"`
 
 	// The tag key-value pairs to add to the on-premises instances.
 	//
-	// Keys and values are both required. Keys cannot be nulls or empty strings.
+	// Keys and values are both required. Keys cannot be null or empty strings.
 	// Value-only tags are not allowed.
 	Tags []*Tag `locationName:"tags" type:"list" required:"true"`
 }
@@ -1008,6 +1927,22 @@ func (s AddTagsToOnPremisesInstancesInput) String() string {
 // GoString returns the string representation
 func (s AddTagsToOnPremisesInstancesInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AddTagsToOnPremisesInstancesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AddTagsToOnPremisesInstancesInput"}
+	if s.InstanceNames == nil {
+		invalidParams.Add(request.NewErrParamRequired("InstanceNames"))
+	}
+	if s.Tags == nil {
+		invalidParams.Add(request.NewErrParamRequired("Tags"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type AddTagsToOnPremisesInstancesOutput struct {
@@ -1034,7 +1969,7 @@ type ApplicationInfo struct {
 	// The application name.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string"`
 
-	// The time that the application was created.
+	// The time at which the application was created.
 	CreateTime *time.Time `locationName:"createTime" type:"timestamp" timestampFormat:"unix"`
 
 	// True if the user has authenticated with GitHub for the specified application;
@@ -1073,12 +2008,75 @@ func (s AutoScalingGroup) GoString() string {
 	return s.String()
 }
 
+// Represents the input of a batch get application revisions operation.
+type BatchGetApplicationRevisionsInput struct {
+	_ struct{} `type:"structure"`
+
+	// The name of an AWS CodeDeploy application about which to get revision information.
+	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
+
+	// Information to get about the application revisions, including type and location.
+	Revisions []*RevisionLocation `locationName:"revisions" type:"list" required:"true"`
+}
+
+// String returns the string representation
+func (s BatchGetApplicationRevisionsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s BatchGetApplicationRevisionsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *BatchGetApplicationRevisionsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "BatchGetApplicationRevisionsInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+	if s.Revisions == nil {
+		invalidParams.Add(request.NewErrParamRequired("Revisions"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// Represents the output of a batch get application revisions operation.
+type BatchGetApplicationRevisionsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The name of the application that corresponds to the revisions.
+	ApplicationName *string `locationName:"applicationName" min:"1" type:"string"`
+
+	// Information about errors that may have occurred during the API call.
+	ErrorMessage *string `locationName:"errorMessage" type:"string"`
+
+	// Additional information about the revisions, including the type and location.
+	Revisions []*RevisionInfo `locationName:"revisions" type:"list"`
+}
+
+// String returns the string representation
+func (s BatchGetApplicationRevisionsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s BatchGetApplicationRevisionsOutput) GoString() string {
+	return s.String()
+}
+
 // Represents the input of a batch get applications operation.
 type BatchGetApplicationsInput struct {
 	_ struct{} `type:"structure"`
 
-	// A list of application names, with multiple application names separated by
-	// spaces.
+	// A list of application names separated by spaces.
 	ApplicationNames []*string `locationName:"applicationNames" type:"list"`
 }
 
@@ -1110,11 +2108,131 @@ func (s BatchGetApplicationsOutput) GoString() string {
 	return s.String()
 }
 
+// Represents the input of a batch get deployment groups operation.
+type BatchGetDeploymentGroupsInput struct {
+	_ struct{} `type:"structure"`
+
+	// The name of an AWS CodeDeploy application associated with the applicable
+	// IAM user or AWS account.
+	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
+
+	// The deployment groups' names.
+	DeploymentGroupNames []*string `locationName:"deploymentGroupNames" type:"list" required:"true"`
+}
+
+// String returns the string representation
+func (s BatchGetDeploymentGroupsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s BatchGetDeploymentGroupsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *BatchGetDeploymentGroupsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "BatchGetDeploymentGroupsInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+	if s.DeploymentGroupNames == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeploymentGroupNames"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// Represents the output of a batch get deployment groups operation.
+type BatchGetDeploymentGroupsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Information about the deployment groups.
+	DeploymentGroupsInfo []*DeploymentGroupInfo `locationName:"deploymentGroupsInfo" type:"list"`
+
+	// Information about errors that may have occurred during the API call.
+	ErrorMessage *string `locationName:"errorMessage" type:"string"`
+}
+
+// String returns the string representation
+func (s BatchGetDeploymentGroupsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s BatchGetDeploymentGroupsOutput) GoString() string {
+	return s.String()
+}
+
+// Represents the input of a batch get deployment instances operation.
+type BatchGetDeploymentInstancesInput struct {
+	_ struct{} `type:"structure"`
+
+	// The unique ID of a deployment.
+	DeploymentId *string `locationName:"deploymentId" type:"string" required:"true"`
+
+	// The unique IDs of instances in the deployment group.
+	InstanceIds []*string `locationName:"instanceIds" type:"list" required:"true"`
+}
+
+// String returns the string representation
+func (s BatchGetDeploymentInstancesInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s BatchGetDeploymentInstancesInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *BatchGetDeploymentInstancesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "BatchGetDeploymentInstancesInput"}
+	if s.DeploymentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeploymentId"))
+	}
+	if s.InstanceIds == nil {
+		invalidParams.Add(request.NewErrParamRequired("InstanceIds"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// Represents the output of a batch get deployment instance operation.
+type BatchGetDeploymentInstancesOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Information about errors that may have occurred during the API call.
+	ErrorMessage *string `locationName:"errorMessage" type:"string"`
+
+	// Information about the instance.
+	InstancesSummary []*InstanceSummary `locationName:"instancesSummary" type:"list"`
+}
+
+// String returns the string representation
+func (s BatchGetDeploymentInstancesOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s BatchGetDeploymentInstancesOutput) GoString() string {
+	return s.String()
+}
+
 // Represents the input of a batch get deployments operation.
 type BatchGetDeploymentsInput struct {
 	_ struct{} `type:"structure"`
 
-	// A list of deployment IDs, with multiple deployment IDs separated by spaces.
+	// A list of deployment IDs, separated by spaces.
 	DeploymentIds []*string `locationName:"deploymentIds" type:"list"`
 }
 
@@ -1150,7 +2268,7 @@ func (s BatchGetDeploymentsOutput) GoString() string {
 type BatchGetOnPremisesInstancesInput struct {
 	_ struct{} `type:"structure"`
 
-	// The names of the on-premises instances to get information about.
+	// The names of the on-premises instances about which to get information.
 	InstanceNames []*string `locationName:"instanceNames" type:"list"`
 }
 
@@ -1201,6 +2319,22 @@ func (s CreateApplicationInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateApplicationInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateApplicationInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Represents the output of a create application operation.
 type CreateApplicationOutput struct {
 	_ struct{} `type:"structure"`
@@ -1233,14 +2367,14 @@ type CreateDeploymentConfigInput struct {
 	// The type parameter takes either of the following values:
 	//
 	//  HOST_COUNT: The value parameter represents the minimum number of healthy
-	// instances, as an absolute value. FLEET_PERCENT: The value parameter represents
-	// the minimum number of healthy instances, as a percentage of the total number
-	// of instances in the deployment. If you specify FLEET_PERCENT, then at the
-	// start of the deployment AWS CodeDeploy converts the percentage to the equivalent
-	// number of instances and rounds fractional instances up.  The value parameter
+	// instances as an absolute value. FLEET_PERCENT: The value parameter represents
+	// the minimum number of healthy instances as a percentage of the total number
+	// of instances in the deployment. If you specify FLEET_PERCENT, at the start
+	// of the deployment, AWS CodeDeploy converts the percentage to the equivalent
+	// number of instance and rounds up fractional instances.  The value parameter
 	// takes an integer.
 	//
-	// For example, to set a minimum of 95% healthy instances, specify a type of
+	// For example, to set a minimum of 95% healthy instance, specify a type of
 	// FLEET_PERCENT and a value of 95.
 	MinimumHealthyHosts *MinimumHealthyHosts `locationName:"minimumHealthyHosts" type:"structure"`
 }
@@ -1253,6 +2387,22 @@ func (s CreateDeploymentConfigInput) String() string {
 // GoString returns the string representation
 func (s CreateDeploymentConfigInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateDeploymentConfigInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateDeploymentConfigInput"}
+	if s.DeploymentConfigName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeploymentConfigName"))
+	}
+	if s.DeploymentConfigName != nil && len(*s.DeploymentConfigName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeploymentConfigName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Represents the output of a create deployment configuration operation.
@@ -1277,56 +2427,82 @@ func (s CreateDeploymentConfigOutput) GoString() string {
 type CreateDeploymentGroupInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of an existing AWS CodeDeploy application associated with the applicable
+	// The name of an AWS CodeDeploy application associated with the applicable
 	// IAM user or AWS account.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
 
 	// A list of associated Auto Scaling groups.
 	AutoScalingGroups []*string `locationName:"autoScalingGroups" type:"list"`
 
-	// If specified, the deployment configuration name must be one of the predefined
-	// values, or it can be a custom deployment configuration:
-	//
-	//  CodeDeployDefault.AllAtOnce deploys an application revision to up to all
-	// of the instances at once. The overall deployment succeeds if the application
-	// revision deploys to at least one of the instances. The overall deployment
-	// fails after the application revision fails to deploy to all of the instances.
-	// For example, for 9 instances, deploy to up to all 9 instances at once. The
-	// overall deployment succeeds if any of the 9 instances is successfully deployed
-	// to, and it fails if all 9 instances fail to be deployed to. CodeDeployDefault.HalfAtATime
-	// deploys to up to half of the instances at a time (with fractions rounded
-	// down). The overall deployment succeeds if the application revision deploys
-	// to at least half of the instances (with fractions rounded up); otherwise,
-	// the deployment fails. For example, for 9 instances, deploy to up to 4 instances
-	// at a time. The overall deployment succeeds if 5 or more instances are successfully
-	// deployed to; otherwise, the deployment fails. Note that the deployment may
-	// successfully deploy to some instances, even if the overall deployment fails.
-	// CodeDeployDefault.OneAtATime deploys the application revision to only one
-	// of the instances at a time. The overall deployment succeeds if the application
-	// revision deploys to all of the instances. The overall deployment fails after
-	// the application revision first fails to deploy to any one instances. For
-	// example, for 9 instances, deploy to one instance at a time. The overall deployment
-	// succeeds if all 9 instances are successfully deployed to, and it fails if
-	// any of one of the 9 instances fail to be deployed to. Note that the deployment
-	// may successfully deploy to some instances, even if the overall deployment
-	// fails. This is the default deployment configuration if a configuration isn't
-	// specified for either the deployment or the deployment group.  To create a
-	// custom deployment configuration, call the create deployment configuration
+	// If specified, the deployment configuration name can be either one of the
+	// predefined configurations provided with AWS CodeDeploy or a custom deployment
+	// configuration that you create by calling the create deployment configuration
 	// operation.
+	//
+	//  CodeDeployDefault.OneAtATime is the default deployment configuration. It
+	// is used if a configuration isn't specified for the deployment or the deployment
+	// group.
+	//
+	//  The predefined deployment configurations include the following:
+	//
+	//   CodeDeployDefault.AllAtOnce attempts to deploy an application revision
+	// to as many instance as possible at once. The status of the overall deployment
+	// will be displayed as Succeeded if the application revision is deployed to
+	// one or more of the instances. The status of the overall deployment will be
+	// displayed as Failed if the application revision is not deployed to any of
+	// the instances. Using an example of nine instance, CodeDeployDefault.AllAtOnce
+	// will attempt to deploy to all nine instance at once. The overall deployment
+	// will succeed if deployment to even a single instance is successful; it will
+	// fail only if deployments to all nine instance fail.
+	//
+	//   CodeDeployDefault.HalfAtATime deploys to up to half of the instances at
+	// a time (with fractions rounded down). The overall deployment succeeds if
+	// the application revision is deployed to at least half of the instances (with
+	// fractions rounded up); otherwise, the deployment fails. In the example of
+	// nine instances, it will deploy to up to four instance at a time. The overall
+	// deployment succeeds if deployment to five or more instances succeed; otherwise,
+	// the deployment fails. The deployment may be successfully deployed to some
+	// instances even if the overall deployment fails.
+	//
+	//   CodeDeployDefault.OneAtATime deploys the application revision to only
+	// one instance at a time.
+	//
+	// For deployment groups that contain more than one instance:
+	//
+	//   The overall deployment succeeds if the application revision is deployed
+	// to all of the instances. The exception to this rule is if deployment to the
+	// last instance fails, the overall deployment still succeeds. This is because
+	// AWS CodeDeploy allows only one instance at a time to be taken offline with
+	// the CodeDeployDefault.OneAtATime configuration.
+	//
+	//   The overall deployment fails as soon as the application revision fails
+	// to be deployed to any but the last instance. The deployment may be successfully
+	// deployed to some instances even if the overall deployment fails.
+	//
+	//   In an example using nine instance, it will deploy to one instance at a
+	// time. The overall deployment succeeds if deployment to the first eight instance
+	// is successful; the overall deployment fails if deployment to any of the first
+	// eight instance fails.
+	//
+	//   For deployment groups that contain only one instance, the overall deployment
+	// is successful only if deployment to the single instance is successful
 	DeploymentConfigName *string `locationName:"deploymentConfigName" min:"1" type:"string"`
 
-	// The name of an existing deployment group for the specified application.
+	// The name of a new deployment group for the specified application.
 	DeploymentGroupName *string `locationName:"deploymentGroupName" min:"1" type:"string" required:"true"`
 
-	// The Amazon EC2 tags to filter on.
+	// The Amazon EC2 tags on which to filter.
 	Ec2TagFilters []*EC2TagFilter `locationName:"ec2TagFilters" type:"list"`
 
-	// The on-premises instance tags to filter on.
+	// The on-premises instance tags on which to filter.
 	OnPremisesInstanceTagFilters []*TagFilter `locationName:"onPremisesInstanceTagFilters" type:"list"`
 
 	// A service role ARN that allows AWS CodeDeploy to act on the user's behalf
 	// when interacting with AWS services.
 	ServiceRoleArn *string `locationName:"serviceRoleArn" type:"string" required:"true"`
+
+	// Information about triggers to create when the deployment group is created.
+	TriggerConfigurations []*TriggerConfig `locationName:"triggerConfigurations" type:"list"`
 }
 
 // String returns the string representation
@@ -1337,6 +2513,34 @@ func (s CreateDeploymentGroupInput) String() string {
 // GoString returns the string representation
 func (s CreateDeploymentGroupInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateDeploymentGroupInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateDeploymentGroupInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+	if s.DeploymentConfigName != nil && len(*s.DeploymentConfigName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeploymentConfigName", 1))
+	}
+	if s.DeploymentGroupName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeploymentGroupName"))
+	}
+	if s.DeploymentGroupName != nil && len(*s.DeploymentGroupName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeploymentGroupName", 1))
+	}
+	if s.ServiceRoleArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ServiceRoleArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Represents the output of a create deployment group operation.
@@ -1361,37 +2565,36 @@ func (s CreateDeploymentGroupOutput) GoString() string {
 type CreateDeploymentInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of an existing AWS CodeDeploy application associated with the applicable
+	// The name of an AWS CodeDeploy application associated with the applicable
 	// IAM user or AWS account.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
 
-	// The name of an existing deployment configuration associated with the applicable
-	// IAM user or AWS account.
+	// The name of a deployment configuration associated with the applicable IAM
+	// user or AWS account.
 	//
 	// If not specified, the value configured in the deployment group will be used
 	// as the default. If the deployment group does not have a deployment configuration
 	// associated with it, then CodeDeployDefault.OneAtATime will be used by default.
 	DeploymentConfigName *string `locationName:"deploymentConfigName" min:"1" type:"string"`
 
-	// The deployment group's name.
+	// The name of the deployment group.
 	DeploymentGroupName *string `locationName:"deploymentGroupName" min:"1" type:"string"`
 
 	// A comment about the deployment.
 	Description *string `locationName:"description" type:"string"`
 
 	// If set to true, then if the deployment causes the ApplicationStop deployment
-	// lifecycle event to fail to a specific instance, the deployment will not be
-	// considered to have failed to that instance at that point and will continue
-	// on to the BeforeInstall deployment lifecycle event.
+	// lifecycle event to an instance to fail, the deployment to that instance will
+	// not be considered to have failed at that point and will continue on to the
+	// BeforeInstall deployment lifecycle event.
 	//
 	// If set to false or not specified, then if the deployment causes the ApplicationStop
-	// deployment lifecycle event to fail to a specific instance, the deployment
-	// will stop to that instance, and the deployment to that instance will be considered
+	// deployment lifecycle event to fail to an instance, the deployment to that
+	// instance will stop, and the deployment to that instance will be considered
 	// to have failed.
 	IgnoreApplicationStopFailures *bool `locationName:"ignoreApplicationStopFailures" type:"boolean"`
 
-	// The type of revision to deploy, along with information about the revision's
-	// location.
+	// The type and location of the revision to deploy.
 	Revision *RevisionLocation `locationName:"revision" type:"structure"`
 }
 
@@ -1403,6 +2606,28 @@ func (s CreateDeploymentInput) String() string {
 // GoString returns the string representation
 func (s CreateDeploymentInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateDeploymentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateDeploymentInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+	if s.DeploymentConfigName != nil && len(*s.DeploymentConfigName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeploymentConfigName", 1))
+	}
+	if s.DeploymentGroupName != nil && len(*s.DeploymentGroupName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeploymentGroupName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Represents the output of a create deployment operation.
@@ -1427,7 +2652,7 @@ func (s CreateDeploymentOutput) GoString() string {
 type DeleteApplicationInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of an existing AWS CodeDeploy application associated with the applicable
+	// The name of an AWS CodeDeploy application associated with the applicable
 	// IAM user or AWS account.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
 }
@@ -1440,6 +2665,22 @@ func (s DeleteApplicationInput) String() string {
 // GoString returns the string representation
 func (s DeleteApplicationInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteApplicationInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteApplicationInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type DeleteApplicationOutput struct {
@@ -1460,8 +2701,8 @@ func (s DeleteApplicationOutput) GoString() string {
 type DeleteDeploymentConfigInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of an existing deployment configuration associated with the applicable
-	// IAM user or AWS account.
+	// The name of a deployment configuration associated with the applicable IAM
+	// user or AWS account.
 	DeploymentConfigName *string `locationName:"deploymentConfigName" min:"1" type:"string" required:"true"`
 }
 
@@ -1473,6 +2714,22 @@ func (s DeleteDeploymentConfigInput) String() string {
 // GoString returns the string representation
 func (s DeleteDeploymentConfigInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteDeploymentConfigInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteDeploymentConfigInput"}
+	if s.DeploymentConfigName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeploymentConfigName"))
+	}
+	if s.DeploymentConfigName != nil && len(*s.DeploymentConfigName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeploymentConfigName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type DeleteDeploymentConfigOutput struct {
@@ -1493,7 +2750,7 @@ func (s DeleteDeploymentConfigOutput) GoString() string {
 type DeleteDeploymentGroupInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of an existing AWS CodeDeploy application associated with the applicable
+	// The name of an AWS CodeDeploy application associated with the applicable
 	// IAM user or AWS account.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
 
@@ -1511,6 +2768,28 @@ func (s DeleteDeploymentGroupInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteDeploymentGroupInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteDeploymentGroupInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+	if s.DeploymentGroupName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeploymentGroupName"))
+	}
+	if s.DeploymentGroupName != nil && len(*s.DeploymentGroupName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeploymentGroupName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Represents the output of a delete deployment group operation.
 type DeleteDeploymentGroupOutput struct {
 	_ struct{} `type:"structure"`
@@ -1518,7 +2797,7 @@ type DeleteDeploymentGroupOutput struct {
 	// If the output contains no data, and the corresponding deployment group contained
 	// at least one Auto Scaling group, AWS CodeDeploy successfully removed all
 	// corresponding Auto Scaling lifecycle event hooks from the Amazon EC2 instances
-	// in the Auto Scaling. If the output does contain data, AWS CodeDeploy could
+	// in the Auto Scaling group. If the output contains data, AWS CodeDeploy could
 	// not remove some Auto Scaling lifecycle event hooks from the Amazon EC2 instances
 	// in the Auto Scaling group.
 	HooksNotCleanedUp []*AutoScalingGroup `locationName:"hooksNotCleanedUp" type:"list"`
@@ -1538,7 +2817,7 @@ func (s DeleteDeploymentGroupOutput) GoString() string {
 type DeploymentConfigInfo struct {
 	_ struct{} `type:"structure"`
 
-	// The time that the deployment configuration was created.
+	// The time at which the deployment configuration was created.
 	CreateTime *time.Time `locationName:"createTime" type:"timestamp" timestampFormat:"unix"`
 
 	// The deployment configuration ID.
@@ -1547,7 +2826,7 @@ type DeploymentConfigInfo struct {
 	// The deployment configuration name.
 	DeploymentConfigName *string `locationName:"deploymentConfigName" min:"1" type:"string"`
 
-	// Information about the number or percentage of minimum healthy instances.
+	// Information about the number or percentage of minimum healthy instance.
 	MinimumHealthyHosts *MinimumHealthyHosts `locationName:"minimumHealthyHosts" type:"structure"`
 }
 
@@ -1580,18 +2859,21 @@ type DeploymentGroupInfo struct {
 	// The deployment group name.
 	DeploymentGroupName *string `locationName:"deploymentGroupName" min:"1" type:"string"`
 
-	// The Amazon EC2 tags to filter on.
+	// The Amazon EC2 tags on which to filter.
 	Ec2TagFilters []*EC2TagFilter `locationName:"ec2TagFilters" type:"list"`
 
-	// The on-premises instance tags to filter on.
+	// The on-premises instance tags on which to filter.
 	OnPremisesInstanceTagFilters []*TagFilter `locationName:"onPremisesInstanceTagFilters" type:"list"`
 
 	// A service role ARN.
 	ServiceRoleArn *string `locationName:"serviceRoleArn" type:"string"`
 
-	// Information about the deployment group's target revision, including the revision's
-	// type and its location.
+	// Information about the deployment group's target revision, including type
+	// and location.
 	TargetRevision *RevisionLocation `locationName:"targetRevision" type:"structure"`
+
+	// A list of associated triggers.
+	TriggerConfigurations []*TriggerConfig `locationName:"triggerConfigurations" type:"list"`
 }
 
 // String returns the string representation
@@ -1611,13 +2893,13 @@ type DeploymentInfo struct {
 	// The application name.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string"`
 
-	// A timestamp indicating when the deployment was completed.
+	// A timestamp indicating when the deployment was complete.
 	CompleteTime *time.Time `locationName:"completeTime" type:"timestamp" timestampFormat:"unix"`
 
 	// A timestamp indicating when the deployment was created.
 	CreateTime *time.Time `locationName:"createTime" type:"timestamp" timestampFormat:"unix"`
 
-	// How the deployment was created:
+	// The means by which the deployment was created:
 	//
 	//  user: A user created the deployment. autoscaling: Auto Scaling created
 	// the deployment.
@@ -1642,26 +2924,26 @@ type DeploymentInfo struct {
 	ErrorInformation *ErrorInformation `locationName:"errorInformation" type:"structure"`
 
 	// If true, then if the deployment causes the ApplicationStop deployment lifecycle
-	// event to fail to a specific instance, the deployment will not be considered
-	// to have failed to that instance at that point and will continue on to the
-	// BeforeInstall deployment lifecycle event.
+	// event to an instance to fail, the deployment to that instance will not be
+	// considered to have failed at that point and will continue on to the BeforeInstall
+	// deployment lifecycle event.
 	//
 	// If false or not specified, then if the deployment causes the ApplicationStop
-	// deployment lifecycle event to fail to a specific instance, the deployment
-	// will stop to that instance, and the deployment to that instance will be considered
+	// deployment lifecycle event to an instance to fail, the deployment to that
+	// instance will stop, and the deployment to that instance will be considered
 	// to have failed.
 	IgnoreApplicationStopFailures *bool `locationName:"ignoreApplicationStopFailures" type:"boolean"`
 
-	// Information about the location of application artifacts that are stored and
-	// the service to retrieve them from.
+	// Information about the location of stored application artifacts and the service
+	// from which to retrieve them.
 	Revision *RevisionLocation `locationName:"revision" type:"structure"`
 
-	// A timestamp indicating when the deployment began deploying to the deployment
+	// A timestamp indicating when the deployment was deployed to the deployment
 	// group.
 	//
-	// Note that in some cases, the reported value of the start time may be later
-	// than the complete time. This is due to differences in the clock settings
-	// of various back-end servers that participate in the overall deployment process.
+	// In some cases, the reported value of the start time may be later than the
+	// complete time. This is due to differences in the clock settings of back-end
+	// servers that participate in the deployment process.
 	StartTime *time.Time `locationName:"startTime" type:"timestamp" timestampFormat:"unix"`
 
 	// The current state of the deployment as a whole.
@@ -1682,19 +2964,20 @@ func (s DeploymentInfo) GoString() string {
 type DeploymentOverview struct {
 	_ struct{} `type:"structure"`
 
-	// The number of instances that have failed in the deployment.
+	// The number of instances in the deployment in a failed state.
 	Failed *int64 `type:"long"`
 
-	// The number of instances that are in progress in the deployment.
+	// The number of instances in which the deployment is in progress.
 	InProgress *int64 `type:"long"`
 
-	// The number of instances that are pending in the deployment.
+	// The number of instances in the deployment in a pending state.
 	Pending *int64 `type:"long"`
 
-	// The number of instances that have been skipped in the deployment.
+	// The number of instances in the deployment in a skipped state.
 	Skipped *int64 `type:"long"`
 
-	// The number of instances that have succeeded in the deployment.
+	// The number of instances in the deployment to which revisions have been successfully
+	// deployed.
 	Succeeded *int64 `type:"long"`
 }
 
@@ -1726,6 +3009,19 @@ func (s DeregisterOnPremisesInstanceInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeregisterOnPremisesInstanceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeregisterOnPremisesInstanceInput"}
+	if s.InstanceName == nil {
+		invalidParams.Add(request.NewErrParamRequired("InstanceName"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type DeregisterOnPremisesInstanceOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -1754,7 +3050,10 @@ type Diagnostics struct {
 	// script did not run for an unknown reason.
 	ErrorCode *string `locationName:"errorCode" type:"string" enum:"LifecycleErrorCode"`
 
-	// The last portion of the associated diagnostic log.
+	// The last portion of the diagnostic log.
+	//
+	// If available, AWS CodeDeploy returns up to the last 4 KB of the diagnostic
+	// log.
 	LogTail *string `locationName:"logTail" type:"string"`
 
 	// The message associated with the error.
@@ -1806,25 +3105,24 @@ type ErrorInformation struct {
 
 	// The error code:
 	//
-	//  APPLICATION_MISSING: The application was missing. Note that this error
-	// code will most likely be raised if the application is deleted after the deployment
-	// is created but before it starts. DEPLOYMENT_GROUP_MISSING: The deployment
-	// group was missing. Note that this error code will most likely be raised if
-	// the deployment group is deleted after the deployment is created but before
-	// it starts. HEALTH_CONSTRAINTS: The deployment failed on too many instances
-	// to be able to successfully deploy within the specified instance health constraints.
-	// HEALTH_CONSTRAINTS_INVALID: The revision can never successfully deploy within
-	// the instance health constraints as specified. IAM_ROLE_MISSING: The service
-	// role cannot be accessed. IAM_ROLE_PERMISSIONS: The service role does not
-	// have the correct permissions. INTERNAL_ERROR: There was an internal error.
-	// NO_EC2_SUBSCRIPTION: The calling account is not subscribed to the Amazon
-	// EC2 service. NO_INSTANCES: No instances were specified, or no instances can
-	// be found. OVER_MAX_INSTANCES: The maximum number of instances was exceeded.
-	// THROTTLED: The operation was throttled because the calling account exceeded
-	// the throttling limits of one or more AWS services. TIMEOUT: The deployment
-	// has timed out. REVISION_MISSING: The revision ID was missing. Note that this
-	// error code will most likely be raised if the revision is deleted after the
-	// deployment is created but before it starts.
+	//  APPLICATION_MISSING: The application was missing. This error code will
+	// most likely be raised if the application is deleted after the deployment
+	// is created but before it is started. DEPLOYMENT_GROUP_MISSING: The deployment
+	// group was missing. This error code will most likely be raised if the deployment
+	// group is deleted after the deployment is created but before it is started.
+	// HEALTH_CONSTRAINTS: The deployment failed on too many instances to be successfully
+	// deployed within the instance health constraints specified. HEALTH_CONSTRAINTS_INVALID:
+	// The revision cannot be successfully deployed within the instance health constraints
+	// specified. IAM_ROLE_MISSING: The service role cannot be accessed. IAM_ROLE_PERMISSIONS:
+	// The service role does not have the correct permissions. INTERNAL_ERROR: There
+	// was an internal error. NO_EC2_SUBSCRIPTION: The calling account is not subscribed
+	// to the Amazon EC2 service. NO_INSTANCES: No instance were specified, or no
+	// instance can be found. OVER_MAX_INSTANCES: The maximum number of instance
+	// was exceeded. THROTTLED: The operation was throttled because the calling
+	// account exceeded the throttling limits of one or more AWS services. TIMEOUT:
+	// The deployment has timed out. REVISION_MISSING: The revision ID was missing.
+	// This error code will most likely be raised if the revision is deleted after
+	// the deployment is created but before it is started.
 	Code *string `locationName:"code" type:"string" enum:"ErrorCode"`
 
 	// An accompanying error message.
@@ -1845,7 +3143,7 @@ func (s ErrorInformation) GoString() string {
 type GenericRevisionInfo struct {
 	_ struct{} `type:"structure"`
 
-	// A list of deployment groups that use this revision.
+	// The deployment groups for which this is the current target revision.
 	DeploymentGroups []*string `locationName:"deploymentGroups" type:"list"`
 
 	// A comment about the revision.
@@ -1875,7 +3173,7 @@ func (s GenericRevisionInfo) GoString() string {
 type GetApplicationInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of an existing AWS CodeDeploy application associated with the applicable
+	// The name of an AWS CodeDeploy application associated with the applicable
 	// IAM user or AWS account.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
 }
@@ -1888,6 +3186,22 @@ func (s GetApplicationInput) String() string {
 // GoString returns the string representation
 func (s GetApplicationInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetApplicationInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetApplicationInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Represents the output of a get application operation.
@@ -1915,8 +3229,7 @@ type GetApplicationRevisionInput struct {
 	// The name of the application that corresponds to the revision.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
 
-	// Information about the application revision to get, including the revision's
-	// type and its location.
+	// Information about the application revision to get, including type and location.
 	Revision *RevisionLocation `locationName:"revision" type:"structure" required:"true"`
 }
 
@@ -1930,6 +3243,25 @@ func (s GetApplicationRevisionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetApplicationRevisionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetApplicationRevisionInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+	if s.Revision == nil {
+		invalidParams.Add(request.NewErrParamRequired("Revision"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Represents the output of a get application revision operation.
 type GetApplicationRevisionOutput struct {
 	_ struct{} `type:"structure"`
@@ -1937,8 +3269,7 @@ type GetApplicationRevisionOutput struct {
 	// The name of the application that corresponds to the revision.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string"`
 
-	// Additional information about the revision, including the revision's type
-	// and its location.
+	// Additional information about the revision, including type and location.
 	Revision *RevisionLocation `locationName:"revision" type:"structure"`
 
 	// General information about the revision.
@@ -1959,8 +3290,8 @@ func (s GetApplicationRevisionOutput) GoString() string {
 type GetDeploymentConfigInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of an existing deployment configuration associated with the applicable
-	// IAM user or AWS account.
+	// The name of a deployment configuration associated with the applicable IAM
+	// user or AWS account.
 	DeploymentConfigName *string `locationName:"deploymentConfigName" min:"1" type:"string" required:"true"`
 }
 
@@ -1972,6 +3303,22 @@ func (s GetDeploymentConfigInput) String() string {
 // GoString returns the string representation
 func (s GetDeploymentConfigInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetDeploymentConfigInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetDeploymentConfigInput"}
+	if s.DeploymentConfigName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeploymentConfigName"))
+	}
+	if s.DeploymentConfigName != nil && len(*s.DeploymentConfigName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeploymentConfigName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Represents the output of a get deployment configuration operation.
@@ -1996,7 +3343,7 @@ func (s GetDeploymentConfigOutput) GoString() string {
 type GetDeploymentGroupInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of an existing AWS CodeDeploy application associated with the applicable
+	// The name of an AWS CodeDeploy application associated with the applicable
 	// IAM user or AWS account.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
 
@@ -2012,6 +3359,28 @@ func (s GetDeploymentGroupInput) String() string {
 // GoString returns the string representation
 func (s GetDeploymentGroupInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetDeploymentGroupInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetDeploymentGroupInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+	if s.DeploymentGroupName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeploymentGroupName"))
+	}
+	if s.DeploymentGroupName != nil && len(*s.DeploymentGroupName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeploymentGroupName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Represents the output of a get deployment group operation.
@@ -2036,8 +3405,7 @@ func (s GetDeploymentGroupOutput) GoString() string {
 type GetDeploymentInput struct {
 	_ struct{} `type:"structure"`
 
-	// An existing deployment ID associated with the applicable IAM user or AWS
-	// account.
+	// A deployment ID associated with the applicable IAM user or AWS account.
 	DeploymentId *string `locationName:"deploymentId" type:"string" required:"true"`
 }
 
@@ -2051,6 +3419,19 @@ func (s GetDeploymentInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetDeploymentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetDeploymentInput"}
+	if s.DeploymentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeploymentId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Represents the input of a get deployment instance operation.
 type GetDeploymentInstanceInput struct {
 	_ struct{} `type:"structure"`
@@ -2058,7 +3439,7 @@ type GetDeploymentInstanceInput struct {
 	// The unique ID of a deployment.
 	DeploymentId *string `locationName:"deploymentId" type:"string" required:"true"`
 
-	// The unique ID of an instance in the deployment's deployment group.
+	// The unique ID of an instance in the deployment group.
 	InstanceId *string `locationName:"instanceId" type:"string" required:"true"`
 }
 
@@ -2070,6 +3451,22 @@ func (s GetDeploymentInstanceInput) String() string {
 // GoString returns the string representation
 func (s GetDeploymentInstanceInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetDeploymentInstanceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetDeploymentInstanceInput"}
+	if s.DeploymentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeploymentId"))
+	}
+	if s.InstanceId == nil {
+		invalidParams.Add(request.NewErrParamRequired("InstanceId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Represents the output of a get deployment instance operation.
@@ -2112,7 +3509,7 @@ func (s GetDeploymentOutput) GoString() string {
 type GetOnPremisesInstanceInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of the on-premises instance to get information about
+	// The name of the on-premises instance about which to get information.
 	InstanceName *string `locationName:"instanceName" type:"string" required:"true"`
 }
 
@@ -2124,6 +3521,19 @@ func (s GetOnPremisesInstanceInput) String() string {
 // GoString returns the string representation
 func (s GetOnPremisesInstanceInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetOnPremisesInstanceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetOnPremisesInstanceInput"}
+	if s.InstanceName == nil {
+		invalidParams.Add(request.NewErrParamRequired("InstanceName"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Represents the output of a get on-premises instance operation.
@@ -2144,13 +3554,12 @@ func (s GetOnPremisesInstanceOutput) GoString() string {
 	return s.String()
 }
 
-// Information about the location of application artifacts that are stored in
-// GitHub.
+// Information about the location of application artifacts stored in GitHub.
 type GitHubLocation struct {
 	_ struct{} `type:"structure"`
 
-	// The SHA1 commit ID of the GitHub commit that references the that represents
-	// the bundled artifacts for the application revision.
+	// The SHA1 commit ID of the GitHub commit that represents the bundled artifacts
+	// for the application revision.
 	CommitId *string `locationName:"commitId" type:"string"`
 
 	// The GitHub account and repository pair that stores a reference to the commit
@@ -2174,7 +3583,7 @@ func (s GitHubLocation) GoString() string {
 type InstanceInfo struct {
 	_ struct{} `type:"structure"`
 
-	// If the on-premises instance was deregistered, the time that the on-premises
+	// If the on-premises instance was deregistered, the time at which the on-premises
 	// instance was deregistered.
 	DeregisterTime *time.Time `locationName:"deregisterTime" type:"timestamp" timestampFormat:"unix"`
 
@@ -2187,10 +3596,10 @@ type InstanceInfo struct {
 	// The name of the on-premises instance.
 	InstanceName *string `locationName:"instanceName" type:"string"`
 
-	// The time that the on-premises instance was registered.
+	// The time at which the on-premises instance was registered.
 	RegisterTime *time.Time `locationName:"registerTime" type:"timestamp" timestampFormat:"unix"`
 
-	// The tags that are currently associated with the on-premises instance.
+	// The tags currently associated with the on-premises instance.
 	Tags []*Tag `locationName:"tags" type:"list"`
 }
 
@@ -2261,7 +3670,7 @@ type LifecycleEvent struct {
 	//
 	//  Pending: The deployment lifecycle event is pending. InProgress: The deployment
 	// lifecycle event is in progress. Succeeded: The deployment lifecycle event
-	// has succeeded. Failed: The deployment lifecycle event has failed. Skipped:
+	// ran successfully. Failed: The deployment lifecycle event has failed. Skipped:
 	// The deployment lifecycle event has been skipped. Unknown: The deployment
 	// lifecycle event is unknown.
 	Status *string `locationName:"status" type:"string" enum:"LifecycleEventStatus"`
@@ -2281,7 +3690,7 @@ func (s LifecycleEvent) GoString() string {
 type ListApplicationRevisionsInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of an existing AWS CodeDeploy application associated with the applicable
+	// The name of an AWS CodeDeploy application associated with the applicable
 	// IAM user or AWS account.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
 
@@ -2290,37 +3699,34 @@ type ListApplicationRevisionsInput struct {
 	//
 	//  include: List revisions that are target revisions of a deployment group.
 	// exclude: Do not list revisions that are target revisions of a deployment
-	// group. ignore: List all revisions, regardless of whether they are target
-	// revisions of a deployment group.
+	// group. ignore: List all revisions.
 	Deployed *string `locationName:"deployed" type:"string" enum:"ListStateFilterAction"`
 
-	// An identifier that was returned from the previous list application revisions
-	// call, which can be used to return the next set of applications in the list.
+	// An identifier returned from the previous list application revisions call.
+	// It can be used to return the next set of applications in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 
-	// A specific Amazon S3 bucket name to limit the search for revisions.
+	// An Amazon S3 bucket name to limit the search for revisions.
 	//
-	// If set to null, then all of the user's buckets will be searched.
+	// If set to null, all of the user's buckets will be searched.
 	S3Bucket *string `locationName:"s3Bucket" type:"string"`
 
-	// A specific key prefix for the set of Amazon S3 objects to limit the search
-	// for revisions.
+	// A key prefix for the set of Amazon S3 objects to limit the search for revisions.
 	S3KeyPrefix *string `locationName:"s3KeyPrefix" type:"string"`
 
-	// The column name to sort the list results by:
+	// The column name to use to sort the list results:
 	//
-	//  registerTime: Sort the list results by when the revisions were registered
-	// with AWS CodeDeploy. firstUsedTime: Sort the list results by when the revisions
-	// were first used by in a deployment. lastUsedTime: Sort the list results by
-	// when the revisions were last used in a deployment.  If not specified or set
-	// to null, the results will be returned in an arbitrary order.
+	//  registerTime: Sort by the time the revisions were registered with AWS CodeDeploy.
+	// firstUsedTime: Sort by the time the revisions were first used in a deployment.
+	// lastUsedTime: Sort by the time the revisions were last used in a deployment.
+	//  If not specified or set to null, the results will be returned in an arbitrary
+	// order.
 	SortBy *string `locationName:"sortBy" type:"string" enum:"ApplicationRevisionSortBy"`
 
-	// The order to sort the list results by:
+	// The order in which to sort the list results:
 	//
-	//  ascending: Sort the list of results in ascending order. descending: Sort
-	// the list of results in descending order.  If not specified, the results will
-	// be sorted in ascending order.
+	//  ascending: ascending order. descending: descending order.  If not specified,
+	// the results will be sorted in ascending order.
 	//
 	// If set to null, the results will be sorted in an arbitrary order.
 	SortOrder *string `locationName:"sortOrder" type:"string" enum:"SortOrder"`
@@ -2336,17 +3742,32 @@ func (s ListApplicationRevisionsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListApplicationRevisionsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListApplicationRevisionsInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Represents the output of a list application revisions operation.
 type ListApplicationRevisionsOutput struct {
 	_ struct{} `type:"structure"`
 
-	// If the amount of information that is returned is significantly large, an
-	// identifier will also be returned, which can be used in a subsequent list
-	// application revisions call to return the next set of application revisions
-	// in the list.
+	// If a large amount of information is returned, an identifier will also be
+	// returned. It can be used in a subsequent list application revisions call
+	// to return the next set of application revisions in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 
-	// A list of revision locations that contain the matching revisions.
+	// A list of locations that contain the matching revisions.
 	Revisions []*RevisionLocation `locationName:"revisions" type:"list"`
 }
 
@@ -2364,8 +3785,8 @@ func (s ListApplicationRevisionsOutput) GoString() string {
 type ListApplicationsInput struct {
 	_ struct{} `type:"structure"`
 
-	// An identifier that was returned from the previous list applications call,
-	// which can be used to return the next set of applications in the list.
+	// An identifier returned from the previous list applications call. It can be
+	// used to return the next set of applications in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
@@ -2386,9 +3807,9 @@ type ListApplicationsOutput struct {
 	// A list of application names.
 	Applications []*string `locationName:"applications" type:"list"`
 
-	// If the amount of information that is returned is significantly large, an
-	// identifier will also be returned, which can be used in a subsequent list
-	// applications call to return the next set of applications in the list.
+	// If a large amount of information is returned, an identifier is also returned.
+	// It can be used in a subsequent list applications call to return the next
+	// set of applications, will also be returned. in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
@@ -2406,9 +3827,9 @@ func (s ListApplicationsOutput) GoString() string {
 type ListDeploymentConfigsInput struct {
 	_ struct{} `type:"structure"`
 
-	// An identifier that was returned from the previous list deployment configurations
-	// call, which can be used to return the next set of deployment configurations
-	// in the list.
+	// An identifier returned from the previous list deployment configurations call.
+	// It can be used to return the next set of deployment configurations in the
+	// list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
@@ -2426,14 +3847,13 @@ func (s ListDeploymentConfigsInput) GoString() string {
 type ListDeploymentConfigsOutput struct {
 	_ struct{} `type:"structure"`
 
-	// A list of deployment configurations, including the built-in configurations
-	// such as CodeDeployDefault.OneAtATime.
+	// A list of deployment configurations, including built-in configurations such
+	// as CodeDeployDefault.OneAtATime.
 	DeploymentConfigsList []*string `locationName:"deploymentConfigsList" type:"list"`
 
-	// If the amount of information that is returned is significantly large, an
-	// identifier will also be returned, which can be used in a subsequent list
-	// deployment configurations call to return the next set of deployment configurations
-	// in the list.
+	// If a large amount of information is returned, an identifier is also returned.
+	// It can be used in a subsequent list deployment configurations call to return
+	// the next set of deployment configurations in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
@@ -2451,13 +3871,12 @@ func (s ListDeploymentConfigsOutput) GoString() string {
 type ListDeploymentGroupsInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of an existing AWS CodeDeploy application associated with the applicable
+	// The name of an AWS CodeDeploy application associated with the applicable
 	// IAM user or AWS account.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
 
-	// An identifier that was returned from the previous list deployment groups
-	// call, which can be used to return the next set of deployment groups in the
-	// list.
+	// An identifier returned from the previous list deployment groups call. It
+	// can be used to return the next set of deployment groups in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
@@ -2471,6 +3890,22 @@ func (s ListDeploymentGroupsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListDeploymentGroupsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListDeploymentGroupsInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Represents the output of a list deployment groups operation.
 type ListDeploymentGroupsOutput struct {
 	_ struct{} `type:"structure"`
@@ -2481,10 +3916,9 @@ type ListDeploymentGroupsOutput struct {
 	// A list of corresponding deployment group names.
 	DeploymentGroups []*string `locationName:"deploymentGroups" type:"list"`
 
-	// If the amount of information that is returned is significantly large, an
-	// identifier will also be returned, which can be used in a subsequent list
-	// deployment groups call to return the next set of deployment groups in the
-	// list.
+	// If a large amount of information is returned, an identifier is also returned.
+	// It can be used in a subsequent list deployment groups call to return the
+	// next set of deployment groups in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
@@ -2505,20 +3939,17 @@ type ListDeploymentInstancesInput struct {
 	// The unique ID of a deployment.
 	DeploymentId *string `locationName:"deploymentId" type:"string" required:"true"`
 
-	// A subset of instances to list, by status:
+	// A subset of instances to list by status:
 	//
-	//  Pending: Include in the resulting list those instances with pending deployments.
-	// InProgress: Include in the resulting list those instances with in-progress
-	// deployments. Succeeded: Include in the resulting list those instances with
-	// succeeded deployments. Failed: Include in the resulting list those instances
-	// with failed deployments. Skipped: Include in the resulting list those instances
-	// with skipped deployments. Unknown: Include in the resulting list those instances
-	// with deployments in an unknown state.
+	//  Pending: Include those instance with pending deployments. InProgress: Include
+	// those instance where deployments are still in progress. Succeeded: Include
+	// those instances with successful deployments. Failed: Include those instance
+	// with failed deployments. Skipped: Include those instance with skipped deployments.
+	// Unknown: Include those instance with deployments in an unknown state.
 	InstanceStatusFilter []*string `locationName:"instanceStatusFilter" type:"list"`
 
-	// An identifier that was returned from the previous list deployment instances
-	// call, which can be used to return the next set of deployment instances in
-	// the list.
+	// An identifier returned from the previous list deployment instances call.
+	// It can be used to return the next set of deployment instances in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
@@ -2532,17 +3963,29 @@ func (s ListDeploymentInstancesInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListDeploymentInstancesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListDeploymentInstancesInput"}
+	if s.DeploymentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeploymentId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Represents the output of a list deployment instances operation.
 type ListDeploymentInstancesOutput struct {
 	_ struct{} `type:"structure"`
 
-	// A list of instances IDs.
+	// A list of instance IDs.
 	InstancesList []*string `locationName:"instancesList" type:"list"`
 
-	// If the amount of information that is returned is significantly large, an
-	// identifier will also be returned, which can be used in a subsequent list
-	// deployment instances call to return the next set of deployment instances
-	// in the list.
+	// If a large amount of information is returned, an identifier is also returned.
+	// It can be used in a subsequent list deployment instances call to return the
+	// next set of deployment instances in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
@@ -2560,28 +4003,27 @@ func (s ListDeploymentInstancesOutput) GoString() string {
 type ListDeploymentsInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of an existing AWS CodeDeploy application associated with the applicable
+	// The name of an AWS CodeDeploy application associated with the applicable
 	// IAM user or AWS account.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string"`
 
-	// A deployment creation start- and end-time range for returning a subset of
-	// the list of deployments.
+	// A time range (start and end) for returning a subset of the list of deployments.
 	CreateTimeRange *TimeRange `locationName:"createTimeRange" type:"structure"`
 
 	// The name of an existing deployment group for the specified application.
 	DeploymentGroupName *string `locationName:"deploymentGroupName" min:"1" type:"string"`
 
-	// A subset of deployments to list, by status:
+	// A subset of deployments to list by status:
 	//
-	//  Created: Include in the resulting list created deployments. Queued: Include
-	// in the resulting list queued deployments. In Progress: Include in the resulting
-	// list in-progress deployments. Succeeded: Include in the resulting list succeeded
-	// deployments. Failed: Include in the resulting list failed deployments. Aborted:
-	// Include in the resulting list aborted deployments.
+	//  Created: Include created deployments in the resulting list. Queued: Include
+	// queued deployments in the resulting list. In Progress: Include in-progress
+	// deployments in the resulting list. Succeeded: Include successful deployments
+	// in the resulting list. Failed: Include failed deployments in the resulting
+	// list. Stopped: Include stopped deployments in the resulting list.
 	IncludeOnlyStatuses []*string `locationName:"includeOnlyStatuses" type:"list"`
 
-	// An identifier that was returned from the previous list deployments call,
-	// which can be used to return the next set of deployments in the list.
+	// An identifier returned from the previous list deployments call. It can be
+	// used to return the next set of deployments in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
@@ -2595,6 +4037,22 @@ func (s ListDeploymentsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListDeploymentsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListDeploymentsInput"}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+	if s.DeploymentGroupName != nil && len(*s.DeploymentGroupName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeploymentGroupName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Represents the output of a list deployments operation.
 type ListDeploymentsOutput struct {
 	_ struct{} `type:"structure"`
@@ -2602,9 +4060,9 @@ type ListDeploymentsOutput struct {
 	// A list of deployment IDs.
 	Deployments []*string `locationName:"deployments" type:"list"`
 
-	// If the amount of information that is returned is significantly large, an
-	// identifier will also be returned, which can be used in a subsequent list
-	// deployments call to return the next set of deployments in the list.
+	// If a large amount of information is returned, an identifier is also returned.
+	// It can be used in a subsequent list deployments call to return the next set
+	// of deployments in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
@@ -2624,19 +4082,19 @@ func (s ListDeploymentsOutput) GoString() string {
 type ListOnPremisesInstancesInput struct {
 	_ struct{} `type:"structure"`
 
-	// An identifier that was returned from the previous list on-premises instances
-	// call, which can be used to return the next set of on-premises instances in
-	// the list.
+	// An identifier returned from the previous list on-premises instances call.
+	// It can be used to return the next set of on-premises instances in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 
-	// The on-premises instances registration status:
+	// The registration status of the on-premises instances:
 	//
-	//  Deregistered: Include in the resulting list deregistered on-premises instances.
-	// Registered: Include in the resulting list registered on-premises instances.
+	//  Deregistered: Include deregistered on-premises instances in the resulting
+	// list. Registered: Include registered on-premises instances in the resulting
+	// list.
 	RegistrationStatus *string `locationName:"registrationStatus" type:"string" enum:"RegistrationStatus"`
 
 	// The on-premises instance tags that will be used to restrict the corresponding
-	// on-premises instance names that are returned.
+	// on-premises instance names returned.
 	TagFilters []*TagFilter `locationName:"tagFilters" type:"list"`
 }
 
@@ -2657,10 +4115,9 @@ type ListOnPremisesInstancesOutput struct {
 	// The list of matching on-premises instance names.
 	InstanceNames []*string `locationName:"instanceNames" type:"list"`
 
-	// If the amount of information that is returned is significantly large, an
-	// identifier will also be returned, which can be used in a subsequent list
-	// on-premises instances call to return the next set of on-premises instances
-	// in the list.
+	// If a large amount of information is returned, an identifier is also returned.
+	// It can be used in a subsequent list on-premises instances call to return
+	// the next set of on-premises instances in the list.
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
@@ -2674,28 +4131,34 @@ func (s ListOnPremisesInstancesOutput) GoString() string {
 	return s.String()
 }
 
-// Information about minimum healthy instances.
+// Information about minimum healthy instance.
 type MinimumHealthyHosts struct {
 	_ struct{} `type:"structure"`
 
-	// The minimum healthy instances type:
+	// The minimum healthy instance type:
 	//
-	//  HOST_COUNT: The minimum number of healthy instances, as an absolute value.
-	// FLEET_PERCENT: The minimum number of healthy instances, as a percentage of
-	// the total number of instances in the deployment.  For example, for 9 instances,
-	// if a HOST_COUNT of 6 is specified, deploy to up to 3 instances at a time.
-	// The deployment succeeds if 6 or more instances are successfully deployed
-	// to; otherwise, the deployment fails. If a FLEET_PERCENT of 40 is specified,
-	// deploy to up to 5 instances at a time. The deployment succeeds if 4 or more
-	// instances are successfully deployed to; otherwise, the deployment fails.
+	//  HOST_COUNT: The minimum number of healthy instance as an absolute value.
+	// FLEET_PERCENT: The minimum number of healthy instance as a percentage of
+	// the total number of instance in the deployment.  In an example of nine instance,
+	// if a HOST_COUNT of six is specified, deploy to up to three instances at a
+	// time. The deployment will be successful if six or more instances are deployed
+	// to successfully; otherwise, the deployment fails. If a FLEET_PERCENT of 40
+	// is specified, deploy to up to five instance at a time. The deployment will
+	// be successful if four or more instance are deployed to successfully; otherwise,
+	// the deployment fails.
 	//
 	// In a call to the get deployment configuration operation, CodeDeployDefault.OneAtATime
-	// will return a minimum healthy instances type of MOST_CONCURRENCY and a value
-	// of 1. This means a deployment to only one instances at a time. (You cannot
-	// set the type to MOST_CONCURRENCY, only to HOST_COUNT or FLEET_PERCENT.)
+	// will return a minimum healthy instance type of MOST_CONCURRENCY and a value
+	// of 1. This means a deployment to only one instance at a time. (You cannot
+	// set the type to MOST_CONCURRENCY, only to HOST_COUNT or FLEET_PERCENT.) In
+	// addition, with CodeDeployDefault.OneAtATime, AWS CodeDeploy will try to ensure
+	// that all instances but one are kept in a healthy state during the deployment.
+	// Although this allows one instance at a time to be taken offline for a new
+	// deployment, it also means that if the deployment to the last instance fails,
+	// the overall deployment still succeeds.
 	Type *string `locationName:"type" type:"string" enum:"MinimumHealthyHostsType"`
 
-	// The minimum healthy instances value.
+	// The minimum healthy instance value.
 	Value *int64 `locationName:"value" type:"integer"`
 }
 
@@ -2713,15 +4176,15 @@ func (s MinimumHealthyHosts) GoString() string {
 type RegisterApplicationRevisionInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of an existing AWS CodeDeploy application associated with the applicable
+	// The name of an AWS CodeDeploy application associated with the applicable
 	// IAM user or AWS account.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
 
 	// A comment about the revision.
 	Description *string `locationName:"description" type:"string"`
 
-	// Information about the application revision to register, including the revision's
-	// type and its location.
+	// Information about the application revision to register, including type and
+	// location.
 	Revision *RevisionLocation `locationName:"revision" type:"structure" required:"true"`
 }
 
@@ -2733,6 +4196,25 @@ func (s RegisterApplicationRevisionInput) String() string {
 // GoString returns the string representation
 func (s RegisterApplicationRevisionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RegisterApplicationRevisionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RegisterApplicationRevisionInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+	if s.Revision == nil {
+		invalidParams.Add(request.NewErrParamRequired("Revision"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type RegisterApplicationRevisionOutput struct {
@@ -2749,7 +4231,7 @@ func (s RegisterApplicationRevisionOutput) GoString() string {
 	return s.String()
 }
 
-// Represents the input of register on-premises instance operation.
+// Represents the input of the register on-premises instance operation.
 type RegisterOnPremisesInstanceInput struct {
 	_ struct{} `type:"structure"`
 
@@ -2770,6 +4252,22 @@ func (s RegisterOnPremisesInstanceInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RegisterOnPremisesInstanceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RegisterOnPremisesInstanceInput"}
+	if s.IamUserArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("IamUserArn"))
+	}
+	if s.InstanceName == nil {
+		invalidParams.Add(request.NewErrParamRequired("InstanceName"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type RegisterOnPremisesInstanceOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -2788,7 +4286,7 @@ func (s RegisterOnPremisesInstanceOutput) GoString() string {
 type RemoveTagsFromOnPremisesInstancesInput struct {
 	_ struct{} `type:"structure"`
 
-	// The names of the on-premises instances to remove tags from.
+	// The names of the on-premises instances from which to remove tags.
 	InstanceNames []*string `locationName:"instanceNames" type:"list" required:"true"`
 
 	// The tag key-value pairs to remove from the on-premises instances.
@@ -2805,6 +4303,22 @@ func (s RemoveTagsFromOnPremisesInstancesInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RemoveTagsFromOnPremisesInstancesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RemoveTagsFromOnPremisesInstancesInput"}
+	if s.InstanceNames == nil {
+		invalidParams.Add(request.NewErrParamRequired("InstanceNames"))
+	}
+	if s.Tags == nil {
+		invalidParams.Add(request.NewErrParamRequired("Tags"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type RemoveTagsFromOnPremisesInstancesOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -2819,22 +4333,42 @@ func (s RemoveTagsFromOnPremisesInstancesOutput) GoString() string {
 	return s.String()
 }
 
-// Information about an application revision's location.
+// Information about an application revision.
+type RevisionInfo struct {
+	_ struct{} `type:"structure"`
+
+	// Information about an application revision.
+	GenericRevisionInfo *GenericRevisionInfo `locationName:"genericRevisionInfo" type:"structure"`
+
+	// Information about the location of an application revision.
+	RevisionLocation *RevisionLocation `locationName:"revisionLocation" type:"structure"`
+}
+
+// String returns the string representation
+func (s RevisionInfo) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s RevisionInfo) GoString() string {
+	return s.String()
+}
+
+// Information about the location of an application revision.
 type RevisionLocation struct {
 	_ struct{} `type:"structure"`
 
-	// Information about the location of application artifacts that are stored in
-	// GitHub.
+	// Information about the location of application artifacts stored in GitHub.
 	GitHubLocation *GitHubLocation `locationName:"gitHubLocation" type:"structure"`
 
-	// The application revision's type:
+	// The type of application revision:
 	//
 	//  S3: An application revision stored in Amazon S3. GitHub: An application
 	// revision stored in GitHub.
 	RevisionType *string `locationName:"revisionType" type:"string" enum:"RevisionLocationType"`
 
-	// Information about the location of application artifacts that are stored in
-	// Amazon S3.
+	// Information about the location of application artifacts stored in Amazon
+	// S3.
 	S3Location *S3Location `locationName:"s3Location" type:"structure"`
 }
 
@@ -2848,8 +4382,8 @@ func (s RevisionLocation) GoString() string {
 	return s.String()
 }
 
-// Information about the location of application artifacts that are stored in
-// Amazon S3.
+// Information about the location of application artifacts stored in Amazon
+// S3.
 type S3Location struct {
 	_ struct{} `type:"structure"`
 
@@ -2909,13 +4443,27 @@ func (s StopDeploymentInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *StopDeploymentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "StopDeploymentInput"}
+	if s.DeploymentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeploymentId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Represents the output of a stop deployment operation.
 type StopDeploymentOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The status of the stop deployment operation:
 	//
-	//  Pending: The stop operation is pending. Succeeded: The stop operation succeeded.
+	//  Pending: The stop operation is pending. Succeeded: The stop operation was
+	// successful.
 	Status *string `locationName:"status" type:"string" enum:"StopStatus"`
 
 	// An accompanying status message.
@@ -2983,14 +4531,14 @@ func (s TagFilter) GoString() string {
 type TimeRange struct {
 	_ struct{} `type:"structure"`
 
-	// The time range's end time.
+	// The end time of the time range.
 	//
-	// Specify null to leave the time range's end time open-ended.
+	// Specify null to leave the end time open-ended.
 	End *time.Time `locationName:"end" type:"timestamp" timestampFormat:"unix"`
 
-	// The time range's start time.
+	// The start time of the time range.
 	//
-	// Specify null to leave the time range's start time open-ended.
+	// Specify null to leave the start time open-ended.
 	Start *time.Time `locationName:"start" type:"timestamp" timestampFormat:"unix"`
 }
 
@@ -3004,14 +4552,44 @@ func (s TimeRange) GoString() string {
 	return s.String()
 }
 
+// Information about notification triggers for the deployment group.
+type TriggerConfig struct {
+	_ struct{} `type:"structure"`
+
+	// The event type or types for which notifications are triggered.
+	//
+	// The following event type values are supported:
+	//
+	//  DEPLOYMENT_START DEPLOYMENT_SUCCESS DEPLOYMENT_FAILURE DEPLOYMENT_STOP
+	// INSTANCE_START INSTANCE_SUCCESS INSTANCE_FAILURE
+	TriggerEvents []*string `locationName:"triggerEvents" type:"list"`
+
+	// The name of the notification trigger.
+	TriggerName *string `locationName:"triggerName" type:"string"`
+
+	// The ARN of the Amazon Simple Notification Service topic through which notifications
+	// about deployment or instance events are sent.
+	TriggerTargetArn *string `locationName:"triggerTargetArn" type:"string"`
+}
+
+// String returns the string representation
+func (s TriggerConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s TriggerConfig) GoString() string {
+	return s.String()
+}
+
 // Represents the input of an update application operation.
 type UpdateApplicationInput struct {
 	_ struct{} `type:"structure"`
 
-	// The current name of the application that you want to change.
+	// The current name of the application you want to change.
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string"`
 
-	// The new name that you want to change the application to.
+	// The new name to give the application.
 	NewApplicationName *string `locationName:"newApplicationName" min:"1" type:"string"`
 }
 
@@ -3023,6 +4601,22 @@ func (s UpdateApplicationInput) String() string {
 // GoString returns the string representation
 func (s UpdateApplicationInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateApplicationInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateApplicationInput"}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+	if s.NewApplicationName != nil && len(*s.NewApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("NewApplicationName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type UpdateApplicationOutput struct {
@@ -3047,29 +4641,36 @@ type UpdateDeploymentGroupInput struct {
 	ApplicationName *string `locationName:"applicationName" min:"1" type:"string" required:"true"`
 
 	// The replacement list of Auto Scaling groups to be included in the deployment
-	// group, if you want to change them.
+	// group, if you want to change them. To keep the Auto Scaling groups, enter
+	// their names. To remove Auto Scaling groups, do not enter any Auto Scaling
+	// group names.
 	AutoScalingGroups []*string `locationName:"autoScalingGroups" type:"list"`
 
-	// The current name of the existing deployment group.
+	// The current name of the deployment group.
 	CurrentDeploymentGroupName *string `locationName:"currentDeploymentGroupName" min:"1" type:"string" required:"true"`
 
 	// The replacement deployment configuration name to use, if you want to change
 	// it.
 	DeploymentConfigName *string `locationName:"deploymentConfigName" min:"1" type:"string"`
 
-	// The replacement set of Amazon EC2 tags to filter on, if you want to change
-	// them.
+	// The replacement set of Amazon EC2 tags on which to filter, if you want to
+	// change them. To keep the existing tags, enter their names. To remove tags,
+	// do not enter any tag names.
 	Ec2TagFilters []*EC2TagFilter `locationName:"ec2TagFilters" type:"list"`
 
 	// The new name of the deployment group, if you want to change it.
 	NewDeploymentGroupName *string `locationName:"newDeploymentGroupName" min:"1" type:"string"`
 
-	// The replacement set of on-premises instance tags for filter on, if you want
-	// to change them.
+	// The replacement set of on-premises instance tags on which to filter, if you
+	// want to change them. To keep the existing tags, enter their names. To remove
+	// tags, do not enter any tag names.
 	OnPremisesInstanceTagFilters []*TagFilter `locationName:"onPremisesInstanceTagFilters" type:"list"`
 
-	// A replacement service role's ARN, if you want to change it.
+	// A replacement ARN for the service role, if you want to change it.
 	ServiceRoleArn *string `locationName:"serviceRoleArn" type:"string"`
+
+	// Information about triggers to change when the deployment group is updated.
+	TriggerConfigurations []*TriggerConfig `locationName:"triggerConfigurations" type:"list"`
 }
 
 // String returns the string representation
@@ -3082,6 +4683,34 @@ func (s UpdateDeploymentGroupInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateDeploymentGroupInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateDeploymentGroupInput"}
+	if s.ApplicationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApplicationName"))
+	}
+	if s.ApplicationName != nil && len(*s.ApplicationName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApplicationName", 1))
+	}
+	if s.CurrentDeploymentGroupName == nil {
+		invalidParams.Add(request.NewErrParamRequired("CurrentDeploymentGroupName"))
+	}
+	if s.CurrentDeploymentGroupName != nil && len(*s.CurrentDeploymentGroupName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CurrentDeploymentGroupName", 1))
+	}
+	if s.DeploymentConfigName != nil && len(*s.DeploymentConfigName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeploymentConfigName", 1))
+	}
+	if s.NewDeploymentGroupName != nil && len(*s.NewDeploymentGroupName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("NewDeploymentGroupName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Represents the output of an update deployment group operation.
 type UpdateDeploymentGroupOutput struct {
 	_ struct{} `type:"structure"`
@@ -3089,7 +4718,7 @@ type UpdateDeploymentGroupOutput struct {
 	// If the output contains no data, and the corresponding deployment group contained
 	// at least one Auto Scaling group, AWS CodeDeploy successfully removed all
 	// corresponding Auto Scaling lifecycle event hooks from the AWS account. If
-	// the output does contain data, AWS CodeDeploy could not remove some Auto Scaling
+	// the output contains data, AWS CodeDeploy could not remove some Auto Scaling
 	// lifecycle event hooks from the AWS account.
 	HooksNotCleanedUp []*AutoScalingGroup `locationName:"hooksNotCleanedUp" type:"list"`
 }
@@ -3278,4 +4907,21 @@ const (
 	TagFilterTypeValueOnly = "VALUE_ONLY"
 	// @enum TagFilterType
 	TagFilterTypeKeyAndValue = "KEY_AND_VALUE"
+)
+
+const (
+	// @enum TriggerEventType
+	TriggerEventTypeDeploymentStart = "DeploymentStart"
+	// @enum TriggerEventType
+	TriggerEventTypeDeploymentSuccess = "DeploymentSuccess"
+	// @enum TriggerEventType
+	TriggerEventTypeDeploymentFailure = "DeploymentFailure"
+	// @enum TriggerEventType
+	TriggerEventTypeDeploymentStop = "DeploymentStop"
+	// @enum TriggerEventType
+	TriggerEventTypeInstanceStart = "InstanceStart"
+	// @enum TriggerEventType
+	TriggerEventTypeInstanceSuccess = "InstanceSuccess"
+	// @enum TriggerEventType
+	TriggerEventTypeInstanceFailure = "InstanceFailure"
 )

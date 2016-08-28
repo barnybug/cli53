@@ -15,7 +15,28 @@ import (
 
 const opAddPermission = "AddPermission"
 
-// AddPermissionRequest generates a request for the AddPermission operation.
+// AddPermissionRequest generates a "aws/request.Request" representing the
+// client's request for the AddPermission operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the AddPermission method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the AddPermissionRequest method.
+//    req, resp := client.AddPermissionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) AddPermissionRequest(input *AddPermissionInput) (req *request.Request, output *AddPermissionOutput) {
 	op := &request.Operation{
 		Name:       opAddPermission,
@@ -35,18 +56,17 @@ func (c *Lambda) AddPermissionRequest(input *AddPermissionInput) (req *request.R
 
 // Adds a permission to the resource policy associated with the specified AWS
 // Lambda function. You use resource policies to grant permissions to event
-// sources that use "push" model. In "push" model, event sources (such as Amazon
+// sources that use push model. In a push model, event sources (such as Amazon
 // S3 and custom applications) invoke your Lambda function. Each permission
 // you add to the resource policy allows an event source, permission to invoke
 // the Lambda function.
 //
 // For information about the push model, see AWS Lambda: How it Works (http://docs.aws.amazon.com/lambda/latest/dg/lambda-introduction.html).
 //
-// If you are using versioning feature (see AWS Lambda Function Versioning
-// and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases-v2.html)),
-// a Lambda function can have multiple ARNs that can be used to invoke the function.
-// Note that, each permission you add to resource policy using this API is specific
-// to an ARN, specified using the Qualifier parameter
+// If you are using versioning, the permissions you add are specific to the
+// Lambda function version or alias you specify in the AddPermission request
+// via the Qualifier parameter. For more information about versioning, see AWS
+// Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // This operation requires permission for the lambda:AddPermission action.
 func (c *Lambda) AddPermission(input *AddPermissionInput) (*AddPermissionOutput, error) {
@@ -57,7 +77,28 @@ func (c *Lambda) AddPermission(input *AddPermissionInput) (*AddPermissionOutput,
 
 const opCreateAlias = "CreateAlias"
 
-// CreateAliasRequest generates a request for the CreateAlias operation.
+// CreateAliasRequest generates a "aws/request.Request" representing the
+// client's request for the CreateAlias operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateAlias method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateAliasRequest method.
+//    req, resp := client.CreateAliasRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) CreateAliasRequest(input *CreateAliasInput) (req *request.Request, output *AliasConfiguration) {
 	op := &request.Operation{
 		Name:       opCreateAlias,
@@ -75,10 +116,11 @@ func (c *Lambda) CreateAliasRequest(input *CreateAliasInput) (req *request.Reque
 	return
 }
 
-// Creates an alias to the specified Lambda function version. For more information,
-// see Introduction to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-v2-intro-aliases.html)
+// Creates an alias that points to the specified Lambda function version. For
+// more information, see Introduction to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/aliases-intro.html).
 //
-// This requires permission for the lambda:CreateAlias action.
+// Alias names are unique for a given function. This requires permission for
+// the lambda:CreateAlias action.
 func (c *Lambda) CreateAlias(input *CreateAliasInput) (*AliasConfiguration, error) {
 	req, out := c.CreateAliasRequest(input)
 	err := req.Send()
@@ -87,7 +129,28 @@ func (c *Lambda) CreateAlias(input *CreateAliasInput) (*AliasConfiguration, erro
 
 const opCreateEventSourceMapping = "CreateEventSourceMapping"
 
-// CreateEventSourceMappingRequest generates a request for the CreateEventSourceMapping operation.
+// CreateEventSourceMappingRequest generates a "aws/request.Request" representing the
+// client's request for the CreateEventSourceMapping operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateEventSourceMapping method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateEventSourceMappingRequest method.
+//    req, resp := client.CreateEventSourceMappingRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) CreateEventSourceMappingRequest(input *CreateEventSourceMappingInput) (req *request.Request, output *EventSourceMappingConfiguration) {
 	op := &request.Operation{
 		Name:       opCreateEventSourceMapping,
@@ -109,18 +172,24 @@ func (c *Lambda) CreateEventSourceMappingRequest(input *CreateEventSourceMapping
 // an Amazon Kinesis stream or an Amazon DynamoDB stream. AWS Lambda invokes
 // the specified function when records are posted to the stream.
 //
-// This is the pull model, where AWS Lambda invokes the function. For more
-// information, go to AWS Lambda: How it Works (http://docs.aws.amazon.com/lambda/latest/dg/lambda-introduction.html)
+// This association between a stream source and a Lambda function is called
+// the event source mapping.
+//
+// This event source mapping is relevant only in the AWS Lambda pull model,
+// where AWS Lambda invokes the function. For more information, go to AWS Lambda:
+// How it Works (http://docs.aws.amazon.com/lambda/latest/dg/lambda-introduction.html)
 // in the AWS Lambda Developer Guide.
 //
-// This association between an Amazon Kinesis stream and a Lambda function
-// is called the event source mapping. You provide the configuration information
-// (for example, which stream to read from and which Lambda function to invoke)
-// for the event source mapping in the request body.
+//  You provide mapping information (for example, which stream to read from
+// and which Lambda function to invoke) in the request body.
 //
-//  Each event source, such as an Amazon Kinesis or a DynamoDB stream, can
-// be associated with multiple AWS Lambda function. A given Lambda function
-// can be associated with multiple AWS event sources.
+// Each event source, such as an Amazon Kinesis or a DynamoDB stream, can be
+// associated with multiple AWS Lambda function. A given Lambda function can
+// be associated with multiple AWS event sources.
+//
+// If you are using versioning, you can specify a specific function version
+// or an alias via the function name parameter. For more information about versioning,
+// see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // This operation requires permission for the lambda:CreateEventSourceMapping
 // action.
@@ -132,7 +201,28 @@ func (c *Lambda) CreateEventSourceMapping(input *CreateEventSourceMappingInput) 
 
 const opCreateFunction = "CreateFunction"
 
-// CreateFunctionRequest generates a request for the CreateFunction operation.
+// CreateFunctionRequest generates a "aws/request.Request" representing the
+// client's request for the CreateFunction operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateFunction method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateFunctionRequest method.
+//    req, resp := client.CreateFunctionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) CreateFunctionRequest(input *CreateFunctionInput) (req *request.Request, output *FunctionConfiguration) {
 	op := &request.Operation{
 		Name:       opCreateFunction,
@@ -155,6 +245,10 @@ func (c *Lambda) CreateFunctionRequest(input *CreateFunctionInput) (req *request
 // in the request body. If the function name already exists, the operation will
 // fail. Note that the function name is case-sensitive.
 //
+//  If you are using versioning, you can also publish a version of the Lambda
+// function you are creating using the Publish parameter. For more information
+// about versioning, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+//
 // This operation requires permission for the lambda:CreateFunction action.
 func (c *Lambda) CreateFunction(input *CreateFunctionInput) (*FunctionConfiguration, error) {
 	req, out := c.CreateFunctionRequest(input)
@@ -164,7 +258,28 @@ func (c *Lambda) CreateFunction(input *CreateFunctionInput) (*FunctionConfigurat
 
 const opDeleteAlias = "DeleteAlias"
 
-// DeleteAliasRequest generates a request for the DeleteAlias operation.
+// DeleteAliasRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteAlias operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteAlias method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteAliasRequest method.
+//    req, resp := client.DeleteAliasRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) DeleteAliasRequest(input *DeleteAliasInput) (req *request.Request, output *DeleteAliasOutput) {
 	op := &request.Operation{
 		Name:       opDeleteAlias,
@@ -184,8 +299,8 @@ func (c *Lambda) DeleteAliasRequest(input *DeleteAliasInput) (req *request.Reque
 	return
 }
 
-// Deletes specified Lambda function alias. For more information, see Introduction
-// to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-v2-intro-aliases.html)
+// Deletes the specified Lambda function alias. For more information, see Introduction
+// to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/aliases-intro.html).
 //
 // This requires permission for the lambda:DeleteAlias action.
 func (c *Lambda) DeleteAlias(input *DeleteAliasInput) (*DeleteAliasOutput, error) {
@@ -196,7 +311,28 @@ func (c *Lambda) DeleteAlias(input *DeleteAliasInput) (*DeleteAliasOutput, error
 
 const opDeleteEventSourceMapping = "DeleteEventSourceMapping"
 
-// DeleteEventSourceMappingRequest generates a request for the DeleteEventSourceMapping operation.
+// DeleteEventSourceMappingRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteEventSourceMapping operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteEventSourceMapping method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteEventSourceMappingRequest method.
+//    req, resp := client.DeleteEventSourceMappingRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) DeleteEventSourceMappingRequest(input *DeleteEventSourceMappingInput) (req *request.Request, output *EventSourceMappingConfiguration) {
 	op := &request.Operation{
 		Name:       opDeleteEventSourceMapping,
@@ -227,7 +363,28 @@ func (c *Lambda) DeleteEventSourceMapping(input *DeleteEventSourceMappingInput) 
 
 const opDeleteFunction = "DeleteFunction"
 
-// DeleteFunctionRequest generates a request for the DeleteFunction operation.
+// DeleteFunctionRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteFunction operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteFunction method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteFunctionRequest method.
+//    req, resp := client.DeleteFunctionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) DeleteFunctionRequest(input *DeleteFunctionInput) (req *request.Request, output *DeleteFunctionOutput) {
 	op := &request.Operation{
 		Name:       opDeleteFunction,
@@ -249,14 +406,15 @@ func (c *Lambda) DeleteFunctionRequest(input *DeleteFunctionInput) (req *request
 
 // Deletes the specified Lambda function code and configuration.
 //
-// If you don't specify a function version, AWS Lambda will delete the function,
+// If you are using the versioning feature and you don't specify a function
+// version in your DeleteFunction request, AWS Lambda will delete the function,
 // including all its versions, and any aliases pointing to the function versions.
+// To delete a specific function version, you must provide the function version
+// via the Qualifier parameter. For information about function versioning, see
+// AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // When you delete a function the associated resource policy is also deleted.
 // You will need to delete the event source mappings explicitly.
-//
-// For information about function versioning, see AWS Lambda Function Versioning
-// and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases-v2.html).
 //
 // This operation requires permission for the lambda:DeleteFunction action.
 func (c *Lambda) DeleteFunction(input *DeleteFunctionInput) (*DeleteFunctionOutput, error) {
@@ -267,7 +425,28 @@ func (c *Lambda) DeleteFunction(input *DeleteFunctionInput) (*DeleteFunctionOutp
 
 const opGetAlias = "GetAlias"
 
-// GetAliasRequest generates a request for the GetAlias operation.
+// GetAliasRequest generates a "aws/request.Request" representing the
+// client's request for the GetAlias operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetAlias method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetAliasRequest method.
+//    req, resp := client.GetAliasRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) GetAliasRequest(input *GetAliasInput) (req *request.Request, output *AliasConfiguration) {
 	op := &request.Operation{
 		Name:       opGetAlias,
@@ -287,7 +466,7 @@ func (c *Lambda) GetAliasRequest(input *GetAliasInput) (req *request.Request, ou
 
 // Returns the specified alias information such as the alias ARN, description,
 // and function version it is pointing to. For more information, see Introduction
-// to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-v2-intro-aliases.html)
+// to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/aliases-intro.html).
 //
 // This requires permission for the lambda:GetAlias action.
 func (c *Lambda) GetAlias(input *GetAliasInput) (*AliasConfiguration, error) {
@@ -298,7 +477,28 @@ func (c *Lambda) GetAlias(input *GetAliasInput) (*AliasConfiguration, error) {
 
 const opGetEventSourceMapping = "GetEventSourceMapping"
 
-// GetEventSourceMappingRequest generates a request for the GetEventSourceMapping operation.
+// GetEventSourceMappingRequest generates a "aws/request.Request" representing the
+// client's request for the GetEventSourceMapping operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetEventSourceMapping method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetEventSourceMappingRequest method.
+//    req, resp := client.GetEventSourceMappingRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) GetEventSourceMappingRequest(input *GetEventSourceMappingInput) (req *request.Request, output *EventSourceMappingConfiguration) {
 	op := &request.Operation{
 		Name:       opGetEventSourceMapping,
@@ -329,7 +529,28 @@ func (c *Lambda) GetEventSourceMapping(input *GetEventSourceMappingInput) (*Even
 
 const opGetFunction = "GetFunction"
 
-// GetFunctionRequest generates a request for the GetFunction operation.
+// GetFunctionRequest generates a "aws/request.Request" representing the
+// client's request for the GetFunction operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetFunction method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetFunctionRequest method.
+//    req, resp := client.GetFunctionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) GetFunctionRequest(input *GetFunctionInput) (req *request.Request, output *GetFunctionOutput) {
 	op := &request.Operation{
 		Name:       opGetFunction,
@@ -357,7 +578,7 @@ func (c *Lambda) GetFunctionRequest(input *GetFunctionInput) (req *request.Reque
 // version for which you want this information. If you don't specify this parameter,
 // the API uses unqualified function ARN which return information about the
 // $LATEST version of the Lambda function. For more information, see AWS Lambda
-// Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases-v2.html).
+// Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // This operation requires permission for the lambda:GetFunction action.
 func (c *Lambda) GetFunction(input *GetFunctionInput) (*GetFunctionOutput, error) {
@@ -368,7 +589,28 @@ func (c *Lambda) GetFunction(input *GetFunctionInput) (*GetFunctionOutput, error
 
 const opGetFunctionConfiguration = "GetFunctionConfiguration"
 
-// GetFunctionConfigurationRequest generates a request for the GetFunctionConfiguration operation.
+// GetFunctionConfigurationRequest generates a "aws/request.Request" representing the
+// client's request for the GetFunctionConfiguration operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetFunctionConfiguration method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetFunctionConfigurationRequest method.
+//    req, resp := client.GetFunctionConfigurationRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) GetFunctionConfigurationRequest(input *GetFunctionConfigurationInput) (req *request.Request, output *FunctionConfiguration) {
 	op := &request.Operation{
 		Name:       opGetFunctionConfiguration,
@@ -390,10 +632,12 @@ func (c *Lambda) GetFunctionConfigurationRequest(input *GetFunctionConfiguration
 // information you provided as parameters when uploading the function by using
 // CreateFunction.
 //
-// You can use the optional Qualifier parameter to retrieve configuration information
-// for a specific Lambda function version. If you don't provide it, the API
-// returns information about the $LATEST version of the function. For more information
-// about versioning, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases-v2.html).
+// If you are using the versioning feature, you can retrieve this information
+// for a specific function version by using the optional Qualifier parameter
+// and specifying the function version or alias that points to it. If you don't
+// provide it, the API returns information about the $LATEST version of the
+// function. For more information about versioning, see AWS Lambda Function
+// Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // This operation requires permission for the lambda:GetFunctionConfiguration
 // operation.
@@ -405,7 +649,28 @@ func (c *Lambda) GetFunctionConfiguration(input *GetFunctionConfigurationInput) 
 
 const opGetPolicy = "GetPolicy"
 
-// GetPolicyRequest generates a request for the GetPolicy operation.
+// GetPolicyRequest generates a "aws/request.Request" representing the
+// client's request for the GetPolicy operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetPolicy method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetPolicyRequest method.
+//    req, resp := client.GetPolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) GetPolicyRequest(input *GetPolicyInput) (req *request.Request, output *GetPolicyOutput) {
 	op := &request.Operation{
 		Name:       opGetPolicy,
@@ -423,10 +688,14 @@ func (c *Lambda) GetPolicyRequest(input *GetPolicyInput) (req *request.Request, 
 	return
 }
 
-// Returns the resource policy, containing a list of permissions that apply
-// to a specific to an ARN that you specify via the Qualifier paramter.
+// Returns the resource policy associated with the specified Lambda function.
 //
-// For informration about adding permissions, see AddPermission.
+//  If you are using the versioning feature, you can get the resource policy
+// associated with the specific Lambda function version or alias by specifying
+// the version or alias name using the Qualifier parameter. For more information
+// about versioning, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+//
+// For information about adding permissions, see AddPermission.
 //
 // You need permission for the lambda:GetPolicy action.
 func (c *Lambda) GetPolicy(input *GetPolicyInput) (*GetPolicyOutput, error) {
@@ -437,7 +706,28 @@ func (c *Lambda) GetPolicy(input *GetPolicyInput) (*GetPolicyOutput, error) {
 
 const opInvoke = "Invoke"
 
-// InvokeRequest generates a request for the Invoke operation.
+// InvokeRequest generates a "aws/request.Request" representing the
+// client's request for the Invoke operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the Invoke method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InvokeRequest method.
+//    req, resp := client.InvokeRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) InvokeRequest(input *InvokeInput) (req *request.Request, output *InvokeOutput) {
 	op := &request.Operation{
 		Name:       opInvoke,
@@ -455,20 +745,15 @@ func (c *Lambda) InvokeRequest(input *InvokeInput) (req *request.Request, output
 	return
 }
 
-// Invokes a specific Lambda function version.
+// Invokes a specific Lambda function.
 //
-// If you don't provide the Qualifier parameter, it uses the unqualified function
-// ARN which results in invocation of the $LATEST version of the Lambda function
-// (when you create a Lambda function, the $LATEST is the version). The AWS
-// Lambda versioning and aliases feature allows you to publish multiple versions
-// of a Lambda function and also create aliases for each function version. So
-// each your Lambda function version can be invoked using multiple ARNs. For
-// more information, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases-v2.html).
-// Using the Qualifier parameter, you can specify a function version or alias
-// name to invoke specific function version. If you specify function version,
-// the API uses the qualified function ARN to invoke a specific function version.
-// If you specify alias name, the API uses the alias ARN to invoke the function
-// version to which the alias points.
+// If you are using the versioning feature, you can invoke the specific function
+// version by providing function version or alias name that is pointing to the
+// function version using the Qualifier parameter in the request. If you don't
+// provide the Qualifier parameter, the $LATEST version of the Lambda function
+// is invoked. Invocations occur at least once in response to an event and functions
+// must be idempotent to handle this. For information about the versioning feature,
+// see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // This operation requires permission for the lambda:InvokeFunction action.
 func (c *Lambda) Invoke(input *InvokeInput) (*InvokeOutput, error) {
@@ -479,7 +764,28 @@ func (c *Lambda) Invoke(input *InvokeInput) (*InvokeOutput, error) {
 
 const opInvokeAsync = "InvokeAsync"
 
-// InvokeAsyncRequest generates a request for the InvokeAsync operation.
+// InvokeAsyncRequest generates a "aws/request.Request" representing the
+// client's request for the InvokeAsync operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the InvokeAsync method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the InvokeAsyncRequest method.
+//    req, resp := client.InvokeAsyncRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) InvokeAsyncRequest(input *InvokeAsyncInput) (req *request.Request, output *InvokeAsyncOutput) {
 	if c.Client.Config.Logger != nil {
 		c.Client.Config.Logger.Log("This operation, InvokeAsync, has been deprecated")
@@ -500,10 +806,11 @@ func (c *Lambda) InvokeAsyncRequest(input *InvokeAsyncInput) (req *request.Reque
 	return
 }
 
-// This API is deprecated. We recommend you use Invoke API (see Invoke). Submits
-// an invocation request to AWS Lambda. Upon receiving the request, Lambda executes
-// the specified function asynchronously. To see the logs generated by the Lambda
-// function execution, see the CloudWatch logs console.
+// This API is deprecated. We recommend you use Invoke API (see Invoke).
+//
+//  Submits an invocation request to AWS Lambda. Upon receiving the request,
+// Lambda executes the specified function asynchronously. To see the logs generated
+// by the Lambda function execution, see the CloudWatch Logs console.
 //
 // This operation requires permission for the lambda:InvokeFunction action.
 func (c *Lambda) InvokeAsync(input *InvokeAsyncInput) (*InvokeAsyncOutput, error) {
@@ -514,7 +821,28 @@ func (c *Lambda) InvokeAsync(input *InvokeAsyncInput) (*InvokeAsyncOutput, error
 
 const opListAliases = "ListAliases"
 
-// ListAliasesRequest generates a request for the ListAliases operation.
+// ListAliasesRequest generates a "aws/request.Request" representing the
+// client's request for the ListAliases operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListAliases method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListAliasesRequest method.
+//    req, resp := client.ListAliasesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) ListAliasesRequest(input *ListAliasesInput) (req *request.Request, output *ListAliasesOutput) {
 	op := &request.Operation{
 		Name:       opListAliases,
@@ -535,7 +863,7 @@ func (c *Lambda) ListAliasesRequest(input *ListAliasesInput) (req *request.Reque
 // Returns list of aliases created for a Lambda function. For each alias, the
 // response includes information such as the alias ARN, description, alias name,
 // and the function version to which it points. For more information, see Introduction
-// to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-v2-intro-aliases.html)
+// to AWS Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/aliases-intro.html).
 //
 // This requires permission for the lambda:ListAliases action.
 func (c *Lambda) ListAliases(input *ListAliasesInput) (*ListAliasesOutput, error) {
@@ -546,7 +874,28 @@ func (c *Lambda) ListAliases(input *ListAliasesInput) (*ListAliasesOutput, error
 
 const opListEventSourceMappings = "ListEventSourceMappings"
 
-// ListEventSourceMappingsRequest generates a request for the ListEventSourceMappings operation.
+// ListEventSourceMappingsRequest generates a "aws/request.Request" representing the
+// client's request for the ListEventSourceMappings operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListEventSourceMappings method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListEventSourceMappingsRequest method.
+//    req, resp := client.ListEventSourceMappingsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) ListEventSourceMappingsRequest(input *ListEventSourceMappingsInput) (req *request.Request, output *ListEventSourceMappingsOutput) {
 	op := &request.Operation{
 		Name:       opListEventSourceMappings,
@@ -571,11 +920,15 @@ func (c *Lambda) ListEventSourceMappingsRequest(input *ListEventSourceMappingsIn
 }
 
 // Returns a list of event source mappings you created using the CreateEventSourceMapping
-// (see CreateEventSourceMapping), where you identify a stream as an event source.
-// This list does not include Amazon S3 event sources.
+// (see CreateEventSourceMapping).
 //
 // For each mapping, the API returns configuration information. You can optionally
 // specify filters to retrieve specific event source mappings.
+//
+// If you are using the versioning feature, you can get list of event source
+// mappings for a specific Lambda function version or an alias as described
+// in the FunctionName parameter. For information about the versioning feature,
+// see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // This operation requires permission for the lambda:ListEventSourceMappings
 // action.
@@ -585,6 +938,23 @@ func (c *Lambda) ListEventSourceMappings(input *ListEventSourceMappingsInput) (*
 	return out, err
 }
 
+// ListEventSourceMappingsPages iterates over the pages of a ListEventSourceMappings operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListEventSourceMappings method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListEventSourceMappings operation.
+//    pageNum := 0
+//    err := client.ListEventSourceMappingsPages(params,
+//        func(page *ListEventSourceMappingsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *Lambda) ListEventSourceMappingsPages(input *ListEventSourceMappingsInput, fn func(p *ListEventSourceMappingsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListEventSourceMappingsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -595,7 +965,28 @@ func (c *Lambda) ListEventSourceMappingsPages(input *ListEventSourceMappingsInpu
 
 const opListFunctions = "ListFunctions"
 
-// ListFunctionsRequest generates a request for the ListFunctions operation.
+// ListFunctionsRequest generates a "aws/request.Request" representing the
+// client's request for the ListFunctions operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListFunctions method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListFunctionsRequest method.
+//    req, resp := client.ListFunctionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) ListFunctionsRequest(input *ListFunctionsInput) (req *request.Request, output *ListFunctionsOutput) {
 	op := &request.Operation{
 		Name:       opListFunctions,
@@ -624,12 +1015,33 @@ func (c *Lambda) ListFunctionsRequest(input *ListFunctionsInput) (req *request.R
 // to retrieve the code for your function.
 //
 // This operation requires permission for the lambda:ListFunctions action.
+//
+// If you are using versioning feature, the response returns list of $LATEST
+// versions of your functions. For information about the versioning feature,
+// see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 func (c *Lambda) ListFunctions(input *ListFunctionsInput) (*ListFunctionsOutput, error) {
 	req, out := c.ListFunctionsRequest(input)
 	err := req.Send()
 	return out, err
 }
 
+// ListFunctionsPages iterates over the pages of a ListFunctions operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListFunctions method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListFunctions operation.
+//    pageNum := 0
+//    err := client.ListFunctionsPages(params,
+//        func(page *ListFunctionsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *Lambda) ListFunctionsPages(input *ListFunctionsInput, fn func(p *ListFunctionsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListFunctionsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -640,7 +1052,28 @@ func (c *Lambda) ListFunctionsPages(input *ListFunctionsInput, fn func(p *ListFu
 
 const opListVersionsByFunction = "ListVersionsByFunction"
 
-// ListVersionsByFunctionRequest generates a request for the ListVersionsByFunction operation.
+// ListVersionsByFunctionRequest generates a "aws/request.Request" representing the
+// client's request for the ListVersionsByFunction operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListVersionsByFunction method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListVersionsByFunctionRequest method.
+//    req, resp := client.ListVersionsByFunctionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) ListVersionsByFunctionRequest(input *ListVersionsByFunctionInput) (req *request.Request, output *ListVersionsByFunctionOutput) {
 	op := &request.Operation{
 		Name:       opListVersionsByFunction,
@@ -658,7 +1091,8 @@ func (c *Lambda) ListVersionsByFunctionRequest(input *ListVersionsByFunctionInpu
 	return
 }
 
-// List all versions of a function.
+// List all versions of a function. For information about the versioning feature,
+// see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 func (c *Lambda) ListVersionsByFunction(input *ListVersionsByFunctionInput) (*ListVersionsByFunctionOutput, error) {
 	req, out := c.ListVersionsByFunctionRequest(input)
 	err := req.Send()
@@ -667,7 +1101,28 @@ func (c *Lambda) ListVersionsByFunction(input *ListVersionsByFunctionInput) (*Li
 
 const opPublishVersion = "PublishVersion"
 
-// PublishVersionRequest generates a request for the PublishVersion operation.
+// PublishVersionRequest generates a "aws/request.Request" representing the
+// client's request for the PublishVersion operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the PublishVersion method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the PublishVersionRequest method.
+//    req, resp := client.PublishVersionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) PublishVersionRequest(input *PublishVersionInput) (req *request.Request, output *FunctionConfiguration) {
 	op := &request.Operation{
 		Name:       opPublishVersion,
@@ -685,11 +1140,11 @@ func (c *Lambda) PublishVersionRequest(input *PublishVersionInput) (req *request
 	return
 }
 
-// Publishes a version of your function from the current snapshot of HEAD. That
-// is, AWS Lambda takes a snapshot of the function code and configuration information
-// from HEAD and publishes a new version. The code and handler of this specific
-// Lambda function version cannot be modified after publication, but you can
-// modify the configuration information.
+// Publishes a version of your function from the current snapshot of $LATEST.
+// That is, AWS Lambda takes a snapshot of the function code and configuration
+// information from $LATEST and publishes a new version. The code and configuration
+// cannot be modified after publication. For information about the versioning
+// feature, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 func (c *Lambda) PublishVersion(input *PublishVersionInput) (*FunctionConfiguration, error) {
 	req, out := c.PublishVersionRequest(input)
 	err := req.Send()
@@ -698,7 +1153,28 @@ func (c *Lambda) PublishVersion(input *PublishVersionInput) (*FunctionConfigurat
 
 const opRemovePermission = "RemovePermission"
 
-// RemovePermissionRequest generates a request for the RemovePermission operation.
+// RemovePermissionRequest generates a "aws/request.Request" representing the
+// client's request for the RemovePermission operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RemovePermission method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RemovePermissionRequest method.
+//    req, resp := client.RemovePermissionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) RemovePermissionRequest(input *RemovePermissionInput) (req *request.Request, output *RemovePermissionOutput) {
 	op := &request.Operation{
 		Name:       opRemovePermission,
@@ -720,8 +1196,12 @@ func (c *Lambda) RemovePermissionRequest(input *RemovePermissionInput) (req *req
 
 // You can remove individual permissions from an resource policy associated
 // with a Lambda function by providing a statement ID that you provided when
-// you addded the permission. The API removes corresponding permission that
-// is associated with the specific ARN identified by the Qualifier parameter.
+// you added the permission.
+//
+// If you are using versioning, the permissions you remove are specific to
+// the Lambda function version or alias you specify in the AddPermission request
+// via the Qualifier parameter. For more information about versioning, see AWS
+// Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
 //
 // Note that removal of a permission will cause an active event source to lose
 // permission to the function.
@@ -735,7 +1215,28 @@ func (c *Lambda) RemovePermission(input *RemovePermissionInput) (*RemovePermissi
 
 const opUpdateAlias = "UpdateAlias"
 
-// UpdateAliasRequest generates a request for the UpdateAlias operation.
+// UpdateAliasRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateAlias operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the UpdateAlias method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the UpdateAliasRequest method.
+//    req, resp := client.UpdateAliasRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) UpdateAliasRequest(input *UpdateAliasInput) (req *request.Request, output *AliasConfiguration) {
 	op := &request.Operation{
 		Name:       opUpdateAlias,
@@ -753,9 +1254,9 @@ func (c *Lambda) UpdateAliasRequest(input *UpdateAliasInput) (req *request.Reque
 	return
 }
 
-// Using this API you can update function version to which the alias points
-// to and alias description. For more information, see Introduction to AWS Lambda
-// Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-v2-intro-aliases.html)
+// Using this API you can update the function version to which the alias points
+// and the alias description. For more information, see Introduction to AWS
+// Lambda Aliases (http://docs.aws.amazon.com/lambda/latest/dg/aliases-intro.html).
 //
 // This requires permission for the lambda:UpdateAlias action.
 func (c *Lambda) UpdateAlias(input *UpdateAliasInput) (*AliasConfiguration, error) {
@@ -766,7 +1267,28 @@ func (c *Lambda) UpdateAlias(input *UpdateAliasInput) (*AliasConfiguration, erro
 
 const opUpdateEventSourceMapping = "UpdateEventSourceMapping"
 
-// UpdateEventSourceMappingRequest generates a request for the UpdateEventSourceMapping operation.
+// UpdateEventSourceMappingRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateEventSourceMapping operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the UpdateEventSourceMapping method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the UpdateEventSourceMappingRequest method.
+//    req, resp := client.UpdateEventSourceMappingRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) UpdateEventSourceMappingRequest(input *UpdateEventSourceMappingInput) (req *request.Request, output *EventSourceMappingConfiguration) {
 	op := &request.Operation{
 		Name:       opUpdateEventSourceMapping,
@@ -789,6 +1311,16 @@ func (c *Lambda) UpdateEventSourceMappingRequest(input *UpdateEventSourceMapping
 // stream. You can change which function will receive the stream records, but
 // to change the stream itself, you must create a new mapping.
 //
+// If you are using the versioning feature, you can update the event source
+// mapping to map to a specific Lambda function version or alias as described
+// in the FunctionName parameter. For information about the versioning feature,
+// see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+//
+// If you disable the event source mapping, AWS Lambda stops polling. If you
+// enable again, it will resume polling from the time it had stopped polling,
+// so you don't lose processing of any records. However, if you delete event
+// source mapping and create it again, it will reset.
+//
 // This operation requires permission for the lambda:UpdateEventSourceMapping
 // action.
 func (c *Lambda) UpdateEventSourceMapping(input *UpdateEventSourceMappingInput) (*EventSourceMappingConfiguration, error) {
@@ -799,7 +1331,28 @@ func (c *Lambda) UpdateEventSourceMapping(input *UpdateEventSourceMappingInput) 
 
 const opUpdateFunctionCode = "UpdateFunctionCode"
 
-// UpdateFunctionCodeRequest generates a request for the UpdateFunctionCode operation.
+// UpdateFunctionCodeRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateFunctionCode operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the UpdateFunctionCode method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the UpdateFunctionCodeRequest method.
+//    req, resp := client.UpdateFunctionCodeRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) UpdateFunctionCodeRequest(input *UpdateFunctionCodeInput) (req *request.Request, output *FunctionConfiguration) {
 	op := &request.Operation{
 		Name:       opUpdateFunctionCode,
@@ -821,6 +1374,10 @@ func (c *Lambda) UpdateFunctionCodeRequest(input *UpdateFunctionCodeInput) (req 
 // be used on an existing Lambda function and cannot be used to update the function
 // configuration.
 //
+// If you are using the versioning feature, note this API will always update
+// the $LATEST version of your Lambda function. For information about the versioning
+// feature, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+//
 // This operation requires permission for the lambda:UpdateFunctionCode action.
 func (c *Lambda) UpdateFunctionCode(input *UpdateFunctionCodeInput) (*FunctionConfiguration, error) {
 	req, out := c.UpdateFunctionCodeRequest(input)
@@ -830,7 +1387,28 @@ func (c *Lambda) UpdateFunctionCode(input *UpdateFunctionCodeInput) (*FunctionCo
 
 const opUpdateFunctionConfiguration = "UpdateFunctionConfiguration"
 
-// UpdateFunctionConfigurationRequest generates a request for the UpdateFunctionConfiguration operation.
+// UpdateFunctionConfigurationRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateFunctionConfiguration operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the UpdateFunctionConfiguration method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the UpdateFunctionConfigurationRequest method.
+//    req, resp := client.UpdateFunctionConfigurationRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Lambda) UpdateFunctionConfigurationRequest(input *UpdateFunctionConfigurationInput) (req *request.Request, output *FunctionConfiguration) {
 	op := &request.Operation{
 		Name:       opUpdateFunctionConfiguration,
@@ -853,6 +1431,10 @@ func (c *Lambda) UpdateFunctionConfigurationRequest(input *UpdateFunctionConfigu
 // you want to change. This operation must only be used on an existing Lambda
 // function and cannot be used to update the function's code.
 //
+// If you are using the versioning feature, note this API will always update
+// the $LATEST version of your Lambda function. For information about the versioning
+// feature, see AWS Lambda Function Versioning and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+//
 // This operation requires permission for the lambda:UpdateFunctionConfiguration
 // action.
 func (c *Lambda) UpdateFunctionConfiguration(input *UpdateFunctionConfigurationInput) (*FunctionConfiguration, error) {
@@ -865,61 +1447,65 @@ type AddPermissionInput struct {
 	_ struct{} `type:"structure"`
 
 	// The AWS Lambda action you want to allow in this statement. Each Lambda action
-	// is a string starting with "lambda:" followed by the API name (see Operations).
-	// For example, "lambda:CreateFunction". You can use wildcard ("lambda:*") to
-	// grant permission for all AWS Lambda actions.
+	// is a string starting with lambda: followed by the API name . For example,
+	// lambda:CreateFunction. You can use wildcard (lambda:*) to grant permission
+	// for all AWS Lambda actions.
 	Action *string `type:"string" required:"true"`
+
+	// A unique token that must be supplied by the principal invoking the function.
+	// This is currently only used for Alexa Smart Home functions.
+	EventSourceToken *string `type:"string"`
 
 	// Name of the Lambda function whose resource policy you are updating by adding
 	// a new permission.
 	//
-	//  You can specify an unqualified function name (for example, "Thumbnail")
-	// or you can specify Amazon Resource Name (ARN) of the function (for example,
-	// "arn:aws:lambda:us-west-2:account-id:function:ThumbNail"). AWS Lambda also
-	// allows you to specify only the account ID qualifier (for example, "account-id:Thumbnail").
+	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	// AWS Lambda also allows you to specify partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// The principal who is getting this permission. It can be Amazon S3 service
-	// Principal ("s3.amazonaws.com") if you want Amazon S3 to invoke the function,
+	// Principal (s3.amazonaws.com) if you want Amazon S3 to invoke the function,
 	// an AWS account ID if you are granting cross-account permission, or any valid
-	// AWS service principal such as "sns.amazonaws.com". For example, you might
-	// want to allow a custom application in another AWS account to push events
-	// to AWS Lambda by invoking your function.
+	// AWS service principal such as sns.amazonaws.com. For example, you might want
+	// to allow a custom application in another AWS account to push events to AWS
+	// Lambda by invoking your function.
 	Principal *string `type:"string" required:"true"`
 
-	// You can specify this optional query parameter to specify function version
-	// or alias name. The permission will then apply to the specific qualified ARN.
-	// For example, if you specify function version 2 as the qualifier, then permission
-	// applies only when request is made using qualified function ARN:
+	// You can use this optional query parameter to describe a qualified ARN using
+	// a function version or an alias name. The permission will then apply to the
+	// specific qualified ARN. For example, if you specify function version 2 as
+	// the qualifier, then permission applies only when request is made using qualified
+	// function ARN:
 	//
-	// arn:aws:lambda:aws-region:acct-id:function:function-name:2
+	//  arn:aws:lambda:aws-region:acct-id:function:function-name:2
 	//
-	// If you specify alias name, for example "PROD", then the permission is valid
+	// If you specify an alias name, for example PROD, then the permission is valid
 	// only for requests made using the alias ARN:
 	//
-	// arn:aws:lambda:aws-region:acct-id:function:function-name:PROD
+	//  arn:aws:lambda:aws-region:acct-id:function:function-name:PROD
 	//
 	// If the qualifier is not specified, the permission is valid only when requests
 	// is made using unqualified function ARN.
 	//
-	// arn:aws:lambda:aws-region:acct-id:function:function-name
+	//  arn:aws:lambda:aws-region:acct-id:function:function-name
 	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 
-	// The AWS account ID (without a hyphen) of the source owner. For example, if
-	// the SourceArn identifies a bucket, then this is the bucket owner's account
-	// ID. You can use this additional condition to ensure the bucket you specify
-	// is owned by a specific account (it is possible the bucket owner deleted the
-	// bucket and some other AWS account created the bucket). You can also use this
-	// condition to specify all sources (that is, you don't specify the SourceArn)
-	// owned by a specific account.
+	// This parameter is used for S3 and SES only. The AWS account ID (without a
+	// hyphen) of the source owner. For example, if the SourceArn identifies a bucket,
+	// then this is the bucket owner's account ID. You can use this additional condition
+	// to ensure the bucket you specify is owned by a specific account (it is possible
+	// the bucket owner deleted the bucket and some other AWS account created the
+	// bucket). You can also use this condition to specify all sources (that is,
+	// you don't specify the SourceArn) owned by a specific account.
 	SourceAccount *string `type:"string"`
 
 	// This is optional; however, when granting Amazon S3 permission to invoke your
-	// function, you should specify this field with the bucket Amazon Resource Name
-	// (ARN) as its value. This ensures that only events generated from the specified
-	// bucket can invoke the function.
+	// function, you should specify this field with the Amazon Resource Name (ARN)
+	// as its value. This ensures that only events generated from the specified
+	// source can invoke the function.
 	//
 	// If you add a permission for the Amazon S3 principal without providing the
 	// source ARN, any AWS account that creates a mapping to your function ARN can
@@ -940,11 +1526,43 @@ func (s AddPermissionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AddPermissionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AddPermissionInput"}
+	if s.Action == nil {
+		invalidParams.Add(request.NewErrParamRequired("Action"))
+	}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.Principal == nil {
+		invalidParams.Add(request.NewErrParamRequired("Principal"))
+	}
+	if s.Qualifier != nil && len(*s.Qualifier) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Qualifier", 1))
+	}
+	if s.StatementId == nil {
+		invalidParams.Add(request.NewErrParamRequired("StatementId"))
+	}
+	if s.StatementId != nil && len(*s.StatementId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("StatementId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type AddPermissionOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The permission statement you specified in the request. The response returns
-	// the same as a string using "\" as an escape character in the JSON.
+	// the same as a string using a backslash ("\") as an escape character in the
+	// JSON.
 	Statement *string `type:"string"`
 }
 
@@ -962,9 +1580,9 @@ func (s AddPermissionOutput) GoString() string {
 type AliasConfiguration struct {
 	_ struct{} `type:"structure"`
 
-	// Lambda function ARN that is qualified using alias name as the suffix. For
-	// example, if you create an alias "BETA" pointing to a helloworld function
-	// version, the ARN is arn:aws:lambda:aws-regions:acct-id:function:helloworld:BETA.
+	// Lambda function ARN that is qualified using the alias name as the suffix.
+	// For example, if you create an alias called BETA that points to a helloworld
+	// function version, the ARN is arn:aws:lambda:aws-regions:acct-id:function:helloworld:BETA.
 	AliasArn *string `type:"string"`
 
 	// Alias description.
@@ -999,7 +1617,7 @@ type CreateAliasInput struct {
 	// Lambda function version for which you are creating the alias.
 	FunctionVersion *string `min:"1" type:"string" required:"true"`
 
-	// Name for the alias your creating.
+	// Name for the alias you are creating.
 	Name *string `min:"1" type:"string" required:"true"`
 }
 
@@ -1011,6 +1629,34 @@ func (s CreateAliasInput) String() string {
 // GoString returns the string representation
 func (s CreateAliasInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateAliasInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateAliasInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.FunctionVersion == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionVersion"))
+	}
+	if s.FunctionVersion != nil && len(*s.FunctionVersion) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionVersion", 1))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type CreateEventSourceMappingInput struct {
@@ -1034,12 +1680,19 @@ type CreateEventSourceMappingInput struct {
 
 	// The Lambda function to invoke when AWS Lambda detects an event on the stream.
 	//
-	//  You can specify an unqualified function name (for example, "Thumbnail")
-	// or you can specify Amazon Resource Name (ARN) of the function (for example,
-	// "arn:aws:lambda:us-west-2:account-id:function:ThumbNail"). AWS Lambda also
-	// allows you to specify only the account ID qualifier (for example, "account-id:Thumbnail").
-	// Note that the length constraint applies only to the ARN. If you specify only
-	// the function name, it is limited to 64 character in length.
+	//  You can specify the function name (for example, Thumbnail) or you can specify
+	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	//
+	//  If you are using versioning, you can also provide a qualified function
+	// ARN (ARN that is qualified with function version or alias name as suffix).
+	// For more information about versioning, see AWS Lambda Function Versioning
+	// and Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html)
+	//
+	// AWS Lambda also allows you to specify only the function name with the account
+	// ID qualifier (for example, account-id:Thumbnail).
+	//
+	// Note that the length constraint applies only to the ARN. If you specify
+	// only the function name, it is limited to 64 character in length.
 	FunctionName *string `min:"1" type:"string" required:"true"`
 
 	// The position in the stream where AWS Lambda should start reading. For more
@@ -1058,6 +1711,31 @@ func (s CreateEventSourceMappingInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateEventSourceMappingInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateEventSourceMappingInput"}
+	if s.BatchSize != nil && *s.BatchSize < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("BatchSize", 1))
+	}
+	if s.EventSourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("EventSourceArn"))
+	}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.StartingPosition == nil {
+		invalidParams.Add(request.NewErrParamRequired("StartingPosition"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type CreateFunctionInput struct {
 	_ struct{} `type:"structure"`
 
@@ -1068,15 +1746,9 @@ type CreateFunctionInput struct {
 	// Assign a meaningful description as you see fit.
 	Description *string `type:"string"`
 
-	// The name you want to assign to the function you are uploading. You can specify
-	// an unqualified function name (for example, "Thumbnail") or you can specify
-	// Amazon Resource Name (ARN) of the function (for example, "arn:aws:lambda:us-west-2:account-id:function:ThumbNail").
-	// AWS Lambda also allows you to specify only the account ID qualifier (for
-	// example, "account-id:Thumbnail"). Note that the length constraint applies
-	// only to the ARN. If you specify only the function name, it is limited to
-	// 64 character in length. The function names appear in the console and are
-	// returned in the ListFunctions API. Function names are used to specify functions
-	// to other AWS Lambda APIs, such as Invoke.
+	// The name you want to assign to the function you are uploading. The function
+	// names appear in the console and are returned in the ListFunctions API. Function
+	// names are used to specify functions to other AWS Lambda APIs, such as Invoke.
 	FunctionName *string `min:"1" type:"string" required:"true"`
 
 	// The function within your code that Lambda calls to begin execution. For Node.js,
@@ -1099,17 +1771,25 @@ type CreateFunctionInput struct {
 
 	// The Amazon Resource Name (ARN) of the IAM role that Lambda assumes when it
 	// executes your function to access any other Amazon Web Services (AWS) resources.
-	// For more information, see AWS Lambda: How it Works (http://docs.aws.amazon.com/lambda/latest/dg/lambda-introduction.html)
+	// For more information, see AWS Lambda: How it Works (http://docs.aws.amazon.com/lambda/latest/dg/lambda-introduction.html).
 	Role *string `type:"string" required:"true"`
 
-	// The runtime environment for the Lambda function you are uploading. Currently,
-	// Lambda supports "java" and "nodejs" as the runtime.
+	// The runtime environment for the Lambda function you are uploading.
+	//
+	// To use the Node.js runtime v4.3, set the value to "nodejs4.3". To use earlier
+	// runtime (v0.10.42), set the value to "nodejs".
 	Runtime *string `type:"string" required:"true" enum:"Runtime"`
 
 	// The function execution time at which Lambda should terminate the function.
 	// Because the execution time has cost implications, we recommend you set this
 	// value based on your expected execution time. The default is 3 seconds.
 	Timeout *int64 `min:"1" type:"integer"`
+
+	// If your Lambda function accesses resources in a VPC, you provide this parameter
+	// identifying the list of security group IDs and subnet IDs. These must belong
+	// to the same VPC. You must provide at least one security group and one subnet
+	// ID.
+	VpcConfig *VpcConfig `type:"structure"`
 }
 
 // String returns the string representation
@@ -1122,10 +1802,50 @@ func (s CreateFunctionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateFunctionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateFunctionInput"}
+	if s.Code == nil {
+		invalidParams.Add(request.NewErrParamRequired("Code"))
+	}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.Handler == nil {
+		invalidParams.Add(request.NewErrParamRequired("Handler"))
+	}
+	if s.MemorySize != nil && *s.MemorySize < 128 {
+		invalidParams.Add(request.NewErrParamMinValue("MemorySize", 128))
+	}
+	if s.Role == nil {
+		invalidParams.Add(request.NewErrParamRequired("Role"))
+	}
+	if s.Runtime == nil {
+		invalidParams.Add(request.NewErrParamRequired("Runtime"))
+	}
+	if s.Timeout != nil && *s.Timeout < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("Timeout", 1))
+	}
+	if s.Code != nil {
+		if err := s.Code.Validate(); err != nil {
+			invalidParams.AddNested("Code", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type DeleteAliasInput struct {
 	_ struct{} `type:"structure"`
 
-	// The Lambda function name for which the alias is created.
+	// The Lambda function name for which the alias is created. Deleting an alias
+	// does not delete the function version to which it is pointing.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// Name of the alias to delete.
@@ -1140,6 +1860,28 @@ func (s DeleteAliasInput) String() string {
 // GoString returns the string representation
 func (s DeleteAliasInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteAliasInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteAliasInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type DeleteAliasOutput struct {
@@ -1173,17 +1915,32 @@ func (s DeleteEventSourceMappingInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteEventSourceMappingInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteEventSourceMappingInput"}
+	if s.UUID == nil {
+		invalidParams.Add(request.NewErrParamRequired("UUID"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type DeleteFunctionInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Lambda function to delete.
 	//
-	//  You can specify an unqualified function name (for example, "Thumbnail")
-	// or you can specify Amazon Resource Name (ARN) of the function (for example,
-	// "arn:aws:lambda:us-west-2:account-id:function:ThumbNail"). AWS Lambda also
-	// allows you to specify only the account ID qualifier (for example, "account-id:Thumbnail").
-	// Note that the length constraint applies only to the ARN. If you specify only
-	// the function name, it is limited to 64 character in length.
+	//  You can specify the function name (for example, Thumbnail) or you can specify
+	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	// If you are using versioning, you can also provide a qualified function ARN
+	// (ARN that is qualified with function version or alias name as suffix). AWS
+	// Lambda also allows you to specify only the function name with the account
+	// ID qualifier (for example, account-id:Thumbnail). Note that the length constraint
+	// applies only to the ARN. If you specify only the function name, it is limited
+	// to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// Using this optional parameter you can specify a function version (but not
@@ -1194,11 +1951,11 @@ type DeleteFunctionInput struct {
 	// as the value of this parameter. The $LATEST version can be deleted only when
 	// you want to delete all the function versions and aliases.
 	//
-	// You can only specify a function version and not alias name using this parameter.
+	// You can only specify a function version, not an alias name, using this parameter.
 	// You cannot delete a function version using its alias.
 	//
 	// If you don't specify this parameter, AWS Lambda will delete the function,
-	// including all its versions and aliases.
+	// including all of its versions and aliases.
 	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 }
 
@@ -1210,6 +1967,25 @@ func (s DeleteFunctionInput) String() string {
 // GoString returns the string representation
 func (s DeleteFunctionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteFunctionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteFunctionInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.Qualifier != nil && len(*s.Qualifier) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Qualifier", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type DeleteFunctionOutput struct {
@@ -1248,8 +2024,8 @@ type EventSourceMappingConfiguration struct {
 	// The result of the last AWS Lambda invocation of your Lambda function.
 	LastProcessingResult *string `type:"string"`
 
-	// The state of the event source mapping. It can be "Creating", "Enabled", "Disabled",
-	// "Enabling", "Disabling", "Updating", or "Deleting".
+	// The state of the event source mapping. It can be Creating, Enabled, Disabled,
+	// Enabling, Disabling, Updating, or Deleting.
 	State *string `type:"string"`
 
 	// The reason the event source mapping is in its current state. It is either
@@ -1285,9 +2061,14 @@ type FunctionCode struct {
 	// The Amazon S3 object (the deployment package) version you want to upload.
 	S3ObjectVersion *string `min:"1" type:"string"`
 
-	// A base64-encoded .zip file containing your deployment package. For more information
-	// about creating a .zip file, go to Execution Permissions (http://docs.aws.amazon.com/lambda/latest/dg/intro-permission-model.html#lambda-intro-execution-role.html)
+	// The contents of your zip file containing your deployment package. If you
+	// are using the web API directly, the contents of the zip file must be base64-encoded.
+	// If you are using the AWS SDKs or the AWS CLI, the SDKs or CLI will do the
+	// encoding for you. For more information about creating a .zip file, go to
+	// Execution Permissions (http://docs.aws.amazon.com/lambda/latest/dg/intro-permission-model.html#lambda-intro-execution-role.html)
 	// in the AWS Lambda Developer Guide.
+	//
+	// ZipFile is automatically base64 encoded/decoded by the SDK.
 	ZipFile []byte `type:"blob"`
 }
 
@@ -1299,6 +2080,25 @@ func (s FunctionCode) String() string {
 // GoString returns the string representation
 func (s FunctionCode) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *FunctionCode) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "FunctionCode"}
+	if s.S3Bucket != nil && len(*s.S3Bucket) < 3 {
+		invalidParams.Add(request.NewErrParamMinLen("S3Bucket", 3))
+	}
+	if s.S3Key != nil && len(*s.S3Key) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("S3Key", 1))
+	}
+	if s.S3ObjectVersion != nil && len(*s.S3ObjectVersion) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("S3ObjectVersion", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The object for the Lambda function location.
@@ -1345,7 +2145,7 @@ type FunctionConfiguration struct {
 	// The function Lambda calls to begin executing your function.
 	Handler *string `type:"string"`
 
-	// The timestamp of the last time you updated the function.
+	// The time stamp of the last time you updated the function.
 	LastModified *string `type:"string"`
 
 	// The memory size, in MB, you configured for the function. Must be a multiple
@@ -1357,6 +2157,9 @@ type FunctionConfiguration struct {
 	Role *string `type:"string"`
 
 	// The runtime environment for the Lambda function.
+	//
+	// To use the Node.js runtime v4.3, set the value to "nodejs4.3". To use earlier
+	// runtime (v0.10.42), set the value to "nodejs".
 	Runtime *string `type:"string" enum:"Runtime"`
 
 	// The function execution time at which Lambda should terminate the function.
@@ -1366,6 +2169,9 @@ type FunctionConfiguration struct {
 
 	// The version of the Lambda function.
 	Version *string `min:"1" type:"string"`
+
+	// VPC configuration associated with your Lambda function.
+	VpcConfig *VpcConfigResponse `type:"structure"`
 }
 
 // String returns the string representation
@@ -1382,7 +2188,7 @@ type GetAliasInput struct {
 	_ struct{} `type:"structure"`
 
 	// Function name for which the alias is created. An alias is a subresource that
-	// exists only in the context of an existing Lambda function. So you must specify
+	// exists only in the context of an existing Lambda function so you must specify
 	// the function name.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
@@ -1398,6 +2204,28 @@ func (s GetAliasInput) String() string {
 // GoString returns the string representation
 func (s GetAliasInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetAliasInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetAliasInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type GetEventSourceMappingInput struct {
@@ -1417,25 +2245,37 @@ func (s GetEventSourceMappingInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetEventSourceMappingInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetEventSourceMappingInput"}
+	if s.UUID == nil {
+		invalidParams.Add(request.NewErrParamRequired("UUID"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type GetFunctionConfigurationInput struct {
 	_ struct{} `type:"structure"`
 
 	// The name of the Lambda function for which you want to retrieve the configuration
 	// information.
 	//
-	//  You can specify an unqualified function name (for example, "Thumbnail")
-	// or you can specify Amazon Resource Name (ARN) of the function (for example,
-	// "arn:aws:lambda:us-west-2:account-id:function:ThumbNail"). AWS Lambda also
-	// allows you to specify only the account ID qualifier (for example, "account-id:Thumbnail").
+	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
-	// Using this optional parameter you can specify function version or alias name.
-	// If you specify function version, the API uses qualified function ARN and
-	// returns information about the specific function version. if you specify alias
-	// name, the API uses alias ARN and returns information about the function version
-	// to which the alias points.
+	// Using this optional parameter you can specify a function version or an alias
+	// name. If you specify function version, the API uses qualified function ARN
+	// and returns information about the specific function version. If you specify
+	// an alias name, the API uses the alias ARN and returns information about the
+	// function version to which the alias points.
 	//
 	// If you don't specify this parameter, the API uses unqualified function ARN,
 	// and returns information about the $LATEST function version.
@@ -1452,23 +2292,41 @@ func (s GetFunctionConfigurationInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetFunctionConfigurationInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetFunctionConfigurationInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.Qualifier != nil && len(*s.Qualifier) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Qualifier", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type GetFunctionInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Lambda function name.
 	//
-	//  You can specify an unqualified function name (for example, "Thumbnail")
-	// or you can specify Amazon Resource Name (ARN) of the function (for example,
-	// "arn:aws:lambda:us-west-2:account-id:function:ThumbNail"). AWS Lambda also
-	// allows you to specify only the account ID qualifier (for example, "account-id:Thumbnail").
+	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
-	// Using this optional parameter to specify a function version or alias name.
+	// Using this optional parameter to specify a function version or an alias name.
 	// If you specify function version, the API uses qualified function ARN for
 	// the request and returns information about the specific Lambda function version.
-	// If you specify alias name, the API uses alias ARN and returns information
+	// If you specify an alias name, the API uses the alias ARN and returns information
 	// about the function version to which the alias points. If you don't provide
 	// this parameter, the API uses unqualified function ARN and returns information
 	// about the $LATEST version of the Lambda function.
@@ -1485,7 +2343,26 @@ func (s GetFunctionInput) GoString() string {
 	return s.String()
 }
 
-// This response contains the object for the Lambda function location (see API_FunctionCodeLocation
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetFunctionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetFunctionInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.Qualifier != nil && len(*s.Qualifier) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Qualifier", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// This response contains the object for the Lambda function location (see .
 type GetFunctionOutput struct {
 	_ struct{} `type:"structure"`
 
@@ -1511,19 +2388,21 @@ type GetPolicyInput struct {
 
 	// Function name whose resource policy you want to retrieve.
 	//
-	//  You can specify an unqualified function name (for example, "Thumbnail")
-	// or you can specify Amazon Resource Name (ARN) of the function (for example,
-	// "arn:aws:lambda:us-west-2:account-id:function:ThumbNail"). AWS Lambda also
-	// allows you to specify only the account ID qualifier (for example, "account-id:Thumbnail").
-	// Note that the length constraint applies only to the ARN. If you specify only
-	// the function name, it is limited to 64 character in length.
+	//  You can specify the function name (for example, Thumbnail) or you can specify
+	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	// If you are using versioning, you can also provide a qualified function ARN
+	// (ARN that is qualified with function version or alias name as suffix). AWS
+	// Lambda also allows you to specify only the function name with the account
+	// ID qualifier (for example, account-id:Thumbnail). Note that the length constraint
+	// applies only to the ARN. If you specify only the function name, it is limited
+	// to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
-	// You can specify this optional query parameter to specify function version
-	// or alias name in which case this API will return all permissions associated
-	// with the specific ARN. If you don't provide this parameter, the API will
-	// return permissions that apply to the unqualified function ARN.
-	Qualifier *string `min:"1" type:"string"`
+	// You can specify this optional query parameter to specify a function version
+	// or an alias name in which case this API will return all permissions associated
+	// with the specific qualified ARN. If you don't provide this parameter, the
+	// API will return permissions that apply to the unqualified function ARN.
+	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 }
 
 // String returns the string representation
@@ -1536,11 +2415,31 @@ func (s GetPolicyInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetPolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetPolicyInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.Qualifier != nil && len(*s.Qualifier) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Qualifier", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type GetPolicyOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The resource policy associated with the specified function. The response
-	// returns the same as a string using "\" as an escape character in the JSON.
+	// returns the same as a string using a backslash ("\") as an escape character
+	// in the JSON.
 	Policy *string `type:"string"`
 }
 
@@ -1574,6 +2473,25 @@ func (s InvokeAsyncInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *InvokeAsyncInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "InvokeAsyncInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.InvokeArgs == nil {
+		invalidParams.Add(request.NewErrParamRequired("InvokeArgs"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Upon success, it returns empty response. Otherwise, throws an exception.
 type InvokeAsyncOutput struct {
 	_ struct{} `deprecated:"true" type:"structure"`
@@ -1598,7 +2516,7 @@ type InvokeInput struct {
 	// Using the ClientContext you can pass client-specific information to the Lambda
 	// function you are invoking. You can then process the client information in
 	// your Lambda function as you choose through the context variable. For an example
-	// of a ClientContext JSON, go to PutEvents (http://docs.aws.amazon.com/mobileanalytics/latest/ug/PutEvents.html)
+	// of a ClientContext JSON, see PutEvents (http://docs.aws.amazon.com/mobileanalytics/latest/ug/PutEvents.html)
 	// in the Amazon Mobile Analytics API Reference and User Guide.
 	//
 	// The ClientContext JSON must be base64-encoded.
@@ -1606,37 +2524,36 @@ type InvokeInput struct {
 
 	// The Lambda function name.
 	//
-	//  You can specify an unqualified function name (for example, "Thumbnail")
-	// or you can specify Amazon Resource Name (ARN) of the function (for example,
-	// "arn:aws:lambda:us-west-2:account-id:function:ThumbNail"). AWS Lambda also
-	// allows you to specify only the account ID qualifier (for example, "account-id:Thumbnail").
+	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
-	// By default, the Invoke API assumes "RequestResponse" invocation type. You
-	// can optionally request asynchronous execution by specifying "Event" as the
-	// InvocationType. You can also use this parameter to request AWS Lambda to
-	// not execute the function but do some verification, such as if the caller
-	// is authorized to invoke the function and if the inputs are valid. You request
-	// this by specifying "DryRun" as the InvocationType. This is useful in a cross-account
-	// scenario when you want to verify access to a function without running it.
+	// By default, the Invoke API assumes RequestResponse invocation type. You can
+	// optionally request asynchronous execution by specifying Event as the InvocationType.
+	// You can also use this parameter to request AWS Lambda to not execute the
+	// function but do some verification, such as if the caller is authorized to
+	// invoke the function and if the inputs are valid. You request this by specifying
+	// DryRun as the InvocationType. This is useful in a cross-account scenario
+	// when you want to verify access to a function without running it.
 	InvocationType *string `location:"header" locationName:"X-Amz-Invocation-Type" type:"string" enum:"InvocationType"`
 
-	// You can set this optional parameter to "Tail" in the request only if you
-	// specify the InvocationType parameter with value "RequestResponse". In this
-	// case, AWS Lambda returns the base64-encoded last 4 KB of log data produced
-	// by your Lambda function in the x-amz-log-results header.
+	// You can set this optional parameter to Tail in the request only if you specify
+	// the InvocationType parameter with value RequestResponse. In this case, AWS
+	// Lambda returns the base64-encoded last 4 KB of log data produced by your
+	// Lambda function in the x-amz-log-result header.
 	LogType *string `location:"header" locationName:"X-Amz-Log-Type" type:"string" enum:"LogType"`
 
 	// JSON that you want to provide to your Lambda function as input.
 	Payload []byte `type:"blob"`
 
-	// You can use this optional paramter to specify a Lambda function version or
-	// alias name. If you specify function version, the API uses qualified function
-	// ARN to invoke a specific Lambda function. If you specify alias name, the
-	// API uses the alias ARN to invoke the Lambda function version to which the
-	// alias points.
+	// You can use this optional parameter to specify a Lambda function version
+	// or alias name. If you specify a function version, the API uses the qualified
+	// function ARN to invoke a specific Lambda function. If you specify an alias
+	// name, the API uses the alias ARN to invoke the Lambda function version to
+	// which the alias points.
 	//
 	// If you don't provide this parameter, then the API uses unqualified function
 	// ARN which results in invocation of the $LATEST version.
@@ -1653,6 +2570,25 @@ func (s InvokeInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *InvokeInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "InvokeInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.Qualifier != nil && len(*s.Qualifier) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Qualifier", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Upon success, returns an empty response. Otherwise, throws an exception.
 type InvokeOutput struct {
 	_ struct{} `type:"structure" payload:"Payload"`
@@ -1666,12 +2602,12 @@ type InvokeOutput struct {
 	FunctionError *string `location:"header" locationName:"X-Amz-Function-Error" type:"string"`
 
 	// It is the base64-encoded logs for the Lambda function invocation. This is
-	// present only if the invocation type is "RequestResponse" and the logs were
+	// present only if the invocation type is RequestResponse and the logs were
 	// requested.
 	LogResult *string `location:"header" locationName:"X-Amz-Log-Result" type:"string"`
 
 	// It is the JSON representation of the object returned by the Lambda function.
-	// In This is present only if the invocation type is "RequestResponse".
+	// In This is present only if the invocation type is RequestResponse.
 	//
 	// In the event of a function error this field contains a message describing
 	// the error. For the Handled errors the Lambda function will report this message.
@@ -1679,8 +2615,8 @@ type InvokeOutput struct {
 	Payload []byte `type:"blob"`
 
 	// The HTTP status code will be in the 200 range for successful request. For
-	// the "RequestResonse" invocation type this status code will be 200. For the
-	// "Event" invocation type this status code will be 202. For the "DryRun" invocation
+	// the RequestResonse invocation type this status code will be 200. For the
+	// Event invocation type this status code will be 202. For the DryRun invocation
 	// type the status code will be 204.
 	StatusCode *int64 `location:"statusCode" type:"integer"`
 }
@@ -1702,8 +2638,8 @@ type ListAliasesInput struct {
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// If you specify this optional parameter, the API returns only the aliases
-	// pointing to the specific Lambda function version, otherwise returns all aliases
-	// created for the Lambda function.
+	// that are pointing to the specific Lambda function version, otherwise the
+	// API returns all of the aliases created for the Lambda function.
 	FunctionVersion *string `location:"querystring" locationName:"FunctionVersion" min:"1" type:"string"`
 
 	// Optional string. An opaque pagination token returned from a previous ListAliases
@@ -1725,10 +2661,32 @@ func (s ListAliasesInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListAliasesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListAliasesInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.FunctionVersion != nil && len(*s.FunctionVersion) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionVersion", 1))
+	}
+	if s.MaxItems != nil && *s.MaxItems < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxItems", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type ListAliasesOutput struct {
 	_ struct{} `type:"structure"`
 
-	// An list of alises.
+	// A list of aliases.
 	Aliases []*AliasConfiguration `type:"list"`
 
 	// A string, present if there are more aliases.
@@ -1748,17 +2706,20 @@ func (s ListAliasesOutput) GoString() string {
 type ListEventSourceMappingsInput struct {
 	_ struct{} `type:"structure"`
 
-	// The Amazon Resource Name (ARN) of the Amazon Kinesis stream.
+	// The Amazon Resource Name (ARN) of the Amazon Kinesis stream. (This parameter
+	// is optional.)
 	EventSourceArn *string `location:"querystring" locationName:"EventSourceArn" type:"string"`
 
 	// The name of the Lambda function.
 	//
-	//  You can specify an unqualified function name (for example, "Thumbnail")
-	// or you can specify Amazon Resource Name (ARN) of the function (for example,
-	// "arn:aws:lambda:us-west-2:account-id:function:ThumbNail"). AWS Lambda also
-	// allows you to specify only the account ID qualifier (for example, "account-id:Thumbnail").
-	// Note that the length constraint applies only to the ARN. If you specify only
-	// the function name, it is limited to 64 character in length.
+	//  You can specify the function name (for example, Thumbnail) or you can specify
+	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	// If you are using versioning, you can also provide a qualified function ARN
+	// (ARN that is qualified with function version or alias name as suffix). AWS
+	// Lambda also allows you to specify only the function name with the account
+	// ID qualifier (for example, account-id:Thumbnail). Note that the length constraint
+	// applies only to the ARN. If you specify only the function name, it is limited
+	// to 64 character in length.
 	FunctionName *string `location:"querystring" locationName:"FunctionName" min:"1" type:"string"`
 
 	// Optional string. An opaque pagination token returned from a previous ListEventSourceMappings
@@ -1781,7 +2742,23 @@ func (s ListEventSourceMappingsInput) GoString() string {
 	return s.String()
 }
 
-// Contains a list of event sources (see API_EventSourceMappingConfiguration)
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListEventSourceMappingsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListEventSourceMappingsInput"}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.MaxItems != nil && *s.MaxItems < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxItems", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// Contains a list of event sources (see )
 type ListEventSourceMappingsOutput struct {
 	_ struct{} `type:"structure"`
 
@@ -1824,6 +2801,19 @@ func (s ListFunctionsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListFunctionsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListFunctionsInput"}
+	if s.MaxItems != nil && *s.MaxItems < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxItems", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains a list of AWS Lambda function configurations (see FunctionConfiguration.
 type ListFunctionsOutput struct {
 	_ struct{} `type:"structure"`
@@ -1848,13 +2838,12 @@ func (s ListFunctionsOutput) GoString() string {
 type ListVersionsByFunctionInput struct {
 	_ struct{} `type:"structure"`
 
-	// Function name whose versions to list. You can specify an unqualified function
-	// name (for example, "Thumbnail") or you can specify Amazon Resource Name (ARN)
-	// of the function (for example, "arn:aws:lambda:us-west-2:account-id:function:ThumbNail").
-	// AWS Lambda also allows you to specify only the account ID qualifier (for
-	// example, "account-id:Thumbnail"). Note that the length constraint applies
-	// only to the ARN. If you specify only the function name, it is limited to
-	// 64 character in length.
+	// Function name whose versions to list. You can specify a function name (for
+	// example, Thumbnail) or you can specify Amazon Resource Name (ARN) of the
+	// function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
+	// Note that the length constraint applies only to the ARN. If you specify only
+	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// Optional string. An opaque pagination token returned from a previous ListVersionsByFunction
@@ -1874,6 +2863,25 @@ func (s ListVersionsByFunctionInput) String() string {
 // GoString returns the string representation
 func (s ListVersionsByFunctionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListVersionsByFunctionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListVersionsByFunctionInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.MaxItems != nil && *s.MaxItems < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxItems", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type ListVersionsByFunctionOutput struct {
@@ -1901,20 +2909,20 @@ type PublishVersionInput struct {
 
 	// The SHA256 hash of the deployment package you want to publish. This provides
 	// validation on the code you are publishing. If you provide this parameter
-	// value must match the SHA256 of the HEAD version for the publication to succeed.
+	// value must match the SHA256 of the $LATEST version for the publication to
+	// succeed.
 	CodeSha256 *string `type:"string"`
 
 	// The description for the version you are publishing. If not provided, AWS
-	// Lambda copies the description from the HEAD version.
+	// Lambda copies the description from the $LATEST version.
 	Description *string `type:"string"`
 
-	// The Lambda function name. You can specify an unqualified function name (for
-	// example, "Thumbnail") or you can specify Amazon Resource Name (ARN) of the
-	// function (for example, "arn:aws:lambda:us-west-2:account-id:function:ThumbNail").
-	// AWS Lambda also allows you to specify only the account ID qualifier (for
-	// example, "account-id:Thumbnail"). Note that the length constraint applies
-	// only to the ARN. If you specify only the function name, it is limited to
-	// 64 character in length.
+	// The Lambda function name. You can specify a function name (for example, Thumbnail)
+	// or you can specify Amazon Resource Name (ARN) of the function (for example,
+	// arn:aws:lambda:us-west-2:account-id:function:ThumbNail). AWS Lambda also
+	// allows you to specify a partial ARN (for example, account-id:Thumbnail).
+	// Note that the length constraint applies only to the ARN. If you specify only
+	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 }
 
@@ -1928,23 +2936,38 @@ func (s PublishVersionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PublishVersionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PublishVersionInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type RemovePermissionInput struct {
 	_ struct{} `type:"structure"`
 
 	// Lambda function whose resource policy you want to remove a permission from.
 	//
-	//  You can specify an unqualified function name (for example, "Thumbnail")
-	// or you can specify Amazon Resource Name (ARN) of the function (for example,
-	// "arn:aws:lambda:us-west-2:account-id:function:ThumbNail"). AWS Lambda also
-	// allows you to specify only the account ID qualifier (for example, "account-id:Thumbnail").
+	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// You can specify this optional parameter to remove permission associated with
-	// a specific function version or function alias. The value of this paramter
-	// is the function version or alias name. If you don't specify this parameter,
-	// the API removes permission associated with the unqualified function ARN.
+	// a specific function version or function alias. If you don't specify this
+	// parameter, the API removes permission associated with the unqualified function
+	// ARN.
 	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 
 	// Statement ID of the permission to remove.
@@ -1959,6 +2982,31 @@ func (s RemovePermissionInput) String() string {
 // GoString returns the string representation
 func (s RemovePermissionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RemovePermissionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RemovePermissionInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.Qualifier != nil && len(*s.Qualifier) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Qualifier", 1))
+	}
+	if s.StatementId == nil {
+		invalidParams.Add(request.NewErrParamRequired("StatementId"))
+	}
+	if s.StatementId != nil && len(*s.StatementId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("StatementId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type RemovePermissionOutput struct {
@@ -1978,14 +3026,14 @@ func (s RemovePermissionOutput) GoString() string {
 type UpdateAliasInput struct {
 	_ struct{} `type:"structure"`
 
-	// You can optionally change the description of the alias using this parameter.
+	// You can change the description of the alias using this parameter.
 	Description *string `type:"string"`
 
 	// The function name for which the alias is created.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
-	// Using this parameter you can optionally change the Lambda function version
-	// to which the alias to points to.
+	// Using this parameter you can change the Lambda function version to which
+	// the alias points.
 	FunctionVersion *string `min:"1" type:"string"`
 
 	// The alias name.
@@ -2002,6 +3050,31 @@ func (s UpdateAliasInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateAliasInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateAliasInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.FunctionVersion != nil && len(*s.FunctionVersion) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionVersion", 1))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type UpdateEventSourceMappingInput struct {
 	_ struct{} `type:"structure"`
 
@@ -2015,12 +3088,17 @@ type UpdateEventSourceMappingInput struct {
 
 	// The Lambda function to which you want the stream records sent.
 	//
-	//  You can specify an unqualified function name (for example, "Thumbnail")
-	// or you can specify Amazon Resource Name (ARN) of the function (for example,
-	// "arn:aws:lambda:us-west-2:account-id:function:ThumbNail"). AWS Lambda also
-	// allows you to specify only the account ID qualifier (for example, "account-id:Thumbnail").
-	// Note that the length constraint applies only to the ARN. If you specify only
-	// the function name, it is limited to 64 character in length.
+	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
+	//
+	// If you are using versioning, you can also provide a qualified function ARN
+	// (ARN that is qualified with function version or alias name as suffix). For
+	// more information about versioning, see AWS Lambda Function Versioning and
+	// Aliases (http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html)
+	//
+	// Note that the length constraint applies only to the ARN. If you specify
+	// only the function name, it is limited to 64 character in length.
 	FunctionName *string `min:"1" type:"string"`
 
 	// The event source mapping identifier.
@@ -2037,15 +3115,33 @@ func (s UpdateEventSourceMappingInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateEventSourceMappingInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateEventSourceMappingInput"}
+	if s.BatchSize != nil && *s.BatchSize < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("BatchSize", 1))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.UUID == nil {
+		invalidParams.Add(request.NewErrParamRequired("UUID"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type UpdateFunctionCodeInput struct {
 	_ struct{} `type:"structure"`
 
 	// The existing Lambda function name whose code you want to replace.
 	//
-	//  You can specify an unqualified function name (for example, "Thumbnail")
-	// or you can specify Amazon Resource Name (ARN) of the function (for example,
-	// "arn:aws:lambda:us-west-2:account-id:function:ThumbNail"). AWS Lambda also
-	// allows you to specify only the account ID qualifier (for example, "account-id:Thumbnail").
+	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
@@ -2065,7 +3161,14 @@ type UpdateFunctionCodeInput struct {
 	// The Amazon S3 object (the deployment package) version you want to upload.
 	S3ObjectVersion *string `min:"1" type:"string"`
 
-	// Based64-encoded .zip file containing your packaged source code.
+	// The contents of your zip file containing your deployment package. If you
+	// are using the web API directly, the contents of the zip file must be base64-encoded.
+	// If you are using the AWS SDKs or the AWS CLI, the SDKs or CLI will do the
+	// encoding for you. For more information about creating a .zip file, go to
+	// Execution Permissions (http://docs.aws.amazon.com/lambda/latest/dg/intro-permission-model.html#lambda-intro-execution-role.html)
+	// in the AWS Lambda Developer Guide.
+	//
+	// ZipFile is automatically base64 encoded/decoded by the SDK.
 	ZipFile []byte `type:"blob"`
 }
 
@@ -2079,6 +3182,31 @@ func (s UpdateFunctionCodeInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateFunctionCodeInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateFunctionCodeInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.S3Bucket != nil && len(*s.S3Bucket) < 3 {
+		invalidParams.Add(request.NewErrParamMinLen("S3Bucket", 3))
+	}
+	if s.S3Key != nil && len(*s.S3Key) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("S3Key", 1))
+	}
+	if s.S3ObjectVersion != nil && len(*s.S3ObjectVersion) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("S3ObjectVersion", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type UpdateFunctionConfigurationInput struct {
 	_ struct{} `type:"structure"`
 
@@ -2088,10 +3216,9 @@ type UpdateFunctionConfigurationInput struct {
 
 	// The name of the Lambda function.
 	//
-	//  You can specify an unqualified function name (for example, "Thumbnail")
-	// or you can specify Amazon Resource Name (ARN) of the function (for example,
-	// "arn:aws:lambda:us-west-2:account-id:function:ThumbNail"). AWS Lambda also
-	// allows you to specify only the account ID qualifier (for example, "account-id:Thumbnail").
+	//  You can specify a function name (for example, Thumbnail) or you can specify
+	// Amazon Resource Name (ARN) of the function (for example, arn:aws:lambda:us-west-2:account-id:function:ThumbNail).
+	// AWS Lambda also allows you to specify a partial ARN (for example, account-id:Thumbnail).
 	// Note that the length constraint applies only to the ARN. If you specify only
 	// the function name, it is limited to 64 character in length.
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
@@ -2112,10 +3239,22 @@ type UpdateFunctionConfigurationInput struct {
 	// it executes your function.
 	Role *string `type:"string"`
 
+	// The runtime environment for the Lambda function.
+	//
+	// To use the Node.js runtime v4.3, set the value to "nodejs4.3". To use earlier
+	// runtime (v0.10.42), set the value to "nodejs".
+	Runtime *string `type:"string" enum:"Runtime"`
+
 	// The function execution time at which AWS Lambda should terminate the function.
 	// Because the execution time has cost implications, we recommend you set this
 	// value based on your expected execution time. The default is 3 seconds.
 	Timeout *int64 `min:"1" type:"integer"`
+
+	// If your Lambda function accesses resources in a VPC, you provide this parameter
+	// identifying the list of security group IDs and subnet IDs. These must belong
+	// to the same VPC. You must provide at least one security group and one subnet
+	// ID.
+	VpcConfig *VpcConfig `type:"structure"`
 }
 
 // String returns the string representation
@@ -2125,6 +3264,76 @@ func (s UpdateFunctionConfigurationInput) String() string {
 
 // GoString returns the string representation
 func (s UpdateFunctionConfigurationInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateFunctionConfigurationInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateFunctionConfigurationInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.MemorySize != nil && *s.MemorySize < 128 {
+		invalidParams.Add(request.NewErrParamMinValue("MemorySize", 128))
+	}
+	if s.Timeout != nil && *s.Timeout < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("Timeout", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// If your Lambda function accesses resources in a VPC, you provide this parameter
+// identifying the list of security group IDs and subnet IDs. These must belong
+// to the same VPC. You must provide at least one security group and one subnet
+// ID.
+type VpcConfig struct {
+	_ struct{} `type:"structure"`
+
+	// A list of one or more security groups IDs in your VPC.
+	SecurityGroupIds []*string `type:"list"`
+
+	// A list of one or more subnet IDs in your VPC.
+	SubnetIds []*string `type:"list"`
+}
+
+// String returns the string representation
+func (s VpcConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s VpcConfig) GoString() string {
+	return s.String()
+}
+
+// VPC configuration associated with your Lambda function.
+type VpcConfigResponse struct {
+	_ struct{} `type:"structure"`
+
+	// A list of security group IDs associated with the Lambda function.
+	SecurityGroupIds []*string `type:"list"`
+
+	// A list of subnet IDs associated with the Lambda function.
+	SubnetIds []*string `type:"list"`
+
+	// The VPC ID associated with you Lambda function.
+	VpcId *string `type:"string"`
+}
+
+// String returns the string representation
+func (s VpcConfigResponse) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s VpcConfigResponse) GoString() string {
 	return s.String()
 }
 
@@ -2155,7 +3364,18 @@ const (
 	// @enum Runtime
 	RuntimeNodejs = "nodejs"
 	// @enum Runtime
+	RuntimeNodejs43 = "nodejs4.3"
+	// @enum Runtime
 	RuntimeJava8 = "java8"
 	// @enum Runtime
 	RuntimePython27 = "python2.7"
+)
+
+const (
+	// @enum ThrottleReason
+	ThrottleReasonConcurrentInvocationLimitExceeded = "ConcurrentInvocationLimitExceeded"
+	// @enum ThrottleReason
+	ThrottleReasonFunctionInvocationRateLimitExceeded = "FunctionInvocationRateLimitExceeded"
+	// @enum ThrottleReason
+	ThrottleReasonCallerRateLimitExceeded = "CallerRateLimitExceeded"
 )

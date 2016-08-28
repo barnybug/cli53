@@ -4,6 +4,7 @@
 package swf
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/awsutil"
@@ -14,7 +15,28 @@ import (
 
 const opCountClosedWorkflowExecutions = "CountClosedWorkflowExecutions"
 
-// CountClosedWorkflowExecutionsRequest generates a request for the CountClosedWorkflowExecutions operation.
+// CountClosedWorkflowExecutionsRequest generates a "aws/request.Request" representing the
+// client's request for the CountClosedWorkflowExecutions operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CountClosedWorkflowExecutions method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CountClosedWorkflowExecutionsRequest method.
+//    req, resp := client.CountClosedWorkflowExecutionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) CountClosedWorkflowExecutionsRequest(input *CountClosedWorkflowExecutionsInput) (req *request.Request, output *WorkflowExecutionCount) {
 	op := &request.Operation{
 		Name:       opCountClosedWorkflowExecutions,
@@ -60,7 +82,28 @@ func (c *SWF) CountClosedWorkflowExecutions(input *CountClosedWorkflowExecutions
 
 const opCountOpenWorkflowExecutions = "CountOpenWorkflowExecutions"
 
-// CountOpenWorkflowExecutionsRequest generates a request for the CountOpenWorkflowExecutions operation.
+// CountOpenWorkflowExecutionsRequest generates a "aws/request.Request" representing the
+// client's request for the CountOpenWorkflowExecutions operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CountOpenWorkflowExecutions method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CountOpenWorkflowExecutionsRequest method.
+//    req, resp := client.CountOpenWorkflowExecutionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) CountOpenWorkflowExecutionsRequest(input *CountOpenWorkflowExecutionsInput) (req *request.Request, output *WorkflowExecutionCount) {
 	op := &request.Operation{
 		Name:       opCountOpenWorkflowExecutions,
@@ -106,7 +149,28 @@ func (c *SWF) CountOpenWorkflowExecutions(input *CountOpenWorkflowExecutionsInpu
 
 const opCountPendingActivityTasks = "CountPendingActivityTasks"
 
-// CountPendingActivityTasksRequest generates a request for the CountPendingActivityTasks operation.
+// CountPendingActivityTasksRequest generates a "aws/request.Request" representing the
+// client's request for the CountPendingActivityTasks operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CountPendingActivityTasks method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CountPendingActivityTasksRequest method.
+//    req, resp := client.CountPendingActivityTasksRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) CountPendingActivityTasksRequest(input *CountPendingActivityTasksInput) (req *request.Request, output *PendingTaskCount) {
 	op := &request.Operation{
 		Name:       opCountPendingActivityTasks,
@@ -151,7 +215,28 @@ func (c *SWF) CountPendingActivityTasks(input *CountPendingActivityTasksInput) (
 
 const opCountPendingDecisionTasks = "CountPendingDecisionTasks"
 
-// CountPendingDecisionTasksRequest generates a request for the CountPendingDecisionTasks operation.
+// CountPendingDecisionTasksRequest generates a "aws/request.Request" representing the
+// client's request for the CountPendingDecisionTasks operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CountPendingDecisionTasks method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CountPendingDecisionTasksRequest method.
+//    req, resp := client.CountPendingDecisionTasksRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) CountPendingDecisionTasksRequest(input *CountPendingDecisionTasksInput) (req *request.Request, output *PendingTaskCount) {
 	op := &request.Operation{
 		Name:       opCountPendingDecisionTasks,
@@ -196,7 +281,28 @@ func (c *SWF) CountPendingDecisionTasks(input *CountPendingDecisionTasksInput) (
 
 const opDeprecateActivityType = "DeprecateActivityType"
 
-// DeprecateActivityTypeRequest generates a request for the DeprecateActivityType operation.
+// DeprecateActivityTypeRequest generates a "aws/request.Request" representing the
+// client's request for the DeprecateActivityType operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeprecateActivityType method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeprecateActivityTypeRequest method.
+//    req, resp := client.DeprecateActivityTypeRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) DeprecateActivityTypeRequest(input *DeprecateActivityTypeInput) (req *request.Request, output *DeprecateActivityTypeOutput) {
 	op := &request.Operation{
 		Name:       opDeprecateActivityType,
@@ -244,7 +350,28 @@ func (c *SWF) DeprecateActivityType(input *DeprecateActivityTypeInput) (*Depreca
 
 const opDeprecateDomain = "DeprecateDomain"
 
-// DeprecateDomainRequest generates a request for the DeprecateDomain operation.
+// DeprecateDomainRequest generates a "aws/request.Request" representing the
+// client's request for the DeprecateDomain operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeprecateDomain method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeprecateDomainRequest method.
+//    req, resp := client.DeprecateDomainRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) DeprecateDomainRequest(input *DeprecateDomainInput) (req *request.Request, output *DeprecateDomainOutput) {
 	op := &request.Operation{
 		Name:       opDeprecateDomain,
@@ -293,7 +420,28 @@ func (c *SWF) DeprecateDomain(input *DeprecateDomainInput) (*DeprecateDomainOutp
 
 const opDeprecateWorkflowType = "DeprecateWorkflowType"
 
-// DeprecateWorkflowTypeRequest generates a request for the DeprecateWorkflowType operation.
+// DeprecateWorkflowTypeRequest generates a "aws/request.Request" representing the
+// client's request for the DeprecateWorkflowType operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeprecateWorkflowType method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeprecateWorkflowTypeRequest method.
+//    req, resp := client.DeprecateWorkflowTypeRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) DeprecateWorkflowTypeRequest(input *DeprecateWorkflowTypeInput) (req *request.Request, output *DeprecateWorkflowTypeOutput) {
 	op := &request.Operation{
 		Name:       opDeprecateWorkflowType,
@@ -342,7 +490,28 @@ func (c *SWF) DeprecateWorkflowType(input *DeprecateWorkflowTypeInput) (*Depreca
 
 const opDescribeActivityType = "DescribeActivityType"
 
-// DescribeActivityTypeRequest generates a request for the DescribeActivityType operation.
+// DescribeActivityTypeRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeActivityType operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeActivityType method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeActivityTypeRequest method.
+//    req, resp := client.DescribeActivityTypeRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) DescribeActivityTypeRequest(input *DescribeActivityTypeInput) (req *request.Request, output *DescribeActivityTypeOutput) {
 	op := &request.Operation{
 		Name:       opDescribeActivityType,
@@ -387,7 +556,28 @@ func (c *SWF) DescribeActivityType(input *DescribeActivityTypeInput) (*DescribeA
 
 const opDescribeDomain = "DescribeDomain"
 
-// DescribeDomainRequest generates a request for the DescribeDomain operation.
+// DescribeDomainRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeDomain operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeDomain method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeDomainRequest method.
+//    req, resp := client.DescribeDomainRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) DescribeDomainRequest(input *DescribeDomainInput) (req *request.Request, output *DescribeDomainOutput) {
 	op := &request.Operation{
 		Name:       opDescribeDomain,
@@ -429,7 +619,28 @@ func (c *SWF) DescribeDomain(input *DescribeDomainInput) (*DescribeDomainOutput,
 
 const opDescribeWorkflowExecution = "DescribeWorkflowExecution"
 
-// DescribeWorkflowExecutionRequest generates a request for the DescribeWorkflowExecution operation.
+// DescribeWorkflowExecutionRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeWorkflowExecution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeWorkflowExecution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeWorkflowExecutionRequest method.
+//    req, resp := client.DescribeWorkflowExecutionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) DescribeWorkflowExecutionRequest(input *DescribeWorkflowExecutionInput) (req *request.Request, output *DescribeWorkflowExecutionOutput) {
 	op := &request.Operation{
 		Name:       opDescribeWorkflowExecution,
@@ -472,7 +683,28 @@ func (c *SWF) DescribeWorkflowExecution(input *DescribeWorkflowExecutionInput) (
 
 const opDescribeWorkflowType = "DescribeWorkflowType"
 
-// DescribeWorkflowTypeRequest generates a request for the DescribeWorkflowType operation.
+// DescribeWorkflowTypeRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeWorkflowType operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeWorkflowType method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeWorkflowTypeRequest method.
+//    req, resp := client.DescribeWorkflowTypeRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) DescribeWorkflowTypeRequest(input *DescribeWorkflowTypeInput) (req *request.Request, output *DescribeWorkflowTypeOutput) {
 	op := &request.Operation{
 		Name:       opDescribeWorkflowType,
@@ -517,7 +749,28 @@ func (c *SWF) DescribeWorkflowType(input *DescribeWorkflowTypeInput) (*DescribeW
 
 const opGetWorkflowExecutionHistory = "GetWorkflowExecutionHistory"
 
-// GetWorkflowExecutionHistoryRequest generates a request for the GetWorkflowExecutionHistory operation.
+// GetWorkflowExecutionHistoryRequest generates a "aws/request.Request" representing the
+// client's request for the GetWorkflowExecutionHistory operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetWorkflowExecutionHistory method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetWorkflowExecutionHistoryRequest method.
+//    req, resp := client.GetWorkflowExecutionHistoryRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) GetWorkflowExecutionHistoryRequest(input *GetWorkflowExecutionHistoryInput) (req *request.Request, output *GetWorkflowExecutionHistoryOutput) {
 	op := &request.Operation{
 		Name:       opGetWorkflowExecutionHistory,
@@ -565,6 +818,23 @@ func (c *SWF) GetWorkflowExecutionHistory(input *GetWorkflowExecutionHistoryInpu
 	return out, err
 }
 
+// GetWorkflowExecutionHistoryPages iterates over the pages of a GetWorkflowExecutionHistory operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See GetWorkflowExecutionHistory method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a GetWorkflowExecutionHistory operation.
+//    pageNum := 0
+//    err := client.GetWorkflowExecutionHistoryPages(params,
+//        func(page *GetWorkflowExecutionHistoryOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *SWF) GetWorkflowExecutionHistoryPages(input *GetWorkflowExecutionHistoryInput, fn func(p *GetWorkflowExecutionHistoryOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.GetWorkflowExecutionHistoryRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -575,7 +845,28 @@ func (c *SWF) GetWorkflowExecutionHistoryPages(input *GetWorkflowExecutionHistor
 
 const opListActivityTypes = "ListActivityTypes"
 
-// ListActivityTypesRequest generates a request for the ListActivityTypes operation.
+// ListActivityTypesRequest generates a "aws/request.Request" representing the
+// client's request for the ListActivityTypes operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListActivityTypes method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListActivityTypesRequest method.
+//    req, resp := client.ListActivityTypesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) ListActivityTypesRequest(input *ListActivityTypesInput) (req *request.Request, output *ListActivityTypesOutput) {
 	op := &request.Operation{
 		Name:       opListActivityTypes,
@@ -624,6 +915,23 @@ func (c *SWF) ListActivityTypes(input *ListActivityTypesInput) (*ListActivityTyp
 	return out, err
 }
 
+// ListActivityTypesPages iterates over the pages of a ListActivityTypes operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListActivityTypes method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListActivityTypes operation.
+//    pageNum := 0
+//    err := client.ListActivityTypesPages(params,
+//        func(page *ListActivityTypesOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *SWF) ListActivityTypesPages(input *ListActivityTypesInput, fn func(p *ListActivityTypesOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListActivityTypesRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -634,7 +942,28 @@ func (c *SWF) ListActivityTypesPages(input *ListActivityTypesInput, fn func(p *L
 
 const opListClosedWorkflowExecutions = "ListClosedWorkflowExecutions"
 
-// ListClosedWorkflowExecutionsRequest generates a request for the ListClosedWorkflowExecutions operation.
+// ListClosedWorkflowExecutionsRequest generates a "aws/request.Request" representing the
+// client's request for the ListClosedWorkflowExecutions operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListClosedWorkflowExecutions method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListClosedWorkflowExecutionsRequest method.
+//    req, resp := client.ListClosedWorkflowExecutionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) ListClosedWorkflowExecutionsRequest(input *ListClosedWorkflowExecutionsInput) (req *request.Request, output *WorkflowExecutionInfos) {
 	op := &request.Operation{
 		Name:       opListClosedWorkflowExecutions,
@@ -686,6 +1015,23 @@ func (c *SWF) ListClosedWorkflowExecutions(input *ListClosedWorkflowExecutionsIn
 	return out, err
 }
 
+// ListClosedWorkflowExecutionsPages iterates over the pages of a ListClosedWorkflowExecutions operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListClosedWorkflowExecutions method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListClosedWorkflowExecutions operation.
+//    pageNum := 0
+//    err := client.ListClosedWorkflowExecutionsPages(params,
+//        func(page *WorkflowExecutionInfos, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *SWF) ListClosedWorkflowExecutionsPages(input *ListClosedWorkflowExecutionsInput, fn func(p *WorkflowExecutionInfos, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListClosedWorkflowExecutionsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -696,7 +1042,28 @@ func (c *SWF) ListClosedWorkflowExecutionsPages(input *ListClosedWorkflowExecuti
 
 const opListDomains = "ListDomains"
 
-// ListDomainsRequest generates a request for the ListDomains operation.
+// ListDomainsRequest generates a "aws/request.Request" representing the
+// client's request for the ListDomains operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListDomains method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListDomainsRequest method.
+//    req, resp := client.ListDomainsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) ListDomainsRequest(input *ListDomainsInput) (req *request.Request, output *ListDomainsOutput) {
 	op := &request.Operation{
 		Name:       opListDomains,
@@ -745,6 +1112,23 @@ func (c *SWF) ListDomains(input *ListDomainsInput) (*ListDomainsOutput, error) {
 	return out, err
 }
 
+// ListDomainsPages iterates over the pages of a ListDomains operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListDomains method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListDomains operation.
+//    pageNum := 0
+//    err := client.ListDomainsPages(params,
+//        func(page *ListDomainsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *SWF) ListDomainsPages(input *ListDomainsInput, fn func(p *ListDomainsOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListDomainsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -755,7 +1139,28 @@ func (c *SWF) ListDomainsPages(input *ListDomainsInput, fn func(p *ListDomainsOu
 
 const opListOpenWorkflowExecutions = "ListOpenWorkflowExecutions"
 
-// ListOpenWorkflowExecutionsRequest generates a request for the ListOpenWorkflowExecutions operation.
+// ListOpenWorkflowExecutionsRequest generates a "aws/request.Request" representing the
+// client's request for the ListOpenWorkflowExecutions operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListOpenWorkflowExecutions method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListOpenWorkflowExecutionsRequest method.
+//    req, resp := client.ListOpenWorkflowExecutionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) ListOpenWorkflowExecutionsRequest(input *ListOpenWorkflowExecutionsInput) (req *request.Request, output *WorkflowExecutionInfos) {
 	op := &request.Operation{
 		Name:       opListOpenWorkflowExecutions,
@@ -807,6 +1212,23 @@ func (c *SWF) ListOpenWorkflowExecutions(input *ListOpenWorkflowExecutionsInput)
 	return out, err
 }
 
+// ListOpenWorkflowExecutionsPages iterates over the pages of a ListOpenWorkflowExecutions operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListOpenWorkflowExecutions method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListOpenWorkflowExecutions operation.
+//    pageNum := 0
+//    err := client.ListOpenWorkflowExecutionsPages(params,
+//        func(page *WorkflowExecutionInfos, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *SWF) ListOpenWorkflowExecutionsPages(input *ListOpenWorkflowExecutionsInput, fn func(p *WorkflowExecutionInfos, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListOpenWorkflowExecutionsRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -817,7 +1239,28 @@ func (c *SWF) ListOpenWorkflowExecutionsPages(input *ListOpenWorkflowExecutionsI
 
 const opListWorkflowTypes = "ListWorkflowTypes"
 
-// ListWorkflowTypesRequest generates a request for the ListWorkflowTypes operation.
+// ListWorkflowTypesRequest generates a "aws/request.Request" representing the
+// client's request for the ListWorkflowTypes operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListWorkflowTypes method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListWorkflowTypesRequest method.
+//    req, resp := client.ListWorkflowTypesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) ListWorkflowTypesRequest(input *ListWorkflowTypesInput) (req *request.Request, output *ListWorkflowTypesOutput) {
 	op := &request.Operation{
 		Name:       opListWorkflowTypes,
@@ -864,6 +1307,23 @@ func (c *SWF) ListWorkflowTypes(input *ListWorkflowTypesInput) (*ListWorkflowTyp
 	return out, err
 }
 
+// ListWorkflowTypesPages iterates over the pages of a ListWorkflowTypes operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListWorkflowTypes method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListWorkflowTypes operation.
+//    pageNum := 0
+//    err := client.ListWorkflowTypesPages(params,
+//        func(page *ListWorkflowTypesOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *SWF) ListWorkflowTypesPages(input *ListWorkflowTypesInput, fn func(p *ListWorkflowTypesOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.ListWorkflowTypesRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -874,7 +1334,28 @@ func (c *SWF) ListWorkflowTypesPages(input *ListWorkflowTypesInput, fn func(p *L
 
 const opPollForActivityTask = "PollForActivityTask"
 
-// PollForActivityTaskRequest generates a request for the PollForActivityTask operation.
+// PollForActivityTaskRequest generates a "aws/request.Request" representing the
+// client's request for the PollForActivityTask operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the PollForActivityTask method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the PollForActivityTaskRequest method.
+//    req, resp := client.PollForActivityTaskRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) PollForActivityTaskRequest(input *PollForActivityTaskInput) (req *request.Request, output *PollForActivityTaskOutput) {
 	op := &request.Operation{
 		Name:       opPollForActivityTask,
@@ -925,7 +1406,28 @@ func (c *SWF) PollForActivityTask(input *PollForActivityTaskInput) (*PollForActi
 
 const opPollForDecisionTask = "PollForDecisionTask"
 
-// PollForDecisionTaskRequest generates a request for the PollForDecisionTask operation.
+// PollForDecisionTaskRequest generates a "aws/request.Request" representing the
+// client's request for the PollForDecisionTask operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the PollForDecisionTask method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the PollForDecisionTaskRequest method.
+//    req, resp := client.PollForDecisionTaskRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) PollForDecisionTaskRequest(input *PollForDecisionTaskInput) (req *request.Request, output *PollForDecisionTaskOutput) {
 	op := &request.Operation{
 		Name:       opPollForDecisionTask,
@@ -988,6 +1490,23 @@ func (c *SWF) PollForDecisionTask(input *PollForDecisionTaskInput) (*PollForDeci
 	return out, err
 }
 
+// PollForDecisionTaskPages iterates over the pages of a PollForDecisionTask operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See PollForDecisionTask method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a PollForDecisionTask operation.
+//    pageNum := 0
+//    err := client.PollForDecisionTaskPages(params,
+//        func(page *PollForDecisionTaskOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
 func (c *SWF) PollForDecisionTaskPages(input *PollForDecisionTaskInput, fn func(p *PollForDecisionTaskOutput, lastPage bool) (shouldContinue bool)) error {
 	page, _ := c.PollForDecisionTaskRequest(input)
 	page.Handlers.Build.PushBack(request.MakeAddToUserAgentFreeFormHandler("Paginator"))
@@ -998,7 +1517,28 @@ func (c *SWF) PollForDecisionTaskPages(input *PollForDecisionTaskInput, fn func(
 
 const opRecordActivityTaskHeartbeat = "RecordActivityTaskHeartbeat"
 
-// RecordActivityTaskHeartbeatRequest generates a request for the RecordActivityTaskHeartbeat operation.
+// RecordActivityTaskHeartbeatRequest generates a "aws/request.Request" representing the
+// client's request for the RecordActivityTaskHeartbeat operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RecordActivityTaskHeartbeat method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RecordActivityTaskHeartbeatRequest method.
+//    req, resp := client.RecordActivityTaskHeartbeatRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) RecordActivityTaskHeartbeatRequest(input *RecordActivityTaskHeartbeatInput) (req *request.Request, output *RecordActivityTaskHeartbeatOutput) {
 	op := &request.Operation{
 		Name:       opRecordActivityTaskHeartbeat,
@@ -1060,7 +1600,28 @@ func (c *SWF) RecordActivityTaskHeartbeat(input *RecordActivityTaskHeartbeatInpu
 
 const opRegisterActivityType = "RegisterActivityType"
 
-// RegisterActivityTypeRequest generates a request for the RegisterActivityType operation.
+// RegisterActivityTypeRequest generates a "aws/request.Request" representing the
+// client's request for the RegisterActivityType operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RegisterActivityType method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RegisterActivityTypeRequest method.
+//    req, resp := client.RegisterActivityTypeRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) RegisterActivityTypeRequest(input *RegisterActivityTypeInput) (req *request.Request, output *RegisterActivityTypeOutput) {
 	op := &request.Operation{
 		Name:       opRegisterActivityType,
@@ -1109,7 +1670,28 @@ func (c *SWF) RegisterActivityType(input *RegisterActivityTypeInput) (*RegisterA
 
 const opRegisterDomain = "RegisterDomain"
 
-// RegisterDomainRequest generates a request for the RegisterDomain operation.
+// RegisterDomainRequest generates a "aws/request.Request" representing the
+// client's request for the RegisterDomain operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RegisterDomain method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RegisterDomainRequest method.
+//    req, resp := client.RegisterDomainRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) RegisterDomainRequest(input *RegisterDomainInput) (req *request.Request, output *RegisterDomainOutput) {
 	op := &request.Operation{
 		Name:       opRegisterDomain,
@@ -1153,7 +1735,28 @@ func (c *SWF) RegisterDomain(input *RegisterDomainInput) (*RegisterDomainOutput,
 
 const opRegisterWorkflowType = "RegisterWorkflowType"
 
-// RegisterWorkflowTypeRequest generates a request for the RegisterWorkflowType operation.
+// RegisterWorkflowTypeRequest generates a "aws/request.Request" representing the
+// client's request for the RegisterWorkflowType operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RegisterWorkflowType method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RegisterWorkflowTypeRequest method.
+//    req, resp := client.RegisterWorkflowTypeRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) RegisterWorkflowTypeRequest(input *RegisterWorkflowTypeInput) (req *request.Request, output *RegisterWorkflowTypeOutput) {
 	op := &request.Operation{
 		Name:       opRegisterWorkflowType,
@@ -1205,7 +1808,28 @@ func (c *SWF) RegisterWorkflowType(input *RegisterWorkflowTypeInput) (*RegisterW
 
 const opRequestCancelWorkflowExecution = "RequestCancelWorkflowExecution"
 
-// RequestCancelWorkflowExecutionRequest generates a request for the RequestCancelWorkflowExecution operation.
+// RequestCancelWorkflowExecutionRequest generates a "aws/request.Request" representing the
+// client's request for the RequestCancelWorkflowExecution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RequestCancelWorkflowExecution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RequestCancelWorkflowExecutionRequest method.
+//    req, resp := client.RequestCancelWorkflowExecutionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) RequestCancelWorkflowExecutionRequest(input *RequestCancelWorkflowExecutionInput) (req *request.Request, output *RequestCancelWorkflowExecutionOutput) {
 	op := &request.Operation{
 		Name:       opRequestCancelWorkflowExecution,
@@ -1256,7 +1880,28 @@ func (c *SWF) RequestCancelWorkflowExecution(input *RequestCancelWorkflowExecuti
 
 const opRespondActivityTaskCanceled = "RespondActivityTaskCanceled"
 
-// RespondActivityTaskCanceledRequest generates a request for the RespondActivityTaskCanceled operation.
+// RespondActivityTaskCanceledRequest generates a "aws/request.Request" representing the
+// client's request for the RespondActivityTaskCanceled operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RespondActivityTaskCanceled method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RespondActivityTaskCanceledRequest method.
+//    req, resp := client.RespondActivityTaskCanceledRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) RespondActivityTaskCanceledRequest(input *RespondActivityTaskCanceledInput) (req *request.Request, output *RespondActivityTaskCanceledOutput) {
 	op := &request.Operation{
 		Name:       opRespondActivityTaskCanceled,
@@ -1312,7 +1957,28 @@ func (c *SWF) RespondActivityTaskCanceled(input *RespondActivityTaskCanceledInpu
 
 const opRespondActivityTaskCompleted = "RespondActivityTaskCompleted"
 
-// RespondActivityTaskCompletedRequest generates a request for the RespondActivityTaskCompleted operation.
+// RespondActivityTaskCompletedRequest generates a "aws/request.Request" representing the
+// client's request for the RespondActivityTaskCompleted operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RespondActivityTaskCompleted method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RespondActivityTaskCompletedRequest method.
+//    req, resp := client.RespondActivityTaskCompletedRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) RespondActivityTaskCompletedRequest(input *RespondActivityTaskCompletedInput) (req *request.Request, output *RespondActivityTaskCompletedOutput) {
 	op := &request.Operation{
 		Name:       opRespondActivityTaskCompleted,
@@ -1366,7 +2032,28 @@ func (c *SWF) RespondActivityTaskCompleted(input *RespondActivityTaskCompletedIn
 
 const opRespondActivityTaskFailed = "RespondActivityTaskFailed"
 
-// RespondActivityTaskFailedRequest generates a request for the RespondActivityTaskFailed operation.
+// RespondActivityTaskFailedRequest generates a "aws/request.Request" representing the
+// client's request for the RespondActivityTaskFailed operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RespondActivityTaskFailed method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RespondActivityTaskFailedRequest method.
+//    req, resp := client.RespondActivityTaskFailedRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) RespondActivityTaskFailedRequest(input *RespondActivityTaskFailedInput) (req *request.Request, output *RespondActivityTaskFailedOutput) {
 	op := &request.Operation{
 		Name:       opRespondActivityTaskFailed,
@@ -1417,7 +2104,28 @@ func (c *SWF) RespondActivityTaskFailed(input *RespondActivityTaskFailedInput) (
 
 const opRespondDecisionTaskCompleted = "RespondDecisionTaskCompleted"
 
-// RespondDecisionTaskCompletedRequest generates a request for the RespondDecisionTaskCompleted operation.
+// RespondDecisionTaskCompletedRequest generates a "aws/request.Request" representing the
+// client's request for the RespondDecisionTaskCompleted operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the RespondDecisionTaskCompleted method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the RespondDecisionTaskCompletedRequest method.
+//    req, resp := client.RespondDecisionTaskCompletedRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) RespondDecisionTaskCompletedRequest(input *RespondDecisionTaskCompletedInput) (req *request.Request, output *RespondDecisionTaskCompletedOutput) {
 	op := &request.Operation{
 		Name:       opRespondDecisionTaskCompleted,
@@ -1461,7 +2169,28 @@ func (c *SWF) RespondDecisionTaskCompleted(input *RespondDecisionTaskCompletedIn
 
 const opSignalWorkflowExecution = "SignalWorkflowExecution"
 
-// SignalWorkflowExecutionRequest generates a request for the SignalWorkflowExecution operation.
+// SignalWorkflowExecutionRequest generates a "aws/request.Request" representing the
+// client's request for the SignalWorkflowExecution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the SignalWorkflowExecution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the SignalWorkflowExecutionRequest method.
+//    req, resp := client.SignalWorkflowExecutionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) SignalWorkflowExecutionRequest(input *SignalWorkflowExecutionInput) (req *request.Request, output *SignalWorkflowExecutionOutput) {
 	op := &request.Operation{
 		Name:       opSignalWorkflowExecution,
@@ -1510,7 +2239,28 @@ func (c *SWF) SignalWorkflowExecution(input *SignalWorkflowExecutionInput) (*Sig
 
 const opStartWorkflowExecution = "StartWorkflowExecution"
 
-// StartWorkflowExecutionRequest generates a request for the StartWorkflowExecution operation.
+// StartWorkflowExecutionRequest generates a "aws/request.Request" representing the
+// client's request for the StartWorkflowExecution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the StartWorkflowExecution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the StartWorkflowExecutionRequest method.
+//    req, resp := client.StartWorkflowExecutionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) StartWorkflowExecutionRequest(input *StartWorkflowExecutionInput) (req *request.Request, output *StartWorkflowExecutionOutput) {
 	op := &request.Operation{
 		Name:       opStartWorkflowExecution,
@@ -1560,7 +2310,28 @@ func (c *SWF) StartWorkflowExecution(input *StartWorkflowExecutionInput) (*Start
 
 const opTerminateWorkflowExecution = "TerminateWorkflowExecution"
 
-// TerminateWorkflowExecutionRequest generates a request for the TerminateWorkflowExecution operation.
+// TerminateWorkflowExecutionRequest generates a "aws/request.Request" representing the
+// client's request for the TerminateWorkflowExecution operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the TerminateWorkflowExecution method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the TerminateWorkflowExecutionRequest method.
+//    req, resp := client.TerminateWorkflowExecutionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *SWF) TerminateWorkflowExecutionRequest(input *TerminateWorkflowExecutionInput) (req *request.Request, output *TerminateWorkflowExecutionOutput) {
 	op := &request.Operation{
 		Name:       opTerminateWorkflowExecution,
@@ -1874,6 +2645,28 @@ func (s ActivityType) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ActivityType) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ActivityType"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.Version == nil {
+		invalidParams.Add(request.NewErrParamRequired("Version"))
+	}
+	if s.Version != nil && len(*s.Version) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Version", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Configuration settings registered with the activity type.
 type ActivityTypeConfiguration struct {
 	_ struct{} `type:"structure"`
@@ -2006,6 +2799,22 @@ func (s CancelTimerDecisionAttributes) String() string {
 // GoString returns the string representation
 func (s CancelTimerDecisionAttributes) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CancelTimerDecisionAttributes) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CancelTimerDecisionAttributes"}
+	if s.TimerId == nil {
+		invalidParams.Add(request.NewErrParamRequired("TimerId"))
+	}
+	if s.TimerId != nil && len(*s.TimerId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TimerId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Provides details of the CancelTimerFailed event.
@@ -2324,6 +3133,19 @@ func (s CloseStatusFilter) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CloseStatusFilter) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CloseStatusFilter"}
+	if s.Status == nil {
+		invalidParams.Add(request.NewErrParamRequired("Status"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Provides details of the CompleteWorkflowExecution decision.
 //
 // Access Control
@@ -2494,6 +3316,27 @@ func (s ContinueAsNewWorkflowExecutionDecisionAttributes) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ContinueAsNewWorkflowExecutionDecisionAttributes) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ContinueAsNewWorkflowExecutionDecisionAttributes"}
+	if s.LambdaRole != nil && len(*s.LambdaRole) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("LambdaRole", 1))
+	}
+	if s.WorkflowTypeVersion != nil && len(*s.WorkflowTypeVersion) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("WorkflowTypeVersion", 1))
+	}
+	if s.TaskList != nil {
+		if err := s.TaskList.Validate(); err != nil {
+			invalidParams.AddNested("TaskList", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Provides details of the ContinueAsNewWorkflowExecutionFailed event.
 type ContinueAsNewWorkflowExecutionFailedEventAttributes struct {
 	_ struct{} `type:"structure"`
@@ -2581,6 +3424,52 @@ func (s CountClosedWorkflowExecutionsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CountClosedWorkflowExecutionsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CountClosedWorkflowExecutionsInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.CloseStatusFilter != nil {
+		if err := s.CloseStatusFilter.Validate(); err != nil {
+			invalidParams.AddNested("CloseStatusFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.CloseTimeFilter != nil {
+		if err := s.CloseTimeFilter.Validate(); err != nil {
+			invalidParams.AddNested("CloseTimeFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.ExecutionFilter != nil {
+		if err := s.ExecutionFilter.Validate(); err != nil {
+			invalidParams.AddNested("ExecutionFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.StartTimeFilter != nil {
+		if err := s.StartTimeFilter.Validate(); err != nil {
+			invalidParams.AddNested("StartTimeFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TagFilter != nil {
+		if err := s.TagFilter.Validate(); err != nil {
+			invalidParams.AddNested("TagFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TypeFilter != nil {
+		if err := s.TypeFilter.Validate(); err != nil {
+			invalidParams.AddNested("TypeFilter", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type CountOpenWorkflowExecutionsInput struct {
 	_ struct{} `type:"structure"`
 
@@ -2622,6 +3511,45 @@ func (s CountOpenWorkflowExecutionsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CountOpenWorkflowExecutionsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CountOpenWorkflowExecutionsInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.StartTimeFilter == nil {
+		invalidParams.Add(request.NewErrParamRequired("StartTimeFilter"))
+	}
+	if s.ExecutionFilter != nil {
+		if err := s.ExecutionFilter.Validate(); err != nil {
+			invalidParams.AddNested("ExecutionFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.StartTimeFilter != nil {
+		if err := s.StartTimeFilter.Validate(); err != nil {
+			invalidParams.AddNested("StartTimeFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TagFilter != nil {
+		if err := s.TagFilter.Validate(); err != nil {
+			invalidParams.AddNested("TagFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TypeFilter != nil {
+		if err := s.TypeFilter.Validate(); err != nil {
+			invalidParams.AddNested("TypeFilter", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type CountPendingActivityTasksInput struct {
 	_ struct{} `type:"structure"`
 
@@ -2642,6 +3570,30 @@ func (s CountPendingActivityTasksInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CountPendingActivityTasksInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CountPendingActivityTasksInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.TaskList == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskList"))
+	}
+	if s.TaskList != nil {
+		if err := s.TaskList.Validate(); err != nil {
+			invalidParams.AddNested("TaskList", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type CountPendingDecisionTasksInput struct {
 	_ struct{} `type:"structure"`
 
@@ -2660,6 +3612,30 @@ func (s CountPendingDecisionTasksInput) String() string {
 // GoString returns the string representation
 func (s CountPendingDecisionTasksInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CountPendingDecisionTasksInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CountPendingDecisionTasksInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.TaskList == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskList"))
+	}
+	if s.TaskList != nil {
+		if err := s.TaskList.Validate(); err != nil {
+			invalidParams.AddNested("TaskList", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Specifies a decision made by the decider. A decision can be one of these
@@ -2854,6 +3830,69 @@ func (s Decision) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Decision) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Decision"}
+	if s.DecisionType == nil {
+		invalidParams.Add(request.NewErrParamRequired("DecisionType"))
+	}
+	if s.CancelTimerDecisionAttributes != nil {
+		if err := s.CancelTimerDecisionAttributes.Validate(); err != nil {
+			invalidParams.AddNested("CancelTimerDecisionAttributes", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.ContinueAsNewWorkflowExecutionDecisionAttributes != nil {
+		if err := s.ContinueAsNewWorkflowExecutionDecisionAttributes.Validate(); err != nil {
+			invalidParams.AddNested("ContinueAsNewWorkflowExecutionDecisionAttributes", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.RecordMarkerDecisionAttributes != nil {
+		if err := s.RecordMarkerDecisionAttributes.Validate(); err != nil {
+			invalidParams.AddNested("RecordMarkerDecisionAttributes", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.RequestCancelActivityTaskDecisionAttributes != nil {
+		if err := s.RequestCancelActivityTaskDecisionAttributes.Validate(); err != nil {
+			invalidParams.AddNested("RequestCancelActivityTaskDecisionAttributes", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.RequestCancelExternalWorkflowExecutionDecisionAttributes != nil {
+		if err := s.RequestCancelExternalWorkflowExecutionDecisionAttributes.Validate(); err != nil {
+			invalidParams.AddNested("RequestCancelExternalWorkflowExecutionDecisionAttributes", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.ScheduleActivityTaskDecisionAttributes != nil {
+		if err := s.ScheduleActivityTaskDecisionAttributes.Validate(); err != nil {
+			invalidParams.AddNested("ScheduleActivityTaskDecisionAttributes", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.ScheduleLambdaFunctionDecisionAttributes != nil {
+		if err := s.ScheduleLambdaFunctionDecisionAttributes.Validate(); err != nil {
+			invalidParams.AddNested("ScheduleLambdaFunctionDecisionAttributes", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.SignalExternalWorkflowExecutionDecisionAttributes != nil {
+		if err := s.SignalExternalWorkflowExecutionDecisionAttributes.Validate(); err != nil {
+			invalidParams.AddNested("SignalExternalWorkflowExecutionDecisionAttributes", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.StartChildWorkflowExecutionDecisionAttributes != nil {
+		if err := s.StartChildWorkflowExecutionDecisionAttributes.Validate(); err != nil {
+			invalidParams.AddNested("StartChildWorkflowExecutionDecisionAttributes", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.StartTimerDecisionAttributes != nil {
+		if err := s.StartTimerDecisionAttributes.Validate(); err != nil {
+			invalidParams.AddNested("StartTimerDecisionAttributes", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Provides details of the DecisionTaskCompleted event.
 type DecisionTaskCompletedEventAttributes struct {
 	_ struct{} `type:"structure"`
@@ -2989,6 +4028,30 @@ func (s DeprecateActivityTypeInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeprecateActivityTypeInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeprecateActivityTypeInput"}
+	if s.ActivityType == nil {
+		invalidParams.Add(request.NewErrParamRequired("ActivityType"))
+	}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.ActivityType != nil {
+		if err := s.ActivityType.Validate(); err != nil {
+			invalidParams.AddNested("ActivityType", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type DeprecateActivityTypeOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -3018,6 +4081,22 @@ func (s DeprecateDomainInput) String() string {
 // GoString returns the string representation
 func (s DeprecateDomainInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeprecateDomainInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeprecateDomainInput"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type DeprecateDomainOutput struct {
@@ -3054,6 +4133,30 @@ func (s DeprecateWorkflowTypeInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeprecateWorkflowTypeInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeprecateWorkflowTypeInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.WorkflowType == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowType"))
+	}
+	if s.WorkflowType != nil {
+		if err := s.WorkflowType.Validate(); err != nil {
+			invalidParams.AddNested("WorkflowType", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type DeprecateWorkflowTypeOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -3087,6 +4190,30 @@ func (s DescribeActivityTypeInput) String() string {
 // GoString returns the string representation
 func (s DescribeActivityTypeInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeActivityTypeInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeActivityTypeInput"}
+	if s.ActivityType == nil {
+		invalidParams.Add(request.NewErrParamRequired("ActivityType"))
+	}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.ActivityType != nil {
+		if err := s.ActivityType.Validate(); err != nil {
+			invalidParams.AddNested("ActivityType", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Detailed information about an activity type.
@@ -3135,6 +4262,22 @@ func (s DescribeDomainInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeDomainInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeDomainInput"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains details of a domain.
 type DescribeDomainOutput struct {
 	_ struct{} `type:"structure"`
@@ -3174,6 +4317,30 @@ func (s DescribeWorkflowExecutionInput) String() string {
 // GoString returns the string representation
 func (s DescribeWorkflowExecutionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeWorkflowExecutionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeWorkflowExecutionInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.Execution == nil {
+		invalidParams.Add(request.NewErrParamRequired("Execution"))
+	}
+	if s.Execution != nil {
+		if err := s.Execution.Validate(); err != nil {
+			invalidParams.AddNested("Execution", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains details about a workflow execution.
@@ -3230,6 +4397,30 @@ func (s DescribeWorkflowTypeInput) String() string {
 // GoString returns the string representation
 func (s DescribeWorkflowTypeInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeWorkflowTypeInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeWorkflowTypeInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.WorkflowType == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowType"))
+	}
+	if s.WorkflowType != nil {
+		if err := s.WorkflowType.Validate(); err != nil {
+			invalidParams.AddNested("WorkflowType", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains details about a workflow type.
@@ -3331,6 +4522,19 @@ func (s ExecutionTimeFilter) String() string {
 // GoString returns the string representation
 func (s ExecutionTimeFilter) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ExecutionTimeFilter) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ExecutionTimeFilter"}
+	if s.OldestDate == nil {
+		invalidParams.Add(request.NewErrParamRequired("OldestDate"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Provides details of the ExternalWorkflowExecutionCancelRequested event.
@@ -3484,6 +4688,30 @@ func (s GetWorkflowExecutionHistoryInput) String() string {
 // GoString returns the string representation
 func (s GetWorkflowExecutionHistoryInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetWorkflowExecutionHistoryInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetWorkflowExecutionHistoryInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.Execution == nil {
+		invalidParams.Add(request.NewErrParamRequired("Execution"))
+	}
+	if s.Execution != nil {
+		if err := s.Execution.Validate(); err != nil {
+			invalidParams.AddNested("Execution", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Paginated representation of a workflow history for a workflow execution.
@@ -4032,6 +5260,28 @@ func (s ListActivityTypesInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListActivityTypesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListActivityTypesInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.RegistrationStatus == nil {
+		invalidParams.Add(request.NewErrParamRequired("RegistrationStatus"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains a paginated list of activity type information structures.
 type ListActivityTypesOutput struct {
 	_ struct{} `type:"structure"`
@@ -4141,6 +5391,52 @@ func (s ListClosedWorkflowExecutionsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListClosedWorkflowExecutionsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListClosedWorkflowExecutionsInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.CloseStatusFilter != nil {
+		if err := s.CloseStatusFilter.Validate(); err != nil {
+			invalidParams.AddNested("CloseStatusFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.CloseTimeFilter != nil {
+		if err := s.CloseTimeFilter.Validate(); err != nil {
+			invalidParams.AddNested("CloseTimeFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.ExecutionFilter != nil {
+		if err := s.ExecutionFilter.Validate(); err != nil {
+			invalidParams.AddNested("ExecutionFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.StartTimeFilter != nil {
+		if err := s.StartTimeFilter.Validate(); err != nil {
+			invalidParams.AddNested("StartTimeFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TagFilter != nil {
+		if err := s.TagFilter.Validate(); err != nil {
+			invalidParams.AddNested("TagFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TypeFilter != nil {
+		if err := s.TypeFilter.Validate(); err != nil {
+			invalidParams.AddNested("TypeFilter", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type ListDomainsInput struct {
 	_ struct{} `type:"structure"`
 
@@ -4177,6 +5473,19 @@ func (s ListDomainsInput) String() string {
 // GoString returns the string representation
 func (s ListDomainsInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListDomainsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListDomainsInput"}
+	if s.RegistrationStatus == nil {
+		invalidParams.Add(request.NewErrParamRequired("RegistrationStatus"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains a paginated collection of DomainInfo structures.
@@ -4266,6 +5575,45 @@ func (s ListOpenWorkflowExecutionsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListOpenWorkflowExecutionsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListOpenWorkflowExecutionsInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.StartTimeFilter == nil {
+		invalidParams.Add(request.NewErrParamRequired("StartTimeFilter"))
+	}
+	if s.ExecutionFilter != nil {
+		if err := s.ExecutionFilter.Validate(); err != nil {
+			invalidParams.AddNested("ExecutionFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.StartTimeFilter != nil {
+		if err := s.StartTimeFilter.Validate(); err != nil {
+			invalidParams.AddNested("StartTimeFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TagFilter != nil {
+		if err := s.TagFilter.Validate(); err != nil {
+			invalidParams.AddNested("TagFilter", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TypeFilter != nil {
+		if err := s.TypeFilter.Validate(); err != nil {
+			invalidParams.AddNested("TypeFilter", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type ListWorkflowTypesInput struct {
 	_ struct{} `type:"structure"`
 
@@ -4309,6 +5657,28 @@ func (s ListWorkflowTypesInput) String() string {
 // GoString returns the string representation
 func (s ListWorkflowTypesInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListWorkflowTypesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListWorkflowTypesInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.RegistrationStatus == nil {
+		invalidParams.Add(request.NewErrParamRequired("RegistrationStatus"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains a paginated list of information structures about workflow types.
@@ -4416,6 +5786,30 @@ func (s PollForActivityTaskInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PollForActivityTaskInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PollForActivityTaskInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.TaskList == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskList"))
+	}
+	if s.TaskList != nil {
+		if err := s.TaskList.Validate(); err != nil {
+			invalidParams.AddNested("TaskList", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Unit of work sent to an activity worker.
 type PollForActivityTaskOutput struct {
 	_ struct{} `type:"structure"`
@@ -4508,6 +5902,30 @@ func (s PollForDecisionTaskInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PollForDecisionTaskInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PollForDecisionTaskInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.TaskList == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskList"))
+	}
+	if s.TaskList != nil {
+		if err := s.TaskList.Validate(); err != nil {
+			invalidParams.AddNested("TaskList", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A structure that represents a decision task. Decision tasks are sent to deciders
 // in order for them to make decisions.
 type PollForDecisionTaskOutput struct {
@@ -4580,6 +5998,22 @@ func (s RecordActivityTaskHeartbeatInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RecordActivityTaskHeartbeatInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RecordActivityTaskHeartbeatInput"}
+	if s.TaskToken == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskToken"))
+	}
+	if s.TaskToken != nil && len(*s.TaskToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TaskToken", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Status information about an activity task.
 type RecordActivityTaskHeartbeatOutput struct {
 	_ struct{} `type:"structure"`
@@ -4631,6 +6065,22 @@ func (s RecordMarkerDecisionAttributes) String() string {
 // GoString returns the string representation
 func (s RecordMarkerDecisionAttributes) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RecordMarkerDecisionAttributes) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RecordMarkerDecisionAttributes"}
+	if s.MarkerName == nil {
+		invalidParams.Add(request.NewErrParamRequired("MarkerName"))
+	}
+	if s.MarkerName != nil && len(*s.MarkerName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("MarkerName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Provides details of the RecordMarkerFailed event.
@@ -4754,6 +6204,39 @@ func (s RegisterActivityTypeInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RegisterActivityTypeInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RegisterActivityTypeInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.Version == nil {
+		invalidParams.Add(request.NewErrParamRequired("Version"))
+	}
+	if s.Version != nil && len(*s.Version) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Version", 1))
+	}
+	if s.DefaultTaskList != nil {
+		if err := s.DefaultTaskList.Validate(); err != nil {
+			invalidParams.AddNested("DefaultTaskList", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type RegisterActivityTypeOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -4805,6 +6288,28 @@ func (s RegisterDomainInput) String() string {
 // GoString returns the string representation
 func (s RegisterDomainInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RegisterDomainInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RegisterDomainInput"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.WorkflowExecutionRetentionPeriodInDays == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowExecutionRetentionPeriodInDays"))
+	}
+	if s.WorkflowExecutionRetentionPeriodInDays != nil && len(*s.WorkflowExecutionRetentionPeriodInDays) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("WorkflowExecutionRetentionPeriodInDays", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type RegisterDomainOutput struct {
@@ -4918,6 +6423,42 @@ func (s RegisterWorkflowTypeInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RegisterWorkflowTypeInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RegisterWorkflowTypeInput"}
+	if s.DefaultLambdaRole != nil && len(*s.DefaultLambdaRole) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DefaultLambdaRole", 1))
+	}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.Version == nil {
+		invalidParams.Add(request.NewErrParamRequired("Version"))
+	}
+	if s.Version != nil && len(*s.Version) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Version", 1))
+	}
+	if s.DefaultTaskList != nil {
+		if err := s.DefaultTaskList.Validate(); err != nil {
+			invalidParams.AddNested("DefaultTaskList", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type RegisterWorkflowTypeOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -4962,6 +6503,22 @@ func (s RequestCancelActivityTaskDecisionAttributes) String() string {
 // GoString returns the string representation
 func (s RequestCancelActivityTaskDecisionAttributes) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RequestCancelActivityTaskDecisionAttributes) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RequestCancelActivityTaskDecisionAttributes"}
+	if s.ActivityId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ActivityId"))
+	}
+	if s.ActivityId != nil && len(*s.ActivityId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ActivityId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Provides details of the RequestCancelActivityTaskFailed event.
@@ -5033,6 +6590,22 @@ func (s RequestCancelExternalWorkflowExecutionDecisionAttributes) String() strin
 // GoString returns the string representation
 func (s RequestCancelExternalWorkflowExecutionDecisionAttributes) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RequestCancelExternalWorkflowExecutionDecisionAttributes) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RequestCancelExternalWorkflowExecutionDecisionAttributes"}
+	if s.WorkflowId == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowId"))
+	}
+	if s.WorkflowId != nil && len(*s.WorkflowId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("WorkflowId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Provides details of the RequestCancelExternalWorkflowExecutionFailed event.
@@ -5133,6 +6706,28 @@ func (s RequestCancelWorkflowExecutionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RequestCancelWorkflowExecutionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RequestCancelWorkflowExecutionInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.WorkflowId == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowId"))
+	}
+	if s.WorkflowId != nil && len(*s.WorkflowId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("WorkflowId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type RequestCancelWorkflowExecutionOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -5169,6 +6764,22 @@ func (s RespondActivityTaskCanceledInput) String() string {
 // GoString returns the string representation
 func (s RespondActivityTaskCanceledInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RespondActivityTaskCanceledInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RespondActivityTaskCanceledInput"}
+	if s.TaskToken == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskToken"))
+	}
+	if s.TaskToken != nil && len(*s.TaskToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TaskToken", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type RespondActivityTaskCanceledOutput struct {
@@ -5208,6 +6819,22 @@ func (s RespondActivityTaskCompletedInput) String() string {
 // GoString returns the string representation
 func (s RespondActivityTaskCompletedInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RespondActivityTaskCompletedInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RespondActivityTaskCompletedInput"}
+	if s.TaskToken == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskToken"))
+	}
+	if s.TaskToken != nil && len(*s.TaskToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TaskToken", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type RespondActivityTaskCompletedOutput struct {
@@ -5251,6 +6878,22 @@ func (s RespondActivityTaskFailedInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RespondActivityTaskFailedInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RespondActivityTaskFailedInput"}
+	if s.TaskToken == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskToken"))
+	}
+	if s.TaskToken != nil && len(*s.TaskToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TaskToken", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 type RespondActivityTaskFailedOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -5291,6 +6934,32 @@ func (s RespondDecisionTaskCompletedInput) String() string {
 // GoString returns the string representation
 func (s RespondDecisionTaskCompletedInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RespondDecisionTaskCompletedInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RespondDecisionTaskCompletedInput"}
+	if s.TaskToken == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskToken"))
+	}
+	if s.TaskToken != nil && len(*s.TaskToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TaskToken", 1))
+	}
+	if s.Decisions != nil {
+		for i, v := range s.Decisions {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Decisions", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type RespondDecisionTaskCompletedOutput struct {
@@ -5429,6 +7098,35 @@ func (s ScheduleActivityTaskDecisionAttributes) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ScheduleActivityTaskDecisionAttributes) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ScheduleActivityTaskDecisionAttributes"}
+	if s.ActivityId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ActivityId"))
+	}
+	if s.ActivityId != nil && len(*s.ActivityId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ActivityId", 1))
+	}
+	if s.ActivityType == nil {
+		invalidParams.Add(request.NewErrParamRequired("ActivityType"))
+	}
+	if s.ActivityType != nil {
+		if err := s.ActivityType.Validate(); err != nil {
+			invalidParams.AddNested("ActivityType", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TaskList != nil {
+		if err := s.TaskList.Validate(); err != nil {
+			invalidParams.AddNested("TaskList", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Provides details of the ScheduleActivityTaskFailed event.
 type ScheduleActivityTaskFailedEventAttributes struct {
 	_ struct{} `type:"structure"`
@@ -5513,6 +7211,31 @@ func (s ScheduleLambdaFunctionDecisionAttributes) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ScheduleLambdaFunctionDecisionAttributes) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ScheduleLambdaFunctionDecisionAttributes"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+	if s.Input != nil && len(*s.Input) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Input", 1))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Provides details for the ScheduleLambdaFunctionFailed event.
 type ScheduleLambdaFunctionFailedEventAttributes struct {
 	_ struct{} `type:"structure"`
@@ -5593,6 +7316,28 @@ func (s SignalExternalWorkflowExecutionDecisionAttributes) String() string {
 // GoString returns the string representation
 func (s SignalExternalWorkflowExecutionDecisionAttributes) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *SignalExternalWorkflowExecutionDecisionAttributes) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "SignalExternalWorkflowExecutionDecisionAttributes"}
+	if s.SignalName == nil {
+		invalidParams.Add(request.NewErrParamRequired("SignalName"))
+	}
+	if s.SignalName != nil && len(*s.SignalName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("SignalName", 1))
+	}
+	if s.WorkflowId == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowId"))
+	}
+	if s.WorkflowId != nil && len(*s.WorkflowId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("WorkflowId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Provides details of the SignalExternalWorkflowExecutionFailed event.
@@ -5705,6 +7450,34 @@ func (s SignalWorkflowExecutionInput) String() string {
 // GoString returns the string representation
 func (s SignalWorkflowExecutionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *SignalWorkflowExecutionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "SignalWorkflowExecutionInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.SignalName == nil {
+		invalidParams.Add(request.NewErrParamRequired("SignalName"))
+	}
+	if s.SignalName != nil && len(*s.SignalName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("SignalName", 1))
+	}
+	if s.WorkflowId == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowId"))
+	}
+	if s.WorkflowId != nil && len(*s.WorkflowId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("WorkflowId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type SignalWorkflowExecutionOutput struct {
@@ -5849,6 +7622,38 @@ func (s StartChildWorkflowExecutionDecisionAttributes) String() string {
 // GoString returns the string representation
 func (s StartChildWorkflowExecutionDecisionAttributes) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *StartChildWorkflowExecutionDecisionAttributes) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "StartChildWorkflowExecutionDecisionAttributes"}
+	if s.LambdaRole != nil && len(*s.LambdaRole) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("LambdaRole", 1))
+	}
+	if s.WorkflowId == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowId"))
+	}
+	if s.WorkflowId != nil && len(*s.WorkflowId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("WorkflowId", 1))
+	}
+	if s.WorkflowType == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowType"))
+	}
+	if s.TaskList != nil {
+		if err := s.TaskList.Validate(); err != nil {
+			invalidParams.AddNested("TaskList", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.WorkflowType != nil {
+		if err := s.WorkflowType.Validate(); err != nil {
+			invalidParams.AddNested("WorkflowType", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Provides details of the StartChildWorkflowExecutionFailed event.
@@ -6054,6 +7859,28 @@ func (s StartTimerDecisionAttributes) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *StartTimerDecisionAttributes) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "StartTimerDecisionAttributes"}
+	if s.StartToFireTimeout == nil {
+		invalidParams.Add(request.NewErrParamRequired("StartToFireTimeout"))
+	}
+	if s.StartToFireTimeout != nil && len(*s.StartToFireTimeout) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("StartToFireTimeout", 1))
+	}
+	if s.TimerId == nil {
+		invalidParams.Add(request.NewErrParamRequired("TimerId"))
+	}
+	if s.TimerId != nil && len(*s.TimerId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TimerId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Provides details of the StartTimerFailed event.
 type StartTimerFailedEventAttributes struct {
 	_ struct{} `type:"structure"`
@@ -6207,6 +8034,44 @@ func (s StartWorkflowExecutionInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *StartWorkflowExecutionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "StartWorkflowExecutionInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.LambdaRole != nil && len(*s.LambdaRole) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("LambdaRole", 1))
+	}
+	if s.WorkflowId == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowId"))
+	}
+	if s.WorkflowId != nil && len(*s.WorkflowId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("WorkflowId", 1))
+	}
+	if s.WorkflowType == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowType"))
+	}
+	if s.TaskList != nil {
+		if err := s.TaskList.Validate(); err != nil {
+			invalidParams.AddNested("TaskList", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.WorkflowType != nil {
+		if err := s.WorkflowType.Validate(); err != nil {
+			invalidParams.AddNested("WorkflowType", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Specifies the runId of a workflow execution.
 type StartWorkflowExecutionOutput struct {
 	_ struct{} `type:"structure"`
@@ -6245,6 +8110,22 @@ func (s TagFilter) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *TagFilter) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "TagFilter"}
+	if s.Tag == nil {
+		invalidParams.Add(request.NewErrParamRequired("Tag"))
+	}
+	if s.Tag != nil && len(*s.Tag) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Tag", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Represents a task list.
 type TaskList struct {
 	_ struct{} `type:"structure"`
@@ -6261,6 +8142,22 @@ func (s TaskList) String() string {
 // GoString returns the string representation
 func (s TaskList) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *TaskList) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "TaskList"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type TerminateWorkflowExecutionInput struct {
@@ -6308,6 +8205,28 @@ func (s TerminateWorkflowExecutionInput) String() string {
 // GoString returns the string representation
 func (s TerminateWorkflowExecutionInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *TerminateWorkflowExecutionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "TerminateWorkflowExecutionInput"}
+	if s.Domain == nil {
+		invalidParams.Add(request.NewErrParamRequired("Domain"))
+	}
+	if s.Domain != nil && len(*s.Domain) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Domain", 1))
+	}
+	if s.WorkflowId == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowId"))
+	}
+	if s.WorkflowId != nil && len(*s.WorkflowId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("WorkflowId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 type TerminateWorkflowExecutionOutput struct {
@@ -6429,6 +8348,28 @@ func (s WorkflowExecution) String() string {
 // GoString returns the string representation
 func (s WorkflowExecution) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *WorkflowExecution) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "WorkflowExecution"}
+	if s.RunId == nil {
+		invalidParams.Add(request.NewErrParamRequired("RunId"))
+	}
+	if s.RunId != nil && len(*s.RunId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("RunId", 1))
+	}
+	if s.WorkflowId == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowId"))
+	}
+	if s.WorkflowId != nil && len(*s.WorkflowId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("WorkflowId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Provides details of the WorkflowExecutionCancelRequested event.
@@ -6700,6 +8641,22 @@ func (s WorkflowExecutionFilter) String() string {
 // GoString returns the string representation
 func (s WorkflowExecutionFilter) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *WorkflowExecutionFilter) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "WorkflowExecutionFilter"}
+	if s.WorkflowId == nil {
+		invalidParams.Add(request.NewErrParamRequired("WorkflowId"))
+	}
+	if s.WorkflowId != nil && len(*s.WorkflowId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("WorkflowId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains information about a workflow execution.
@@ -7020,6 +8977,28 @@ func (s WorkflowType) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *WorkflowType) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "WorkflowType"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.Version == nil {
+		invalidParams.Add(request.NewErrParamRequired("Version"))
+	}
+	if s.Version != nil && len(*s.Version) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Version", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // The configuration settings of a workflow type.
 type WorkflowTypeConfiguration struct {
 	_ struct{} `type:"structure"`
@@ -7114,6 +9093,22 @@ func (s WorkflowTypeFilter) String() string {
 // GoString returns the string representation
 func (s WorkflowTypeFilter) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *WorkflowTypeFilter) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "WorkflowTypeFilter"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains information about a workflow type.

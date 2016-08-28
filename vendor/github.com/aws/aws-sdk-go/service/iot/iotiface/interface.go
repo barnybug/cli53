@@ -46,9 +46,17 @@ type IoTAPI interface {
 
 	CreateThing(*iot.CreateThingInput) (*iot.CreateThingOutput, error)
 
+	CreateThingTypeRequest(*iot.CreateThingTypeInput) (*request.Request, *iot.CreateThingTypeOutput)
+
+	CreateThingType(*iot.CreateThingTypeInput) (*iot.CreateThingTypeOutput, error)
+
 	CreateTopicRuleRequest(*iot.CreateTopicRuleInput) (*request.Request, *iot.CreateTopicRuleOutput)
 
 	CreateTopicRule(*iot.CreateTopicRuleInput) (*iot.CreateTopicRuleOutput, error)
+
+	DeleteCACertificateRequest(*iot.DeleteCACertificateInput) (*request.Request, *iot.DeleteCACertificateOutput)
+
+	DeleteCACertificate(*iot.DeleteCACertificateInput) (*iot.DeleteCACertificateOutput, error)
 
 	DeleteCertificateRequest(*iot.DeleteCertificateInput) (*request.Request, *iot.DeleteCertificateOutput)
 
@@ -62,13 +70,29 @@ type IoTAPI interface {
 
 	DeletePolicyVersion(*iot.DeletePolicyVersionInput) (*iot.DeletePolicyVersionOutput, error)
 
+	DeleteRegistrationCodeRequest(*iot.DeleteRegistrationCodeInput) (*request.Request, *iot.DeleteRegistrationCodeOutput)
+
+	DeleteRegistrationCode(*iot.DeleteRegistrationCodeInput) (*iot.DeleteRegistrationCodeOutput, error)
+
 	DeleteThingRequest(*iot.DeleteThingInput) (*request.Request, *iot.DeleteThingOutput)
 
 	DeleteThing(*iot.DeleteThingInput) (*iot.DeleteThingOutput, error)
 
+	DeleteThingTypeRequest(*iot.DeleteThingTypeInput) (*request.Request, *iot.DeleteThingTypeOutput)
+
+	DeleteThingType(*iot.DeleteThingTypeInput) (*iot.DeleteThingTypeOutput, error)
+
 	DeleteTopicRuleRequest(*iot.DeleteTopicRuleInput) (*request.Request, *iot.DeleteTopicRuleOutput)
 
 	DeleteTopicRule(*iot.DeleteTopicRuleInput) (*iot.DeleteTopicRuleOutput, error)
+
+	DeprecateThingTypeRequest(*iot.DeprecateThingTypeInput) (*request.Request, *iot.DeprecateThingTypeOutput)
+
+	DeprecateThingType(*iot.DeprecateThingTypeInput) (*iot.DeprecateThingTypeOutput, error)
+
+	DescribeCACertificateRequest(*iot.DescribeCACertificateInput) (*request.Request, *iot.DescribeCACertificateOutput)
+
+	DescribeCACertificate(*iot.DescribeCACertificateInput) (*iot.DescribeCACertificateOutput, error)
 
 	DescribeCertificateRequest(*iot.DescribeCertificateInput) (*request.Request, *iot.DescribeCertificateOutput)
 
@@ -81,6 +105,10 @@ type IoTAPI interface {
 	DescribeThingRequest(*iot.DescribeThingInput) (*request.Request, *iot.DescribeThingOutput)
 
 	DescribeThing(*iot.DescribeThingInput) (*iot.DescribeThingOutput, error)
+
+	DescribeThingTypeRequest(*iot.DescribeThingTypeInput) (*request.Request, *iot.DescribeThingTypeOutput)
+
+	DescribeThingType(*iot.DescribeThingTypeInput) (*iot.DescribeThingTypeOutput, error)
 
 	DetachPrincipalPolicyRequest(*iot.DetachPrincipalPolicyInput) (*request.Request, *iot.DetachPrincipalPolicyOutput)
 
@@ -110,17 +138,37 @@ type IoTAPI interface {
 
 	GetPolicyVersion(*iot.GetPolicyVersionInput) (*iot.GetPolicyVersionOutput, error)
 
+	GetRegistrationCodeRequest(*iot.GetRegistrationCodeInput) (*request.Request, *iot.GetRegistrationCodeOutput)
+
+	GetRegistrationCode(*iot.GetRegistrationCodeInput) (*iot.GetRegistrationCodeOutput, error)
+
 	GetTopicRuleRequest(*iot.GetTopicRuleInput) (*request.Request, *iot.GetTopicRuleOutput)
 
 	GetTopicRule(*iot.GetTopicRuleInput) (*iot.GetTopicRuleOutput, error)
+
+	ListCACertificatesRequest(*iot.ListCACertificatesInput) (*request.Request, *iot.ListCACertificatesOutput)
+
+	ListCACertificates(*iot.ListCACertificatesInput) (*iot.ListCACertificatesOutput, error)
 
 	ListCertificatesRequest(*iot.ListCertificatesInput) (*request.Request, *iot.ListCertificatesOutput)
 
 	ListCertificates(*iot.ListCertificatesInput) (*iot.ListCertificatesOutput, error)
 
+	ListCertificatesByCARequest(*iot.ListCertificatesByCAInput) (*request.Request, *iot.ListCertificatesByCAOutput)
+
+	ListCertificatesByCA(*iot.ListCertificatesByCAInput) (*iot.ListCertificatesByCAOutput, error)
+
+	ListOutgoingCertificatesRequest(*iot.ListOutgoingCertificatesInput) (*request.Request, *iot.ListOutgoingCertificatesOutput)
+
+	ListOutgoingCertificates(*iot.ListOutgoingCertificatesInput) (*iot.ListOutgoingCertificatesOutput, error)
+
 	ListPoliciesRequest(*iot.ListPoliciesInput) (*request.Request, *iot.ListPoliciesOutput)
 
 	ListPolicies(*iot.ListPoliciesInput) (*iot.ListPoliciesOutput, error)
+
+	ListPolicyPrincipalsRequest(*iot.ListPolicyPrincipalsInput) (*request.Request, *iot.ListPolicyPrincipalsOutput)
+
+	ListPolicyPrincipals(*iot.ListPolicyPrincipalsInput) (*iot.ListPolicyPrincipalsOutput, error)
 
 	ListPolicyVersionsRequest(*iot.ListPolicyVersionsInput) (*request.Request, *iot.ListPolicyVersionsOutput)
 
@@ -138,6 +186,10 @@ type IoTAPI interface {
 
 	ListThingPrincipals(*iot.ListThingPrincipalsInput) (*iot.ListThingPrincipalsOutput, error)
 
+	ListThingTypesRequest(*iot.ListThingTypesInput) (*request.Request, *iot.ListThingTypesOutput)
+
+	ListThingTypes(*iot.ListThingTypesInput) (*iot.ListThingTypesOutput, error)
+
 	ListThingsRequest(*iot.ListThingsInput) (*request.Request, *iot.ListThingsOutput)
 
 	ListThings(*iot.ListThingsInput) (*iot.ListThingsOutput, error)
@@ -145,6 +197,14 @@ type IoTAPI interface {
 	ListTopicRulesRequest(*iot.ListTopicRulesInput) (*request.Request, *iot.ListTopicRulesOutput)
 
 	ListTopicRules(*iot.ListTopicRulesInput) (*iot.ListTopicRulesOutput, error)
+
+	RegisterCACertificateRequest(*iot.RegisterCACertificateInput) (*request.Request, *iot.RegisterCACertificateOutput)
+
+	RegisterCACertificate(*iot.RegisterCACertificateInput) (*iot.RegisterCACertificateOutput, error)
+
+	RegisterCertificateRequest(*iot.RegisterCertificateInput) (*request.Request, *iot.RegisterCertificateOutput)
+
+	RegisterCertificate(*iot.RegisterCertificateInput) (*iot.RegisterCertificateOutput, error)
 
 	RejectCertificateTransferRequest(*iot.RejectCertificateTransferInput) (*request.Request, *iot.RejectCertificateTransferOutput)
 
@@ -165,6 +225,10 @@ type IoTAPI interface {
 	TransferCertificateRequest(*iot.TransferCertificateInput) (*request.Request, *iot.TransferCertificateOutput)
 
 	TransferCertificate(*iot.TransferCertificateInput) (*iot.TransferCertificateOutput, error)
+
+	UpdateCACertificateRequest(*iot.UpdateCACertificateInput) (*request.Request, *iot.UpdateCACertificateOutput)
+
+	UpdateCACertificate(*iot.UpdateCACertificateInput) (*iot.UpdateCACertificateOutput, error)
 
 	UpdateCertificateRequest(*iot.UpdateCertificateInput) (*request.Request, *iot.UpdateCertificateOutput)
 

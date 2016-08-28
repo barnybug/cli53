@@ -46,6 +46,10 @@ type GameLiftAPI interface {
 
 	DeleteFleet(*gamelift.DeleteFleetInput) (*gamelift.DeleteFleetOutput, error)
 
+	DeleteScalingPolicyRequest(*gamelift.DeleteScalingPolicyInput) (*request.Request, *gamelift.DeleteScalingPolicyOutput)
+
+	DeleteScalingPolicy(*gamelift.DeleteScalingPolicyInput) (*gamelift.DeleteScalingPolicyOutput, error)
+
 	DescribeAliasRequest(*gamelift.DescribeAliasInput) (*request.Request, *gamelift.DescribeAliasOutput)
 
 	DescribeAlias(*gamelift.DescribeAliasInput) (*gamelift.DescribeAliasOutput, error)
@@ -78,6 +82,10 @@ type GameLiftAPI interface {
 
 	DescribeFleetUtilization(*gamelift.DescribeFleetUtilizationInput) (*gamelift.DescribeFleetUtilizationOutput, error)
 
+	DescribeGameSessionDetailsRequest(*gamelift.DescribeGameSessionDetailsInput) (*request.Request, *gamelift.DescribeGameSessionDetailsOutput)
+
+	DescribeGameSessionDetails(*gamelift.DescribeGameSessionDetailsInput) (*gamelift.DescribeGameSessionDetailsOutput, error)
+
 	DescribeGameSessionsRequest(*gamelift.DescribeGameSessionsInput) (*request.Request, *gamelift.DescribeGameSessionsOutput)
 
 	DescribeGameSessions(*gamelift.DescribeGameSessionsInput) (*gamelift.DescribeGameSessionsOutput, error)
@@ -85,6 +93,14 @@ type GameLiftAPI interface {
 	DescribePlayerSessionsRequest(*gamelift.DescribePlayerSessionsInput) (*request.Request, *gamelift.DescribePlayerSessionsOutput)
 
 	DescribePlayerSessions(*gamelift.DescribePlayerSessionsInput) (*gamelift.DescribePlayerSessionsOutput, error)
+
+	DescribeRuntimeConfigurationRequest(*gamelift.DescribeRuntimeConfigurationInput) (*request.Request, *gamelift.DescribeRuntimeConfigurationOutput)
+
+	DescribeRuntimeConfiguration(*gamelift.DescribeRuntimeConfigurationInput) (*gamelift.DescribeRuntimeConfigurationOutput, error)
+
+	DescribeScalingPoliciesRequest(*gamelift.DescribeScalingPoliciesInput) (*request.Request, *gamelift.DescribeScalingPoliciesOutput)
+
+	DescribeScalingPolicies(*gamelift.DescribeScalingPoliciesInput) (*gamelift.DescribeScalingPoliciesOutput, error)
 
 	GetGameSessionLogUrlRequest(*gamelift.GetGameSessionLogUrlInput) (*request.Request, *gamelift.GetGameSessionLogUrlOutput)
 
@@ -102,6 +118,10 @@ type GameLiftAPI interface {
 
 	ListFleets(*gamelift.ListFleetsInput) (*gamelift.ListFleetsOutput, error)
 
+	PutScalingPolicyRequest(*gamelift.PutScalingPolicyInput) (*request.Request, *gamelift.PutScalingPolicyOutput)
+
+	PutScalingPolicy(*gamelift.PutScalingPolicyInput) (*gamelift.PutScalingPolicyOutput, error)
+
 	RequestUploadCredentialsRequest(*gamelift.RequestUploadCredentialsInput) (*request.Request, *gamelift.RequestUploadCredentialsOutput)
 
 	RequestUploadCredentials(*gamelift.RequestUploadCredentialsInput) (*gamelift.RequestUploadCredentialsOutput, error)
@@ -109,6 +129,10 @@ type GameLiftAPI interface {
 	ResolveAliasRequest(*gamelift.ResolveAliasInput) (*request.Request, *gamelift.ResolveAliasOutput)
 
 	ResolveAlias(*gamelift.ResolveAliasInput) (*gamelift.ResolveAliasOutput, error)
+
+	SearchGameSessionsRequest(*gamelift.SearchGameSessionsInput) (*request.Request, *gamelift.SearchGameSessionsOutput)
+
+	SearchGameSessions(*gamelift.SearchGameSessionsInput) (*gamelift.SearchGameSessionsOutput, error)
 
 	UpdateAliasRequest(*gamelift.UpdateAliasInput) (*request.Request, *gamelift.UpdateAliasOutput)
 
@@ -133,6 +157,10 @@ type GameLiftAPI interface {
 	UpdateGameSessionRequest(*gamelift.UpdateGameSessionInput) (*request.Request, *gamelift.UpdateGameSessionOutput)
 
 	UpdateGameSession(*gamelift.UpdateGameSessionInput) (*gamelift.UpdateGameSessionOutput, error)
+
+	UpdateRuntimeConfigurationRequest(*gamelift.UpdateRuntimeConfigurationInput) (*request.Request, *gamelift.UpdateRuntimeConfigurationOutput)
+
+	UpdateRuntimeConfiguration(*gamelift.UpdateRuntimeConfigurationInput) (*gamelift.UpdateRuntimeConfigurationOutput, error)
 }
 
 var _ GameLiftAPI = (*gamelift.GameLift)(nil)

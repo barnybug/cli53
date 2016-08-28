@@ -11,11 +11,12 @@
     "DeleteBucketCors": "Deletes the cors configuration information set for the bucket.",
     "DeleteBucketLifecycle": "Deletes the lifecycle configuration from the bucket.",
     "DeleteBucketPolicy": "Deletes the policy from the bucket.",
-    "DeleteBucketReplication": null,
+    "DeleteBucketReplication": "Deletes the replication configuration from the bucket.",
     "DeleteBucketTagging": "Deletes the tags from the bucket.",
     "DeleteBucketWebsite": "This operation removes the website configuration from the bucket.",
     "DeleteObject": "Removes the null version (if there is one) of an object and inserts a delete marker, which becomes the latest version of the object. If there isn't a null version, Amazon S3 does not remove any objects.",
     "DeleteObjects": "This operation enables you to delete multiple objects from a bucket using a single HTTP request. You may specify up to 1000 keys.",
+    "GetBucketAccelerateConfiguration": "Returns the accelerate configuration of a bucket.",
     "GetBucketAcl": "Gets the access control policy for the bucket.",
     "GetBucketCors": "Returns the cors configuration for the bucket.",
     "GetBucketLifecycle": "Deprecated, see the GetBucketLifecycleConfiguration operation.",
@@ -25,7 +26,7 @@
     "GetBucketNotification": "Deprecated, see the GetBucketNotificationConfiguration operation.",
     "GetBucketNotificationConfiguration": "Returns the notification configuration of a bucket.",
     "GetBucketPolicy": "Returns the policy of a specified bucket.",
-    "GetBucketReplication": null,
+    "GetBucketReplication": "Returns the replication configuration of a bucket.",
     "GetBucketRequestPayment": "Returns the request payment configuration of a bucket.",
     "GetBucketTagging": "Returns the tag set associated with the bucket.",
     "GetBucketVersioning": "Returns the versioning state of a bucket.",
@@ -39,7 +40,9 @@
     "ListMultipartUploads": "This operation lists in-progress multipart uploads.",
     "ListObjectVersions": "Returns metadata about all of the versions of objects in a bucket.",
     "ListObjects": "Returns some or all (up to 1000) of the objects in a bucket. You can use the request parameters as selection criteria to return a subset of the objects in a bucket.",
+    "ListObjectsV2": "Returns some or all (up to 1000) of the objects in a bucket. You can use the request parameters as selection criteria to return a subset of the objects in a bucket. Note: ListObjectsV2 is the revised List Objects API and we recommend you use this revised API for new application development.",
     "ListParts": "Lists the parts that have been uploaded for a specific multipart upload.",
+    "PutBucketAccelerateConfiguration": "Sets the accelerate configuration of an existing bucket.",
     "PutBucketAcl": "Sets the permissions on a bucket using access control lists (ACL).",
     "PutBucketCors": "Sets the cors configuration for a bucket.",
     "PutBucketLifecycle": "Deprecated, see the PutBucketLifecycleConfiguration operation.",
@@ -60,6 +63,20 @@
     "UploadPartCopy": "Uploads a part by copying data from an existing object as data source."
   },
   "shapes": {
+    "AbortDate": {
+      "base": null,
+      "refs": {
+        "CreateMultipartUploadOutput$AbortDate": "Date when multipart upload will become eligible for abort operation by lifecycle.",
+        "ListPartsOutput$AbortDate": "Date when multipart upload will become eligible for abort operation by lifecycle."
+      }
+    },
+    "AbortIncompleteMultipartUpload": {
+      "base": "Specifies the days since the initiation of an Incomplete Multipart Upload that Lifecycle will wait before permanently removing all parts of the upload.",
+      "refs": {
+        "LifecycleRule$AbortIncompleteMultipartUpload": null,
+        "Rule$AbortIncompleteMultipartUpload": null
+      }
+    },
     "AbortMultipartUploadOutput": {
       "base": null,
       "refs": {
@@ -68,6 +85,19 @@
     "AbortMultipartUploadRequest": {
       "base": null,
       "refs": {
+      }
+    },
+    "AbortRuleId": {
+      "base": null,
+      "refs": {
+        "CreateMultipartUploadOutput$AbortRuleId": "Id of the lifecycle rule that makes a multipart upload eligible for abort operation.",
+        "ListPartsOutput$AbortRuleId": "Id of the lifecycle rule that makes a multipart upload eligible for abort operation."
+      }
+    },
+    "AccelerateConfiguration": {
+      "base": null,
+      "refs": {
+        "PutBucketAccelerateConfigurationRequest$AccelerateConfiguration": "Specifies the Accelerate Configuration you want to set for the bucket."
       }
     },
     "AcceptRanges": {
@@ -126,7 +156,7 @@
         "GetObjectOutput$Body": "Object data.",
         "GetObjectTorrentOutput$Body": null,
         "PutObjectRequest$Body": "Object data.",
-        "UploadPartRequest$Body": null
+        "UploadPartRequest$Body": "Object data."
       }
     },
     "Bucket": {
@@ -135,8 +165,20 @@
         "Buckets$member": null
       }
     },
+    "BucketAccelerateStatus": {
+      "base": null,
+      "refs": {
+        "AccelerateConfiguration$Status": "The accelerate configuration of the bucket.",
+        "GetBucketAccelerateConfigurationOutput$Status": "The accelerate configuration of the bucket."
+      }
+    },
     "BucketAlreadyExists": {
       "base": "The requested bucket name is not available. The bucket namespace is shared by all users of the system. Please select a different name and try again.",
+      "refs": {
+      }
+    },
+    "BucketAlreadyOwnedByYou": {
+      "base": null,
       "refs": {
       }
     },
@@ -193,13 +235,14 @@
         "DeleteObjectRequest$Bucket": null,
         "DeleteObjectsRequest$Bucket": null,
         "Destination$Bucket": "Amazon resource name (ARN) of the bucket where you want Amazon S3 to store replicas of the object identified by the rule.",
+        "GetBucketAccelerateConfigurationRequest$Bucket": "Name of the bucket for which the accelerate configuration is retrieved.",
         "GetBucketAclRequest$Bucket": null,
         "GetBucketCorsRequest$Bucket": null,
         "GetBucketLifecycleConfigurationRequest$Bucket": null,
         "GetBucketLifecycleRequest$Bucket": null,
         "GetBucketLocationRequest$Bucket": null,
         "GetBucketLoggingRequest$Bucket": null,
-        "GetBucketNotificationConfigurationRequest$Bucket": "Name of the buket to get the notification configuration for.",
+        "GetBucketNotificationConfigurationRequest$Bucket": "Name of the bucket to get the notification configuration for.",
         "GetBucketPolicyRequest$Bucket": null,
         "GetBucketReplicationRequest$Bucket": null,
         "GetBucketRequestPaymentRequest$Bucket": null,
@@ -217,8 +260,11 @@
         "ListObjectVersionsRequest$Bucket": null,
         "ListObjectsOutput$Name": null,
         "ListObjectsRequest$Bucket": null,
+        "ListObjectsV2Output$Name": "Name of the bucket to list.",
+        "ListObjectsV2Request$Bucket": "Name of the bucket to list.",
         "ListPartsOutput$Bucket": "Name of the bucket to which the multipart upload was initiated.",
         "ListPartsRequest$Bucket": null,
+        "PutBucketAccelerateConfigurationRequest$Bucket": "Name of the bucket for which the accelerate configuration is set.",
         "PutBucketAclRequest$Bucket": null,
         "PutBucketCorsRequest$Bucket": null,
         "PutBucketLifecycleConfigurationRequest$Bucket": null,
@@ -233,10 +279,10 @@
         "PutBucketVersioningRequest$Bucket": null,
         "PutBucketWebsiteRequest$Bucket": null,
         "PutObjectAclRequest$Bucket": null,
-        "PutObjectRequest$Bucket": null,
+        "PutObjectRequest$Bucket": "Name of the bucket to which the PUT operation was initiated.",
         "RestoreObjectRequest$Bucket": null,
         "UploadPartCopyRequest$Bucket": null,
-        "UploadPartRequest$Bucket": null
+        "UploadPartRequest$Bucket": "Name of the bucket to which the multipart upload was initiated."
       }
     },
     "BucketVersioningStatus": {
@@ -316,7 +362,8 @@
       "refs": {
         "ListMultipartUploadsOutput$CommonPrefixes": null,
         "ListObjectVersionsOutput$CommonPrefixes": null,
-        "ListObjectsOutput$CommonPrefixes": null
+        "ListObjectsOutput$CommonPrefixes": null,
+        "ListObjectsV2Output$CommonPrefixes": "CommonPrefixes contains all (if there are any) keys between Prefix and the next occurrence of the string specified by delimiter"
       }
     },
     "CompleteMultipartUploadOutput": {
@@ -407,8 +454,8 @@
         "PutBucketVersioningRequest$ContentMD5": null,
         "PutBucketWebsiteRequest$ContentMD5": null,
         "PutObjectAclRequest$ContentMD5": null,
-        "PutObjectRequest$ContentMD5": null,
-        "UploadPartRequest$ContentMD5": null
+        "PutObjectRequest$ContentMD5": "The base64-encoded 128-bit MD5 digest of the part data.",
+        "UploadPartRequest$ContentMD5": "The base64-encoded 128-bit MD5 digest of the part data."
       }
     },
     "ContentRange": {
@@ -561,10 +608,16 @@
       "base": null,
       "refs": {
         "LifecycleExpiration$Days": "Indicates the lifetime, in days, of the objects that are subject to the rule. The value must be a non-zero positive integer.",
-        "NoncurrentVersionExpiration$NoncurrentDays": "Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. For information about the noncurrent days calculations, see <a href=\"/AmazonS3/latest/dev/s3-access-control.html\">How Amazon S3 Calculates When an Object Became Noncurrent</a> in the Amazon Simple Storage Service Developer Guide.",
-        "NoncurrentVersionTransition$NoncurrentDays": "Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. For information about the noncurrent days calculations, see <a href=\"/AmazonS3/latest/dev/s3-access-control.html\">How Amazon S3 Calculates When an Object Became Noncurrent</a> in the Amazon Simple Storage Service Developer Guide.",
+        "NoncurrentVersionExpiration$NoncurrentDays": "Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. For information about the noncurrent days calculations, see <a href=\"http://docs.aws.amazon.com/AmazonS3/latest/dev/s3-access-control.html\">How Amazon S3 Calculates When an Object Became Noncurrent</a> in the Amazon Simple Storage Service Developer Guide.",
+        "NoncurrentVersionTransition$NoncurrentDays": "Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. For information about the noncurrent days calculations, see <a href=\"http://docs.aws.amazon.com/AmazonS3/latest/dev/s3-access-control.html\">How Amazon S3 Calculates When an Object Became Noncurrent</a> in the Amazon Simple Storage Service Developer Guide.",
         "RestoreRequest$Days": "Lifetime of the active copy in days",
         "Transition$Days": "Indicates the lifetime, in days, of the objects that are subject to the rule. The value must be a non-zero positive integer."
+      }
+    },
+    "DaysAfterInitiation": {
+      "base": null,
+      "refs": {
+        "AbortIncompleteMultipartUpload$DaysAfterInitiation": "Indicates the number of days that must pass since initiation for Lifecycle to abort an Incomplete Multipart Upload."
       }
     },
     "Delete": {
@@ -675,7 +728,9 @@
         "ListObjectVersionsOutput$Delimiter": null,
         "ListObjectVersionsRequest$Delimiter": "A delimiter is a character you use to group keys.",
         "ListObjectsOutput$Delimiter": null,
-        "ListObjectsRequest$Delimiter": "A delimiter is a character you use to group keys."
+        "ListObjectsRequest$Delimiter": "A delimiter is a character you use to group keys.",
+        "ListObjectsV2Output$Delimiter": "A delimiter is a character you use to group keys.",
+        "ListObjectsV2Request$Delimiter": "A delimiter is a character you use to group keys."
       }
     },
     "Destination": {
@@ -722,7 +777,9 @@
         "ListObjectVersionsOutput$EncodingType": "Encoding type used by Amazon S3 to encode object keys in the response.",
         "ListObjectVersionsRequest$EncodingType": null,
         "ListObjectsOutput$EncodingType": "Encoding type used by Amazon S3 to encode object keys in the response.",
-        "ListObjectsRequest$EncodingType": null
+        "ListObjectsRequest$EncodingType": null,
+        "ListObjectsV2Output$EncodingType": "Encoding type used by Amazon S3 to encode object keys in the response.",
+        "ListObjectsV2Request$EncodingType": "Encoding type used by Amazon S3 to encode object keys in the response."
       }
     },
     "Error": {
@@ -781,6 +838,12 @@
         "Rule$Status": "If 'Enabled', the rule is currently being applied. If 'Disabled', the rule is not currently being applied."
       }
     },
+    "ExpiredObjectDeleteMarker": {
+      "base": null,
+      "refs": {
+        "LifecycleExpiration$ExpiredObjectDeleteMarker": "Indicates whether Amazon S3 will remove a delete marker with no noncurrent versions. If set to true, the delete marker will be expired; if set to false the policy takes no action. This cannot be specified with Days or Date in a Lifecycle Expiration Policy."
+      }
+    },
     "Expires": {
       "base": null,
       "refs": {
@@ -801,6 +864,12 @@
       "base": null,
       "refs": {
         "CORSRule$ExposeHeaders": "One or more headers in the response that you want customers to be able to access from their applications (for example, from a JavaScript XMLHttpRequest object)."
+      }
+    },
+    "FetchOwner": {
+      "base": null,
+      "refs": {
+        "ListObjectsV2Request$FetchOwner": "The owner field is not present in listV2 by default, if you want to return owner field with each key in the result then set the fetch owner field to true"
       }
     },
     "FilterRule": {
@@ -825,6 +894,16 @@
       "base": null,
       "refs": {
         "FilterRule$Value": null
+      }
+    },
+    "GetBucketAccelerateConfigurationOutput": {
+      "base": null,
+      "refs": {
+      }
+    },
+    "GetBucketAccelerateConfigurationRequest": {
+      "base": null,
+      "refs": {
       }
     },
     "GetBucketAclOutput": {
@@ -1161,7 +1240,14 @@
         "ListMultipartUploadsOutput$IsTruncated": "Indicates whether the returned list of multipart uploads is truncated. A value of true indicates that the list was truncated. The list can be truncated if the number of multipart uploads exceeds the limit allowed or specified by max uploads.",
         "ListObjectVersionsOutput$IsTruncated": "A flag that indicates whether or not Amazon S3 returned all of the results that satisfied the search criteria. If your results were truncated, you can make a follow-up paginated request using the NextKeyMarker and NextVersionIdMarker response parameters as a starting place in another request to return the rest of the results.",
         "ListObjectsOutput$IsTruncated": "A flag that indicates whether or not Amazon S3 returned all of the results that satisfied the search criteria.",
+        "ListObjectsV2Output$IsTruncated": "A flag that indicates whether or not Amazon S3 returned all of the results that satisfied the search criteria.",
         "ListPartsOutput$IsTruncated": "Indicates whether the returned list of parts is truncated."
+      }
+    },
+    "KeyCount": {
+      "base": null,
+      "refs": {
+        "ListObjectsV2Output$KeyCount": "KeyCount is the number of keys returned with this request. KeyCount will always be less than equals to MaxKeys field. Say you ask for 50 keys, your result will include less than equals 50 keys"
       }
     },
     "KeyMarker": {
@@ -1271,6 +1357,16 @@
       "refs": {
       }
     },
+    "ListObjectsV2Output": {
+      "base": null,
+      "refs": {
+      }
+    },
+    "ListObjectsV2Request": {
+      "base": null,
+      "refs": {
+      }
+    },
     "ListPartsOutput": {
       "base": null,
       "refs": {
@@ -1334,7 +1430,9 @@
         "ListObjectVersionsOutput$MaxKeys": null,
         "ListObjectVersionsRequest$MaxKeys": "Sets the maximum number of keys returned in the response. The response might contain fewer keys but will never contain more.",
         "ListObjectsOutput$MaxKeys": null,
-        "ListObjectsRequest$MaxKeys": "Sets the maximum number of keys returned in the response. The response might contain fewer keys but will never contain more."
+        "ListObjectsRequest$MaxKeys": "Sets the maximum number of keys returned in the response. The response might contain fewer keys but will never contain more.",
+        "ListObjectsV2Output$MaxKeys": "Sets the maximum number of keys returned in the response. The response might contain fewer keys but will never contain more.",
+        "ListObjectsV2Request$MaxKeys": "Sets the maximum number of keys returned in the response. The response might contain fewer keys but will never contain more."
       }
     },
     "MaxParts": {
@@ -1434,6 +1532,12 @@
       "base": null,
       "refs": {
         "ListPartsOutput$NextPartNumberMarker": "When a list is truncated, this element specifies the last part in the list, as well as the value to use for the part-number-marker request parameter in a subsequent request."
+      }
+    },
+    "NextToken": {
+      "base": null,
+      "refs": {
+        "ListObjectsV2Output$NextContinuationToken": "NextContinuationToken is sent when isTruncated is true which means there are more keys in the bucket that can be listed. The next list requests to Amazon S3 can be continued with this NextContinuationToken. NextContinuationToken is obfuscated and is not a real key"
       }
     },
     "NextUploadIdMarker": {
@@ -1571,17 +1675,18 @@
         "ObjectIdentifier$Key": "Key name of the object to delete.",
         "ObjectVersion$Key": "The object key.",
         "PutObjectAclRequest$Key": null,
-        "PutObjectRequest$Key": null,
+        "PutObjectRequest$Key": "Object key for which the PUT operation was initiated.",
         "RestoreObjectRequest$Key": null,
         "Tag$Key": "Name of the tag.",
         "UploadPartCopyRequest$Key": null,
-        "UploadPartRequest$Key": null
+        "UploadPartRequest$Key": "Object key for which the multipart upload was initiated."
       }
     },
     "ObjectList": {
       "base": null,
       "refs": {
-        "ListObjectsOutput$Contents": null
+        "ListObjectsOutput$Contents": null,
+        "ListObjectsV2Output$Contents": "Metadata about each object returned."
       }
     },
     "ObjectNotInActiveTierError": {
@@ -1618,6 +1723,7 @@
         "HeadObjectRequest$VersionId": "VersionId used to reference a specific version of the object.",
         "ObjectIdentifier$VersionId": "VersionId for the specific version of the object to delete.",
         "ObjectVersion$VersionId": "Version ID of an object.",
+        "PutObjectAclRequest$VersionId": "VersionId used to reference a specific version of the object.",
         "PutObjectOutput$VersionId": "Version of the object.",
         "RestoreObjectRequest$VersionId": null
       }
@@ -1707,6 +1813,8 @@
         "ListObjectVersionsRequest$Prefix": "Limits the response to keys that begin with the specified prefix.",
         "ListObjectsOutput$Prefix": null,
         "ListObjectsRequest$Prefix": "Limits the response to keys that begin with the specified prefix.",
+        "ListObjectsV2Output$Prefix": "Limits the response to keys that begin with the specified prefix.",
+        "ListObjectsV2Request$Prefix": "Limits the response to keys that begin with the specified prefix.",
         "ReplicationRule$Prefix": "Object keyname prefix identifying one or more objects to which the rule applies. Maximum prefix length can be up to 1,024 characters. Overlapping prefixes are not supported.",
         "Rule$Prefix": "Prefix identifying one or more objects to which the rule applies."
       }
@@ -1716,6 +1824,11 @@
       "refs": {
         "Redirect$Protocol": "Protocol to use (http, https) when redirecting requests. The default is the protocol that is used in the original request.",
         "RedirectAllRequestsTo$Protocol": "Protocol to use (http, https) when redirecting requests. The default is the protocol that is used in the original request."
+      }
+    },
+    "PutBucketAccelerateConfigurationRequest": {
+      "base": null,
+      "refs": {
       }
     },
     "PutBucketAclRequest": {
@@ -2133,6 +2246,13 @@
         "Part$Size": "Size of the uploaded part data."
       }
     },
+    "StartAfter": {
+      "base": null,
+      "refs": {
+        "ListObjectsV2Output$StartAfter": "StartAfter is where you want Amazon S3 to start listing from. Amazon S3 starts listing after this specified key. StartAfter can be any key in the bucket",
+        "ListObjectsV2Request$StartAfter": "StartAfter is where you want Amazon S3 to start listing from. Amazon S3 starts listing after this specified key. StartAfter can be any key in the bucket"
+      }
+    },
     "StorageClass": {
       "base": null,
       "refs": {
@@ -2193,6 +2313,13 @@
       "base": null,
       "refs": {
         "LoggingEnabled$TargetPrefix": "This element lets you specify a prefix for the keys that the log files will be stored under."
+      }
+    },
+    "Token": {
+      "base": null,
+      "refs": {
+        "ListObjectsV2Output$ContinuationToken": "ContinuationToken indicates Amazon S3 that the list is being continued on this bucket with a token. ContinuationToken is obfuscated and is not a real key",
+        "ListObjectsV2Request$ContinuationToken": "ContinuationToken indicates Amazon S3 that the list is being continued on this bucket with a token. ContinuationToken is obfuscated and is not a real key"
       }
     },
     "TopicArn": {
