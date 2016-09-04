@@ -1,6 +1,6 @@
 export GO15VENDOREXPERIMENT=1
 
-version := $(shell git describe --always --dirty)
+version := $(shell git describe --always --dirty 2>/dev/null || echo 0.8.1)
 exe = ./cmd/cli53
 buildargs = -ldflags '-w -s -X github.com/barnybug/cli53.version=${version}'
 
