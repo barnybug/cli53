@@ -37,14 +37,25 @@ func Main(args []string) int {
 			Name:    "list",
 			Aliases: []string{"l"},
 			Usage:   "list domains",
-			Flags:   commonFlags,
+			Flags: append(commonFlags,
+				cli.StringFlag{
+					Name:  "format, f",
+					Value: "table",
+					Usage: "output format: text, json, jl, table, csv",
+				},
+			),
 			Action: func(c *cli.Context) error {
 				r53 = getService(c.Bool("debug"), c.String("profile"))
 				if len(c.Args()) != 0 {
 					cli.ShowCommandHelp(c, "list")
 					return cli.NewExitError("No parameters expected", 1)
 				}
-				listZones()
+
+				formatter := getFormatter(c)
+				if formatter == nil {
+					return cli.NewExitError("Unknown format", 1)
+				}
+				listZones(formatter)
 				return nil
 			},
 		},
