@@ -51,11 +51,19 @@ func (self *JlFormatter) formatZoneList(zones <-chan *route53.HostedZone, w io.W
 type TableFormatter struct {
 }
 
+func zoneComment(zone *route53.HostedZone) string {
+	var ret string
+	if zone.Config != nil && zone.Config.Comment != nil {
+		ret = *zone.Config.Comment
+	}
+	return ret
+}
+
 func (self *TableFormatter) formatZoneList(zones <-chan *route53.HostedZone, w io.Writer) {
 	wr := tabwriter.NewWriter(w, 0, 0, 1, ' ', 0)
 	fmt.Fprintln(wr, "ID\tName\tRecord count\tComment")
 	for zone := range zones {
-		fmt.Fprintf(wr, "%s\t%s\t%d\t%s\n", (*zone.Id)[12:], *zone.Name, *zone.ResourceRecordSetCount, *zone.Config.Comment)
+		fmt.Fprintf(wr, "%s\t%s\t%d\t%s\n", (*zone.Id)[12:], *zone.Name, *zone.ResourceRecordSetCount, zoneComment(zone))
 	}
 	wr.Flush()
 }
@@ -67,7 +75,7 @@ func (self *CSVFormatter) formatZoneList(zones <-chan *route53.HostedZone, w io.
 	wr := csv.NewWriter(w)
 	wr.Write([]string{"id", "name", "record count", "comment"})
 	for zone := range zones {
-		wr.Write([]string{(*zone.Id)[12:], *zone.Name, fmt.Sprint(*zone.ResourceRecordSetCount), *zone.Config.Comment})
+		wr.Write([]string{(*zone.Id)[12:], *zone.Name, fmt.Sprint(*zone.ResourceRecordSetCount), zoneComment(zone)})
 	}
 	wr.Flush()
 }
