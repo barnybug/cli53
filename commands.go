@@ -129,21 +129,26 @@ func deleteZone(name string, purge bool) {
 	fmt.Printf("Deleted zone: '%s' ID: '%s'\n", *zone.Name, *zone.Id)
 }
 
-func listZones() {
-	req := route53.ListHostedZonesInput{}
-	for {
-		// paginated
-		resp, err := r53.ListHostedZones(&req)
-		fatalIfErr(err)
-		for _, zone := range resp.HostedZones {
-			fmt.Printf("%+v\n", zone)
+func listZones(formatter Formatter) {
+	zones := make(chan *route53.HostedZone)
+	go func() {
+		for {
+			// paginated
+			req := route53.ListHostedZonesInput{}
+			resp, err := r53.ListHostedZones(&req)
+			fatalIfErr(err)
+			for _, zone := range resp.HostedZones {
+				zones <- zone
+			}
+			if *resp.IsTruncated {
+				req.Marker = resp.NextMarker
+			} else {
+				break
+			}
 		}
-		if *resp.IsTruncated {
-			req.Marker = resp.NextMarker
-		} else {
-			break
-		}
-	}
+		close(zones)
+	}()
+	formatter.formatZoneList(zones, os.Stdout)
 }
 
 func isAuthRecord(zone *route53.HostedZone, rrset *route53.ResourceRecordSet) bool {
