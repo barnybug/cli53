@@ -217,18 +217,27 @@ func groupRecords(records []dns.RR) map[Key][]dns.RR {
 	return grouped
 }
 
-func importBind(name string, file string, wait bool, editauth bool, replace bool) {
-	zone := lookupZone(name)
-	records := parseBindFile(file, *zone.Name)
+type importArgs struct {
+	name     string
+	file     string
+	wait     bool
+	editauth bool
+	replace  bool
+	dryrun   bool
+}
+
+func importBind(args importArgs) {
+	zone := lookupZone(args.name)
+	records := parseBindFile(args.file, *zone.Name)
 	expandSelfAliases(records, zone)
 
 	grouped := groupRecords(records)
 	existing := map[string]*route53.ResourceRecordSet{}
-	if replace {
+	if args.replace {
 		rrsets, err := ListAllRecordSets(r53, *zone.Id)
 		fatalIfErr(err)
 		for _, rrset := range rrsets {
-			if editauth || !isAuthRecord(zone, rrset) {
+			if args.editauth || !isAuthRecord(zone, rrset) {
 				rrset.Name = aws.String(unescaper.Replace(*rrset.Name))
 				existing[rrset.String()] = rrset
 			}
@@ -238,7 +247,7 @@ func importBind(name string, file string, wait bool, editauth bool, replace bool
 	additions := []*route53.Change{}
 	for _, values := range grouped {
 		rrset := ConvertBindToRRSet(values)
-		if rrset != nil && (editauth || !isAuthRecord(zone, rrset)) {
+		if rrset != nil && (args.editauth || !isAuthRecord(zone, rrset)) {
 			key := rrset.String()
 			if _, ok := existing[key]; ok {
 				// no difference - leave it untouched
@@ -264,11 +273,27 @@ func importBind(name string, file string, wait bool, editauth bool, replace bool
 		deletions = append(deletions, &change)
 	}
 
-	resp := batchChanges(additions, deletions, zone)
-	fmt.Printf("%d records imported (%d changes / %d additions / %d deletions)\n", len(records), len(additions)+len(deletions), len(additions), len(deletions))
+	if args.dryrun {
+		if len(additions)+len(deletions) == 0 {
+			fmt.Println("Dry-run, but no changes would have been made.")
+		} else {
+			fmt.Println("Dry-run, changes that would be made:")
+			for _, addition := range additions {
+				rr := addition.ResourceRecordSet
+				fmt.Printf("+ %s %s\n", *rr.Name, *rr.Type)
+			}
+			for _, deletion := range deletions {
+				rr := deletion.ResourceRecordSet
+				fmt.Printf("- %s %s\n", *rr.Name, *rr.Type)
+			}
+		}
+	} else {
+		resp := batchChanges(additions, deletions, zone)
+		fmt.Printf("%d records imported (%d changes / %d additions / %d deletions)\n", len(records), len(additions)+len(deletions), len(additions), len(deletions))
 
-	if wait && resp != nil {
-		waitForChange(resp.ChangeInfo)
+		if args.wait && resp != nil {
+			waitForChange(resp.ChangeInfo)
+		}
 	}
 }
 

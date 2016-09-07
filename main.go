@@ -45,7 +45,7 @@ func Main(args []string) int {
 				},
 			),
 			Action: func(c *cli.Context) error {
-				r53 = getService(c.Bool("debug"), c.String("profile"))
+				r53 = getService(c)
 				if len(c.Args()) != 0 {
 					cli.ShowCommandHelp(c, "list")
 					return cli.NewExitError("No parameters expected", 1)
@@ -86,7 +86,7 @@ func Main(args []string) int {
 				},
 			),
 			Action: func(c *cli.Context) error {
-				r53 = getService(c.Bool("debug"), c.String("profile"))
+				r53 = getService(c)
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "create")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
@@ -106,7 +106,7 @@ func Main(args []string) int {
 				},
 			),
 			Action: func(c *cli.Context) error {
-				r53 = getService(c.Bool("debug"), c.String("profile"))
+				r53 = getService(c)
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "delete")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
@@ -138,14 +138,26 @@ func Main(args []string) int {
 					Name:  "replace",
 					Usage: "replace all existing records",
 				},
+				cli.BoolFlag{
+					Name:  "dry-run, n",
+					Usage: "perform a trial run with no changes made",
+				},
 			),
 			Action: func(c *cli.Context) error {
-				r53 = getService(c.Bool("debug"), c.String("profile"))
+				r53 = getService(c)
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "import")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
-				importBind(c.Args().First(), c.String("file"), c.Bool("wait"), c.Bool("editauth"), c.Bool("replace"))
+				args := importArgs{
+					name:     c.Args().First(),
+					file:     c.String("file"),
+					wait:     c.Bool("wait"),
+					editauth: c.Bool("editauth"),
+					replace:  c.Bool("replace"),
+					dryrun:   c.Bool("dry-run"),
+				}
+				importBind(args)
 				return nil
 			},
 		},
@@ -160,7 +172,7 @@ func Main(args []string) int {
 				},
 			),
 			Action: func(c *cli.Context) error {
-				r53 = getService(c.Bool("debug"), c.String("profile"))
+				r53 = getService(c)
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "export")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
@@ -221,7 +233,7 @@ func Main(args []string) int {
 				},
 			),
 			Action: func(c *cli.Context) error {
-				r53 = getService(c.Bool("debug"), c.String("profile"))
+				r53 = getService(c)
 				if len(c.Args()) < 2 {
 					cli.ShowCommandHelp(c, "rrcreate")
 					return cli.NewExitError("Expected at least 2 parameters", 1)
@@ -269,7 +281,7 @@ func Main(args []string) int {
 				},
 			),
 			Action: func(c *cli.Context) error {
-				r53 = getService(c.Bool("debug"), c.String("profile"))
+				r53 = getService(c)
 				if len(c.Args()) != 3 {
 					cli.ShowCommandHelp(c, "rrdelete")
 					return cli.NewExitError("Expected exactly 3 parameters", 1)
@@ -293,7 +305,7 @@ func Main(args []string) int {
 				},
 			),
 			Action: func(c *cli.Context) error {
-				r53 = getService(c.Bool("debug"), c.String("profile"))
+				r53 = getService(c)
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "rrpurge")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
@@ -310,7 +322,7 @@ func Main(args []string) int {
 			Usage: "list reusable delegation sets",
 			Flags: commonFlags,
 			Action: func(c *cli.Context) error {
-				r53 = getService(c.Bool("debug"), c.String("profile"))
+				r53 = getService(c)
 				listReusableDelegationSets()
 				return nil
 			},
@@ -326,7 +338,7 @@ func Main(args []string) int {
 				},
 			),
 			Action: func(c *cli.Context) error {
-				r53 = getService(c.Bool("debug"), c.String("profile"))
+				r53 = getService(c)
 				createReusableDelegationSet(c.String("zone-id"))
 				return nil
 			},
@@ -337,7 +349,7 @@ func Main(args []string) int {
 			ArgsUsage: "id",
 			Flags:     commonFlags,
 			Action: func(c *cli.Context) error {
-				r53 = getService(c.Bool("debug"), c.String("profile"))
+				r53 = getService(c)
 				if len(c.Args()) != 1 {
 					cli.ShowCommandHelp(c, "dsdelete")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)

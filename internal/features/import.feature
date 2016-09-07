@@ -61,6 +61,20 @@ Feature: import
     And I run "cli53 import --replace --file tests/replace2.txt $domain"
     Then the domain "$domain" export matches file "tests/replace2.txt"
 
+  Scenario: I can import dry-run (with changes)
+    Given I have a domain "$domain"
+    When I run "cli53 import --file tests/replace1.txt $domain"
+    And I run "cli53 import --replace --file tests/replace2.txt --dry-run $domain"
+    Then the output contains "Dry-run"
+    And the output contains "+ mail.$domain. A"
+    And the output contains "- mail.$domain. A"
+
+  Scenario: I can import dry-run (no changes)
+    Given I have a domain "$domain"
+    When I run "cli53 import --file tests/replace1.txt $domain"
+    And I run "cli53 import --replace --file tests/replace1.txt --dry-run $domain"
+    Then the output contains "no changes would have been made"
+
   Scenario: I can import a zone editing auth
     Given I have a domain "$domain"
     When I run "cli53 import --file tests/auth.txt --replace --editauth $domain"

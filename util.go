@@ -12,6 +12,7 @@ import (
 	"unicode"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/urfave/cli"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -33,7 +34,9 @@ func qualifyName(name, origin string) string {
 	}
 }
 
-func getService(debug bool, profile string) *route53.Route53 {
+func getService(c *cli.Context) *route53.Route53 {
+	debug := c.Bool("debug")
+	profile := c.String("profile")
 	config := aws.Config{}
 	if profile != "" {
 		config.Credentials = credentials.NewSharedCredentials("", profile)
