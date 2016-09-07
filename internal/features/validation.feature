@@ -44,12 +44,12 @@ Feature: parameter validation
     When I execute "cli53 export a b"
     Then the exit code was 1
 
-  Scenario: rrcreate requires two arguments
-    When I execute "cli53 import a b c"
+  Scenario: rrcreate requires at least two arguments
+    When I execute "cli53 rrcreate a"
     Then the exit code was 1
 
   Scenario: rrdelete requires three arguments
-    When I execute "cli53 import a b c d"
+    When I execute "cli53 rrdelete a b c d"
     Then the exit code was 1
 
   Scenario: rrpurge requires one argument

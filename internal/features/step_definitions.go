@@ -162,6 +162,12 @@ func domain(s string) string {
 	return strings.Replace(s, "$domain", domain, -1)
 }
 
+var unquoter = strings.NewReplacer(`\\`, `\`, `\"`, `"`)
+
+func unquote(s string) string {
+	return unquoter.Replace(s)
+}
+
 var reMagic = regexp.MustCompile(`\$\w+`)
 
 func replaceMagics(s string) string {
@@ -336,9 +342,9 @@ func init() {
 	})
 
 	Then(`^the output contains "(.+?)"$`, func(s string) {
-		s = domain(s)
+		s = unquote(domain(s))
 		if !strings.Contains(runOutput, s) {
-			T.Errorf("Output did not contain \"%s\"", s)
+			T.Errorf("Output did not contain \"%s\"\nactual: %s", s, runOutput)
 		}
 	})
 
