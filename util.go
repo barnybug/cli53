@@ -97,19 +97,14 @@ func lookupZone(nameOrId string) *route53.HostedZone {
 	} else {
 		// lookup by name
 		matches := []route53.HostedZone{}
-		req := route53.ListHostedZonesInput{}
-		for {
-			resp, err := r53.ListHostedZones(&req)
-			fatalIfErr(err)
-			for _, zone := range resp.HostedZones {
-				if zoneName(*zone.Name) == zoneName(nameOrId) || *zone.Id == nameOrId {
-					matches = append(matches, *zone)
-				}
-			}
-			if *resp.IsTruncated {
-				req.Marker = resp.NextMarker
-			} else {
-				break
+		req := route53.ListHostedZonesByNameInput{
+			DNSName: aws.String(nameOrId),
+		}
+		resp, err := r53.ListHostedZonesByName(&req)
+		fatalIfErr(err)
+		for _, zone := range resp.HostedZones {
+			if zoneName(*zone.Name) == zoneName(nameOrId) {
+				matches = append(matches, *zone)
 			}
 		}
 		switch len(matches) {
