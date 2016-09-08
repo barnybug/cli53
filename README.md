@@ -77,6 +77,10 @@ Replace with an imported zone, waiting for completion:
 
 	$ cli53 import --file zonefile.txt --replace --wait example.com
 
+Also you can 'dry-run' import, to check what will happen:
+
+	$ cli53 import --file zonefile.txt --replace --wait --dry-run example.com
+
 Create an A record pointed to 192.168.0.1 with TTL of 60 seconds:
 
 	$ cli53 rrcreate example.com 'www 60 A 192.168.0.1'
