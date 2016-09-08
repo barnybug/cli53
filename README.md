@@ -69,7 +69,7 @@ Check what we've done:
 
 	$ cli53 list
 
-List also supports other output formats (eg. json for scripting using [jq](https://stedolan.github.io/jq/):
+List also supports other output formats (eg. json for scripting using [jq](https://stedolan.github.io/jq/)):
 
 	$ cli53 list -format json | jq .[].Name
 
@@ -136,6 +136,11 @@ Create some geolocation records:
 	$ cli53 rrcreate -i Africa --continent-code AF example.com 'geo 300 IN A 127.0.0.1'
 	$ cli53 rrcreate -i California --country-code US --subdivision-code CA example.com 'geo 300 IN A 127.0.0.2'
 	
+Create a primary/secondary pair of health checked records:
+
+	$ cli53 rrcreate -i Primary --failover PRIMARY --health-check 2e668584-4352-4890-8ffe-6d3644702a1b example.com 'ha 300 IN A 127.0.0.1'
+	$ cli53 rrcreate -i Secondary --failover SECONDARY example.com 'ha 300 IN A 127.0.0.2'
+
 Create, list and then delete a reusable delegation set:
 
 	$ cli53 dscreate
