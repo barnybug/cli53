@@ -69,6 +69,10 @@ Check what we've done:
 
 	$ cli53 list
 
+List also supports other output formats (eg. json for scripting using [jq](https://stedolan.github.io/jq/):
+
+	$ cli53 list -format json | jq .[].Name
+
 Import a BIND zone file:
 
 	$ cli53 import --file zonefile.txt example.com
