@@ -1,8 +1,7 @@
 export GO15VENDOREXPERIMENT=1
 
-version := $(shell git describe --always --dirty 2>/dev/null || echo 0.8.2)
 exe = ./cmd/cli53
-buildargs = -ldflags '-w -s -X github.com/barnybug/cli53.version=${version}'
+releaseargs = -ldflags '-w -s'
 
 .PHONY: all build install test coverage deps release
 
@@ -14,18 +13,18 @@ deps:
 	go get github.com/gucumber/gucumber/cmd/gucumber
 
 build:
-	go build -i -v $(buildargs) $(exe)
+	go build -i -v $(exe)
 
 install:
-	go install $(buildargs) $(exe)
+	go install $(exe)
 
 release:
-	GOOS=linux GOARCH=386 go build $(buildargs) -o release/cli53-linux-386 $(exe)
-	GOOS=linux GOARCH=amd64 go build $(buildargs) -o release/cli53-linux-amd64 $(exe)
-	GOOS=linux GOARCH=arm go build $(buildargs) -o release/cli53-linux-arm $(exe)
-	GOOS=darwin GOARCH=amd64 go build $(buildargs) -o release/cli53-mac-amd64 $(exe)
-	GOOS=windows GOARCH=386 go build $(buildargs) -o release/cli53-windows-386.exe $(exe)
-	GOOS=windows GOARCH=amd64 go build $(buildargs) -o release/cli53-windows-amd64.exe $(exe)
+	GOOS=linux GOARCH=386 go build $(releaseargs) -o release/cli53-linux-386 $(exe)
+	GOOS=linux GOARCH=amd64 go build $(releaseargs) -o release/cli53-linux-amd64 $(exe)
+	GOOS=linux GOARCH=arm go build $(releaseargs) -o release/cli53-linux-arm $(exe)
+	GOOS=darwin GOARCH=amd64 go build $(releaseargs) -o release/cli53-mac-amd64 $(exe)
+	GOOS=windows GOARCH=386 go build $(releaseargs) -o release/cli53-windows-386.exe $(exe)
+	GOOS=windows GOARCH=amd64 go build $(releaseargs) -o release/cli53-windows-amd64.exe $(exe)
 	goupx release/cli53-linux-amd64
 	upx release/cli53-linux-386 release/cli53-linux-arm release/cli53-windows-386.exe
 	cd release; sha256sum cli53-* > SHA256SUMS
