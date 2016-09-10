@@ -55,6 +55,11 @@ Feature: import
     When I run "cli53 import --file tests/alias.txt $domain"
     Then the domain "$domain" export matches file "tests/alias.txt"
 
+  Scenario: I can import a zone with an alias with multiple types
+    Given I have a domain "$domain"
+    When I run "cli53 import --file tests/alias_multiple_types.txt $domain"
+    Then the domain "$domain" export matches file "tests/alias_multiple_types.txt"
+
   Scenario: I can import (replace) a zone
     Given I have a domain "$domain"
     When I run "cli53 import --file tests/replace1.txt $domain"

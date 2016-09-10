@@ -1,0 +1,4 @@
+www	86400	IN	A	127.0.0.1
+www	86400	IN	AAAA	::1
+alias	86400	AWS	ALIAS	A www $self false
+alias	86400	AWS	ALIAS	AAAA www $self false

@@ -211,6 +211,11 @@ func groupRecords(records []dns.RR) map[Key][]dns.RR {
 		if aws, ok := record.(*AWSRR); ok {
 			identifier = aws.Identifier
 		}
+		if alias, ok := record.(*dns.PrivateRR); ok {
+			// issue #195: alias records need to be keyed by the type of the alias too
+			rdata := alias.Data.(*ALIASRdata)
+			identifier += "@" + rdata.Type
+		}
 		key := Key{record.Header().Name, record.Header().Rrtype, identifier}
 		grouped[key] = append(grouped[key], record)
 	}
