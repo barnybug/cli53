@@ -1,3 +1,25 @@
+## 0.8.3 (2016-09-10)
+
+- Handle aliases with multiple types correctly. #195
+
+## 0.8.2 (2016-09-07)
+
+- Add --dry-run option to import. #178
+- List -format functionality. #185
+- Use ListHostedZonesByZone for more efficient lookup. #193
+
+Note: the default output format for `cli53 list` has been changed. To produce the old output, use `cli53 list -format text`.
+
+## 0.8.1 (2016-09-04)
+
+- Build correct version number into releases
+- Zone ID|name usage clarification
+
+## 0.8.0 (2016-08-28)
+
+- Updated dependencies
+- go 1.7 build for releases
+
 ## 0.7.4 (2016-04-17)
 
 - Reusable delegation set support (new commands: dslist, dscreate, dsdelete, and create parameters --delegation-set-id)
