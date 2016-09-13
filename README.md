@@ -50,14 +50,12 @@ For more information, see: http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFG
 
 ## Building from source
 
-To build yourself from source (you will need golang 1.5 installed):
+To build yourself from source (you will need golang >= 1.5 installed):
 
     $ export GO15VENDOREXPERIMENT=1
-    $ go get github.com/barnybug/cli53
-    $ cd $GOPATH/src/github.com/barnybug/cli53
-    $ make install
+    $ go get github.com/barnybug/cli53/cmd/cli53
 
-This will produce a binary `cli53` in `~/go/bin`, after this follow the steps as above.
+This will produce a binary `cli53` in `$GOPATH/bin`, after this follow the steps as above.
 
 ## Getting Started
 
