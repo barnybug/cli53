@@ -132,9 +132,9 @@ func deleteZone(name string, purge bool) {
 func listZones(formatter Formatter) {
 	zones := make(chan *route53.HostedZone)
 	go func() {
+		req := route53.ListHostedZonesInput{}
 		for {
 			// paginated
-			req := route53.ListHostedZonesInput{}
 			resp, err := r53.ListHostedZones(&req)
 			fatalIfErr(err)
 			for _, zone := range resp.HostedZones {
