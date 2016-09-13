@@ -9,7 +9,7 @@ import (
 )
 
 var r53 *route53.Route53
-var version = "0.8.3"
+var version = "0.8.4"
 
 // Main entry point for cli53 application
 func Main(args []string) int {
