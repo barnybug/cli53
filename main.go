@@ -162,6 +162,70 @@ func Main(args []string) int {
 			},
 		},
 		{
+			Name:      "instances",
+			Usage:     "dynamically update your dns with EC2 instance names",
+			ArgsUsage: "name|ID",
+			Flags: append(commonFlags,
+				cli.StringFlag{
+					Name:  "off",
+					Value: "",
+					Usage: "if provided, then records for stopped instances will be updated. This option gives the dns name the CNAME should revert to",
+				},
+				cli.StringSliceFlag{
+					Name:   "region",
+					EnvVar: "AWS_REGION",
+					Usage:  "a list of regions to check",
+				},
+				cli.BoolFlag{
+					Name:  "wait",
+					Usage: "wait for changes to become live",
+				},
+				cli.IntFlag{
+					Name:  "ttl, x",
+					Value: 60,
+					Usage: "resource record ttl",
+				},
+				cli.StringFlag{
+					Name:  "match",
+					Value: "",
+					Usage: "regular expression to select which Name tags to use",
+				},
+				cli.BoolFlag{
+					Name:  "internal, i",
+					Usage: "always use the internal hostname",
+				},
+				cli.BoolFlag{
+					Name:  "a-record, a",
+					Usage: "write an A record (IP) instead of CNAME",
+				},
+				cli.BoolFlag{
+					Name:  "dry-run, n",
+					Usage: "dry run - don't make any changes",
+				},
+			),
+			Action: func(c *cli.Context) error {
+				config := getConfig(c)
+				r53 = getService(c)
+				if len(c.Args()) != 1 {
+					cli.ShowCommandHelp(c, "instances")
+					return cli.NewExitError("Expected exactly 1 parameter", 1)
+				}
+				args := instancesArgs{
+					name:     c.Args().First(),
+					off:      c.String("off"),
+					regions:  c.StringSlice("region"),
+					wait:     c.Bool("wait"),
+					ttl:      c.Int("ttl"),
+					match:    c.String("match"),
+					internal: c.Bool("internal"),
+					aRecord:  c.Bool("a-record"),
+					dryRun:   c.Bool("dry-run"),
+				}
+				instances(args, config)
+				return nil
+			},
+		},
+		{
 			Name:      "export",
 			Usage:     "export a bind zone file (to stdout)",
 			ArgsUsage: "name|ID",

@@ -11,11 +11,11 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/urfave/cli"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/route53"
 )
@@ -34,7 +34,7 @@ func qualifyName(name, origin string) string {
 	}
 }
 
-func getService(c *cli.Context) *route53.Route53 {
+func getConfig(c *cli.Context) *aws.Config {
 	debug := c.Bool("debug")
 	profile := c.String("profile")
 	config := aws.Config{}
@@ -46,7 +46,11 @@ func getService(c *cli.Context) *route53.Route53 {
 	if debug {
 		config.LogLevel = aws.LogLevel(aws.LogDebug)
 	}
-	return route53.New(session.New(), &config)
+	return &config
+}
+
+func getService(c *cli.Context) *route53.Route53 {
+	return route53.New(session.New(), getConfig(c))
 }
 
 func fatalIfErr(err error) {
