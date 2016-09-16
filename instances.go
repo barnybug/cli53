@@ -92,9 +92,9 @@ func instances(args instancesArgs, config *aws.Config) {
 			value = &args.off
 		} else if args.aRecord {
 			if args.internal {
-				value = instance.PublicIpAddress
-			} else {
 				value = instance.PrivateIpAddress
+			} else {
+				value = instance.PublicIpAddress
 			}
 		} else {
 			if args.internal {
