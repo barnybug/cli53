@@ -1,3 +1,8 @@
+## 0.8.5 (2016-09-16)
+
+- Beta: 'instances' command. #119
+- Fix for short zone IDs. #197
+
 ## 0.8.4 (2016-09-10)
 
 - Fix for listing > 100 zones. #196
