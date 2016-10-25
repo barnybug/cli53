@@ -71,8 +71,8 @@ Feature: import
     When I run "cli53 import --file tests/replace1.txt $domain"
     And I run "cli53 import --replace --file tests/replace2.txt --dry-run $domain"
     Then the output contains "Dry-run"
-    And the output contains "+ mail.$domain. A"
-    And the output contains "- mail.$domain. A"
+    And the output contains "+ mail.$domain.	86400	IN	A	10.0.0.4"
+    And the output contains "- mail.$domain.	86400	IN	A	10.0.0.2"
 
   Scenario: I can import dry-run (no changes)
     Given I have a domain "$domain"
