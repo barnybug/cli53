@@ -1,3 +1,8 @@
+## 0.8.6 (2016-10-25)
+
+- Improve --dry-run output. #204
+- Fix for quoting in TXT records. #205
+
 ## 0.8.5 (2016-09-16)
 
 - Beta: 'instances' command. #119
