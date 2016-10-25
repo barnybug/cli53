@@ -284,12 +284,16 @@ func importBind(args importArgs) {
 		} else {
 			fmt.Println("Dry-run, changes that would be made:")
 			for _, addition := range additions {
-				rr := addition.ResourceRecordSet
-				fmt.Printf("+ %s %s\n", *rr.Name, *rr.Type)
+				rrs := ConvertRRSetToBind(addition.ResourceRecordSet)
+				for _, rr := range rrs {
+					fmt.Printf("+ %s\n", rr.String())
+				}
 			}
 			for _, deletion := range deletions {
-				rr := deletion.ResourceRecordSet
-				fmt.Printf("- %s %s\n", *rr.Name, *rr.Type)
+				rrs := ConvertRRSetToBind(deletion.ResourceRecordSet)
+				for _, rr := range rrs {
+					fmt.Printf("- %s\n", rr.String())
+				}
 			}
 		}
 	} else {
