@@ -53,7 +53,7 @@ func parseBindFile(file, origin string) []dns.RR {
 func quoteValues(vals []string) string {
 	var qvals []string
 	for _, val := range vals {
-		qvals = append(qvals, quote(val))
+		qvals = append(qvals, `"`+val+`"`)
 	}
 	return strings.Join(qvals, " ")
 }
