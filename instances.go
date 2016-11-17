@@ -53,21 +53,29 @@ func instances(args instancesArgs, config *aws.Config) {
 	insts := map[string]*ec2.Instance{}
 	for _, region := range args.regions {
 		ec2conn := ec2.New(session.New(), config.WithRegion(region))
-		output, err := ec2conn.DescribeInstances(&describeInstancesInput)
-		fatalIfErr(err)
-		for _, r := range output.Reservations {
-			for _, i := range r.Instances {
-				for _, tag := range i.Tags {
-					// limit to instances with a Name tag
-					if *tag.Key == "Name" {
-						if reMatch != nil && !reMatch.MatchString(*tag.Value) {
+		for {
+			// paginated
+			output, err := ec2conn.DescribeInstances(&describeInstancesInput)
+			fatalIfErr(err)
+			for _, r := range output.Reservations {
+				for _, i := range r.Instances {
+					for _, tag := range i.Tags {
+						// limit to instances with a Name tag
+						if *tag.Key == "Name" {
+							if reMatch != nil && !reMatch.MatchString(*tag.Value) {
+								continue
+							}
+							insts[*tag.Value] = i
 							continue
 						}
-						insts[*tag.Value] = i
-						continue
 					}
 				}
 			}
+
+			if output.NextToken == nil {
+				break
+			}
+			describeInstancesInput.NextToken = output.NextToken
 		}
 	}
 
