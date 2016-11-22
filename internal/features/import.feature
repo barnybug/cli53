@@ -96,3 +96,9 @@ Feature: import
     When I run "cli53 import --file tests/replace3.txt $domain"
     And I run "cli53 import --replace --file tests/replace3.txt $domain"
     Then the output contains "0 changes"
+
+  Scenario: I can import a zone as case-insensitive
+    Given I have a domain "$domain"
+    When I run "cli53 import --file tests/uppercase.txt $domain"
+    And I run "cli53 import --replace --file tests/uppercase.txt $domain"
+    Then the output contains "0 changes"

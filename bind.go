@@ -135,9 +135,10 @@ func ConvertBindToRRSet(records []dns.RR) *route53.ResourceRecordSet {
 		return nil
 	}
 	hdr := records[0].Header()
+	name := strings.ToLower(hdr.Name)
 	rrset := &route53.ResourceRecordSet{
 		Type: aws.String(dns.TypeToString[hdr.Rrtype]),
-		Name: aws.String(hdr.Name),
+		Name: aws.String(name),
 		TTL:  aws.Int64(int64(hdr.Ttl)),
 	}
 
