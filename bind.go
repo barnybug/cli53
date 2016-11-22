@@ -2,6 +2,7 @@ package cli53
 
 import (
 	"fmt"
+	"io"
 	"net"
 	"os"
 	"strings"
@@ -35,10 +36,8 @@ func parseComment(rr dns.RR, comment string) dns.RR {
 	return rr
 }
 
-func parseBindFile(file, origin string) []dns.RR {
-	rdr, err := os.Open(file)
-	fatalIfErr(err)
-	tokensch := dns.ParseZone(rdr, origin, file)
+func parseBindFile(reader io.Reader, filename, origin string) []dns.RR {
+	tokensch := dns.ParseZone(reader, origin, filename)
 	records := []dns.RR{}
 	for token := range tokensch {
 		if token.Error != nil {

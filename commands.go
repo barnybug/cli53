@@ -233,7 +233,18 @@ type importArgs struct {
 
 func importBind(args importArgs) {
 	zone := lookupZone(args.name)
-	records := parseBindFile(args.file, *zone.Name)
+
+	var reader io.Reader
+	if args.file == "-" {
+		reader = os.Stdin
+	} else {
+		f, err := os.Open(args.file)
+		fatalIfErr(err)
+		defer f.Close()
+		reader = f
+	}
+
+	records := parseBindFile(reader, args.file, *zone.Name)
 	expandSelfAliases(records, zone)
 
 	grouped := groupRecords(records)

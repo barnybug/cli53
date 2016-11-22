@@ -124,7 +124,7 @@ func Main(args []string) int {
 				cli.StringFlag{
 					Name:  "file",
 					Value: "",
-					Usage: "bind zone file (required)",
+					Usage: "bind zone filename, or - for stdin (required)",
 				},
 				cli.BoolFlag{
 					Name:  "wait",
