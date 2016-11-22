@@ -1,3 +1,9 @@
+## 0.8.7 (2016-11-22)
+
+- Lowercase record names to make imports case-insensitive. Fixes #206
+- Support stdin (-) for import. Fixes #209
+- Paginate instances listing
+
 ## 0.8.6 (2016-10-25)
 
 - Improve --dry-run output. #204
