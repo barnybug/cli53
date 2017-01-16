@@ -236,12 +236,16 @@ func Main(args []string) int {
 				},
 			),
 			Action: func(c *cli.Context) error {
+				var Id string = ""
 				r53 = getService(c)
-				if len(c.Args()) != 1 {
+				if len(c.Args()) == 0 {
 					cli.ShowCommandHelp(c, "export")
-					return cli.NewExitError("Expected exactly 1 parameter", 1)
+					return cli.NewExitError("Expected 1 or 2 parameter(s)", 1)
+				} else if len(c.Args()) == 2 {
+					Id = c.Args()[1]
 				}
-				exportBind(c.Args().First(), c.Bool("full"))
+
+				exportBind(c.Args().First(), c.Bool("full"), Id)
 				return nil
 			},
 		},

@@ -361,8 +361,13 @@ func UnexpandSelfAliases(records []dns.RR, zone *route53.HostedZone, full bool) 
 	}
 }
 
-func exportBind(name string, full bool) {
-	zone := lookupZone(name)
+func exportBind(name string, full bool, Id string) {
+	var zone *route53.HostedZone
+	if Id != "" {
+		zone = &route53.HostedZone{Id: aws.String(Id), Name: aws.String(name + ".")}
+	} else {
+		zone = lookupZone(name)
+	}
 	ExportBindToWriter(r53, zone, full, os.Stdout)
 }
 
