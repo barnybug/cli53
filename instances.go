@@ -140,7 +140,7 @@ func instances(args instancesArgs, config *aws.Config) {
 			fmt.Printf("+ %s %s %v\n", *rr.Name, *rr.Type, *rr.ResourceRecords[0].Value)
 		}
 	} else {
-		resp := batchChanges(upserts, []*route53.Change{}, zone)
+		resp := batchChanges([]*route53.Change{}, upserts, []*route53.Change{}, zone)
 		fmt.Printf("%d records upserted\n", len(upserts))
 
 		if args.wait && resp != nil {

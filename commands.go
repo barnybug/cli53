@@ -255,18 +255,27 @@ func importBind(args importArgs) {
 		for _, rrset := range rrsets {
 			if args.editauth || !isAuthRecord(zone, rrset) {
 				rrset.Name = aws.String(unescaper.Replace(*rrset.Name))
-				existing[rrset.String()] = rrset
+				existing[*rrset.Name] = rrset
+				fmt.Println(rrset.String())
 			}
 		}
 	}
 
 	additions := []*route53.Change{}
+	modifications := []*route53.Change{}
 	for _, values := range grouped {
 		rrset := ConvertBindToRRSet(values)
 		if rrset != nil && (args.editauth || !isAuthRecord(zone, rrset)) {
-			key := rrset.String()
-			if _, ok := existing[key]; ok {
-				// no difference - leave it untouched
+			key := *rrset.Name
+			if r, ok := existing[key]; ok {
+				// Check if content changed
+				if r.String() != rrset.String() {
+					change := route53.Change{
+						Action:            aws.String("UPSERT"),
+						ResourceRecordSet: rrset,
+					}
+					modifications = append(additions, &change)
+				}
 				delete(existing, key)
 			} else {
 				// new record, add
@@ -290,10 +299,16 @@ func importBind(args importArgs) {
 	}
 
 	if args.dryrun {
-		if len(additions)+len(deletions) == 0 {
+		if len(additions)+len(deletions)+len(modifications) == 0 {
 			fmt.Println("Dry-run, but no changes would have been made.")
 		} else {
 			fmt.Println("Dry-run, changes that would be made:")
+			for _, modification := range modifications {
+				rrs := ConvertRRSetToBind(modification.ResourceRecordSet)
+				for _, rr := range rrs {
+					fmt.Printf("+ %s\n", rr.String())
+				}
+			}
 			for _, addition := range additions {
 				rrs := ConvertRRSetToBind(addition.ResourceRecordSet)
 				for _, rr := range rrs {
@@ -308,8 +323,8 @@ func importBind(args importArgs) {
 			}
 		}
 	} else {
-		resp := batchChanges(additions, deletions, zone)
-		fmt.Printf("%d records imported (%d changes / %d additions / %d deletions)\n", len(records), len(additions)+len(deletions), len(additions), len(deletions))
+		resp := batchChanges(modifications, additions, deletions, zone)
+		fmt.Printf("%d records imported (%d changes / %d modification / %d additions / %d deletions)\n", len(records), len(additions)+len(deletions)+len(modifications), len(modifications), len(additions), len(deletions))
 
 		if args.wait && resp != nil {
 			waitForChange(resp.ChangeInfo)
@@ -317,11 +332,12 @@ func importBind(args importArgs) {
 	}
 }
 
-func batchChanges(additions, deletions []*route53.Change, zone *route53.HostedZone) *route53.ChangeResourceRecordSetsOutput {
+func batchChanges(modifications, additions, deletions []*route53.Change, zone *route53.HostedZone) *route53.ChangeResourceRecordSetsOutput {
 	// sort additions so aliases are last
 	sort.Sort(changeSorter{additions})
 
 	changes := append(deletions, additions...)
+	changes = append(changes, modifications...)
 
 	var resp *route53.ChangeResourceRecordSetsOutput
 	for i := 0; i < len(changes); i += ChangeBatchSize {
@@ -592,7 +608,7 @@ func createRecords(args createArgs) {
 		}
 	}
 
-	resp := batchChanges(additions, deletions, zone)
+	resp := batchChanges([]*route53.Change{}, additions, deletions, zone)
 
 	for _, record := range records {
 		txt := strings.Replace(record.String(), "\t", " ", -1)
