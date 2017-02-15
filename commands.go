@@ -271,7 +271,7 @@ func importBind(args importArgs) {
 			} else {
 				// new record, add
 				change := route53.Change{
-					Action:            aws.String("CREATE"),
+					Action:            aws.String("UPSERT"),
 					ResourceRecordSet: rrset,
 				}
 				additions = append(additions, &change)
