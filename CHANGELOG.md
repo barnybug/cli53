@@ -1,3 +1,7 @@
+## 0.8.8 (2017-05-06)
+
+- Fix shortenName overzealously removes suffixes #221
+
 ## 0.8.7 (2016-11-22)
 
 - Lowercase record names to make imports case-insensitive. Fixes #206

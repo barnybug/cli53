@@ -90,4 +90,5 @@ func TestShortenName(t *testing.T) {
 	assert.Equal(t, "a", shortenName("a.example.com.", "example.com."))
 	assert.Equal(t, "a.", shortenName("a.", "example.com."))
 	assert.Equal(t, "a.b", shortenName("a.b.example.com.", "example.com."))
+	assert.Equal(t, "fineexample.com.", shortenName("fineexample.com.", "example.com."))
 }

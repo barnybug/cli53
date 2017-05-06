@@ -149,11 +149,8 @@ func waitForChange(change *route53.ChangeInfo) {
 func shortenName(name, origin string) string {
 	if name == origin {
 		return "@"
-	} else if strings.HasSuffix(name, origin) {
-		return name[0 : len(name)-len(origin)-1]
-	} else {
-		return name
 	}
+	return strings.TrimSuffix(name, "."+origin)
 }
 
 var reQuotedValue = regexp.MustCompile(`"((?:\\"|[^"])*)"`)
