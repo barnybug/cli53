@@ -184,6 +184,15 @@ func ConvertBindToRRSet(records []dns.RR) *route53.ResourceRecordSet {
 	return rrset
 }
 
+func absolute(name string) string {
+	// route53 always treats target names as absolute, even when they are
+	// missing the ending period.
+	if !strings.HasSuffix(name, ".") {
+		return name + "."
+	}
+	return name
+}
+
 // ConvertRRSetToBind will convert a ResourceRecordSet to an array of RR entries
 func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 	ret := []dns.RR{}
@@ -255,7 +264,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 						Class:  dns.ClassINET,
 						Ttl:    uint32(*rrset.TTL),
 					},
-					Target: *rr.Value,
+					Target: absolute(*rr.Value),
 				}
 				ret = append(ret, dnsrr)
 			}
@@ -273,7 +282,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 						Class:  dns.ClassINET,
 						Ttl:    uint32(*rrset.TTL),
 					},
-					Mx:         value,
+					Mx:         absolute(value),
 					Preference: preference,
 				}
 				ret = append(ret, dnsrr)
@@ -359,7 +368,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 					Priority: priority,
 					Weight:   weight,
 					Port:     port,
-					Target:   target,
+					Target:   absolute(target),
 				}
 				ret = append(ret, dnsrr)
 			}
