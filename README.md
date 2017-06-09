@@ -192,6 +192,12 @@ after '/hostedzone/' you can see in the output to 'cli53 list'. eg:
 
     $ cli53 rrcreate ZZZZZZZZZZZZZ 'name A 127.0.0.1'
 
+## Setting Endpoint URL
+
+Similar to the AWS CLI, the Route 53 endpoint can be set with the --endpoint-url flag. It can be a hostname or a fully qualified URL. This is particularly useful for testing.
+
+    $ cli53 list --endpoint-url "http://localhost:4580"
+
 ## Caveats
 
 As Amazon limits operations to a maximum of 100 changes, if you

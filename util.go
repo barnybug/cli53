@@ -34,10 +34,21 @@ func qualifyName(name, origin string) string {
 	}
 }
 
-func getConfig(c *cli.Context) *aws.Config {
+func getConfig(c *cli.Context) (*aws.Config, error) {
 	debug := c.Bool("debug")
 	profile := c.String("profile")
-	config := aws.Config{}
+	endpoint := c.String("endpoint-url")
+	region := ""
+	// SDK requires region to be set when endpoint-url is set
+	if rg := os.Getenv("AWS_REGION"); rg != "" {
+		region = rg
+	} else if endpoint != "" {
+		return nil, cli.NewExitError("AWS_REGION must be set when using --endpoint-url", 4)
+	}
+	config := aws.Config{
+		Endpoint: &endpoint,
+		Region:   &region,
+	}
 	if profile != "" {
 		config.Credentials = credentials.NewSharedCredentials("", profile)
 	}
@@ -46,11 +57,15 @@ func getConfig(c *cli.Context) *aws.Config {
 	if debug {
 		config.LogLevel = aws.LogLevel(aws.LogDebug)
 	}
-	return &config
+	return &config, nil
 }
 
-func getService(c *cli.Context) *route53.Route53 {
-	return route53.New(session.New(), getConfig(c))
+func getService(c *cli.Context) (*route53.Route53, error) {
+	config, err := getConfig(c)
+	if err != nil {
+		return nil, err
+	}
+	return route53.New(session.New(), config), nil
 }
 
 func fatalIfErr(err error) {
