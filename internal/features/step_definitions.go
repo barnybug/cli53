@@ -188,6 +188,20 @@ func coverageArgs(args []string) []string {
 	return append([]string{args[0], "-test.coverprofile", coverage}, args[1:]...)
 }
 
+func execute(cmd string, env ...string) {
+	args := safeSplit(cmd)
+	ps := exec.Command("./"+args[0], args[1:]...)
+	ps.Env = append(os.Environ(), env...)
+	out, err := ps.CombinedOutput()
+	runOutput = string(out)
+	if err, ok := err.(*exec.ExitError); ok {
+		waitStatus := err.Sys().(syscall.WaitStatus)
+		retCode = waitStatus.ExitStatus()
+	} else if err != nil {
+		T.Errorf("Error: %s Output: %s", err, out)
+	}
+}
+
 func init() {
 	Before("", func() {
 		// randomize temporary test domain name
@@ -258,19 +272,12 @@ func init() {
 	})
 
 	When(`^I execute "(.+?)"$`, func(cmd string) {
-		cmd = domain(cmd)
-		args := safeSplit(cmd)
-		ps := exec.Command("./"+args[0], args[1:]...)
-		out, err := ps.CombinedOutput()
-		runOutput = string(out)
-		if err, ok := err.(*exec.ExitError); ok {
-			waitStatus := err.Sys().(syscall.WaitStatus)
-			retCode = waitStatus.ExitStatus()
-		} else if err != nil {
-			T.Errorf("Error: %s Output: %s", err, out)
-		} else {
-			runOutput = string(out)
-		}
+		execute(domain(cmd))
+
+	})
+
+	When(`^I execute "(.+?)" with var (.+?) as "(.+?)"$`, func(cmd, name, value string) {
+		execute(domain(cmd), name + "=" + value)
 	})
 
 	Then(`^the domain "(.+?)" is created$`, func(name string) {
