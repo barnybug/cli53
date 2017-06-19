@@ -114,7 +114,7 @@ Export as a BIND zone file (for backup!):
 
 Export all zones as a BIND zone file, concatinated. (for full backup):
 
-    $ for domain in $(cli53 list -format json | jq -r '.[].Name' | sed 's/.$//g' ); do cli53 export $domain ; done
+    $ for domain in $(cli53 list -format json | jq -r '.[].Name' | sed 's/.$//g'); do cli53 export $domain; done
 
 Create some weighted records:
 
