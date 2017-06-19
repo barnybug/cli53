@@ -112,6 +112,10 @@ Export as a BIND zone file (for backup!):
 
 	$ cli53 export example.com
 
+Export all zones as a BIND zone file, concatinated. (for full backup):
+
+    $ for domain in $(cli53 list -format json | jq -r '.[].Name' | sed 's/.$//g'); do cli53 export $domain; done
+
 Create some weighted records:
 
 	$ cli53 rrcreate --identifier server1 --weight 10 example.com 'www A 192.168.0.1'
