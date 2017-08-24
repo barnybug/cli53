@@ -1,3 +1,7 @@
+## 0.8.9 (2017-08-24)
+
+- Add CCA support #235.
+
 ## 0.8.8 (2017-05-06)
 
 - Fix shortenName overzealously removes suffixes #221
