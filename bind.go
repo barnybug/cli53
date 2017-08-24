@@ -105,6 +105,11 @@ func ConvertBindToRR(record dns.RR) *route53.ResourceRecord {
 		return &route53.ResourceRecord{
 			Value: aws.String(value),
 		}
+	case *dns.CAA:
+		value := fmt.Sprintf("%d %s \"%s\"", record.Flag, record.Tag, record.Value)
+		return &route53.ResourceRecord{
+			Value: aws.String(value),
+		}
 	default:
 		errorAndExit(fmt.Sprintf("Unsupported resource record: %s", record))
 	}
@@ -383,6 +388,26 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 						Ttl:    uint32(*rrset.TTL),
 					},
 					Txt: txt,
+				}
+				ret = append(ret, dnsrr)
+			}
+		case "CAA":
+			for _, rr := range rrset.ResourceRecords {
+				var flag uint8
+				var tag string
+				var quotedValue string
+				fmt.Sscanf(*rr.Value, "%d %s %s", &flag, &tag, &quotedValue)
+
+				dnsrr := &dns.CAA{
+					Hdr: dns.RR_Header{
+						Name:   name,
+						Rrtype: dns.TypeCAA,
+						Class:  dns.ClassINET,
+						Ttl:    uint32(*rrset.TTL),
+					},
+					Flag:  flag,
+					Tag:   tag,
+					Value: strings.Trim(quotedValue, `"`),
 				}
 				ret = append(ret, dnsrr)
 			}
