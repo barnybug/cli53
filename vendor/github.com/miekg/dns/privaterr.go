@@ -129,7 +129,7 @@ func PrivateHandle(rtypestr string, rtype uint16, generator func() PrivateRdata)
 			return nil, &ParseError{f, err.Error(), l}, ""
 		}
 
-		return rr, nil, ""
+		return rr, nil, l.comment
 	}
 
 	typeToparserFunc[rtype] = parserFunc{setPrivateRR, true}
