@@ -153,9 +153,20 @@ func (f *WeightedRoute) Parse(kvs KeyValues) {
 	f.Weight = int64(kvs.GetInt("weight"))
 }
 
+type MultiValueAnswerRoute struct {
+}
+
+func (f *MultiValueAnswerRoute) String() string {
+	return KeyValues{"routing", "MULTIVALUE"}.String()
+}
+
+func (f *MultiValueAnswerRoute) Parse(kvs KeyValues) {
+}
+
 var RoutingTypes = map[string]func() AWSRoute{
 	"FAILOVER":    func() AWSRoute { return &FailoverRoute{} },
 	"GEOLOCATION": func() AWSRoute { return &GeoLocationRoute{} },
 	"LATENCY":     func() AWSRoute { return &LatencyRoute{} },
 	"WEIGHTED":    func() AWSRoute { return &WeightedRoute{} },
+	"MULTIVALUE":  func() AWSRoute { return &MultiValueAnswerRoute{} },
 }

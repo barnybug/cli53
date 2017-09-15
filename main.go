@@ -320,6 +320,10 @@ func Main(args []string) int {
 					Name:  "subdivision-code",
 					Usage: "subdivision code for geolocation routing",
 				},
+				cli.BoolFlag{
+					Name:  "multivalue",
+					Usage: "use multivalue answer routing",
+				},
 			),
 			Action: func(c *cli.Context) (err error) {
 				r53, err = getService(c)
@@ -348,6 +352,7 @@ func Main(args []string) int {
 					countryCode:     c.String("country-code"),
 					continentCode:   c.String("continent-code"),
 					subdivisionCode: c.String("subdivision-code"),
+					multivalue:      c.Bool("multivalue"),
 				}
 				if args.validate() {
 					createRecords(args)

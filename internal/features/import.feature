@@ -50,6 +50,12 @@ Feature: import
     When I run "cli53 import --file tests/weighted.txt $domain"
     Then the domain "$domain" export matches file "tests/weighted.txt"
 
+  @multivalue
+  Scenario: I can import a zone with multivalue answer extensions
+    Given I have a domain "$domain"
+    When I run "cli53 import --file tests/multivalue.txt $domain"
+    Then the domain "$domain" export matches file "tests/multivalue.txt"
+
   Scenario: I can import a zone with alias extensions
     Given I have a domain "$domain"
     When I run "cli53 import --file tests/alias.txt $domain"

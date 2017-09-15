@@ -1,0 +1,2 @@
+multivalue	300	IN	A	127.0.0.1 ; AWS routing="MULTIVALUE" identifier="One"
+multivalue	300	IN	A	127.0.0.2 ; AWS routing="MULTIVALUE" identifier="Two"
