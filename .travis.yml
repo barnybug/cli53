@@ -27,6 +27,7 @@ deploy:
   on:
     repo: barnybug/cli53
     tags: true
+  skip_cleanup: true
 env:
   global:
     - secure: "M6bUhLlefRqTAfbVfQd2/j4/4CsifJqKQ6Szz2G5RTI0ADrbdNnS0m3SqTdk\nsbp/4cgwaQM+sgnISW2alDaGP+1PmkyXGyftZdLHM1NuGca8/yKVWy/vLW3e\nv++AiYPFLTRxoiZJ9j0bdHjGOffCMvotZhtc9xv0VXVijGdHiIM="
