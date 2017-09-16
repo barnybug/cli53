@@ -1,3 +1,7 @@
+## 0.8.10 (2017-09-16)
+
+- Add support for multivalue answer routing #241 @lalinsky
+
 ## 0.8.9 (2017-08-24)
 
 - Add CCA support #235.
