@@ -174,7 +174,7 @@ install the python cli53 by giving pip the github branch:
 
 	$ pip install git+https://github.com/barnybug/cli53.git@python
 
-Bare in mind I'll no longer be supporting this any more, so any bug reports
+Please note I'll no longer be supporting this any more, so any bug reports
 will be flatly closed!
 
 ## Broken CNAME exports (GoDaddy)
