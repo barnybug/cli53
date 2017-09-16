@@ -409,6 +409,28 @@ var testConvertRRSetToBindTable = []struct {
 			},
 		},
 	},
+	{
+		Input: route53.ResourceRecordSet{
+			Type: aws.String("A"),
+			Name: aws.String("a."),
+			ResourceRecords: []*route53.ResourceRecord{
+				&route53.ResourceRecord{
+					Value: aws.String("127.0.0.1"),
+				},
+			},
+			MultiValueAnswer: aws.Bool(true),
+			SetIdentifier:    aws.String("One"),
+			TTL:              aws.Int64(300),
+		},
+		Output: []dns.RR{
+			&AWSRR{
+				commonA,
+				&MultiValueAnswerRoute{},
+				nil,
+				"One",
+			},
+		},
+	},
 }
 
 func TestConvertRRSetToBind(t *testing.T) {

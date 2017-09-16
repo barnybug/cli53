@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"regexp"
 	"runtime"
 	"strings"
 	"testing"
@@ -25,6 +26,92 @@ func TestBoolFlagHelpOutput(t *testing.T) {
 
 		if output != test.expected {
 			t.Errorf("%q does not match %q", output, test.expected)
+		}
+	}
+}
+
+func TestFlagsFromEnv(t *testing.T) {
+	var flagTests = []struct {
+		input     string
+		output    interface{}
+		flag      Flag
+		errRegexp string
+	}{
+		{"", false, BoolFlag{Name: "debug", EnvVar: "DEBUG"}, ""},
+		{"1", true, BoolFlag{Name: "debug", EnvVar: "DEBUG"}, ""},
+		{"false", false, BoolFlag{Name: "debug", EnvVar: "DEBUG"}, ""},
+		{"foobar", true, BoolFlag{Name: "debug", EnvVar: "DEBUG"}, fmt.Sprintf(`could not parse foobar as bool value for flag debug: .*`)},
+
+		{"", false, BoolTFlag{Name: "debug", EnvVar: "DEBUG"}, ""},
+		{"1", true, BoolTFlag{Name: "debug", EnvVar: "DEBUG"}, ""},
+		{"false", false, BoolTFlag{Name: "debug", EnvVar: "DEBUG"}, ""},
+		{"foobar", true, BoolTFlag{Name: "debug", EnvVar: "DEBUG"}, fmt.Sprintf(`could not parse foobar as bool value for flag debug: .*`)},
+
+		{"1s", 1 * time.Second, DurationFlag{Name: "time", EnvVar: "TIME"}, ""},
+		{"foobar", false, DurationFlag{Name: "time", EnvVar: "TIME"}, fmt.Sprintf(`could not parse foobar as duration for flag time: .*`)},
+
+		{"1.2", 1.2, Float64Flag{Name: "seconds", EnvVar: "SECONDS"}, ""},
+		{"1", 1.0, Float64Flag{Name: "seconds", EnvVar: "SECONDS"}, ""},
+		{"foobar", 0, Float64Flag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse foobar as float64 value for flag seconds: .*`)},
+
+		{"1", int64(1), Int64Flag{Name: "seconds", EnvVar: "SECONDS"}, ""},
+		{"1.2", 0, Int64Flag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse 1.2 as int value for flag seconds: .*`)},
+		{"foobar", 0, Int64Flag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse foobar as int value for flag seconds: .*`)},
+
+		{"1", 1, IntFlag{Name: "seconds", EnvVar: "SECONDS"}, ""},
+		{"1.2", 0, IntFlag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse 1.2 as int value for flag seconds: .*`)},
+		{"foobar", 0, IntFlag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse foobar as int value for flag seconds: .*`)},
+
+		{"1,2", IntSlice{1, 2}, IntSliceFlag{Name: "seconds", EnvVar: "SECONDS"}, ""},
+		{"1.2,2", IntSlice{}, IntSliceFlag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse 1.2,2 as int slice value for flag seconds: .*`)},
+		{"foobar", IntSlice{}, IntSliceFlag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse foobar as int slice value for flag seconds: .*`)},
+
+		{"1,2", Int64Slice{1, 2}, Int64SliceFlag{Name: "seconds", EnvVar: "SECONDS"}, ""},
+		{"1.2,2", Int64Slice{}, Int64SliceFlag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse 1.2,2 as int64 slice value for flag seconds: .*`)},
+		{"foobar", Int64Slice{}, Int64SliceFlag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse foobar as int64 slice value for flag seconds: .*`)},
+
+		{"foo", "foo", StringFlag{Name: "name", EnvVar: "NAME"}, ""},
+
+		{"foo,bar", StringSlice{"foo", "bar"}, StringSliceFlag{Name: "names", EnvVar: "NAMES"}, ""},
+
+		{"1", uint(1), UintFlag{Name: "seconds", EnvVar: "SECONDS"}, ""},
+		{"1.2", 0, UintFlag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse 1.2 as uint value for flag seconds: .*`)},
+		{"foobar", 0, UintFlag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse foobar as uint value for flag seconds: .*`)},
+
+		{"1", uint64(1), Uint64Flag{Name: "seconds", EnvVar: "SECONDS"}, ""},
+		{"1.2", 0, Uint64Flag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse 1.2 as uint64 value for flag seconds: .*`)},
+		{"foobar", 0, Uint64Flag{Name: "seconds", EnvVar: "SECONDS"}, fmt.Sprintf(`could not parse foobar as uint64 value for flag seconds: .*`)},
+
+		{"foo,bar", &Parser{"foo", "bar"}, GenericFlag{Name: "names", Value: &Parser{}, EnvVar: "NAMES"}, ""},
+	}
+
+	for _, test := range flagTests {
+		os.Clearenv()
+		os.Setenv(reflect.ValueOf(test.flag).FieldByName("EnvVar").String(), test.input)
+		a := App{
+			Flags: []Flag{test.flag},
+			Action: func(ctx *Context) error {
+				if !reflect.DeepEqual(ctx.value(test.flag.GetName()), test.output) {
+					t.Errorf("expected %+v to be parsed as %+v, instead was %+v", test.input, test.output, ctx.value(test.flag.GetName()))
+				}
+				return nil
+			},
+		}
+
+		err := a.Run([]string{"run"})
+
+		if test.errRegexp != "" {
+			if err == nil {
+				t.Errorf("expected error to match %s, got none", test.errRegexp)
+			} else {
+				if matched, _ := regexp.MatchString(test.errRegexp, err.Error()); !matched {
+					t.Errorf("expected error to match %s, got error %s", test.errRegexp, err)
+				}
+			}
+		} else {
+			if err != nil && test.errRegexp == "" {
+				t.Errorf("expected no error got %s", err)
+			}
 		}
 	}
 }
@@ -941,6 +1028,38 @@ func TestParseMultiBoolFromEnvCascade(t *testing.T) {
 	a.Run([]string{"run"})
 }
 
+func TestParseBoolTFromEnv(t *testing.T) {
+	var boolTFlagTests = []struct {
+		input  string
+		output bool
+	}{
+		{"", false},
+		{"1", true},
+		{"false", false},
+		{"true", true},
+	}
+
+	for _, test := range boolTFlagTests {
+		os.Clearenv()
+		os.Setenv("DEBUG", test.input)
+		a := App{
+			Flags: []Flag{
+				BoolTFlag{Name: "debug, d", EnvVar: "DEBUG"},
+			},
+			Action: func(ctx *Context) error {
+				if ctx.Bool("debug") != test.output {
+					t.Errorf("expected %+v to be parsed as %+v, instead was %+v", test.input, test.output, ctx.Bool("debug"))
+				}
+				if ctx.Bool("d") != test.output {
+					t.Errorf("expected %+v to be parsed as %+v, instead was %+v", test.input, test.output, ctx.Bool("d"))
+				}
+				return nil
+			},
+		}
+		a.Run([]string{"run"})
+	}
+}
+
 func TestParseMultiBoolT(t *testing.T) {
 	a := App{
 		Flags: []Flag{
@@ -1034,6 +1153,10 @@ func (p *Parser) Set(value string) error {
 
 func (p *Parser) String() string {
 	return fmt.Sprintf("%s,%s", p[0], p[1])
+}
+
+func (p *Parser) Get() interface{} {
+	return p
 }
 
 func TestParseGeneric(t *testing.T) {

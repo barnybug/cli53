@@ -45,6 +45,12 @@ Feature: rrcreate
     When I run "cli53 rrcreate -i Zero --weight 0 $domain 'weighted 300 IN A 127.0.0.1'"
     Then the domain "$domain" has record "weighted.$domain. 300 IN A 127.0.0.1 ; AWS routing="WEIGHTED" weight=0 identifier="Zero""
 
+  @multivalue
+  Scenario: I can create a multivalue answer record
+    Given I have a domain "$domain"
+    When I run "cli53 rrcreate -i One --multivalue $domain 'multivalue 300 IN A 127.0.0.1'"
+    Then the domain "$domain" has record "multivalue.$domain. 300 IN A 127.0.0.1 ; AWS routing="MULTIVALUE" identifier="One""
+
   Scenario: I can create an alias
     Given I have a domain "$domain"
     When I run "cli53 rrcreate $domain 'www A 127.0.0.1'"

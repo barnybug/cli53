@@ -139,6 +139,11 @@ Create a primary/secondary pair of health checked records:
 	$ cli53 rrcreate -i Primary --failover PRIMARY --health-check 2e668584-4352-4890-8ffe-6d3644702a1b example.com 'ha 300 IN A 127.0.0.1'
 	$ cli53 rrcreate -i Secondary --failover SECONDARY example.com 'ha 300 IN A 127.0.0.2'
 
+Create a multivalue record with health checks:
+
+	$ cli53 rrcreate -i One --multivalue --health-check 2e668584-4352-4890-8ffe-6d3644702a1b example.com 'ha 300 IN A 127.0.0.1'
+	$ cli53 rrcreate -i Two --multivalue --health-check 7c90445d-ad67-47bd-9649-3ca0985e1f88 example.com 'ha 300 IN A 127.0.0.2'
+
 Create, list and then delete a reusable delegation set:
 
 	$ cli53 dscreate

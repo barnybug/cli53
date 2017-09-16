@@ -434,6 +434,7 @@ type createArgs struct {
 	countryCode     string
 	continentCode   string
 	subdivisionCode string
+	multivalue      bool
 }
 
 func (args createArgs) validate() bool {
@@ -459,6 +460,9 @@ func (args createArgs) validate() bool {
 		extcount += 1
 	}
 	if args.continentCode != "" {
+		extcount += 1
+	}
+	if args.multivalue {
 		extcount += 1
 	}
 	if args.subdivisionCode != "" && args.countryCode == "" {
@@ -511,6 +515,9 @@ func (args createArgs) applyRRSetParams(rrset *route53.ResourceRecordSet) {
 			CountryCode:     aws.String(args.countryCode),
 			SubdivisionCode: aws.String(args.subdivisionCode),
 		}
+	}
+	if args.multivalue {
+		rrset.MultiValueAnswer = aws.Bool(true)
 	}
 }
 

@@ -162,6 +162,8 @@ func ConvertBindToRRSet(records []dns.RR) *route53.ResourceRecordSet {
 				rrset.Region = aws.String(route.Region)
 			case *WeightedRoute:
 				rrset.Weight = aws.Int64(route.Weight)
+			case *MultiValueAnswerRoute:
+				rrset.MultiValueAnswer = aws.Bool(true)
 			}
 			if awsrr.HealthCheckId != nil {
 				rrset.HealthCheckId = awsrr.HealthCheckId
@@ -423,6 +425,8 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 		route = &LatencyRoute{*rrset.Region}
 	} else if rrset.GeoLocation != nil {
 		route = &GeoLocationRoute{rrset.GeoLocation.CountryCode, rrset.GeoLocation.ContinentCode, rrset.GeoLocation.SubdivisionCode}
+	} else if rrset.MultiValueAnswer != nil && *rrset.MultiValueAnswer {
+		route = &MultiValueAnswerRoute{}
 	}
 	if route != nil {
 		for i, rr := range ret {
