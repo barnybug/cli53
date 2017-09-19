@@ -24,7 +24,11 @@ import (
 )
 
 func getService() *route53.Route53 {
-	config := aws.Config{}
+	config := aws.Config{
+		Logger: aws.LoggerFunc(func(args ...interface{}) {
+			fmt.Fprintln(os.Stderr, args...)
+		}),
+	}
 	// ensures throttled requests are retried
 	config.MaxRetries = aws.Int(100)
 	return route53.New(session.New(), &config)

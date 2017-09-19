@@ -43,8 +43,8 @@ Or set the environment variables: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY
 You can switch between different sets in the credentials file by passing
 `--profile` to any command, or setting the environment variable `AWS_PROFILE`.
  For example:
-        
-        cli53 list --profile my_profile 
+
+        cli53 list --profile my_profile
 
 For more information, see: http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs
 
@@ -112,6 +112,10 @@ Export as a BIND zone file (for backup!):
 
 	$ cli53 export example.com
 
+Export fully-qualified domain names (instead of just prefixes) to `stdout`, and send AWS debug logging to `stderr`:
+
+  $ cli53 export --full --debug example.com > example.com.txt 2> example.com.err.log
+
 Create some weighted records:
 
 	$ cli53 rrcreate --identifier server1 --weight 10 example.com 'www A 192.168.0.1'
@@ -133,7 +137,7 @@ Create some geolocation records:
 
 	$ cli53 rrcreate -i Africa --continent-code AF example.com 'geo 300 IN A 127.0.0.1'
 	$ cli53 rrcreate -i California --country-code US --subdivision-code CA example.com 'geo 300 IN A 127.0.0.2'
-	
+
 Create a primary/secondary pair of health checked records:
 
 	$ cli53 rrcreate -i Primary --failover PRIMARY --health-check 2e668584-4352-4890-8ffe-6d3644702a1b example.com 'ha 300 IN A 127.0.0.1'
