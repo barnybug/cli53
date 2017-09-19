@@ -48,6 +48,9 @@ func getConfig(c *cli.Context) (*aws.Config, error) {
 	config := aws.Config{
 		Endpoint: &endpoint,
 		Region:   &region,
+		Logger: aws.LoggerFunc(func(args ...interface{}) {
+			fmt.Fprintln(os.Stderr, args...)
+		}),
 	}
 	if profile != "" {
 		config.Credentials = credentials.NewSharedCredentials("", profile)
