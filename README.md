@@ -114,7 +114,7 @@ Export as a BIND zone file (for backup!):
 
 Export fully-qualified domain names (instead of just prefixes) to `stdout`, and send AWS debug logging to `stderr`:
 
-  $ cli53 export --full --debug example.com > example.com.txt 2> example.com.err.log
+    $ cli53 export --full --debug example.com > example.com.txt 2> example.com.err.log
 
 Create some weighted records:
 
