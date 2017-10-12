@@ -1,0 +1,23 @@
+builds:
+  - binary: cli53
+    main: ./cmd/cli53
+    ldflags: -s -w -X=github.com/barnybug/cli53.version={{.Version}}
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - 386
+      - arm
+      - arm64
+    ignore:
+      - goos: darwin
+        goarch: 386
+    hooks:
+      post: make upx
+archive:
+  name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
+  format: binary
+  replacements:
+    darwin: mac

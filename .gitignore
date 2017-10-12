@@ -4,3 +4,5 @@ cli53.sublime-project
 release/
 coverage.txt
 coverage/
+
+/dist/

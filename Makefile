@@ -1,9 +1,8 @@
 export GO15VENDOREXPERIMENT=1
 
 exe = ./cmd/cli53
-releaseargs = -ldflags '-w -s'
 
-.PHONY: all build install test coverage deps release
+.PHONY: all build install test coverage deps
 
 all: install
 
@@ -18,16 +17,9 @@ build:
 install:
 	go install $(exe)
 
-release:
-	GOOS=linux GOARCH=386 go build $(releaseargs) -o release/cli53-linux-386 $(exe)
-	GOOS=linux GOARCH=amd64 go build $(releaseargs) -o release/cli53-linux-amd64 $(exe)
-	GOOS=linux GOARCH=arm go build $(releaseargs) -o release/cli53-linux-arm $(exe)
-	GOOS=darwin GOARCH=amd64 go build $(releaseargs) -o release/cli53-mac-amd64 $(exe)
-	GOOS=windows GOARCH=386 go build $(releaseargs) -o release/cli53-windows-386.exe $(exe)
-	GOOS=windows GOARCH=amd64 go build $(releaseargs) -o release/cli53-windows-amd64.exe $(exe)
-	goupx release/cli53-linux-amd64
-	upx release/cli53-linux-386 release/cli53-linux-arm release/cli53-windows-386.exe
-	cd release; sha256sum cli53-* > SHA256SUMS
+upx:
+	goupx dist/cli53-linux-amd64/cli53-linux-amd64
+	upx dist/cli53-linux-386/cli53-linux-386 dist/cli53-linux-arm/cli53-linux-arm dist/cli53-windows-386/cli53-windows-386.exe
 
 test-unit:
 	go test

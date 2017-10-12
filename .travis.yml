@@ -1,6 +1,6 @@
 language: go
 go:
-- 1.7
+- 1.9
 sudo: false
 before_install:
   - pip install --user codecov
@@ -8,26 +8,9 @@ before_script:
 - 'mkdir -p $GOPATH/bin && wget -q https://github.com/barnybug/cli53/releases/download/0.6.0/upx -O $GOPATH/bin/upx && chmod +x $GOPATH/bin/upx'
 script:
 - make deps test-coverage
-before_deploy:
-- make release
 after_success:
   - codecov
-deploy:
-  provider: releases
-  api_key:
-    secure: nmqbnVuj7XpuUMs5YmB2X+/Dkq5I2hoWaIUSO5Okse7D8iYW0fWPeqR5xMy3ctSlHJgNarMx3qPJZmr+lJAuwT7xZhvW2kFOJE7Ra/nJgLtuWOMu4zrJ2cLNYTgE4fN3jag5VkgnuB4Ax57QZESssWKLvyBVA7ePaV/HXe1hX7k=
-  file:
-  - release/cli53-linux-386
-  - release/cli53-linux-amd64
-  - release/cli53-linux-arm
-  - release/cli53-mac-amd64
-  - release/cli53-windows-386.exe
-  - release/cli53-windows-amd64.exe
-  - release/SHA256SUMS
-  on:
-    repo: barnybug/cli53
-    tags: true
-  skip_cleanup: true
+  - test -n "$TRAVIS_TAG" && curl -sL https://git.io/goreleaser | bash
 env:
   global:
     - secure: "M6bUhLlefRqTAfbVfQd2/j4/4CsifJqKQ6Szz2G5RTI0ADrbdNnS0m3SqTdk\nsbp/4cgwaQM+sgnISW2alDaGP+1PmkyXGyftZdLHM1NuGca8/yKVWy/vLW3e\nv++AiYPFLTRxoiZJ9j0bdHjGOffCMvotZhtc9xv0VXVijGdHiIM="
