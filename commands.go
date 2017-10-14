@@ -86,10 +86,7 @@ func deleteReusableDelegationSet(id string) {
 	fmt.Printf("Deleted reusable delegation set\n")
 }
 
-func purgeZoneRecords(zone *route53.HostedZone, wait bool) {
-	rrsets, err := ListAllRecordSets(r53, *zone.Id)
-	fatalIfErr(err)
-
+func deleteRecordSets(zone *route53.HostedZone, rrsets []*route53.ResourceRecordSet, wait bool) (int, error) {
 	// delete all non-default SOA/NS records
 	changes := []*route53.Change{}
 	for _, rrset := range rrsets {
@@ -103,19 +100,33 @@ func purgeZoneRecords(zone *route53.HostedZone, wait bool) {
 	}
 
 	if len(changes) > 0 {
-		req2 := route53.ChangeResourceRecordSetsInput{
+		req := route53.ChangeResourceRecordSetsInput{
 			HostedZoneId: zone.Id,
 			ChangeBatch: &route53.ChangeBatch{
 				Changes: changes,
 			},
 		}
-		resp, err := r53.ChangeResourceRecordSets(&req2)
-		fatalIfErr(err)
-		fmt.Printf("%d record sets deleted\n", len(changes))
+		resp, err := r53.ChangeResourceRecordSets(&req)
+		if err != nil {
+			return 0, err
+		}
 		if wait {
 			waitForChange(resp.ChangeInfo)
 		}
 	}
+	return len(changes), nil
+}
+
+func purgeZoneRecords(zone *route53.HostedZone, wait bool) {
+	total := 0
+	err := batchListAllRecordSets(r53, *zone.Id, func(rrsets []*route53.ResourceRecordSet) {
+		n, err := deleteRecordSets(zone, rrsets, wait)
+		fatalIfErr(err)
+		total += n
+	})
+	fatalIfErr(err)
+
+	fmt.Printf("%d record sets deleted\n", total)
 }
 
 func deleteZone(name string, purge bool) {
@@ -611,19 +622,17 @@ func createRecords(args createArgs) {
 	}
 }
 
-// Paginate request to get all record sets.
-func ListAllRecordSets(r53 *route53.Route53, id string) (rrsets []*route53.ResourceRecordSet, err error) {
+func batchListAllRecordSets(r53 *route53.Route53, id string, callback func(rrsets []*route53.ResourceRecordSet)) error {
 	req := route53.ListResourceRecordSetsInput{
 		HostedZoneId: &id,
 	}
 
 	for {
-		var resp *route53.ListResourceRecordSetsOutput
-		resp, err = r53.ListResourceRecordSets(&req)
+		resp, err := r53.ListResourceRecordSets(&req)
 		if err != nil {
-			return
+			return err
 		} else {
-			rrsets = append(rrsets, resp.ResourceRecordSets...)
+			callback(resp.ResourceRecordSets)
 			if *resp.IsTruncated {
 				req.StartRecordName = resp.NextRecordName
 				req.StartRecordType = resp.NextRecordType
@@ -633,6 +642,14 @@ func ListAllRecordSets(r53 *route53.Route53, id string) (rrsets []*route53.Resou
 			}
 		}
 	}
+	return nil
+}
+
+// Paginate request to get all record sets.
+func ListAllRecordSets(r53 *route53.Route53, id string) (rrsets []*route53.ResourceRecordSet, err error) {
+	err = batchListAllRecordSets(r53, id, func(results []*route53.ResourceRecordSet) {
+		rrsets = append(rrsets, results...)
+	})
 
 	// unescape wildcards
 	for _, rrset := range rrsets {
