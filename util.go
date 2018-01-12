@@ -15,7 +15,6 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/route53"
 )
@@ -36,13 +35,10 @@ func qualifyName(name, origin string) string {
 
 func getConfig(c *cli.Context) (*aws.Config, error) {
 	debug := c.Bool("debug")
-	profile := c.String("profile")
 	endpoint := c.String("endpoint-url")
-	region := ""
+	region := os.Getenv("AWS_REGION")
 	// SDK requires region to be set when endpoint-url is set
-	if rg := os.Getenv("AWS_REGION"); rg != "" {
-		region = rg
-	} else if endpoint != "" {
+	if endpoint != "" && region == "" {
 		return nil, cli.NewExitError("AWS_REGION must be set when using --endpoint-url", 4)
 	}
 	config := aws.Config{
@@ -51,9 +47,6 @@ func getConfig(c *cli.Context) (*aws.Config, error) {
 		Logger: aws.LoggerFunc(func(args ...interface{}) {
 			fmt.Fprintln(os.Stderr, args...)
 		}),
-	}
-	if profile != "" {
-		config.Credentials = credentials.NewSharedCredentials("", profile)
 	}
 	// ensures throttled requests are retried
 	config.MaxRetries = aws.Int(100)
@@ -68,7 +61,16 @@ func getService(c *cli.Context) (*route53.Route53, error) {
 	if err != nil {
 		return nil, err
 	}
-	return route53.New(session.New(), config), nil
+	options := session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+		Config:            *config,
+		Profile:           c.String("profile"),
+	}
+	sess, err := session.NewSessionWithOptions(options)
+	if err != nil {
+		return nil, err
+	}
+	return route53.New(sess, config), nil
 }
 
 func fatalIfErr(err error) {
