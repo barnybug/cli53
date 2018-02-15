@@ -359,6 +359,20 @@ func init() {
 		}
 	})
 
+	Then(`^the output file "(.+?)" contains "(.+?)"$`, func(outputFile string, s string) {
+		outputFile = unquote(outputFile)
+		s = unquote(domain(s))
+		output, err := ioutil.ReadFile(outputFile)
+
+		if err != nil {
+			T.Errorf("Could not read %s", outputFile)
+		}
+
+		if !strings.Contains(string(output), s) {
+			T.Errorf("Output did not contain \"%s\"\nactual: %s", s, runOutput)
+		}
+	})
+
 	Then(`^the output matches "(.+?)"$`, func(s string) {
 		re, err := regexp.Compile(s)
 		fatalIfErr(err)
