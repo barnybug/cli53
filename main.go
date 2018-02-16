@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/route53"
 	"github.com/urfave/cli"
+	"os"
 )
 
 var r53 *route53.Route53
@@ -256,6 +257,10 @@ func Main(args []string) int {
 					Name:  "full, f",
 					Usage: "export prefixes as full names",
 				},
+				cli.StringFlag{
+					Name:  "output",
+					Usage: "Write to an output file instead of STDOUT",
+				},
 			),
 			Action: func(c *cli.Context) (err error) {
 				r53, err = getService(c)
@@ -266,7 +271,17 @@ func Main(args []string) int {
 					cli.ShowCommandHelp(c, "export")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
-				exportBind(c.Args().First(), c.Bool("full"))
+
+				outputFileName := c.String("output")
+				writer := os.Stdout
+				if len(outputFileName) > 0 {
+					writer, err = os.Create(outputFileName)
+					defer writer.Close()
+					if err != nil {
+						return err
+					}
+				}
+				exportBind(c.Args().First(), c.Bool("full"), writer)
 				return nil
 			},
 		},

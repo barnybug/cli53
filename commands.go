@@ -372,9 +372,9 @@ func UnexpandSelfAliases(records []dns.RR, zone *route53.HostedZone, full bool) 
 	}
 }
 
-func exportBind(name string, full bool) {
+func exportBind(name string, full bool, writer io.Writer) {
 	zone := lookupZone(name)
-	ExportBindToWriter(r53, zone, full, os.Stdout)
+	ExportBindToWriter(r53, zone, full, writer)
 }
 
 type exportSorter struct {

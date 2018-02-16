@@ -6,3 +6,6 @@ coverage.txt
 coverage/
 
 /dist/
+
+# GoLand
+.idea
