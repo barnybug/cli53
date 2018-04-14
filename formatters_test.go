@@ -39,12 +39,12 @@ func TestTextFormatter(t *testing.T) {
 
 func TestJsonFormatter(t *testing.T) {
 	f := &JsonFormatter{}
-	assert.Equal(t, "[{\"CallerReference\":null,\"Config\":{\"Comment\":\"comment\",\"PrivateZone\":null},\"Id\":\"/hostedzone/Z1RWMUCMCPKCJX\",\"Name\":\"example.com.\",\"ResourceRecordSetCount\":2}]\n", formatTest(f))
+	assert.Equal(t, "[{\"CallerReference\":null,\"Config\":{\"Comment\":\"comment\",\"PrivateZone\":null},\"Id\":\"/hostedzone/Z1RWMUCMCPKCJX\",\"LinkedService\":null,\"Name\":\"example.com.\",\"ResourceRecordSetCount\":2}]\n", formatTest(f))
 }
 
 func TestJlFormatter(t *testing.T) {
 	f := &JlFormatter{}
-	assert.Equal(t, "{\"CallerReference\":null,\"Config\":{\"Comment\":\"comment\",\"PrivateZone\":null},\"Id\":\"/hostedzone/Z1RWMUCMCPKCJX\",\"Name\":\"example.com.\",\"ResourceRecordSetCount\":2}\n", formatTest(f))
+	assert.Equal(t, "{\"CallerReference\":null,\"Config\":{\"Comment\":\"comment\",\"PrivateZone\":null},\"Id\":\"/hostedzone/Z1RWMUCMCPKCJX\",\"LinkedService\":null,\"Name\":\"example.com.\",\"ResourceRecordSetCount\":2}\n", formatTest(f))
 }
 
 func TestTableFormatter(t *testing.T) {
