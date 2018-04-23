@@ -5,11 +5,7 @@ import (
 	"strconv"
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/defaults"
 )
-
-// EnvProviderName provides a name of the provider when config is loaded from environment.
-const EnvProviderName = "EnvConfigCredentials"
 
 // envConfig is a collection of environment values the SDK will read
 // setup config from. All environment values are optional. But some values
@@ -161,7 +157,7 @@ func envConfigLoad(enableSharedConfig bool) envConfig {
 	if len(cfg.Creds.AccessKeyID) == 0 || len(cfg.Creds.SecretAccessKey) == 0 {
 		cfg.Creds = credentials.Value{}
 	} else {
-		cfg.Creds.ProviderName = EnvProviderName
+		cfg.Creds.ProviderName = "EnvConfigCredentials"
 	}
 
 	regionKeys := regionEnvKeys
@@ -176,13 +172,6 @@ func envConfigLoad(enableSharedConfig bool) envConfig {
 
 	setFromEnvVal(&cfg.SharedCredentialsFile, sharedCredsFileEnvKey)
 	setFromEnvVal(&cfg.SharedConfigFile, sharedConfigFileEnvKey)
-
-	if len(cfg.SharedCredentialsFile) == 0 {
-		cfg.SharedCredentialsFile = defaults.SharedCredentialsFilename()
-	}
-	if len(cfg.SharedConfigFile) == 0 {
-		cfg.SharedConfigFile = defaults.SharedConfigFilename()
-	}
 
 	cfg.CustomCABundle = os.Getenv("AWS_CA_BUNDLE")
 

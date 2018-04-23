@@ -2,9 +2,10 @@ package endpoints
 
 import (
 	"encoding/json"
-	"reflect"
 	"regexp"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUnmarshalRegionRegex(t *testing.T) {
@@ -15,18 +16,12 @@ func TestUnmarshalRegionRegex(t *testing.T) {
 
 	p := partition{}
 	err := json.Unmarshal(input, &p)
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
+	assert.NoError(t, err)
 
 	expectRegexp, err := regexp.Compile(`^(us|eu|ap|sa|ca)\-\w+\-\d+$`)
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
+	assert.NoError(t, err)
 
-	if e, a := expectRegexp.String(), p.RegionRegex.Regexp.String(); e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
+	assert.Equal(t, expectRegexp.String(), p.RegionRegex.Regexp.String())
 }
 
 func TestUnmarshalRegion(t *testing.T) {
@@ -42,28 +37,16 @@ func TestUnmarshalRegion(t *testing.T) {
 
 	rs := regions{}
 	err := json.Unmarshal(input, &rs)
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
+	assert.NoError(t, err)
 
-	if e, a := 2, len(rs); e != a {
-		t.Errorf("expect %v len, got %v", e, a)
-	}
+	assert.Len(t, rs, 2)
 	r, ok := rs["aws-global"]
-	if !ok {
-		t.Errorf("expect found, was not")
-	}
-	if e, a := "AWS partition-global endpoint", r.Description; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
+	assert.True(t, ok)
+	assert.Equal(t, "AWS partition-global endpoint", r.Description)
 
 	r, ok = rs["us-east-1"]
-	if !ok {
-		t.Errorf("expect found, was not")
-	}
-	if e, a := "US East (N. Virginia)", r.Description; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
+	assert.True(t, ok)
+	assert.Equal(t, "US East (N. Virginia)", r.Description)
 }
 
 func TestUnmarshalServices(t *testing.T) {
@@ -92,45 +75,23 @@ func TestUnmarshalServices(t *testing.T) {
 
 	ss := services{}
 	err := json.Unmarshal(input, &ss)
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
+	assert.NoError(t, err)
 
-	if e, a := 3, len(ss); e != a {
-		t.Errorf("expect %v len, got %v", e, a)
-	}
+	assert.Len(t, ss, 3)
 	s, ok := ss["acm"]
-	if !ok {
-		t.Errorf("expect found, was not")
-	}
-	if e, a := 1, len(s.Endpoints); e != a {
-		t.Errorf("expect %v len, got %v", e, a)
-	}
-	if e, a := boxedBoolUnset, s.IsRegionalized; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
+	assert.True(t, ok)
+	assert.Len(t, s.Endpoints, 1)
+	assert.Equal(t, boxedBoolUnset, s.IsRegionalized)
 
 	s, ok = ss["apigateway"]
-	if !ok {
-		t.Errorf("expect found, was not")
-	}
-	if e, a := 2, len(s.Endpoints); e != a {
-		t.Errorf("expect %v len, got %v", e, a)
-	}
-	if e, a := boxedTrue, s.IsRegionalized; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
+	assert.True(t, ok)
+	assert.Len(t, s.Endpoints, 2)
+	assert.Equal(t, boxedTrue, s.IsRegionalized)
 
 	s, ok = ss["notRegionalized"]
-	if !ok {
-		t.Errorf("expect found, was not")
-	}
-	if e, a := 2, len(s.Endpoints); e != a {
-		t.Errorf("expect %v len, got %v", e, a)
-	}
-	if e, a := boxedFalse, s.IsRegionalized; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
+	assert.True(t, ok)
+	assert.Len(t, s.Endpoints, 2)
+	assert.Equal(t, boxedFalse, s.IsRegionalized)
 }
 
 func TestUnmarshalEndpoints(t *testing.T) {
@@ -154,32 +115,16 @@ func TestUnmarshalEndpoints(t *testing.T) {
 
 	es := endpoints{}
 	err := json.Unmarshal(inputs, &es)
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
+	assert.NoError(t, err)
 
-	if e, a := 2, len(es); e != a {
-		t.Errorf("expect %v len, got %v", e, a)
-	}
+	assert.Len(t, es, 2)
 	s, ok := es["aws-global"]
-	if !ok {
-		t.Errorf("expect found, was not")
-	}
-	if e, a := "cloudfront.amazonaws.com", s.Hostname; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := []string{"http", "https"}, s.Protocols; !reflect.DeepEqual(e, a) {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := []string{"v4"}, s.SignatureVersions; !reflect.DeepEqual(e, a) {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := (credentialScope{"us-east-1", "serviceName"}), s.CredentialScope; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "commonName", s.SSLCommonName; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
+	assert.True(t, ok)
+	assert.Equal(t, "cloudfront.amazonaws.com", s.Hostname)
+	assert.Equal(t, []string{"http", "https"}, s.Protocols)
+	assert.Equal(t, []string{"v4"}, s.SignatureVersions)
+	assert.Equal(t, credentialScope{"us-east-1", "serviceName"}, s.CredentialScope)
+	assert.Equal(t, "commonName", s.SSLCommonName)
 }
 
 func TestEndpointResolve(t *testing.T) {
@@ -210,18 +155,10 @@ func TestEndpointResolve(t *testing.T) {
 		defs, Options{},
 	)
 
-	if e, a := "https://service.region.dnsSuffix", resolved.URL; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "signing_service", resolved.SigningName; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "signing_region", resolved.SigningRegion; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "v4", resolved.SigningMethod; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
+	assert.Equal(t, "https://service.region.dnsSuffix", resolved.URL)
+	assert.Equal(t, "signing_service", resolved.SigningName)
+	assert.Equal(t, "signing_region", resolved.SigningRegion)
+	assert.Equal(t, "v4", resolved.SigningMethod)
 }
 
 func TestEndpointMergeIn(t *testing.T) {
@@ -248,9 +185,7 @@ func TestEndpointMergeIn(t *testing.T) {
 		},
 	})
 
-	if e, a := expected, actual; !reflect.DeepEqual(e, a) {
-		t.Errorf("expect %v, got %v", e, a)
-	}
+	assert.Equal(t, expected, actual)
 }
 
 var testPartitions = partitions{
@@ -278,11 +213,6 @@ var testPartitions = partitions{
 		Services: services{
 			"s3": service{},
 			"service1": service{
-				Defaults: endpoint{
-					CredentialScope: credentialScope{
-						Service: "service1",
-					},
-				},
 				Endpoints: endpoints{
 					"us-east-1": {},
 					"us-west-2": {
@@ -291,13 +221,7 @@ var testPartitions = partitions{
 					},
 				},
 			},
-			"service2": service{
-				Defaults: endpoint{
-					CredentialScope: credentialScope{
-						Service: "service2",
-					},
-				},
-			},
+			"service2": service{},
 			"httpService": service{
 				Defaults: endpoint{
 					Protocols: []string{"http"},
@@ -322,220 +246,109 @@ var testPartitions = partitions{
 func TestResolveEndpoint(t *testing.T) {
 	resolved, err := testPartitions.EndpointFor("service2", "us-west-2")
 
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
-	if e, a := "https://service2.us-west-2.amazonaws.com", resolved.URL; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "us-west-2", resolved.SigningRegion; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "service2", resolved.SigningName; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if resolved.SigningNameDerived {
-		t.Errorf("expect the signing name not to be derived, but was")
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, "https://service2.us-west-2.amazonaws.com", resolved.URL)
+	assert.Equal(t, "us-west-2", resolved.SigningRegion)
+	assert.Equal(t, "service2", resolved.SigningName)
 }
 
 func TestResolveEndpoint_DisableSSL(t *testing.T) {
 	resolved, err := testPartitions.EndpointFor("service2", "us-west-2", DisableSSLOption)
 
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
-	if e, a := "http://service2.us-west-2.amazonaws.com", resolved.URL; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "us-west-2", resolved.SigningRegion; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "service2", resolved.SigningName; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if resolved.SigningNameDerived {
-		t.Errorf("expect the signing name not to be derived, but was")
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, "http://service2.us-west-2.amazonaws.com", resolved.URL)
+	assert.Equal(t, "us-west-2", resolved.SigningRegion)
+	assert.Equal(t, "service2", resolved.SigningName)
 }
 
 func TestResolveEndpoint_UseDualStack(t *testing.T) {
 	resolved, err := testPartitions.EndpointFor("service1", "us-west-2", UseDualStackOption)
 
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
-	if e, a := "https://service1.dualstack.us-west-2.amazonaws.com", resolved.URL; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "us-west-2", resolved.SigningRegion; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "service1", resolved.SigningName; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if resolved.SigningNameDerived {
-		t.Errorf("expect the signing name not to be derived, but was")
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, "https://service1.dualstack.us-west-2.amazonaws.com", resolved.URL)
+	assert.Equal(t, "us-west-2", resolved.SigningRegion)
+	assert.Equal(t, "service1", resolved.SigningName)
 }
 
 func TestResolveEndpoint_HTTPProtocol(t *testing.T) {
 	resolved, err := testPartitions.EndpointFor("httpService", "us-west-2")
 
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
-	if e, a := "http://httpService.us-west-2.amazonaws.com", resolved.URL; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "us-west-2", resolved.SigningRegion; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "httpService", resolved.SigningName; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if !resolved.SigningNameDerived {
-		t.Errorf("expect the signing name to be derived")
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, "http://httpService.us-west-2.amazonaws.com", resolved.URL)
+	assert.Equal(t, "us-west-2", resolved.SigningRegion)
+	assert.Equal(t, "httpService", resolved.SigningName)
 }
 
 func TestResolveEndpoint_UnknownService(t *testing.T) {
 	_, err := testPartitions.EndpointFor("unknownservice", "us-west-2")
 
-	if err == nil {
-		t.Errorf("expect error, got none")
-	}
+	assert.Error(t, err)
 
 	_, ok := err.(UnknownServiceError)
-	if !ok {
-		t.Errorf("expect error to be UnknownServiceError")
-	}
+	assert.True(t, ok, "expect error to be UnknownServiceError")
 }
 
 func TestResolveEndpoint_ResolveUnknownService(t *testing.T) {
 	resolved, err := testPartitions.EndpointFor("unknown-service", "us-region-1",
 		ResolveUnknownServiceOption)
 
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
+	assert.NoError(t, err)
 
-	if e, a := "https://unknown-service.us-region-1.amazonaws.com", resolved.URL; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "us-region-1", resolved.SigningRegion; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "unknown-service", resolved.SigningName; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if !resolved.SigningNameDerived {
-		t.Errorf("expect the signing name to be derived")
-	}
+	assert.Equal(t, "https://unknown-service.us-region-1.amazonaws.com", resolved.URL)
+	assert.Equal(t, "us-region-1", resolved.SigningRegion)
+	assert.Equal(t, "unknown-service", resolved.SigningName)
 }
 
 func TestResolveEndpoint_UnknownMatchedRegion(t *testing.T) {
 	resolved, err := testPartitions.EndpointFor("service2", "us-region-1")
 
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
-	if e, a := "https://service2.us-region-1.amazonaws.com", resolved.URL; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "us-region-1", resolved.SigningRegion; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "service2", resolved.SigningName; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if resolved.SigningNameDerived {
-		t.Errorf("expect the signing name not to be derived, but was")
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, "https://service2.us-region-1.amazonaws.com", resolved.URL)
+	assert.Equal(t, "us-region-1", resolved.SigningRegion)
+	assert.Equal(t, "service2", resolved.SigningName)
 }
 
 func TestResolveEndpoint_UnknownRegion(t *testing.T) {
 	resolved, err := testPartitions.EndpointFor("service2", "unknownregion")
 
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
-	if e, a := "https://service2.unknownregion.amazonaws.com", resolved.URL; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "unknownregion", resolved.SigningRegion; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "service2", resolved.SigningName; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if resolved.SigningNameDerived {
-		t.Errorf("expect the signing name not to be derived, but was")
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, "https://service2.unknownregion.amazonaws.com", resolved.URL)
+	assert.Equal(t, "unknownregion", resolved.SigningRegion)
+	assert.Equal(t, "service2", resolved.SigningName)
 }
 
 func TestResolveEndpoint_StrictPartitionUnknownEndpoint(t *testing.T) {
 	_, err := testPartitions[0].EndpointFor("service2", "unknownregion", StrictMatchingOption)
 
-	if err == nil {
-		t.Errorf("expect error, got none")
-	}
+	assert.Error(t, err)
 
 	_, ok := err.(UnknownEndpointError)
-	if !ok {
-		t.Errorf("expect error to be UnknownEndpointError")
-	}
+	assert.True(t, ok, "expect error to be UnknownEndpointError")
 }
 
 func TestResolveEndpoint_StrictPartitionsUnknownEndpoint(t *testing.T) {
 	_, err := testPartitions.EndpointFor("service2", "us-region-1", StrictMatchingOption)
 
-	if err == nil {
-		t.Errorf("expect error, got none")
-	}
+	assert.Error(t, err)
 
 	_, ok := err.(UnknownEndpointError)
-	if !ok {
-		t.Errorf("expect error to be UnknownEndpointError")
-	}
+	assert.True(t, ok, "expect error to be UnknownEndpointError")
 }
 
 func TestResolveEndpoint_NotRegionalized(t *testing.T) {
 	resolved, err := testPartitions.EndpointFor("globalService", "us-west-2")
 
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
-	if e, a := "https://globalService.amazonaws.com", resolved.URL; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "us-east-1", resolved.SigningRegion; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "globalService", resolved.SigningName; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if !resolved.SigningNameDerived {
-		t.Errorf("expect the signing name to be derived")
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, "https://globalService.amazonaws.com", resolved.URL)
+	assert.Equal(t, "us-east-1", resolved.SigningRegion)
+	assert.Equal(t, "globalService", resolved.SigningName)
 }
 
 func TestResolveEndpoint_AwsGlobal(t *testing.T) {
 	resolved, err := testPartitions.EndpointFor("globalService", "aws-global")
 
-	if err != nil {
-		t.Fatalf("expect no error, got %v", err)
-	}
-	if e, a := "https://globalService.amazonaws.com", resolved.URL; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "us-east-1", resolved.SigningRegion; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if e, a := "globalService", resolved.SigningName; e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
-	if !resolved.SigningNameDerived {
-		t.Errorf("expect the signing name to be derived")
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, "https://globalService.amazonaws.com", resolved.URL)
+	assert.Equal(t, "us-east-1", resolved.SigningRegion)
+	assert.Equal(t, "globalService", resolved.SigningName)
 }

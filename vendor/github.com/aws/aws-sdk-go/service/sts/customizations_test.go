@@ -3,6 +3,8 @@ package sts_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/awstesting/unit"
 	"github.com/aws/aws-sdk-go/service/sts"
@@ -20,12 +22,8 @@ func TestUnsignedRequest_AssumeRoleWithSAML(t *testing.T) {
 	})
 
 	err := req.Sign()
-	if err != nil {
-		t.Errorf("expect no error, got %v", err)
-	}
-	if e, a := "", req.HTTPRequest.Header.Get("Authorization"); e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, "", req.HTTPRequest.Header.Get("Authorization"))
 }
 
 func TestUnsignedRequest_AssumeRoleWithWebIdentity(t *testing.T) {
@@ -36,10 +34,6 @@ func TestUnsignedRequest_AssumeRoleWithWebIdentity(t *testing.T) {
 	})
 
 	err := req.Sign()
-	if err != nil {
-		t.Errorf("expect no error, got %v", err)
-	}
-	if e, a := "", req.HTTPRequest.Header.Get("Authorization"); e != a {
-		t.Errorf("expect %v, got %v", e, a)
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, "", req.HTTPRequest.Header.Get("Authorization"))
 }

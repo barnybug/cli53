@@ -2,6 +2,8 @@ package v4
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRuleCheckWhitelist(t *testing.T) {
@@ -11,12 +13,8 @@ func TestRuleCheckWhitelist(t *testing.T) {
 		},
 	}
 
-	if !w.IsValid("Cache-Control") {
-		t.Error("expected true value")
-	}
-	if w.IsValid("Cache-") {
-		t.Error("expected false value")
-	}
+	assert.True(t, w.IsValid("Cache-Control"))
+	assert.False(t, w.IsValid("Cache-"))
 }
 
 func TestRuleCheckBlacklist(t *testing.T) {
@@ -26,26 +24,16 @@ func TestRuleCheckBlacklist(t *testing.T) {
 		},
 	}
 
-	if b.IsValid("Cache-Control") {
-		t.Error("expected false value")
-	}
-	if !b.IsValid("Cache-") {
-		t.Error("expected true value")
-	}
+	assert.False(t, b.IsValid("Cache-Control"))
+	assert.True(t, b.IsValid("Cache-"))
 }
 
 func TestRuleCheckPattern(t *testing.T) {
 	p := patterns{"X-Amz-Meta-"}
 
-	if !p.IsValid("X-Amz-Meta-") {
-		t.Error("expected true value")
-	}
-	if !p.IsValid("X-Amz-Meta-Star") {
-		t.Error("expected true value")
-	}
-	if p.IsValid("Cache-") {
-		t.Error("expected false value")
-	}
+	assert.True(t, p.IsValid("X-Amz-Meta-"))
+	assert.True(t, p.IsValid("X-Amz-Meta-Star"))
+	assert.False(t, p.IsValid("Cache-"))
 }
 
 func TestRuleComplexWhitelist(t *testing.T) {
@@ -62,16 +50,8 @@ func TestRuleComplexWhitelist(t *testing.T) {
 		inclusiveRules{patterns{"X-Amz-"}, blacklist{w}},
 	}
 
-	if !r.IsValid("X-Amz-Blah") {
-		t.Error("expected true value")
-	}
-	if r.IsValid("X-Amz-Meta-") {
-		t.Error("expected false value")
-	}
-	if r.IsValid("X-Amz-Meta-Star") {
-		t.Error("expected false value")
-	}
-	if r.IsValid("Cache-Control") {
-		t.Error("expected false value")
-	}
+	assert.True(t, r.IsValid("X-Amz-Blah"))
+	assert.False(t, r.IsValid("X-Amz-Meta-"))
+	assert.False(t, r.IsValid("X-Amz-Meta-Star"))
+	assert.False(t, r.IsValid("Cache-Control"))
 }

@@ -7,7 +7,6 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/awstesting"
-	"github.com/aws/aws-sdk-go/internal/shareddefaults"
 )
 
 func TestLoadEnvConfig_Creds(t *testing.T) {
@@ -106,8 +105,6 @@ func TestLoadEnvConfig(t *testing.T) {
 			},
 			Config: envConfig{
 				Region: "region", Profile: "profile",
-				SharedCredentialsFile: shareddefaults.SharedCredentialsFilename(),
-				SharedConfigFile:      shareddefaults.SharedConfigFilename(),
 			},
 		},
 		{
@@ -119,8 +116,6 @@ func TestLoadEnvConfig(t *testing.T) {
 			},
 			Config: envConfig{
 				Region: "region", Profile: "profile",
-				SharedCredentialsFile: shareddefaults.SharedCredentialsFilename(),
-				SharedConfigFile:      shareddefaults.SharedConfigFilename(),
 			},
 		},
 		{
@@ -133,19 +128,13 @@ func TestLoadEnvConfig(t *testing.T) {
 			},
 			Config: envConfig{
 				Region: "region", Profile: "profile",
-				EnableSharedConfig:    true,
-				SharedCredentialsFile: shareddefaults.SharedCredentialsFilename(),
-				SharedConfigFile:      shareddefaults.SharedConfigFilename(),
+				EnableSharedConfig: true,
 			},
 		},
 		{
 			Env: map[string]string{
 				"AWS_DEFAULT_REGION":  "default_region",
 				"AWS_DEFAULT_PROFILE": "default_profile",
-			},
-			Config: envConfig{
-				SharedCredentialsFile: shareddefaults.SharedCredentialsFilename(),
-				SharedConfigFile:      shareddefaults.SharedConfigFilename(),
 			},
 		},
 		{
@@ -156,9 +145,7 @@ func TestLoadEnvConfig(t *testing.T) {
 			},
 			Config: envConfig{
 				Region: "default_region", Profile: "default_profile",
-				EnableSharedConfig:    true,
-				SharedCredentialsFile: shareddefaults.SharedCredentialsFilename(),
-				SharedConfigFile:      shareddefaults.SharedConfigFilename(),
+				EnableSharedConfig: true,
 			},
 		},
 		{
@@ -168,9 +155,7 @@ func TestLoadEnvConfig(t *testing.T) {
 			},
 			Config: envConfig{
 				Region: "region", Profile: "profile",
-				EnableSharedConfig:    true,
-				SharedCredentialsFile: shareddefaults.SharedCredentialsFilename(),
-				SharedConfigFile:      shareddefaults.SharedConfigFilename(),
+				EnableSharedConfig: true,
 			},
 			UseSharedConfigCall: true,
 		},
@@ -183,9 +168,7 @@ func TestLoadEnvConfig(t *testing.T) {
 			},
 			Config: envConfig{
 				Region: "region", Profile: "profile",
-				EnableSharedConfig:    true,
-				SharedCredentialsFile: shareddefaults.SharedCredentialsFilename(),
-				SharedConfigFile:      shareddefaults.SharedConfigFilename(),
+				EnableSharedConfig: true,
 			},
 			UseSharedConfigCall: true,
 		},
@@ -199,9 +182,7 @@ func TestLoadEnvConfig(t *testing.T) {
 			},
 			Config: envConfig{
 				Region: "region", Profile: "profile",
-				EnableSharedConfig:    true,
-				SharedCredentialsFile: shareddefaults.SharedCredentialsFilename(),
-				SharedConfigFile:      shareddefaults.SharedConfigFilename(),
+				EnableSharedConfig: true,
 			},
 			UseSharedConfigCall: true,
 		},
@@ -212,9 +193,7 @@ func TestLoadEnvConfig(t *testing.T) {
 			},
 			Config: envConfig{
 				Region: "default_region", Profile: "default_profile",
-				EnableSharedConfig:    true,
-				SharedCredentialsFile: shareddefaults.SharedCredentialsFilename(),
-				SharedConfigFile:      shareddefaults.SharedConfigFilename(),
+				EnableSharedConfig: true,
 			},
 			UseSharedConfigCall: true,
 		},
@@ -226,9 +205,7 @@ func TestLoadEnvConfig(t *testing.T) {
 			},
 			Config: envConfig{
 				Region: "default_region", Profile: "default_profile",
-				EnableSharedConfig:    true,
-				SharedCredentialsFile: shareddefaults.SharedCredentialsFilename(),
-				SharedConfigFile:      shareddefaults.SharedConfigFilename(),
+				EnableSharedConfig: true,
 			},
 			UseSharedConfigCall: true,
 		},
@@ -237,9 +214,7 @@ func TestLoadEnvConfig(t *testing.T) {
 				"AWS_CA_BUNDLE": "custom_ca_bundle",
 			},
 			Config: envConfig{
-				CustomCABundle:        "custom_ca_bundle",
-				SharedCredentialsFile: shareddefaults.SharedCredentialsFilename(),
-				SharedConfigFile:      shareddefaults.SharedConfigFilename(),
+				CustomCABundle: "custom_ca_bundle",
 			},
 		},
 		{
@@ -247,10 +222,8 @@ func TestLoadEnvConfig(t *testing.T) {
 				"AWS_CA_BUNDLE": "custom_ca_bundle",
 			},
 			Config: envConfig{
-				CustomCABundle:        "custom_ca_bundle",
-				EnableSharedConfig:    true,
-				SharedCredentialsFile: shareddefaults.SharedCredentialsFilename(),
-				SharedConfigFile:      shareddefaults.SharedConfigFilename(),
+				CustomCABundle:     "custom_ca_bundle",
+				EnableSharedConfig: true,
 			},
 			UseSharedConfigCall: true,
 		},

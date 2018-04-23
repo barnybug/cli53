@@ -1,49 +1,32 @@
 package aws
 
 import (
-	"bytes"
 	"math/rand"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestWriteAtBuffer(t *testing.T) {
 	b := &WriteAtBuffer{}
 
 	n, err := b.WriteAt([]byte{1}, 0)
-	if err != nil {
-		t.Errorf("expected no error, but received %v", err)
-	}
-	if e, a := 1, n; e != a {
-		t.Errorf("expected %d, but recieved %d", e, a)
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, 1, n)
 
 	n, err = b.WriteAt([]byte{1, 1, 1}, 5)
-	if err != nil {
-		t.Errorf("expected no error, but received %v", err)
-	}
-	if e, a := 3, n; e != a {
-		t.Errorf("expected %d, but recieved %d", e, a)
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, 3, n)
 
 	n, err = b.WriteAt([]byte{2}, 1)
-	if err != nil {
-		t.Errorf("expected no error, but received %v", err)
-	}
-	if e, a := 1, n; e != a {
-		t.Errorf("expected %d, but recieved %d", e, a)
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, 1, n)
 
 	n, err = b.WriteAt([]byte{3}, 2)
-	if err != nil {
-		t.Errorf("expected no error, but received %v", err)
-	}
-	if e, a := 1, n; e != a {
-		t.Errorf("expected %d, but received %d", e, a)
-	}
+	assert.NoError(t, err)
+	assert.Equal(t, 1, n)
 
-	if !bytes.Equal([]byte{1, 2, 3, 0, 0, 1, 1, 1}, b.Bytes()) {
-		t.Errorf("expected %v, but received %v", []byte{1, 2, 3, 0, 0, 1, 1, 1}, b.Bytes())
-	}
+	assert.Equal(t, []byte{1, 2, 3, 0, 0, 1, 1, 1}, b.Bytes())
 }
 
 func BenchmarkWriteAtBuffer(b *testing.B) {

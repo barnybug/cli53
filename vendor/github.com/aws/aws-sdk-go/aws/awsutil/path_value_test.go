@@ -1,10 +1,10 @@
 package awsutil_test
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws/awsutil"
+	"github.com/stretchr/testify/assert"
 )
 
 type Struct struct {
@@ -50,12 +50,8 @@ func TestValueAtPathSuccess(t *testing.T) {
 	}
 	for i, c := range testCases {
 		v, err := awsutil.ValuesAtPath(c.data, c.path)
-		if err != nil {
-			t.Errorf("case %v, expected no error, %v", i, c.path)
-		}
-		if e, a := c.expect, v; !awsutil.DeepEqual(e, a) {
-			t.Errorf("case %v, %v", i, c.path)
-		}
+		assert.NoError(t, err, "case %d, expected no error, %s", i, c.path)
+		assert.Equal(t, c.expect, v, "case %d, %s", i, c.path)
 	}
 }
 
@@ -82,18 +78,12 @@ func TestValueAtPathFailure(t *testing.T) {
 	for i, c := range testCases {
 		v, err := awsutil.ValuesAtPath(c.data, c.path)
 		if c.errContains != "" {
-			if !strings.Contains(err.Error(), c.errContains) {
-				t.Errorf("case %v, expected error, %v", i, c.path)
-			}
+			assert.Contains(t, err.Error(), c.errContains, "case %d, expected error, %s", i, c.path)
 			continue
 		} else {
-			if err != nil {
-				t.Errorf("case %v, expected no error, %v", i, c.path)
-			}
+			assert.NoError(t, err, "case %d, expected no error, %s", i, c.path)
 		}
-		if e, a := c.expect, v; !awsutil.DeepEqual(e, a) {
-			t.Errorf("case %v, %v", i, c.path)
-		}
+		assert.Equal(t, c.expect, v, "case %d, %s", i, c.path)
 	}
 }
 
@@ -102,81 +92,51 @@ func TestSetValueAtPathSuccess(t *testing.T) {
 	awsutil.SetValueAtPath(&s, "C", "test1")
 	awsutil.SetValueAtPath(&s, "B.B.C", "test2")
 	awsutil.SetValueAtPath(&s, "B.D.C", "test3")
-	if e, a := "test1", s.C; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
-	if e, a := "test2", s.B.B.C; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
-	if e, a := "test3", s.B.D.C; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
+	assert.Equal(t, "test1", s.C)
+	assert.Equal(t, "test2", s.B.B.C)
+	assert.Equal(t, "test3", s.B.D.C)
 
 	awsutil.SetValueAtPath(&s, "B.*.C", "test0")
-	if e, a := "test0", s.B.B.C; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
-	if e, a := "test0", s.B.D.C; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
+	assert.Equal(t, "test0", s.B.B.C)
+	assert.Equal(t, "test0", s.B.D.C)
 
 	var s2 Struct
 	awsutil.SetValueAtPath(&s2, "b.b.c", "test0")
-	if e, a := "test0", s2.B.B.C; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
+	assert.Equal(t, "test0", s2.B.B.C)
 	awsutil.SetValueAtPath(&s2, "A", []Struct{{}})
-	if e, a := []Struct{{}}, s2.A; !awsutil.DeepEqual(e, a) {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
+	assert.Equal(t, []Struct{{}}, s2.A)
 
 	str := "foo"
 
 	s3 := Struct{}
 	awsutil.SetValueAtPath(&s3, "b.b.c", str)
-	if e, a := "foo", s3.B.B.C; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
+	assert.Equal(t, "foo", s3.B.B.C)
 
 	s3 = Struct{B: &Struct{B: &Struct{C: str}}}
 	awsutil.SetValueAtPath(&s3, "b.b.c", nil)
-	if e, a := "", s3.B.B.C; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
+	assert.Equal(t, "", s3.B.B.C)
 
 	s3 = Struct{}
 	awsutil.SetValueAtPath(&s3, "b.b.c", nil)
-	if e, a := "", s3.B.B.C; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
+	assert.Equal(t, "", s3.B.B.C)
 
 	s3 = Struct{}
 	awsutil.SetValueAtPath(&s3, "b.b.c", &str)
-	if e, a := "foo", s3.B.B.C; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
+	assert.Equal(t, "foo", s3.B.B.C)
 
 	var s4 struct{ Name *string }
 	awsutil.SetValueAtPath(&s4, "Name", str)
-	if e, a := str, *s4.Name; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
+	assert.Equal(t, str, *s4.Name)
 
 	s4 = struct{ Name *string }{}
 	awsutil.SetValueAtPath(&s4, "Name", nil)
-	if e, a := (*string)(nil), s4.Name; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
+	assert.Equal(t, (*string)(nil), s4.Name)
 
 	s4 = struct{ Name *string }{Name: &str}
 	awsutil.SetValueAtPath(&s4, "Name", nil)
-	if e, a := (*string)(nil), s4.Name; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
+	assert.Equal(t, (*string)(nil), s4.Name)
 
 	s4 = struct{ Name *string }{}
 	awsutil.SetValueAtPath(&s4, "Name", &str)
-	if e, a := str, *s4.Name; e != a {
-		t.Errorf("expected %v, but received %v", e, a)
-	}
+	assert.Equal(t, str, *s4.Name)
 }

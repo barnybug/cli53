@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/request"
@@ -47,17 +49,9 @@ func TestUnmarshalStandardError(t *testing.T) {
 		Name:            aws.String("test_zone"),
 	})
 
-	if err == nil {
-		t.Error("expected error, but received none")
-	}
-
-	if e, a := "InvalidDomainName", err.(awserr.Error).Code(); e != a {
-		t.Errorf("expected %s, but received %s", e, a)
-	}
-
-	if e, a := "The domain name is invalid", err.(awserr.Error).Message(); e != a {
-		t.Errorf("expected %s, but received %s", e, a)
-	}
+	assert.Error(t, err)
+	assert.Equal(t, "InvalidDomainName", err.(awserr.Error).Code())
+	assert.Equal(t, "The domain name is invalid", err.(awserr.Error).Message())
 }
 
 func TestUnmarshalInvalidChangeBatch(t *testing.T) {
@@ -97,34 +91,21 @@ but it already exists
 	}
 
 	_, err := r.ChangeResourceRecordSets(req)
-	if err == nil {
-		t.Error("expected error, but received none")
-	}
+	assert.Error(t, err)
 
 	if reqErr, ok := err.(awserr.RequestFailure); ok {
-		if reqErr == nil {
-			t.Error("expected error, but received none")
-		}
-
-		if e, a := 400, reqErr.StatusCode(); e != a {
-			t.Errorf("expected %d, but received %d", e, a)
-		}
+		assert.Error(t, reqErr)
+		assert.Equal(t, 400, reqErr.StatusCode())
 	} else {
-		t.Fatal("returned error is not a RequestFailure")
+		assert.Fail(t, "returned error is not a RequestFailure")
 	}
 
 	if batchErr, ok := err.(awserr.BatchedErrors); ok {
 		errs := batchErr.OrigErrs()
-		if e, a := 1, len(errs); e != a {
-			t.Errorf("expected %d, but received %d", e, a)
-		}
-		if e, a := "InvalidChangeBatch", errs[0].(awserr.Error).Code(); e != a {
-			t.Errorf("expected %s, but received %s", e, a)
-		}
-		if e, a := errorMessage, errs[0].(awserr.Error).Message(); e != a {
-			t.Errorf("expected %s, but received %s", e, a)
-		}
+		assert.Len(t, errs, 1)
+		assert.Equal(t, "InvalidChangeBatch", errs[0].(awserr.Error).Code())
+		assert.Equal(t, errorMessage, errs[0].(awserr.Error).Message())
 	} else {
-		t.Fatal("returned error is not a BatchedErrors")
+		assert.Fail(t, "returned error is not a BatchedErrors")
 	}
 }

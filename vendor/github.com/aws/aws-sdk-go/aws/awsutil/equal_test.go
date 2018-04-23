@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awsutil"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDeepEqual(t *testing.T) {
@@ -23,8 +24,6 @@ func TestDeepEqual(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		if awsutil.DeepEqual(c.a, c.b) != c.equal {
-			t.Errorf("%d, a:%v b:%v, %t", i, c.a, c.b, c.equal)
-		}
+		assert.Equal(t, c.equal, awsutil.DeepEqual(c.a, c.b), "%d, a:%v b:%v, %t", i, c.a, c.b, c.equal)
 	}
 }

@@ -2,7 +2,6 @@ package request
 
 import (
 	"bytes"
-	"io"
 	"net/http"
 	"strings"
 	"testing"
@@ -26,69 +25,20 @@ func TestResetBody_WithBodyContents(t *testing.T) {
 	}
 }
 
-type mockReader struct{}
-
-func (mockReader) Read([]byte) (int, error) {
-	return 0, io.EOF
-}
-
-func TestResetBody_ExcludeEmptyUnseekableBodyByMethod(t *testing.T) {
+func TestResetBody_ExcludeUnseekableBodyByMethod(t *testing.T) {
 	cases := []struct {
 		Method   string
-		Body     io.ReadSeeker
 		IsNoBody bool
 	}{
-		{
-			Method:   "GET",
-			IsNoBody: true,
-			Body:     aws.ReadSeekCloser(mockReader{}),
-		},
-		{
-			Method:   "HEAD",
-			IsNoBody: true,
-			Body:     aws.ReadSeekCloser(mockReader{}),
-		},
-		{
-			Method:   "DELETE",
-			IsNoBody: true,
-			Body:     aws.ReadSeekCloser(mockReader{}),
-		},
-		{
-			Method:   "PUT",
-			IsNoBody: false,
-			Body:     aws.ReadSeekCloser(mockReader{}),
-		},
-		{
-			Method:   "PATCH",
-			IsNoBody: false,
-			Body:     aws.ReadSeekCloser(mockReader{}),
-		},
-		{
-			Method:   "POST",
-			IsNoBody: false,
-			Body:     aws.ReadSeekCloser(mockReader{}),
-		},
-		{
-			Method:   "GET",
-			IsNoBody: false,
-			Body:     aws.ReadSeekCloser(bytes.NewBuffer([]byte("abc"))),
-		},
-		{
-			Method:   "GET",
-			IsNoBody: true,
-			Body:     aws.ReadSeekCloser(bytes.NewBuffer(nil)),
-		},
-		{
-			Method:   "POST",
-			IsNoBody: false,
-			Body:     aws.ReadSeekCloser(bytes.NewBuffer([]byte("abc"))),
-		},
-		{
-			Method:   "POST",
-			IsNoBody: true,
-			Body:     aws.ReadSeekCloser(bytes.NewBuffer(nil)),
-		},
+		{"GET", true},
+		{"HEAD", true},
+		{"DELETE", true},
+		{"PUT", false},
+		{"PATCH", false},
+		{"POST", false},
 	}
+
+	reader := aws.ReadSeekCloser(bytes.NewBuffer([]byte("abc")))
 
 	for i, c := range cases {
 		r := Request{
@@ -97,7 +47,8 @@ func TestResetBody_ExcludeEmptyUnseekableBodyByMethod(t *testing.T) {
 				HTTPMethod: c.Method,
 			},
 		}
-		r.SetReaderBody(c.Body)
+
+		r.SetReaderBody(reader)
 
 		if a, e := r.HTTPRequest.Body == NoBody, c.IsNoBody; a != e {
 			t.Errorf("%d, expect body to be set to noBody(%t), but was %t", i, e, a)

@@ -10,6 +10,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws/signer/v4"
 	"github.com/aws/aws-sdk-go/awstesting/unit"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestStandaloneSign(t *testing.T) {
@@ -21,9 +22,7 @@ func TestStandaloneSign(t *testing.T) {
 			c.SubDomain, c.Region, c.Service)
 
 		req, err := http.NewRequest("GET", host, nil)
-		if err != nil {
-			t.Errorf("expected no error, but received %v", err)
-		}
+		assert.NoError(t, err)
 
 		// URL.EscapedPath() will be used by the signer to get the
 		// escaped form of the request's URI path.
@@ -31,20 +30,12 @@ func TestStandaloneSign(t *testing.T) {
 		req.URL.RawQuery = c.OrigQuery
 
 		_, err = signer.Sign(req, nil, c.Service, c.Region, time.Unix(0, 0))
-		if err != nil {
-			t.Errorf("expected no error, but received %v", err)
-		}
+		assert.NoError(t, err)
 
 		actual := req.Header.Get("Authorization")
-		if e, a := c.ExpSig, actual; e != a {
-			t.Errorf("expected %v, but recieved %v", e, a)
-		}
-		if e, a := c.OrigURI, req.URL.Path; e != a {
-			t.Errorf("expected %v, but recieved %v", e, a)
-		}
-		if e, a := c.EscapedURI, req.URL.EscapedPath(); e != a {
-			t.Errorf("expected %v, but recieved %v", e, a)
-		}
+		assert.Equal(t, c.ExpSig, actual)
+		assert.Equal(t, c.OrigURI, req.URL.Path)
+		assert.Equal(t, c.EscapedURI, req.URL.EscapedPath())
 	}
 }
 
@@ -57,9 +48,7 @@ func TestStandaloneSign_RawPath(t *testing.T) {
 			c.SubDomain, c.Region, c.Service)
 
 		req, err := http.NewRequest("GET", host, nil)
-		if err != nil {
-			t.Errorf("expected no error, but received %v", err)
-		}
+		assert.NoError(t, err)
 
 		// URL.EscapedPath() will be used by the signer to get the
 		// escaped form of the request's URI path.
@@ -68,19 +57,11 @@ func TestStandaloneSign_RawPath(t *testing.T) {
 		req.URL.RawQuery = c.OrigQuery
 
 		_, err = signer.Sign(req, nil, c.Service, c.Region, time.Unix(0, 0))
-		if err != nil {
-			t.Errorf("expected no error, but received %v", err)
-		}
+		assert.NoError(t, err)
 
 		actual := req.Header.Get("Authorization")
-		if e, a := c.ExpSig, actual; e != a {
-			t.Errorf("expected %v, but recieved %v", e, a)
-		}
-		if e, a := c.OrigURI, req.URL.Path; e != a {
-			t.Errorf("expected %v, but recieved %v", e, a)
-		}
-		if e, a := c.EscapedURI, req.URL.EscapedPath(); e != a {
-			t.Errorf("expected %v, but recieved %v", e, a)
-		}
+		assert.Equal(t, c.ExpSig, actual)
+		assert.Equal(t, c.OrigURI, req.URL.Path)
+		assert.Equal(t, c.EscapedURI, req.URL.EscapedPath())
 	}
 }
