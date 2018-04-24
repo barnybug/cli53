@@ -242,6 +242,22 @@ type importArgs struct {
 	dryrun   bool
 }
 
+func rrsetKey(rrset *route53.ResourceRecordSet) string {
+	key := fmt.Sprintf("%s %s", *rrset.Type, *rrset.Name)
+	if rrset.TTL != nil {
+		key += fmt.Sprintf(" %d", *rrset.TTL)
+	}
+	var rrs []string
+	for _, rr := range rrset.ResourceRecords {
+		rrs = append(rrs, rr.String())
+	}
+	sort.Strings(rrs)
+	for _, rr := range rrs {
+		key += " " + rr
+	}
+	return key
+}
+
 func importBind(args importArgs) {
 	zone := lookupZone(args.name)
 
@@ -266,7 +282,7 @@ func importBind(args importArgs) {
 		for _, rrset := range rrsets {
 			if args.editauth || !isAuthRecord(zone, rrset) {
 				rrset.Name = aws.String(unescaper.Replace(*rrset.Name))
-				existing[rrset.String()] = rrset
+				existing[rrsetKey(rrset)] = rrset
 			}
 		}
 	}
@@ -275,7 +291,7 @@ func importBind(args importArgs) {
 	for _, values := range grouped {
 		rrset := ConvertBindToRRSet(values)
 		if rrset != nil && (args.editauth || !isAuthRecord(zone, rrset)) {
-			key := rrset.String()
+			key := rrsetKey(rrset)
 			if _, ok := existing[key]; ok {
 				// no difference - leave it untouched
 				delete(existing, key)
