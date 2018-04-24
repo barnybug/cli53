@@ -1,4 +1,4 @@
-[![Build status](https://secure.travis-ci.org/barnybug/cli53.png?branch=master)](https://secure.travis-ci.org/barnybug/cli53) [![codecov.io](http://codecov.io/github/barnybug/cli53/coverage.svg?branch=master)](http://codecov.io/github/barnybug/cli53?branch=master)
+[![Build status](https://secure.travis-ci.org/barnybug/cli53.svg?branch=master)](https://secure.travis-ci.org/barnybug/cli53) [![codecov.io](http://codecov.io/github/barnybug/cli53/coverage.svg?branch=master)](http://codecov.io/github/barnybug/cli53?branch=master)
 [![Join the chat at https://gitter.im/barnybug/cli53](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/barnybug/cli53?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # cli53 - Command line tool for Amazon Route 53
