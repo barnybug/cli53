@@ -1,16 +1,19 @@
 language: go
 go:
-- 1.9
+- '1.10'
 sudo: false
-before_install:
-  - pip install --user codecov
 before_script:
+- pip install --user codecov
 - 'mkdir -p $GOPATH/bin && wget -q https://github.com/barnybug/cli53/releases/download/0.6.0/upx -O $GOPATH/bin/upx && chmod +x $GOPATH/bin/upx'
 script:
 - make deps test-coverage
-after_success:
-  - codecov
-  - test -n "$TRAVIS_TAG" && curl -sL https://git.io/goreleaser | bash
+- codecov
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: curl -sL https://git.io/goreleaser | VERSION=v0.34.2 bash
+  on:
+    tags: true
 env:
   global:
     - secure: "M6bUhLlefRqTAfbVfQd2/j4/4CsifJqKQ6Szz2G5RTI0ADrbdNnS0m3SqTdk\nsbp/4cgwaQM+sgnISW2alDaGP+1PmkyXGyftZdLHM1NuGca8/yKVWy/vLW3e\nv++AiYPFLTRxoiZJ9j0bdHjGOffCMvotZhtc9xv0VXVijGdHiIM="
