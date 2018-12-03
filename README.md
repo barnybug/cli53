@@ -48,6 +48,8 @@ You can switch between different sets in the credentials file by passing
 
 For more information, see: http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs
 
+Note: for Alpine on Docker, the pre-built binaries do not work, so either use Debian, or follow the instructions below for Building from source.
+
 ## Building from source
 
 To build yourself from source (you will need golang >= 1.5 installed):
