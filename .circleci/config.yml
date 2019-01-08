@@ -1,0 +1,28 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.10
+    working_directory: /go/src/github.com/barnybug/cli53
+    steps:
+      - checkout
+      - run: sudo pip install --user codecov
+      - run:
+          command: |
+            mkdir -p $GOPATH/bin && wget -q https://github.com/barnybug/cli53/releases/download/0.6.0/upx -O $GOPATH/bin/upx && chmod +x $GOPATH/bin/upx
+      - run: make deps test-coverage
+      - run: codecov
+  release:
+    docker:
+      - image: circleci/golang:1.10
+    working_directory: /go/src/github.com/barnybug/cli53
+    steps:
+      - checkout
+      - run: curl -sL https://git.io/goreleaser | VERSION=v0.34.2 bash
+    requires: [build]
+    filters:
+      filters:
+        branches:
+          ignore: /.*/
+        tags:
+          only: /^\d+\.\d+\.\d+$/
