@@ -7,6 +7,9 @@ jobs:
     steps:
       - checkout
       - run: make deps test-coverage
+    filters:
+      tags:
+        only: /^\d+\.\d+\.\d+$/
   release:
     docker:
       - image: circleci/golang:1.10
@@ -19,9 +22,7 @@ jobs:
       - run: curl -sL https://git.io/goreleaser | VERSION=v0.34.2 bash
     requires: [build]
     filters:
-      filters:
-        branches:
-          ignore: /.*/
-        tags:
-          only: /^\d+\.\d+\.\d+$/
-
+      branches:
+        ignore: /.*/
+      tags:
+        only: /^\d+\.\d+\.\d+$/
