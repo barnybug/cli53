@@ -7,9 +7,6 @@ jobs:
     steps:
       - checkout
       - run: make deps test-coverage
-    filters:
-      tags:
-        only: /^\d+\.\d+\.\d+$/
   release:
     docker:
       - image: circleci/golang:1.10
@@ -20,9 +17,19 @@ jobs:
           command: |
             mkdir -p $GOPATH/bin && wget -q https://github.com/barnybug/cli53/releases/download/0.6.0/upx -O $GOPATH/bin/upx && chmod +x $GOPATH/bin/upx
       - run: curl -sL https://git.io/goreleaser | VERSION=v0.34.2 bash
-    requires: [build]
-    filters:
-      branches:
-        ignore: /.*/
-      tags:
-        only: /^\d+\.\d+\.\d+$/
+
+workflows:
+  version: 2
+  build-release:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+      - release:
+          requires: [build]
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+\.\d+\.\d+$/
