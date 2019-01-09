@@ -7,7 +7,6 @@ exe = ./cmd/cli53
 all: install
 
 deps:
-	go get github.com/pwaller/goupx
 	go get github.com/wadey/gocovmerge
 	go get github.com/gucumber/gucumber/cmd/gucumber
 
@@ -18,7 +17,6 @@ install:
 	go install $(exe)
 
 upx:
-	goupx dist/cli53-linux-amd64/cli53-linux-amd64
 	upx dist/cli53-linux-386/cli53-linux-386 dist/cli53-linux-arm/cli53-linux-arm dist/cli53-windows-386/cli53-windows-386.exe
 
 test-unit:
