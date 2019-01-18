@@ -77,6 +77,16 @@ func ConvertBindToRR(record dns.RR) *route53.ResourceRecord {
 		return &route53.ResourceRecord{
 			Value: aws.String(value),
 		}
+	case *dns.NAPTR:
+		var value string
+		if (record.Replacement == ".") {
+			value = fmt.Sprintf("%d %d \"%s\" \"%s\" \"%s\" .", record.Order, record.Preference, record.Flags, record.Service, record.Regexp)
+		} else {
+			value = fmt.Sprintf("%d %d \"%s\" \"%s\" \"\" \"%s\"", record.Order, record.Preference, record.Flags, record.Service, record.Replacement)
+		}
+		return &route53.ResourceRecord{
+			Value: aws.String(value),
+		}
 	case *dns.NS:
 		return &route53.ResourceRecord{
 			Value: aws.String(record.Ns),
