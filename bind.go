@@ -5,6 +5,8 @@ import (
 	"io"
 	"net"
 	"os"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -301,6 +303,31 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 					},
 					Mx:         absolute(value),
 					Preference: preference,
+				}
+				ret = append(ret, dnsrr)
+			}
+		case "NAPTR":
+			for _, rr := range rrset.ResourceRecords {
+				// parse value
+				naptrRE, err := regexp.Compile("^([[:digit:]]+) ([[:digit:]]+) \"([^\"]*)\" \"([^\"]*)\" \"([^\"]*)\" \"?([^\"]+)\"?$")
+				naptr := naptrRE.FindStringSubmatch(*rr.Value)
+				fmt.Printf("naptr slice: %q\n", naptr)
+				order, _ := strconv.Atoi(naptr[1])
+				preference, _ := strconv.Atoi(naptr[2])
+
+				dnsrr := &dns.NAPTR{
+					Hdr: dns.RR_Header{
+						Name:   name,
+						Rrtype: dns.TypeNAPTR,
+						Class:  dns.ClassINET,
+						Ttl:    uint32(*rrset.TTL),
+					},
+					Order:       uint16(order),
+					Preference:  uint16(preference),
+					Flags:       naptr[3],
+					Service:     naptr[4],
+					Regexp:      naptr[5],
+					Replacement: naptr[6],
 				}
 				ret = append(ret, dnsrr)
 			}
