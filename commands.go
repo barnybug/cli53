@@ -251,6 +251,9 @@ func rrsetKey(rrset *route53.ResourceRecordSet) string {
 	for _, rr := range rrset.ResourceRecords {
 		rrs = append(rrs, rr.String())
 	}
+	if rrset.AliasTarget != nil {
+		rrs = append(rrs, rrset.AliasTarget.String())
+	}
 	sort.Strings(rrs)
 	for _, rr := range rrs {
 		key += " " + rr
