@@ -312,7 +312,6 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 			for _, rr := range rrset.ResourceRecords {
 				// parse value
 				naptr := reNaptr.FindStringSubmatch(*rr.Value)
-				fmt.Printf("naptr slice: %q\n", naptr)
 				order, _ := strconv.Atoi(naptr[1])
 				preference, _ := strconv.Atoi(naptr[2])
 
