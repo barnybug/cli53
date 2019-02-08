@@ -212,6 +212,8 @@ func absolute(name string) string {
 	return name
 }
 
+var reNaptr = regexp.MustCompile(`^([[:digit:]]+) ([[:digit:]]+) "([^"]*)" "([^"]*)" "([^"]*)" "?([^"]+)"?$`)
+
 // ConvertRRSetToBind will convert a ResourceRecordSet to an array of RR entries
 func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 	ret := []dns.RR{}
@@ -309,8 +311,7 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 		case "NAPTR":
 			for _, rr := range rrset.ResourceRecords {
 				// parse value
-				naptrRE, err := regexp.Compile("^([[:digit:]]+) ([[:digit:]]+) \"([^\"]*)\" \"([^\"]*)\" \"([^\"]*)\" \"?([^\"]+)\"?$")
-				naptr := naptrRE.FindStringSubmatch(*rr.Value)
+				naptr := reNaptr.FindStringSubmatch(*rr.Value)
 				fmt.Printf("naptr slice: %q\n", naptr)
 				order, _ := strconv.Atoi(naptr[1])
 				preference, _ := strconv.Atoi(naptr[2])
