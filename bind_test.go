@@ -293,6 +293,34 @@ var testConvertRRSetToBindTable = []struct {
 	},
 	{
 		Input: route53.ResourceRecordSet{
+			Type: aws.String("NAPTR"),
+			Name: aws.String("example.com."),
+			ResourceRecords: []*route53.ResourceRecord{
+				&route53.ResourceRecord{
+					Value: aws.String(`100 10 "u" "sip+E2U" "!^.*$!sip:information@foo.se!i" .`),
+				},
+			},
+			TTL: aws.Int64(86400),
+		},
+		Output: []dns.RR{
+			&dns.NAPTR{
+				Hdr: dns.RR_Header{
+					Name:   "example.com.",
+					Rrtype: dns.TypeNAPTR,
+					Class:  dns.ClassINET,
+					Ttl:    uint32(86400),
+				},
+				Order:       100,
+				Preference:  10,
+				Flags:       "u",
+				Service:     "sip+E2U",
+				Regexp:      "!^.*$!sip:information@foo.se!i",
+				Replacement: ".",
+			},
+		},
+	},
+	{
+		Input: route53.ResourceRecordSet{
 			Type: aws.String("A"),
 			Name: aws.String("example.com."),
 			AliasTarget: &route53.AliasTarget{
