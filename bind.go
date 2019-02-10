@@ -5,6 +5,8 @@ import (
 	"io"
 	"net"
 	"os"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -74,6 +76,16 @@ func ConvertBindToRR(record dns.RR) *route53.ResourceRecord {
 		}
 	case *dns.MX:
 		value := fmt.Sprintf("%d %s", record.Preference, record.Mx)
+		return &route53.ResourceRecord{
+			Value: aws.String(value),
+		}
+	case *dns.NAPTR:
+		var value string
+		if record.Replacement == "." {
+			value = fmt.Sprintf("%d %d \"%s\" \"%s\" \"%s\" .", record.Order, record.Preference, record.Flags, record.Service, record.Regexp)
+		} else {
+			value = fmt.Sprintf("%d %d \"%s\" \"%s\" \"\" \"%s\"", record.Order, record.Preference, record.Flags, record.Service, record.Replacement)
+		}
 		return &route53.ResourceRecord{
 			Value: aws.String(value),
 		}
@@ -200,6 +212,8 @@ func absolute(name string) string {
 	return name
 }
 
+var reNaptr = regexp.MustCompile(`^([[:digit:]]+) ([[:digit:]]+) "([^"]*)" "([^"]*)" "([^"]*)" "?([^"]+)"?$`)
+
 // ConvertRRSetToBind will convert a ResourceRecordSet to an array of RR entries
 func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 	ret := []dns.RR{}
@@ -291,6 +305,29 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 					},
 					Mx:         absolute(value),
 					Preference: preference,
+				}
+				ret = append(ret, dnsrr)
+			}
+		case "NAPTR":
+			for _, rr := range rrset.ResourceRecords {
+				// parse value
+				naptr := reNaptr.FindStringSubmatch(*rr.Value)
+				order, _ := strconv.Atoi(naptr[1])
+				preference, _ := strconv.Atoi(naptr[2])
+
+				dnsrr := &dns.NAPTR{
+					Hdr: dns.RR_Header{
+						Name:   name,
+						Rrtype: dns.TypeNAPTR,
+						Class:  dns.ClassINET,
+						Ttl:    uint32(*rrset.TTL),
+					},
+					Order:       uint16(order),
+					Preference:  uint16(preference),
+					Flags:       naptr[3],
+					Service:     naptr[4],
+					Regexp:      naptr[5],
+					Replacement: naptr[6],
 				}
 				ret = append(ret, dnsrr)
 			}

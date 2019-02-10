@@ -13,3 +13,5 @@ test 86400 IN TXT "multivalued" " txt \"quoted\" record"
 www 86400 IN A 10.0.0.1
 web 86400 IN CNAME www
 google 86400 IN CNAME www.google.com.
+rfc3403-1 86400 IN NAPTR 100 10 "u" "sip+E2U" "!^.*$!sip:information@foo.se!i" .
+rfc3403-2 86400 IN NAPTR 100 50 "a" "z3950+N2L+N2C" "" cidserver.example.com.
