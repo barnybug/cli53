@@ -9,4 +9,6 @@ mail 86400 IN A 10.0.0.4
 mail2 86400 IN A 10.0.0.5
 test 86400 IN TXT "one"
 www 86400 IN A 10.0.0.2
+www2 86400 IN A 10.0.0.2
 unchanged 86400 IN A 10.1.0.1
+alias	86400	AWS	ALIAS	A www2 $self false
