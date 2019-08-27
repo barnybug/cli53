@@ -1,4 +1,4 @@
-name: Go
+name: Build
 on: [push]
 jobs:
 
@@ -17,6 +17,14 @@ jobs:
 
     - name: Get dependencies
       run: make deps
+
+    - name: dep
+      run: |
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
+
 
     - name: Test coverage
       run: make test-coverage
