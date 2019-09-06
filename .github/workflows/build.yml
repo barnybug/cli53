@@ -7,24 +7,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Set up Go 1.11
+    - name: Set up Go 1.12
       uses: actions/setup-go@v1
       with:
-        go-version: 1.11
+        go-version: 1.12
 
     - name: Check out code
       uses: actions/checkout@v1
 
-    - name: Get dependencies
-      run: make deps
-
-    - name: dep
-      run: |
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            ~/go/bin/dep ensure
-        fi
-
-
-    - name: Test coverage
+    - name: Run unit tests
+      run: make test-unit
+      
+    - name: Run test coverage
       run: make test-coverage
