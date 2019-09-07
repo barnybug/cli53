@@ -20,5 +20,12 @@ jobs:
       
     - name: Run test coverage
       run: |
-        export PATH=$PATH:$(go env GOPATH)/bin
+        # gucumber only works from under GOPATH...
+        export GOPATH=$(go env GOPATH)
+        export PATH=$PATH:$GOPATH/bin
+        export GOSRC=$GOPATH/src/github.com/$GITHUB_REPOSITORY
+        export GO111MODULE=on
+        mkdir -p $GOSRC
+        cp -r $(pwd)/* $GOSRC
+        cd $GOSRC
         make test-coverage
