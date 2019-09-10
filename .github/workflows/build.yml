@@ -15,6 +15,11 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v1
 
+    - name: Download Go dependencies
+      env:
+        GOPROXY: "https://proxy.golang.org"
+      run: go mod download
+
     - name: Run unit tests
       run: make test-unit
       
@@ -24,7 +29,6 @@ jobs:
         export GOPATH=$(go env GOPATH)
         export PATH=$PATH:$GOPATH/bin
         export GOSRC=$GOPATH/src/github.com/$GITHUB_REPOSITORY
-        export GO111MODULE=on
         mkdir -p $GOSRC
         cp -r $(pwd)/* $GOSRC
         cd $GOSRC
@@ -32,3 +36,4 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        GO111MODULE: 'on'
