@@ -28,6 +28,10 @@ func Main(args []string) int {
 			Usage: "profile to use from credentials file",
 		},
 		cli.StringFlag{
+			Name:  "role-arn",
+			Usage: "AWS role ARN to assume",
+		},
+		cli.StringFlag{
 			Name:  "endpoint-url",
 			Usage: "override Route53 endpoint (hostname or fully qualified URI)",
 		},
