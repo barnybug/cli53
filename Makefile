@@ -2,11 +2,11 @@ export GO15VENDOREXPERIMENT=1
 
 exe = ./cmd/cli53
 
-.PHONY: all build install test coverage deps
+.PHONY: all build install test coverage test-deps
 
 all: install
 
-deps:
+test-deps:
 	go get github.com/wadey/gocovmerge
 	go get github.com/gucumber/gucumber/cmd/gucumber
 
@@ -26,7 +26,7 @@ test-integration: build
 	gucumber
 
 # run unit and system tests, then recombine coverage output
-test-coverage:
+test-coverage: test-deps
 	rm -rf coverage && mkdir coverage
 	go test -covermode=count -coverprofile=coverage/unit.txt
 	go test -c -covermode=count -coverpkg . -o ./cli53 ./cmd/cli53
