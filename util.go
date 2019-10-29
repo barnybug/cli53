@@ -15,6 +15,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
+	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/route53"
 )
@@ -69,6 +70,14 @@ func getService(c *cli.Context) (*route53.Route53, error) {
 	sess, err := session.NewSessionWithOptions(options)
 	if err != nil {
 		return nil, err
+	}
+	roleARN := c.String("role-arn")
+	if roleARN != "" {
+		roleCreds := stscreds.NewCredentials(sess, roleARN)
+		if err != nil {
+			return nil, err
+		}
+		config.Credentials = roleCreds
 	}
 	return route53.New(sess, config), nil
 }
