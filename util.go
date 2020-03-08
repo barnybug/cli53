@@ -108,7 +108,7 @@ func zoneName(s string) string {
 	return unescaper.Replace(strings.TrimRight(s, "."))
 }
 
-var reZoneId = regexp.MustCompile("^(/hostedzone/)?Z[A-Z0-9]{10,}$")
+var reZoneId = regexp.MustCompile("^(/hostedzone/)?Z[A-Z0-9]{9,}$")
 
 func isZoneId(s string) bool {
 	return reZoneId.MatchString(s)
