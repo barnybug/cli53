@@ -72,6 +72,12 @@ Feature: import
     And I run "cli53 import --replace --file tests/replace2.txt $domain"
     Then the domain "$domain" export matches file "tests/replace2.txt"
 
+  Scenario: I can import (upsert) a zone
+    Given I have a domain "$domain"
+    When I run "cli53 import --file tests/upsert1.txt $domain"
+    And I run "cli53 import --upsert --file tests/upsert2.txt $domain"
+    Then the domain "$domain" export matches file "tests/upsert3.txt"
+
   Scenario: I can import dry-run (with changes)
     Given I have a domain "$domain"
     When I run "cli53 import --file tests/replace1.txt $domain"

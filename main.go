@@ -154,6 +154,10 @@ func Main(args []string) int {
 					Usage: "replace all existing records",
 				},
 				&cli.BoolFlag{
+					Name:  "upsert",
+					Usage: "update or replace records, do not delete existing",
+				},
+				&cli.BoolFlag{
 					Name:    "dry-run",
 					Aliases: []string{"n"},
 					Usage:   "perform a trial run with no changes made",
@@ -174,6 +178,7 @@ func Main(args []string) int {
 					wait:     c.Bool("wait"),
 					editauth: c.Bool("editauth"),
 					replace:  c.Bool("replace"),
+					upsert:   c.Bool("upsert"),
 					dryrun:   c.Bool("dry-run"),
 				}
 				importBind(args)
