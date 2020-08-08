@@ -239,6 +239,7 @@ type importArgs struct {
 	wait     bool
 	editauth bool
 	replace  bool
+	upsert   bool
 	dryrun   bool
 }
 
@@ -279,7 +280,7 @@ func importBind(args importArgs) {
 
 	grouped := groupRecords(records)
 	existing := map[string]*route53.ResourceRecordSet{}
-	if args.replace {
+	if args.replace || args.upsert {
 		rrsets, err := ListAllRecordSets(r53, *zone.Id)
 		fatalIfErr(err)
 		for _, rrset := range rrsets {
@@ -299,24 +300,34 @@ func importBind(args importArgs) {
 				// no difference - leave it untouched
 				delete(existing, key)
 			} else {
-				// new record, add
-				change := route53.Change{
-					Action:            aws.String("CREATE"),
-					ResourceRecordSet: rrset,
+				// new record, add or upsert
+				if args.upsert {
+					change := route53.Change{
+						Action:            aws.String("UPSERT"),
+						ResourceRecordSet: rrset,
+					}
+					additions = append(additions, &change)
+				} else {
+					change := route53.Change{
+						Action:            aws.String("CREATE"),
+						ResourceRecordSet: rrset,
+					}
+					additions = append(additions, &change)
 				}
-				additions = append(additions, &change)
 			}
 		}
 	}
 
 	// remaining records in existing should be deleted
 	deletions := []*route53.Change{}
-	for _, rrset := range existing {
-		change := route53.Change{
-			Action:            aws.String("DELETE"),
-			ResourceRecordSet: rrset,
+	if !args.upsert {
+		for _, rrset := range existing {
+			change := route53.Change{
+				Action:            aws.String("DELETE"),
+				ResourceRecordSet: rrset,
+			}
+			deletions = append(deletions, &change)
 		}
-		deletions = append(deletions, &change)
 	}
 
 	if args.dryrun {
