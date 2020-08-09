@@ -280,8 +280,8 @@ func init() {
 
 	})
 
-	When(`^I execute "(.+?)" with var (.+?) as "(.+?)"$`, func(cmd, name, value string) {
-		execute(domain(cmd), name + "=" + value)
+	When(`^I execute "(.+?)" with var (.+?) as "(.*?)"$`, func(cmd, name, value string) {
+		execute(domain(cmd), name+"="+value)
 	})
 
 	Then(`^the domain "(.+?)" is created$`, func(name string) {

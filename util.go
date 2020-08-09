@@ -40,7 +40,7 @@ func getConfig(c *cli.Context) (*aws.Config, error) {
 	region := os.Getenv("AWS_REGION")
 	// SDK requires region to be set when endpoint-url is set
 	if endpoint != "" && region == "" {
-		return nil, cli.NewExitError("AWS_REGION must be set when using --endpoint-url", 4)
+		return nil, cli.NewExitError("AWS_REGION must be set when using --endpoint-url", 1)
 	}
 	config := aws.Config{
 		Endpoint: &endpoint,
