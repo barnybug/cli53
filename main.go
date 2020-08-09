@@ -1,12 +1,11 @@
 package cli53
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/route53"
-	"github.com/urfave/cli"
-	"os"
+	"github.com/urfave/cli/v2"
 )
 
 var r53 *route53.Route53
@@ -14,24 +13,21 @@ var version = "master"
 
 // Main entry point for cli53 application
 func Main(args []string) int {
-	cli.OsExiter = func(c int) {
-		// noop - don't exit
-	}
-
 	commonFlags := []cli.Flag{
-		cli.BoolFlag{
-			Name:  "debug, d",
-			Usage: "enable debug logging",
+		&cli.BoolFlag{
+			Name:    "debug",
+			Aliases: []string{"d"},
+			Usage:   "enable debug logging",
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  "profile",
 			Usage: "profile to use from credentials file",
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  "role-arn",
 			Usage: "AWS role ARN to assume",
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  "endpoint-url",
 			Usage: "override Route53 endpoint (hostname or fully qualified URI)",
 		},
@@ -41,16 +37,17 @@ func Main(args []string) int {
 	app.Name = "cli53"
 	app.Usage = "manage route53 DNS"
 	app.Version = version
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
 			Name:    "list",
 			Aliases: []string{"l"},
 			Usage:   "list domains",
 			Flags: append(commonFlags,
-				cli.StringFlag{
-					Name:  "format, f",
-					Value: "table",
-					Usage: "output format: text, json, jl, table, csv",
+				&cli.StringFlag{
+					Name:    "format",
+					Aliases: []string{"f"},
+					Value:   "table",
+					Usage:   "output format: text, json, jl, table, csv",
 				},
 			),
 			Action: func(c *cli.Context) (err error) {
@@ -58,7 +55,7 @@ func Main(args []string) int {
 				if err != nil {
 					return err
 				}
-				if len(c.Args()) != 0 {
+				if c.Args().Len() != 0 {
 					cli.ShowCommandHelp(c, "list")
 					return cli.NewExitError("No parameters expected", 1)
 				}
@@ -76,22 +73,22 @@ func Main(args []string) int {
 			Usage:     "create a domain",
 			ArgsUsage: "domain.name",
 			Flags: append(commonFlags,
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "comment",
 					Value: "",
 					Usage: "comment on the domain",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "vpc-id",
 					Value: "",
 					Usage: "create a private zone in the VPC",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "vpc-region",
 					Value: "",
 					Usage: "VPC region (required if vpcId is specified)",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "delegation-set-id",
 					Value: "",
 					Usage: "use the given delegation set",
@@ -102,7 +99,7 @@ func Main(args []string) int {
 				if err != nil {
 					return err
 				}
-				if len(c.Args()) != 1 {
+				if c.Args().Len() != 1 {
 					cli.ShowCommandHelp(c, "create")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
@@ -115,7 +112,7 @@ func Main(args []string) int {
 			Usage:     "delete a domain",
 			ArgsUsage: "name|ID",
 			Flags: append(commonFlags,
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "purge",
 					Usage: "remove any existing records on the domain (otherwise deletion will fail)",
 				},
@@ -125,7 +122,7 @@ func Main(args []string) int {
 				if err != nil {
 					return err
 				}
-				if len(c.Args()) != 1 {
+				if c.Args().Len() != 1 {
 					cli.ShowCommandHelp(c, "delete")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
@@ -139,26 +136,27 @@ func Main(args []string) int {
 			Usage:     "import a bind zone file",
 			ArgsUsage: "name|ID",
 			Flags: append(commonFlags,
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "file",
 					Value: "",
 					Usage: "bind zone filename, or - for stdin (required)",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "wait",
 					Usage: "wait for changes to become live",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "editauth",
 					Usage: "include SOA and NS records from zone file",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "replace",
 					Usage: "replace all existing records",
 				},
-				cli.BoolFlag{
-					Name:  "dry-run, n",
-					Usage: "perform a trial run with no changes made",
+				&cli.BoolFlag{
+					Name:    "dry-run",
+					Aliases: []string{"n"},
+					Usage:   "perform a trial run with no changes made",
 				},
 			),
 			Action: func(c *cli.Context) (err error) {
@@ -166,7 +164,7 @@ func Main(args []string) int {
 				if err != nil {
 					return err
 				}
-				if len(c.Args()) != 1 {
+				if c.Args().Len() != 1 {
 					cli.ShowCommandHelp(c, "import")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
@@ -187,41 +185,45 @@ func Main(args []string) int {
 			Usage:     "dynamically update your dns with EC2 instance names",
 			ArgsUsage: "name|ID",
 			Flags: append(commonFlags,
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "off",
 					Value: "",
 					Usage: "if provided, then records for stopped instances will be updated. This option gives the dns name the CNAME should revert to",
 				},
-				cli.StringSliceFlag{
-					Name:   "region",
-					EnvVar: "AWS_REGION",
-					Usage:  "a list of regions to check",
+				&cli.StringSliceFlag{
+					Name:    "region",
+					EnvVars: []string{"AWS_REGION"},
+					Usage:   "a list of regions to check",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "wait",
 					Usage: "wait for changes to become live",
 				},
-				cli.IntFlag{
-					Name:  "ttl, x",
-					Value: 60,
-					Usage: "resource record ttl",
+				&cli.IntFlag{
+					Name:    "ttl",
+					Aliases: []string{"x"},
+					Value:   60,
+					Usage:   "resource record ttl",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "match",
 					Value: "",
 					Usage: "regular expression to select which Name tags to use",
 				},
-				cli.BoolFlag{
-					Name:  "internal, i",
-					Usage: "always use the internal hostname",
+				&cli.BoolFlag{
+					Name:    "internal",
+					Aliases: []string{"i"},
+					Usage:   "always use the internal hostname",
 				},
-				cli.BoolFlag{
-					Name:  "a-record, a",
-					Usage: "write an A record (IP) instead of CNAME",
+				&cli.BoolFlag{
+					Name:    "a-record",
+					Aliases: []string{"a"},
+					Usage:   "write an A record (IP) instead of CNAME",
 				},
-				cli.BoolFlag{
-					Name:  "dry-run, n",
-					Usage: "dry run - don't make any changes",
+				&cli.BoolFlag{
+					Name:    "dry-run",
+					Aliases: []string{"n"},
+					Usage:   "dry run - don't make any changes",
 				},
 			),
 			Action: func(c *cli.Context) (err error) {
@@ -233,7 +235,7 @@ func Main(args []string) int {
 				if err != nil {
 					return err
 				}
-				if len(c.Args()) != 1 {
+				if c.Args().Len() != 1 {
 					cli.ShowCommandHelp(c, "instances")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
@@ -257,11 +259,12 @@ func Main(args []string) int {
 			Usage:     "export a bind zone file (to stdout)",
 			ArgsUsage: "name|ID",
 			Flags: append(commonFlags,
-				cli.BoolFlag{
-					Name:  "full, f",
-					Usage: "export prefixes as full names",
+				&cli.BoolFlag{
+					Name:    "full",
+					Aliases: []string{"f"},
+					Usage:   "export prefixes as full names",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "output",
 					Usage: "Write to an output file instead of STDOUT",
 				},
@@ -271,7 +274,7 @@ func Main(args []string) int {
 				if err != nil {
 					return err
 				}
-				if len(c.Args()) != 1 {
+				if c.Args().Len() != 1 {
 					cli.ShowCommandHelp(c, "export")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
@@ -295,51 +298,52 @@ func Main(args []string) int {
 			Usage:     "create one or more records",
 			ArgsUsage: "zone record [record...]",
 			Flags: append(commonFlags,
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "wait",
 					Usage: "wait for changes to become live",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "append",
 					Usage: "append the record",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "replace",
 					Usage: "replace the record",
 				},
-				cli.StringFlag{
-					Name:  "identifier, i",
-					Usage: "record set identifier (for routed records)",
+				&cli.StringFlag{
+					Name:    "identifier",
+					Aliases: []string{"i"},
+					Usage:   "record set identifier (for routed records)",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "failover",
 					Usage: "PRIMARY or SECONDARY on a failover routing",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "health-check",
 					Usage: "associated health check id for failover PRIMARY",
 				},
-				cli.IntFlag{
+				&cli.IntFlag{
 					Name:  "weight",
 					Usage: "weight on a weighted routing",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "region",
 					Usage: "region for latency-based routing",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "country-code",
 					Usage: "country code for geolocation routing",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "continent-code",
 					Usage: "continent code for geolocation routing",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "subdivision-code",
 					Usage: "subdivision code for geolocation routing",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "multivalue",
 					Usage: "use multivalue answer routing",
 				},
@@ -349,7 +353,7 @@ func Main(args []string) int {
 				if err != nil {
 					return err
 				}
-				if len(c.Args()) < 2 {
+				if c.Args().Len() < 2 {
 					cli.ShowCommandHelp(c, "rrcreate")
 					return cli.NewExitError("Expected at least 2 parameters", 1)
 				}
@@ -358,8 +362,8 @@ func Main(args []string) int {
 					weight = aws.Int(c.Int("weight"))
 				}
 				args := createArgs{
-					name:            c.Args()[0],
-					records:         c.Args()[1:],
+					name:            c.Args().Get(0),
+					records:         c.Args().Slice()[1:],
 					wait:            c.Bool("wait"),
 					append:          c.Bool("append"),
 					replace:         c.Bool("replace"),
@@ -387,13 +391,14 @@ func Main(args []string) int {
 			Usage:     "delete a record",
 			ArgsUsage: "zone prefix type",
 			Flags: append(commonFlags,
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "wait",
 					Usage: "wait for changes to become live",
 				},
-				cli.StringFlag{
-					Name:  "identifier, i",
-					Usage: "record set identifier to delete",
+				&cli.StringFlag{
+					Name:    "identifier",
+					Aliases: []string{"i"},
+					Usage:   "record set identifier to delete",
 				},
 			),
 			Action: func(c *cli.Context) (err error) {
@@ -401,11 +406,11 @@ func Main(args []string) int {
 				if err != nil {
 					return err
 				}
-				if len(c.Args()) != 3 {
+				if c.Args().Len() != 3 {
 					cli.ShowCommandHelp(c, "rrdelete")
 					return cli.NewExitError("Expected exactly 3 parameters", 1)
 				}
-				deleteRecord(c.Args()[0], c.Args()[1], c.Args()[2], c.Bool("wait"), c.String("identifier"))
+				deleteRecord(c.Args().Get(0), c.Args().Get(1), c.Args().Get(2), c.Bool("wait"), c.String("identifier"))
 				return nil
 			},
 		},
@@ -414,11 +419,11 @@ func Main(args []string) int {
 			Usage:     "delete all the records (danger!)",
 			ArgsUsage: "name|ID",
 			Flags: append(commonFlags,
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "confirm",
 					Usage: "confirm you definitely want to do this!",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "wait",
 					Usage: "wait for changes to become live",
 				},
@@ -428,7 +433,7 @@ func Main(args []string) int {
 				if err != nil {
 					return err
 				}
-				if len(c.Args()) != 1 {
+				if c.Args().Len() != 1 {
 					cli.ShowCommandHelp(c, "rrpurge")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
@@ -456,7 +461,7 @@ func Main(args []string) int {
 			Name:  "dscreate",
 			Usage: "create a reusable delegation set",
 			Flags: append(commonFlags,
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "zone-id",
 					Value: "",
 					Usage: "convert the given zone delegation set (optional)",
@@ -481,7 +486,7 @@ func Main(args []string) int {
 				if err != nil {
 					return err
 				}
-				if len(c.Args()) != 1 {
+				if c.Args().Len() != 1 {
 					cli.ShowCommandHelp(c, "dsdelete")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
@@ -491,13 +496,8 @@ func Main(args []string) int {
 		},
 	}
 	err := app.Run(args)
-	exitCode := 0
 	if err != nil {
-		if _, ok := err.(*cli.ExitError); !ok {
-			// Exit errors are already printed
-			fmt.Println(err)
-		}
-		exitCode = 1
+		return 1
 	}
-	return exitCode
+	return 0
 }

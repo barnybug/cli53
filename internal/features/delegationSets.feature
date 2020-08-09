@@ -2,7 +2,7 @@
 Feature: reusable delegation sets
   Scenario: I can create with a delegation set
     Given I have a delegation set
-    When I run "cli53 create $domain --delegation-set-id $delegationSet"
+    When I run "cli53 create --delegation-set-id $delegationSet $domain"
     Then the domain "$domain" is created
 
   Scenario: I can create a delegation set
