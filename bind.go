@@ -39,14 +39,18 @@ func parseComment(rr dns.RR, comment string) dns.RR {
 }
 
 func parseBindFile(reader io.Reader, filename, origin string) []dns.RR {
-	tokensch := dns.ParseZone(reader, origin, filename)
+	parser := dns.NewZoneParser(reader, origin, filename)
 	records := []dns.RR{}
-	for token := range tokensch {
-		if token.Error != nil {
-			fatalIfErr(token.Error)
+	for {
+		rr, ok := parser.Next()
+		if !ok {
+			break
 		}
-		record := parseComment(token.RR, token.Comment)
+		record := parseComment(rr, parser.Comment())
 		records = append(records, record)
+	}
+	if err := parser.Err(); err != nil {
+		fatalIfErr(err)
 	}
 	return records
 }
