@@ -17,9 +17,6 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v1
 
-    - name: Download Go dependencies
-      run: go mod download
-
     - name: Get upx
       run: sudo apt install -y upx
 
