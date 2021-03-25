@@ -7,8 +7,8 @@ exe = ./cmd/cli53
 all: install
 
 test-deps:
-	go get github.com/wadey/gocovmerge
-	go get github.com/gucumber/gucumber/cmd/gucumber
+	go get -u github.com/wadey/gocovmerge
+	go get -u github.com/gucumber/gucumber/cmd/gucumber
 
 build:
 	go build -i -v $(exe)
