@@ -152,8 +152,8 @@ func Main(args []string) int {
 					return cli.NewExitError("No parameters expected", 1)
 				}
 				args := importArgs{
-					name:     c.Args().First(),
-					file:     c.String("file"),
+					name: c.Args().First(),
+					file: c.String("file"),
 				}
 				parseBind(args)
 				return nil
