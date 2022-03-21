@@ -273,7 +273,7 @@ func parseBind(args importArgs) {
 		reader = f
 	}
 
-	parseBindFile(reader, args.file, "")
+	parseBindFile(reader, args.file, "parse.test")
 }
 
 func importBind(args importArgs) {
