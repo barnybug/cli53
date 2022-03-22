@@ -262,7 +262,7 @@ func rrsetKey(rrset *route53.ResourceRecordSet) string {
 	return key
 }
 
-func parseBind(args importArgs) {
+func validateBindFile(args importArgs) {
 	var reader io.Reader
 	if args.file == "-" {
 		reader = os.Stdin
@@ -273,7 +273,7 @@ func parseBind(args importArgs) {
 		reader = f
 	}
 
-	parseBindFile(reader, args.file, "parse.test")
+	parseBindFile(reader, args.file, "validate.test")
 }
 
 func importBind(args importArgs) {

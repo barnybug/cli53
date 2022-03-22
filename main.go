@@ -132,8 +132,8 @@ func Main(args []string) int {
 			},
 		},
 		{
-			Name:      "parse",
-			Usage:     "parse a bind zone file to verify the syntax",
+			Name:      "validate",
+			Usage:     "validate a bind zone file syntax",
 			ArgsUsage: "name|ID",
 			Flags: append(commonFlags,
 				&cli.StringFlag{
@@ -148,14 +148,14 @@ func Main(args []string) int {
 					return err
 				}
 				if c.Args().Len() != 0 {
-					cli.ShowCommandHelp(c, "parse")
+					cli.ShowCommandHelp(c, "validate")
 					return cli.NewExitError("No parameters expected", 1)
 				}
 				args := importArgs{
 					name: c.Args().First(),
 					file: c.String("file"),
 				}
-				parseBind(args)
+				validateBindFile(args)
 				return nil
 			},
 		},
