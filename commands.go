@@ -262,6 +262,20 @@ func rrsetKey(rrset *route53.ResourceRecordSet) string {
 	return key
 }
 
+func validateBindFile(args importArgs) {
+	var reader io.Reader
+	if args.file == "-" {
+		reader = os.Stdin
+	} else {
+		f, err := os.Open(args.file)
+		fatalIfErr(err)
+		defer f.Close()
+		reader = f
+	}
+
+	parseBindFile(reader, args.file, "validate.test")
+}
+
 func importBind(args importArgs) {
 	zone := lookupZone(args.name)
 

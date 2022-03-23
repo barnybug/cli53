@@ -99,6 +99,10 @@ Upsert with an imported zone (replace existing and add new records, without dele
 
 	$ cli53 import --file zonefile.txt --upsert example.com
 
+Validate a zone file syntax:
+
+	$ cli53 validate --file zonefile.txt
+
 Create an A record pointed to 192.168.0.1 with TTL of 60 seconds:
 
 	$ cli53 rrcreate example.com 'www 60 A 192.168.0.1'

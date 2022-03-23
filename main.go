@@ -132,6 +132,34 @@ func Main(args []string) int {
 			},
 		},
 		{
+			Name:      "validate",
+			Usage:     "validate a bind zone file syntax",
+			ArgsUsage: "name|ID",
+			Flags: append(commonFlags,
+				&cli.StringFlag{
+					Name:  "file",
+					Value: "",
+					Usage: "bind zone filename, or - for stdin (required)",
+				},
+			),
+			Action: func(c *cli.Context) (err error) {
+				r53, err = getService(c)
+				if err != nil {
+					return err
+				}
+				if c.Args().Len() != 0 {
+					cli.ShowCommandHelp(c, "validate")
+					return cli.NewExitError("No parameters expected", 1)
+				}
+				args := importArgs{
+					name: c.Args().First(),
+					file: c.String("file"),
+				}
+				validateBindFile(args)
+				return nil
+			},
+		},
+		{
 			Name:      "import",
 			Usage:     "import a bind zone file",
 			ArgsUsage: "name|ID",
