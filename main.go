@@ -316,10 +316,10 @@ func Main(args []string) int {
 				writer := os.Stdout
 				if len(outputFileName) > 0 {
 					writer, err = os.Create(outputFileName)
-					defer writer.Close()
 					if err != nil {
 						return err
 					}
+					defer writer.Close()
 				}
 				exportBind(c.Args().First(), c.Bool("full"), writer)
 				return nil
