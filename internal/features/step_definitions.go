@@ -385,7 +385,7 @@ func init() {
 
 	Then(`^the exit code was (\d+)$`, func(code int) {
 		if code != retCode {
-			T.Errorf("Exit code expected: %d != actual: %d", code, retCode)
+			T.Errorf("Exit code expected: %d != actual: %d. Output: %s", code, retCode, runOutput)
 		}
 	})
 
