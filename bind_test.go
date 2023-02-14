@@ -293,6 +293,32 @@ var testConvertRRSetToBindTable = []struct {
 	},
 	{
 		Input: route53.ResourceRecordSet{
+			Type: aws.String("DS"),
+			Name: aws.String("example.com."),
+			ResourceRecords: []*route53.ResourceRecord{
+				{
+					Value: aws.String("123 4 5 1234567890ABCDEF1234567890ABCDEF"),
+				},
+			},
+			TTL: aws.Int64(86400),
+		},
+		Output: []dns.RR{
+			&dns.DS{
+				Hdr: dns.RR_Header{
+					Name:   "example.com.",
+					Rrtype: dns.TypeDS,
+					Class:  dns.ClassINET,
+					Ttl:    uint32(86400),
+				},
+				KeyTag:     123,
+				Algorithm:  4,
+				DigestType: 5,
+				Digest:     "1234567890ABCDEF1234567890ABCDEF",
+			},
+		},
+	},
+	{
+		Input: route53.ResourceRecordSet{
 			Type: aws.String("NAPTR"),
 			Name: aws.String("example.com."),
 			ResourceRecords: []*route53.ResourceRecord{
