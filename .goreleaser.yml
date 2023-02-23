@@ -11,5 +11,5 @@ builds:
       - arm
       - arm64
 archives:
-- name_template: "{{ .ProjectName }}-{{ if .Os == \"darwin\" }}mac{{ else }}{{ .Os }}{{ end }}-{{ .Arch }}"
+- name_template: "{{ .ProjectName }}-{{ if eq .Os \"darwin\" }}mac{{ else }}{{ .Os }}{{ end }}-{{ .Arch }}"
   format: binary
