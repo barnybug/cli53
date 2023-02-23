@@ -25,6 +25,10 @@ jobs:
       run: sudo apt install -y upx
 
     - name: Make release
-      run: curl -sL https://git.io/goreleaser | VERSION=v0.34.2 bash
+      uses: goreleaser/goreleaser-action@v4
+      with:
+        distribution: goreleaser
+        version: v1.15.2
+        args: release --clean
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

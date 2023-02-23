@@ -8,16 +8,8 @@ builds:
       - windows
     goarch:
       - amd64
-      - 386
       - arm
       - arm64
-    ignore:
-      - goos: darwin
-        goarch: 386
-    hooks:
-      post: make upx
-archive:
-  name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
+archives:
+- name_template: "{{ .ProjectName }}-{{ if .Os == \"darwin\" }}mac{{ else }}{{ .Os }}{{ end }}-{{ .Arch }}"
   format: binary
-  replacements:
-    darwin: mac

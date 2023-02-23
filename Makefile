@@ -16,9 +16,6 @@ build:
 install:
 	go install $(exe)
 
-upx:
-	upx dist/cli53-linux-386/cli53-linux-386 dist/cli53-linux-arm/cli53-linux-arm dist/cli53-windows-386/cli53-windows-386.exe
-
 test-unit:
 	go test
 
