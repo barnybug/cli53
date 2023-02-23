@@ -1,7 +1,9 @@
 package cli53
 
 import (
+	"context"
 	"os"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/route53"
@@ -10,6 +12,14 @@ import (
 
 var r53 *route53.Route53
 var version = "main"
+
+func theContext(c *cli.Context) (context.Context, func()) {
+	if c.IsSet("timeout") {
+		timeout := time.Second * time.Duration(c.Float64("timeout"))
+		return context.WithTimeout(context.Background(), timeout)
+	}
+	return context.Background(), func() {}
+}
 
 // Main entry point for cli53 application
 func Main(args []string) int {
@@ -30,6 +40,10 @@ func Main(args []string) int {
 		&cli.StringFlag{
 			Name:  "endpoint-url",
 			Usage: "override Route53 endpoint (hostname or fully qualified URI)",
+		},
+		&cli.Float64Flag{
+			Name:  "timeout",
+			Usage: "timeout in seconds",
 		},
 	}
 
@@ -64,7 +78,9 @@ func Main(args []string) int {
 				if formatter == nil {
 					return cli.NewExitError("Unknown format", 1)
 				}
-				listZones(formatter)
+				ctx, cancel := theContext(c)
+				defer cancel()
+				listZones(ctx, formatter)
 				return nil
 			},
 		},
@@ -103,7 +119,9 @@ func Main(args []string) int {
 					cli.ShowCommandHelp(c, "create")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
-				createZone(c.Args().First(), c.String("comment"), c.String("vpc-id"), c.String("vpc-region"), c.String("delegation-set-id"))
+				ctx, cancel := theContext(c)
+				defer cancel()
+				createZone(ctx, c.Args().First(), c.String("comment"), c.String("vpc-id"), c.String("vpc-region"), c.String("delegation-set-id"))
 				return nil
 			},
 		},
@@ -127,7 +145,9 @@ func Main(args []string) int {
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
 				domain := c.Args().First()
-				deleteZone(domain, c.Bool("purge"))
+				ctx, cancel := theContext(c)
+				defer cancel()
+				deleteZone(ctx, domain, c.Bool("purge"))
 				return nil
 			},
 		},
@@ -209,7 +229,9 @@ func Main(args []string) int {
 					upsert:   c.Bool("upsert"),
 					dryrun:   c.Bool("dry-run"),
 				}
-				importBind(args)
+				ctx, cancel := theContext(c)
+				defer cancel()
+				importBind(ctx, args)
 				return nil
 			},
 		},
@@ -283,7 +305,9 @@ func Main(args []string) int {
 					aRecord:  c.Bool("a-record"),
 					dryRun:   c.Bool("dry-run"),
 				}
-				instances(args, config)
+				ctx, cancel := theContext(c)
+				defer cancel()
+				instances(ctx, args, config)
 				return nil
 			},
 		},
@@ -321,7 +345,9 @@ func Main(args []string) int {
 					}
 					defer writer.Close()
 				}
-				exportBind(c.Args().First(), c.Bool("full"), writer)
+				ctx, cancel := theContext(c)
+				defer cancel()
+				exportBind(ctx, c.Args().First(), c.Bool("full"), writer)
 				return nil
 			},
 		},
@@ -410,11 +436,12 @@ func Main(args []string) int {
 					subdivisionCode: c.String("subdivision-code"),
 					multivalue:      c.Bool("multivalue"),
 				}
-				if args.validate() {
-					createRecords(args)
-				} else {
+				if !args.validate() {
 					return cli.NewExitError("Validation error", 1)
 				}
+				ctx, cancel := theContext(c)
+				defer cancel()
+				createRecords(ctx, args)
 				return nil
 			},
 		},
@@ -443,7 +470,9 @@ func Main(args []string) int {
 					cli.ShowCommandHelp(c, "rrdelete")
 					return cli.NewExitError("Expected exactly 3 parameters", 1)
 				}
-				deleteRecord(c.Args().Get(0), c.Args().Get(1), c.Args().Get(2), c.Bool("wait"), c.String("identifier"))
+				ctx, cancel := theContext(c)
+				defer cancel()
+				deleteRecord(ctx, c.Args().Get(0), c.Args().Get(1), c.Args().Get(2), c.Bool("wait"), c.String("identifier"))
 				return nil
 			},
 		},
@@ -473,7 +502,9 @@ func Main(args []string) int {
 				if !c.Bool("confirm") {
 					return cli.NewExitError("You must --confirm this action", 1)
 				}
-				purgeRecords(c.Args().First(), c.Bool("wait"))
+				ctx, cancel := theContext(c)
+				defer cancel()
+				purgeRecords(ctx, c.Args().First(), c.Bool("wait"))
 				return nil
 			},
 		},
@@ -486,7 +517,9 @@ func Main(args []string) int {
 				if err != nil {
 					return err
 				}
-				listReusableDelegationSets()
+				ctx, cancel := theContext(c)
+				defer cancel()
+				listReusableDelegationSets(ctx)
 				return nil
 			},
 		},
@@ -505,7 +538,9 @@ func Main(args []string) int {
 				if err != nil {
 					return err
 				}
-				createReusableDelegationSet(c.String("zone-id"))
+				ctx, cancel := theContext(c)
+				defer cancel()
+				createReusableDelegationSet(ctx, c.String("zone-id"))
 				return nil
 			},
 		},
@@ -523,7 +558,9 @@ func Main(args []string) int {
 					cli.ShowCommandHelp(c, "dsdelete")
 					return cli.NewExitError("Expected exactly 1 parameter", 1)
 				}
-				deleteReusableDelegationSet(c.Args().First())
+				ctx, cancel := theContext(c)
+				defer cancel()
+				deleteReusableDelegationSet(ctx, c.Args().First())
 				return nil
 			},
 		},
