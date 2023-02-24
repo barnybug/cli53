@@ -1,6 +1,7 @@
 package cli53
 
 import (
+	"context"
 	"fmt"
 	"math/rand"
 	"os"
@@ -114,7 +115,7 @@ func isZoneId(s string) bool {
 	return reZoneId.MatchString(s)
 }
 
-func lookupZone(nameOrId string) *route53.HostedZone {
+func lookupZone(ctx context.Context, nameOrId string) *route53.HostedZone {
 	if isZoneId(nameOrId) {
 		// lookup by id
 		id := nameOrId
@@ -124,7 +125,7 @@ func lookupZone(nameOrId string) *route53.HostedZone {
 		req := route53.GetHostedZoneInput{
 			Id: aws.String(id),
 		}
-		resp, err := r53.GetHostedZone(&req)
+		resp, err := r53.GetHostedZoneWithContext(ctx, &req)
 		if err, ok := err.(awserr.Error); ok && err.Code() == "NoSuchHostedZone" {
 			errorAndExit(fmt.Sprintf("Zone '%s' not found", nameOrId))
 		}
@@ -136,7 +137,7 @@ func lookupZone(nameOrId string) *route53.HostedZone {
 		req := route53.ListHostedZonesByNameInput{
 			DNSName: aws.String(nameOrId),
 		}
-		resp, err := r53.ListHostedZonesByName(&req)
+		resp, err := r53.ListHostedZonesByNameWithContext(ctx, &req)
 		fatalIfErr(err)
 		for _, zone := range resp.HostedZones {
 			if zoneName(*zone.Name) == zoneName(nameOrId) {
@@ -155,11 +156,11 @@ func lookupZone(nameOrId string) *route53.HostedZone {
 	return nil
 }
 
-func waitForChange(change *route53.ChangeInfo) {
+func waitForChange(ctx context.Context, change *route53.ChangeInfo) {
 	fmt.Printf("Waiting for sync")
 	for {
 		req := route53.GetChangeInput{Id: change.Id}
-		resp, err := r53.GetChange(&req)
+		resp, err := r53.GetChangeWithContext(ctx, &req)
 		fatalIfErr(err)
 		if *resp.ChangeInfo.Status == "INSYNC" {
 			fmt.Println("\nCompleted")

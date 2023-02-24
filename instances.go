@@ -1,6 +1,7 @@
 package cli53
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 	"strings"
@@ -28,8 +29,8 @@ type InstanceRecord struct {
 	value string
 }
 
-func instances(args instancesArgs, config *aws.Config) {
-	zone := lookupZone(args.name)
+func instances(ctx context.Context, args instancesArgs, config *aws.Config) {
+	zone := lookupZone(ctx, args.name)
 	fmt.Println("Getting DNS records")
 
 	describeInstancesInput := ec2.DescribeInstancesInput{}
@@ -140,11 +141,11 @@ func instances(args instancesArgs, config *aws.Config) {
 			fmt.Printf("+ %s %s %v\n", *rr.Name, *rr.Type, *rr.ResourceRecords[0].Value)
 		}
 	} else {
-		resp := batchChanges(upserts, []*route53.Change{}, zone)
+		resp := batchChanges(ctx, upserts, []*route53.Change{}, zone)
 		fmt.Printf("%d records upserted\n", len(upserts))
 
 		if args.wait && resp != nil {
-			waitForChange(resp.ChangeInfo)
+			waitForChange(ctx, resp.ChangeInfo)
 		}
 	}
 }

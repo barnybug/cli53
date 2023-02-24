@@ -1,6 +1,7 @@
 package cli53
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -14,7 +15,7 @@ import (
 
 const ChangeBatchSize = 100
 
-func createZone(name, comment, vpcId, vpcRegion, delegationSetId string) {
+func createZone(ctx context.Context, name, comment, vpcId, vpcRegion, delegationSetId string) {
 	callerReference := uniqueReference()
 	req := route53.CreateHostedZoneInput{
 		CallerReference: &callerReference,
@@ -34,12 +35,12 @@ func createZone(name, comment, vpcId, vpcRegion, delegationSetId string) {
 		delegationSetId = strings.Replace(delegationSetId, "/delegationset/", "", 1)
 		req.DelegationSetId = aws.String(delegationSetId)
 	}
-	resp, err := r53.CreateHostedZone(&req)
+	resp, err := r53.CreateHostedZoneWithContext(ctx, &req)
 	fatalIfErr(err)
 	fmt.Printf("Created zone: '%s' ID: '%s'\n", *resp.HostedZone.Name, *resp.HostedZone.Id)
 }
 
-func createReusableDelegationSet(zoneId string) {
+func createReusableDelegationSet(ctx context.Context, zoneId string) {
 	callerReference := uniqueReference()
 	req := route53.CreateReusableDelegationSetInput{
 		CallerReference: &callerReference,
@@ -47,7 +48,7 @@ func createReusableDelegationSet(zoneId string) {
 	if zoneId != "" {
 		req.HostedZoneId = &zoneId
 	}
-	resp, err := r53.CreateReusableDelegationSet(&req)
+	resp, err := r53.CreateReusableDelegationSetWithContext(ctx, &req)
 	fatalIfErr(err)
 	ds := resp.DelegationSet
 	fmt.Printf("Created reusable delegation set ID: '%s'\n", *ds.Id)
@@ -56,9 +57,9 @@ func createReusableDelegationSet(zoneId string) {
 	}
 }
 
-func listReusableDelegationSets() {
+func listReusableDelegationSets(ctx context.Context) {
 	req := route53.ListReusableDelegationSetsInput{}
-	resp, err := r53.ListReusableDelegationSets(&req)
+	resp, err := r53.ListReusableDelegationSetsWithContext(ctx, &req)
 	fatalIfErr(err)
 	fmt.Printf("Reusable delegation sets:\n")
 	if len(resp.DelegationSets) == 0 {
@@ -74,19 +75,19 @@ func listReusableDelegationSets() {
 	}
 }
 
-func deleteReusableDelegationSet(id string) {
+func deleteReusableDelegationSet(ctx context.Context, id string) {
 	if !strings.HasPrefix(id, "/delegationset/") {
 		id = "/delegationset/" + id
 	}
 	req := route53.DeleteReusableDelegationSetInput{
 		Id: &id,
 	}
-	_, err := r53.DeleteReusableDelegationSet(&req)
+	_, err := r53.DeleteReusableDelegationSetWithContext(ctx, &req)
 	fatalIfErr(err)
 	fmt.Printf("Deleted reusable delegation set\n")
 }
 
-func deleteRecordSets(zone *route53.HostedZone, rrsets []*route53.ResourceRecordSet, wait bool) (int, error) {
+func deleteRecordSets(ctx context.Context, zone *route53.HostedZone, rrsets []*route53.ResourceRecordSet, wait bool) (int, error) {
 	// delete all non-default SOA/NS records
 	changes := []*route53.Change{}
 	for _, rrset := range rrsets {
@@ -106,21 +107,21 @@ func deleteRecordSets(zone *route53.HostedZone, rrsets []*route53.ResourceRecord
 				Changes: changes,
 			},
 		}
-		resp, err := r53.ChangeResourceRecordSets(&req)
+		resp, err := r53.ChangeResourceRecordSetsWithContext(ctx, &req)
 		if err != nil {
 			return 0, err
 		}
 		if wait {
-			waitForChange(resp.ChangeInfo)
+			waitForChange(ctx, resp.ChangeInfo)
 		}
 	}
 	return len(changes), nil
 }
 
-func purgeZoneRecords(zone *route53.HostedZone, wait bool) {
+func purgeZoneRecords(ctx context.Context, zone *route53.HostedZone, wait bool) {
 	total := 0
-	err := batchListAllRecordSets(r53, *zone.Id, func(rrsets []*route53.ResourceRecordSet) {
-		n, err := deleteRecordSets(zone, rrsets, wait)
+	err := batchListAllRecordSets(ctx, r53, *zone.Id, func(rrsets []*route53.ResourceRecordSet) {
+		n, err := deleteRecordSets(ctx, zone, rrsets, wait)
 		fatalIfErr(err)
 		total += n
 	})
@@ -129,24 +130,24 @@ func purgeZoneRecords(zone *route53.HostedZone, wait bool) {
 	fmt.Printf("%d record sets deleted\n", total)
 }
 
-func deleteZone(name string, purge bool) {
-	zone := lookupZone(name)
+func deleteZone(ctx context.Context, name string, purge bool) {
+	zone := lookupZone(ctx, name)
 	if purge {
-		purgeZoneRecords(zone, false)
+		purgeZoneRecords(ctx, zone, false)
 	}
 	req := route53.DeleteHostedZoneInput{Id: zone.Id}
-	_, err := r53.DeleteHostedZone(&req)
+	_, err := r53.DeleteHostedZoneWithContext(ctx, &req)
 	fatalIfErr(err)
 	fmt.Printf("Deleted zone: '%s' ID: '%s'\n", *zone.Name, *zone.Id)
 }
 
-func listZones(formatter Formatter) {
+func listZones(ctx context.Context, formatter Formatter) {
 	zones := make(chan *route53.HostedZone)
 	go func() {
 		req := route53.ListHostedZonesInput{}
 		for {
 			// paginated
-			resp, err := r53.ListHostedZones(&req)
+			resp, err := r53.ListHostedZonesWithContext(ctx, &req)
 			fatalIfErr(err)
 			for _, zone := range resp.HostedZones {
 				zones <- zone
@@ -276,8 +277,8 @@ func validateBindFile(args importArgs) {
 	parseBindFile(reader, args.file, "validate.test")
 }
 
-func importBind(args importArgs) {
-	zone := lookupZone(args.name)
+func importBind(ctx context.Context, args importArgs) {
+	zone := lookupZone(ctx, args.name)
 
 	var reader io.Reader
 	if args.file == "-" {
@@ -295,7 +296,7 @@ func importBind(args importArgs) {
 	grouped := groupRecords(records)
 	existing := map[string]*route53.ResourceRecordSet{}
 	if args.replace || args.upsert {
-		rrsets, err := ListAllRecordSets(r53, *zone.Id)
+		rrsets, err := ListAllRecordSets(ctx, r53, *zone.Id)
 		fatalIfErr(err)
 		for _, rrset := range rrsets {
 			if args.editauth || !isAuthRecord(zone, rrset) {
@@ -363,16 +364,16 @@ func importBind(args importArgs) {
 			}
 		}
 	} else {
-		resp := batchChanges(additions, deletions, zone)
+		resp := batchChanges(ctx, additions, deletions, zone)
 		fmt.Printf("%d records imported (%d changes / %d additions / %d deletions)\n", len(records), len(additions)+len(deletions), len(additions), len(deletions))
 
 		if args.wait && resp != nil {
-			waitForChange(resp.ChangeInfo)
+			waitForChange(ctx, resp.ChangeInfo)
 		}
 	}
 }
 
-func batchChanges(additions, deletions []*route53.Change, zone *route53.HostedZone) *route53.ChangeResourceRecordSetsOutput {
+func batchChanges(ctx context.Context, additions, deletions []*route53.Change, zone *route53.HostedZone) *route53.ChangeResourceRecordSetsOutput {
 	// sort additions so aliases are last
 	sort.Sort(changeSorter{additions})
 
@@ -392,7 +393,7 @@ func batchChanges(additions, deletions []*route53.Change, zone *route53.HostedZo
 			ChangeBatch:  &batch,
 		}
 		var err error
-		resp, err = r53.ChangeResourceRecordSets(&req)
+		resp, err = r53.ChangeResourceRecordSetsWithContext(ctx, &req)
 		fatalIfErr(err)
 	}
 	return resp
@@ -416,9 +417,9 @@ func UnexpandSelfAliases(records []dns.RR, zone *route53.HostedZone, full bool) 
 	}
 }
 
-func exportBind(name string, full bool, writer io.Writer) {
-	zone := lookupZone(name)
-	ExportBindToWriter(r53, zone, full, writer)
+func exportBind(ctx context.Context, name string, full bool, writer io.Writer) {
+	zone := lookupZone(ctx, name)
+	ExportBindToWriter(ctx, r53, zone, full, writer)
 }
 
 type exportSorter struct {
@@ -450,8 +451,8 @@ func (r exportSorter) Less(i, j int) bool {
 	return *r.rrsets[i].Name < *r.rrsets[j].Name
 }
 
-func ExportBindToWriter(r53 *route53.Route53, zone *route53.HostedZone, full bool, out io.Writer) {
-	rrsets, err := ListAllRecordSets(r53, *zone.Id)
+func ExportBindToWriter(ctx context.Context, r53 *route53.Route53, zone *route53.HostedZone, full bool, out io.Writer) {
+	rrsets, err := ListAllRecordSets(ctx, r53, *zone.Id)
 	fatalIfErr(err)
 
 	sort.Sort(exportSorter{rrsets, *zone.Name})
@@ -607,8 +608,8 @@ func parseRecordList(args []string, zone *route53.HostedZone) []dns.RR {
 	return records
 }
 
-func createRecords(args createArgs) {
-	zone := lookupZone(args.name)
+func createRecords(ctx context.Context, args createArgs) {
+	zone := lookupZone(ctx, args.name)
 	records := parseRecordList(args.records, zone)
 	expandSelfAliases(records, zone)
 
@@ -617,7 +618,7 @@ func createRecords(args createArgs) {
 	var existing []*route53.ResourceRecordSet
 	if args.replace || args.append {
 		var err error
-		existing, err = ListAllRecordSets(r53, *zone.Id)
+		existing, err = ListAllRecordSets(ctx, r53, *zone.Id)
 		fatalIfErr(err)
 	}
 
@@ -654,7 +655,7 @@ func createRecords(args createArgs) {
 		}
 	}
 
-	resp := batchChanges(additions, deletions, zone)
+	resp := batchChanges(ctx, additions, deletions, zone)
 
 	for _, record := range records {
 		txt := strings.Replace(record.String(), "\t", " ", -1)
@@ -662,17 +663,17 @@ func createRecords(args createArgs) {
 	}
 
 	if args.wait {
-		waitForChange(resp.ChangeInfo)
+		waitForChange(ctx, resp.ChangeInfo)
 	}
 }
 
-func batchListAllRecordSets(r53 *route53.Route53, id string, callback func(rrsets []*route53.ResourceRecordSet)) error {
+func batchListAllRecordSets(ctx context.Context, r53 *route53.Route53, id string, callback func(rrsets []*route53.ResourceRecordSet)) error {
 	req := route53.ListResourceRecordSetsInput{
 		HostedZoneId: &id,
 	}
 
 	for {
-		resp, err := r53.ListResourceRecordSets(&req)
+		resp, err := r53.ListResourceRecordSetsWithContext(ctx, &req)
 		if err != nil {
 			return err
 		} else {
@@ -690,8 +691,8 @@ func batchListAllRecordSets(r53 *route53.Route53, id string, callback func(rrset
 }
 
 // Paginate request to get all record sets.
-func ListAllRecordSets(r53 *route53.Route53, id string) (rrsets []*route53.ResourceRecordSet, err error) {
-	err = batchListAllRecordSets(r53, id, func(results []*route53.ResourceRecordSet) {
+func ListAllRecordSets(ctx context.Context, r53 *route53.Route53, id string) (rrsets []*route53.ResourceRecordSet, err error) {
+	err = batchListAllRecordSets(ctx, r53, id, func(results []*route53.ResourceRecordSet) {
 		rrsets = append(rrsets, results...)
 	})
 
@@ -703,9 +704,9 @@ func ListAllRecordSets(r53 *route53.Route53, id string) (rrsets []*route53.Resou
 	return
 }
 
-func deleteRecord(name string, match string, rtype string, wait bool, identifier string) {
-	zone := lookupZone(name)
-	rrsets, err := ListAllRecordSets(r53, *zone.Id)
+func deleteRecord(ctx context.Context, name string, match string, rtype string, wait bool, identifier string) {
+	zone := lookupZone(ctx, name)
+	rrsets, err := ListAllRecordSets(ctx, r53, *zone.Id)
 	fatalIfErr(err)
 
 	match = qualifyName(match, *zone.Name)
@@ -727,18 +728,18 @@ func deleteRecord(name string, match string, rtype string, wait bool, identifier
 				Changes: changes,
 			},
 		}
-		resp, err := r53.ChangeResourceRecordSets(&req2)
+		resp, err := r53.ChangeResourceRecordSetsWithContext(ctx, &req2)
 		fatalIfErr(err)
 		fmt.Printf("%d record sets deleted\n", len(changes))
 		if wait {
-			waitForChange(resp.ChangeInfo)
+			waitForChange(ctx, resp.ChangeInfo)
 		}
 	} else {
 		fmt.Println("Warning: no records matched - nothing deleted")
 	}
 }
 
-func purgeRecords(name string, wait bool) {
-	zone := lookupZone(name)
-	purgeZoneRecords(zone, wait)
+func purgeRecords(ctx context.Context, name string, wait bool) {
+	zone := lookupZone(ctx, name)
+	purgeZoneRecords(ctx, zone, wait)
 }

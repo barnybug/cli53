@@ -2,6 +2,7 @@ package features
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -90,7 +91,8 @@ func uniqueReference() string {
 
 func cleanupDomain(r53 *route53.Route53, id string) {
 	// delete all non-default SOA/NS records
-	rrsets, err := cli53.ListAllRecordSets(r53, id)
+	ctx := context.Background()
+	rrsets, err := cli53.ListAllRecordSets(ctx, r53, id)
 	fatalIfErr(err)
 	changes := []*route53.Change{}
 	for _, rrset := range rrsets {
@@ -309,7 +311,8 @@ func init() {
 		name = domain(name)
 		r53 := getService()
 		id := domainId(name)
-		rrsets, err := cli53.ListAllRecordSets(r53, id)
+		ctx := context.Background()
+		rrsets, err := cli53.ListAllRecordSets(ctx, r53, id)
 		fatalIfErr(err)
 		actual := len(rrsets)
 		if expected != actual {
@@ -338,7 +341,8 @@ func init() {
 		r53 := getService()
 		zone := domainZone(name)
 		out := new(bytes.Buffer)
-		cli53.ExportBindToWriter(r53, zone, false, out)
+		ctx := context.Background()
+		cli53.ExportBindToWriter(ctx, r53, zone, false, out)
 		actual := out.Bytes()
 		rfile, err := os.Open(filename)
 		fatalIfErr(err)
@@ -414,7 +418,8 @@ func init() {
 func hasRecord(name, record string) bool {
 	r53 := getService()
 	zone := domainZone(name)
-	rrsets, err := cli53.ListAllRecordSets(r53, *zone.Id)
+	ctx := context.Background()
+	rrsets, err := cli53.ListAllRecordSets(ctx, r53, *zone.Id)
 	fatalIfErr(err)
 
 	for _, rrset := range rrsets {
