@@ -8,7 +8,9 @@ all: install
 
 test-deps:
 	go get github.com/wadey/gocovmerge
+	go install github.com/wadey/gocovmerge
 	go get github.com/gucumber/gucumber/cmd/gucumber
+	go install github.com/gucumber/gucumber/cmd/gucumber
 
 build:
 	go build -i -v $(exe)

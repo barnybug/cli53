@@ -1,39 +1,37 @@
 name: Test
 on: push
 jobs:
-
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.23
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.17
+      - name: Check out code
+        uses: actions/checkout@v3
 
-    - name: Check out code
-      uses: actions/checkout@v3
+      - name: Download Go dependencies
+        env:
+          GOPROXY: "https://proxy.golang.org"
+        run: go mod download
 
-    - name: Download Go dependencies
-      env:
-        GOPROXY: "https://proxy.golang.org"
-      run: go mod download
+      - name: Run unit tests
+        run: make test-unit
 
-    - name: Run unit tests
-      run: make test-unit
-
-    - name: Run test coverage
-      run: |
-        # gucumber only works from under GOPATH...
-        export GOPATH=$(go env GOPATH)
-        export PATH=$PATH:$GOPATH/bin
-        export GOSRC=$GOPATH/src/github.com/$GITHUB_REPOSITORY
-        mkdir -p $GOSRC
-        cp -r $(pwd)/* $GOSRC
-        cd $GOSRC
-        make test-coverage
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        GO111MODULE: 'on'
+      - name: Run test coverage
+        run: |
+          # gucumber only works from under GOPATH...
+          export GOPATH=$(go env GOPATH)
+          export PATH=$PATH:$GOPATH/bin
+          export GOSRC=$GOPATH/src/github.com/$GITHUB_REPOSITORY
+          mkdir -p $GOSRC
+          cp -r $(pwd)/* $GOSRC
+          cd $GOSRC
+          make test-coverage
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GO111MODULE: "on"
