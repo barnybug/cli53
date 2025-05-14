@@ -1,7 +1,16 @@
+---
+
+# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
 builds:
-  - binary: cli53
+  - id: cli53
+    binary: cli53
     main: ./cmd/cli53
-    ldflags: -s -w -X=github.com/barnybug/cli53.version={{.Version}}
+    ldflags:
+      - -s -w -X github.com/barnybug/cli53.version={{.Version}}
     goos:
       - linux
       - darwin
@@ -10,6 +19,11 @@ builds:
       - amd64
       - arm
       - arm64
+
 archives:
-- name_template: "{{ .ProjectName }}-{{ if eq .Os \"darwin\" }}mac{{ else }}{{ .Os }}{{ end }}-{{ .Arch }}"
-  format: binary
+  - id: default
+    ids:
+      - cli53
+    formats:
+      - binary
+    name_template: "{{ .ProjectName }}-{{ if eq .Os \"darwin\" }}mac{{ else }}{{ .Os }}{{ end }}-{{ .Arch }}"
