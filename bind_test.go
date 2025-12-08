@@ -293,6 +293,31 @@ var testConvertRRSetToBindTable = []struct {
 	},
 	{
 		Input: route53.ResourceRecordSet{
+			Type: aws.String("CAA"),
+			Name: aws.String("example.com."),
+			ResourceRecords: []*route53.ResourceRecord{
+				&route53.ResourceRecord{
+					Value: aws.String("128 issuewild \"example.net; key=value\""),
+				},
+			},
+			TTL: aws.Int64(86400),
+		},
+		Output: []dns.RR{
+			&dns.CAA{
+				Hdr: dns.RR_Header{
+					Name:   "example.com.",
+					Rrtype: dns.TypeCAA,
+					Class:  dns.ClassINET,
+					Ttl:    uint32(86400),
+				},
+				Flag:  128,
+				Tag:   "issuewild",
+				Value: "example.net; key=value",
+			},
+		},
+	},
+	{
+		Input: route53.ResourceRecordSet{
 			Type: aws.String("NAPTR"),
 			Name: aws.String("example.com."),
 			ResourceRecords: []*route53.ResourceRecord{

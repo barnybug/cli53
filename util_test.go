@@ -66,6 +66,15 @@ func TestSplitValues(t *testing.T) {
 	assert.Equal(t, []string{`a "quote" b`}, splitValues(`"a \"quote\" b"`))
 }
 
+func TestParseCharacterString(t *testing.T) {
+	assert.Equal(t, "", parseCharacterString(""))
+	assert.Equal(t, "abc", parseCharacterString("abc"))
+	assert.Equal(t, "abc", parseCharacterString(`"abc"`))
+	assert.Equal(t, "abc def", parseCharacterString(`"abc def"`))
+	assert.Equal(t, `abc" def`, parseCharacterString(`"abc\" def"`))
+	assert.Equal(t, `abc\ def`, parseCharacterString(`"abc\\ def"`))
+}
+
 func TestIsZoneId(t *testing.T) {
 	assert.True(t, isZoneId("Z1DXU7RZRUQ"))
 	assert.True(t, isZoneId("Z1DXU7RZRUQP"))
