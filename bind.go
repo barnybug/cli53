@@ -436,10 +436,10 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 			}
 		case "CAA":
 			for _, rr := range rrset.ResourceRecords {
-				var flag uint8
-				var tag string
-				var quotedValue string
-				fmt.Sscanf(*rr.Value, "%d %s %s", &flag, &tag, &quotedValue)
+				fields := strings.SplitN(*rr.Value, " ", 3)
+				flag, _ := strconv.ParseUint(fields[0], 10, 8)
+				tag := fields[1]
+				value := parseCharacterString(fields[2])
 
 				dnsrr := &dns.CAA{
 					Hdr: dns.RR_Header{
@@ -448,9 +448,9 @@ func ConvertRRSetToBind(rrset *route53.ResourceRecordSet) []dns.RR {
 						Class:  dns.ClassINET,
 						Ttl:    uint32(*rrset.TTL),
 					},
-					Flag:  flag,
+					Flag:  uint8(flag),
 					Tag:   tag,
-					Value: strings.Trim(quotedValue, `"`),
+					Value: value,
 				}
 				ret = append(ret, dnsrr)
 			}

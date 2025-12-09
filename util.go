@@ -195,6 +195,15 @@ func splitValues(s string) []string {
 	return ret
 }
 
+// parse a <character-string> per RFC 1035 Section 5.1
+func parseCharacterString(s string) string {
+	if len(s) >= 2 && s[0] == '"' && s[len(s)-1] == '"' {
+		return reBackslashed.ReplaceAllString(s[1:len(s)-1], "$1")
+	} else {
+		return s
+	}
+}
+
 var quoter = strings.NewReplacer(`\`, `\\`, `"`, `\"`)
 
 func quote(s string) string {
