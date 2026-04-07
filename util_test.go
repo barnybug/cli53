@@ -1,9 +1,13 @@
 package cli53
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestKeyValuesString(t *testing.T) {
@@ -100,4 +104,39 @@ func TestShortenName(t *testing.T) {
 	assert.Equal(t, "a.", shortenName("a.", "example.com."))
 	assert.Equal(t, "a.b", shortenName("a.b.example.com.", "example.com."))
 	assert.Equal(t, "fineexample.com.", shortenName("fineexample.com.", "example.com."))
+}
+
+func TestLoadAWSProfileSettings(t *testing.T) {
+	dir := t.TempDir()
+	configPath := filepath.Join(dir, "config")
+	content := `[default]
+region = us-east-1
+login_session = arn:aws:iam::111111111111:user/test
+
+[profile demo]
+region = us-west-2
+role_arn = arn:aws:iam::222222222222:role/demo
+source_profile = default
+external_id = ext-123
+role_session_name = demo-session
+duration_seconds = 3600
+`
+	require.NoError(t, os.WriteFile(configPath, []byte(content), 0o600))
+	t.Setenv("AWS_CONFIG_FILE", configPath)
+
+	source, found, err := loadAWSProfileSettings("default")
+	require.NoError(t, err)
+	require.True(t, found)
+	assert.Equal(t, "us-east-1", source.Region)
+	assert.Equal(t, "arn:aws:iam::111111111111:user/test", source.LoginSession)
+
+	target, found, err := loadAWSProfileSettings("demo")
+	require.NoError(t, err)
+	require.True(t, found)
+	assert.Equal(t, "us-west-2", target.Region)
+	assert.Equal(t, "arn:aws:iam::222222222222:role/demo", target.RoleARN)
+	assert.Equal(t, "default", target.SourceProfileName)
+	assert.Equal(t, "ext-123", target.ExternalID)
+	assert.Equal(t, "demo-session", target.RoleSessionName)
+	assert.Equal(t, time.Hour, target.Duration)
 }

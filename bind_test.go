@@ -6,8 +6,8 @@ import (
 )
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/route53"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	route53types "github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/miekg/dns"
 	"github.com/stretchr/testify/assert"
 )
@@ -23,15 +23,15 @@ var commonA = &dns.A{
 }
 
 var testConvertRRSetToBindTable = []struct {
-	Input  route53.ResourceRecordSet
+	Input  route53types.ResourceRecordSet
 	Output []dns.RR
 }{
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("A"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("A"),
 			Name: aws.String("example.com."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("127.0.0.1"),
 				},
 			},
@@ -50,11 +50,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("AAAA"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("AAAA"),
 			Name: aws.String("example.com."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("127.0.0.1"),
 				},
 			},
@@ -73,11 +73,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("CNAME"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("CNAME"),
 			Name: aws.String("test.example.com."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("www.example.com."),
 				},
 			},
@@ -96,11 +96,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("MX"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("MX"),
 			Name: aws.String("example.com."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("5 mail.example.com."),
 				},
 			},
@@ -120,11 +120,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("NS"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("NS"),
 			Name: aws.String("example.com."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("ns1.example.com."),
 				},
 			},
@@ -143,11 +143,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("PTR"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("PTR"),
 			Name: aws.String("98."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("foo.example.com."),
 				},
 			},
@@ -166,11 +166,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("SOA"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("SOA"),
 			Name: aws.String("example.com."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("ns-2018.awsdns-60.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"),
 				},
 			},
@@ -195,11 +195,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("SPF"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("SPF"),
 			Name: aws.String("example.com."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("\"~all\""),
 				},
 			},
@@ -218,11 +218,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("SRV"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("SRV"),
 			Name: aws.String("_sip._tcp.example.com."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("0 5 5060 sipserver.example.com."),
 				},
 			},
@@ -244,11 +244,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("TXT"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("TXT"),
 			Name: aws.String("example.com."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("\"hello\""),
 				},
 			},
@@ -267,11 +267,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("CAA"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("CAA"),
 			Name: aws.String("example.com."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("0 issue \"example.net\""),
 				},
 			},
@@ -292,11 +292,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("CAA"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("CAA"),
 			Name: aws.String("example.com."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("128 issuewild \"example.net; key=value\""),
 				},
 			},
@@ -317,11 +317,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("NAPTR"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("NAPTR"),
 			Name: aws.String("example.com."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String(`100 10 "u" "sip+E2U" "!^.*$!sip:information@foo.se!i" .`),
 				},
 			},
@@ -345,13 +345,13 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("A"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("A"),
 			Name: aws.String("example.com."),
-			AliasTarget: &route53.AliasTarget{
+			AliasTarget: &route53types.AliasTarget{
 				DNSName:              aws.String("target"),
 				HostedZoneId:         aws.String("zoneid"),
-				EvaluateTargetHealth: aws.Bool(false),
+				EvaluateTargetHealth: false,
 			},
 		},
 		Output: []dns.RR{
@@ -372,15 +372,15 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("A"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("A"),
 			Name: aws.String("a."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("127.0.0.1"),
 				},
 			},
-			Failover:      aws.String("PRIMARY"),
+			Failover:      route53types.ResourceRecordSetFailover("PRIMARY"),
 			HealthCheckId: aws.String("6bb57c41-879a-42d0-acdd-ed6472f08eb9"),
 			SetIdentifier: aws.String("failover-Primary"),
 			TTL:           aws.Int64(300),
@@ -395,15 +395,15 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("A"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("A"),
 			Name: aws.String("a."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("127.0.0.1"),
 				},
 			},
-			GeoLocation: &route53.GeoLocation{
+			GeoLocation: &route53types.GeoLocation{
 				ContinentCode: aws.String("AF"),
 			},
 			SetIdentifier: aws.String("Africa"),
@@ -419,15 +419,15 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("A"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("A"),
 			Name: aws.String("a."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("127.0.0.1"),
 				},
 			},
-			Region:        aws.String("us-west-1"),
+			Region:        route53types.ResourceRecordSetRegion("us-west-1"),
 			SetIdentifier: aws.String("USWest1"),
 			TTL:           aws.Int64(300),
 		},
@@ -441,11 +441,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("A"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("A"),
 			Name: aws.String("a."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("127.0.0.1"),
 				},
 			},
@@ -463,11 +463,11 @@ var testConvertRRSetToBindTable = []struct {
 		},
 	},
 	{
-		Input: route53.ResourceRecordSet{
-			Type: aws.String("A"),
+		Input: route53types.ResourceRecordSet{
+			Type: route53types.RRType("A"),
 			Name: aws.String("a."),
-			ResourceRecords: []*route53.ResourceRecord{
-				&route53.ResourceRecord{
+			ResourceRecords: []route53types.ResourceRecord{
+				route53types.ResourceRecord{
 					Value: aws.String("127.0.0.1"),
 				},
 			},
@@ -511,11 +511,7 @@ func TestConvertBindToRRSet(t *testing.T) {
 		if !assert.NotNil(t, result, "Record %s", test.Output) {
 			continue
 		}
-		actual := result.String()
-		expected := test.Input.String()
-		if actual != expected {
-			t.Errorf("Expected record %s, got %s", expected, actual)
-		}
+		assert.Equal(t, test.Input, *result)
 	}
 }
 
@@ -535,7 +531,7 @@ var testParseCommentTable = []struct {
 	{
 		Record:  mustParseRR("test 3600 IN A 127.0.0.1"),
 		Comment: "",
-		Output: "test.	3600	IN	A	127.0.0.1",
+		Output:  "test.	3600	IN	A	127.0.0.1",
 	},
 	// {
 	// 	Record:  mustParseRR("test 3600 IN A 127.0.0.1"),

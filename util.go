@@ -1,7 +1,9 @@
 package cli53
 
 import (
+	"bufio"
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 	"os"
@@ -14,11 +16,13 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/route53"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
+	"github.com/aws/aws-sdk-go-v2/service/route53"
+	route53types "github.com/aws/aws-sdk-go-v2/service/route53/types"
+	"github.com/aws/aws-sdk-go-v2/service/sts"
+	smithylogging "github.com/aws/smithy-go/logging"
 )
 
 // Qualify names, if relative
@@ -35,52 +39,243 @@ func qualifyName(name, origin string) string {
 	}
 }
 
-func getConfig(c *cli.Context) (*aws.Config, error) {
+func getConfig(c *cli.Context) (aws.Config, error) {
+	ctx := context.Background()
 	debug := c.Bool("debug")
 	endpoint := c.String("endpoint-url")
-	region := os.Getenv("AWS_REGION")
-	// SDK requires region to be set when endpoint-url is set
-	if endpoint != "" && region == "" {
-		return nil, cli.NewExitError("AWS_REGION must be set when using --endpoint-url", 1)
+	profile := c.String("profile")
+
+	options := []func(*config.LoadOptions) error{
+		config.WithRetryMaxAttempts(100),
 	}
-	config := aws.Config{
-		Endpoint: &endpoint,
-		Region:   &region,
-		Logger: aws.LoggerFunc(func(args ...interface{}) {
-			fmt.Fprintln(os.Stderr, args...)
-		}),
+
+	if profile != "" {
+		options = append(options, config.WithSharedConfigProfile(profile))
 	}
-	// ensures throttled requests are retried
-	config.MaxRetries = aws.Int(100)
+
+	cfg, err := config.LoadDefaultConfig(ctx, options...)
+	if err != nil {
+		fallbackCfg, handled, fallbackErr := loadConfigWithSourceProfileFallback(ctx, effectiveSharedConfigProfile(profile))
+		if handled {
+			if fallbackErr != nil {
+				return aws.Config{}, fallbackErr
+			}
+			return fallbackCfg, nil
+		}
+		return aws.Config{}, err
+	}
+
 	if debug {
-		config.LogLevel = aws.LogLevel(aws.LogDebug)
+		cfg.Logger = smithylogging.NewStandardLogger(os.Stderr)
+		cfg.ClientLogMode = aws.LogRetries | aws.LogRequestWithBody | aws.LogResponseWithBody
 	}
-	return &config, nil
+
+	if cfg.Region == "" {
+		cfg.Region = "us-east-1"
+	}
+
+	// SDK requires region to be set when endpoint-url is set.
+	if endpoint != "" && cfg.Region == "" {
+		return aws.Config{}, cli.NewExitError("AWS_REGION must be set when using --endpoint-url", 1)
+	}
+
+	return cfg, nil
 }
 
-func getService(c *cli.Context) (*route53.Route53, error) {
-	config, err := getConfig(c)
+func loadConfigWithSourceProfileFallback(ctx context.Context, profile string) (aws.Config, bool, error) {
+	target, found, err := loadAWSProfileSettings(profile)
+	if err != nil {
+		return aws.Config{}, false, nil
+	}
+	if !found || target.RoleARN == "" || target.SourceProfileName == "" {
+		return aws.Config{}, false, nil
+	}
+
+	source, found, err := loadAWSProfileSettings(target.SourceProfileName)
+	if err != nil {
+		return aws.Config{}, false, nil
+	}
+	if !found || source.LoginSession == "" {
+		return aws.Config{}, false, nil
+	}
+	if target.MFASerial != "" {
+		return aws.Config{}, true, fmt.Errorf("profile %q requires MFA serial %q; cli53 fallback does not support prompting for MFA", profile, target.MFASerial)
+	}
+
+	options := []func(*config.LoadOptions) error{
+		config.WithRetryMaxAttempts(100),
+		config.WithSharedConfigProfile(target.SourceProfileName),
+	}
+
+	cfg, err := config.LoadDefaultConfig(ctx, options...)
+	if err != nil {
+		return aws.Config{}, true, err
+	}
+
+	if target.Region != "" {
+		cfg.Region = target.Region
+	}
+
+	assumeRoleOptions := []func(*stscreds.AssumeRoleOptions){
+		func(o *stscreds.AssumeRoleOptions) {
+			if target.ExternalID != "" {
+				o.ExternalID = aws.String(target.ExternalID)
+			}
+			if target.RoleSessionName != "" {
+				o.RoleSessionName = target.RoleSessionName
+			}
+			if target.Duration > 0 {
+				o.Duration = target.Duration
+			}
+		},
+	}
+	cfg.Credentials = aws.NewCredentialsCache(stscreds.NewAssumeRoleProvider(sts.NewFromConfig(cfg), target.RoleARN, assumeRoleOptions...))
+
+	return cfg, true, nil
+}
+
+func effectiveSharedConfigProfile(profile string) string {
+	switch {
+	case profile != "":
+		return profile
+	case os.Getenv("AWS_PROFILE") != "":
+		return os.Getenv("AWS_PROFILE")
+	case os.Getenv("AWS_DEFAULT_PROFILE") != "":
+		return os.Getenv("AWS_DEFAULT_PROFILE")
+	default:
+		return "default"
+	}
+}
+
+func sharedConfigFilesForDebug() []string {
+	if path := os.Getenv("AWS_CONFIG_FILE"); path != "" {
+		return []string{path}
+	}
+	return append([]string(nil), config.DefaultSharedConfigFiles...)
+}
+
+func sharedCredentialsFilesForDebug() []string {
+	if path := os.Getenv("AWS_SHARED_CREDENTIALS_FILE"); path != "" {
+		return []string{path}
+	}
+	return append([]string(nil), config.DefaultSharedCredentialsFiles...)
+}
+
+type awsProfileSettings struct {
+	Name              string
+	Region            string
+	RoleARN           string
+	SourceProfileName string
+	ExternalID        string
+	RoleSessionName   string
+	MFASerial         string
+	LoginSession      string
+	Duration          time.Duration
+}
+
+func loadAWSProfileSettings(profile string) (awsProfileSettings, bool, error) {
+	settings := awsProfileSettings{Name: profile}
+	found := false
+
+	for _, path := range sharedConfigFilesForDebug() {
+		file, err := os.Open(path)
+		if err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				continue
+			}
+			return awsProfileSettings{}, false, err
+		}
+
+		fileFound, fileErr := parseAWSConfigProfile(file, profile, &settings)
+		_ = file.Close()
+		if fileErr != nil {
+			return awsProfileSettings{}, false, fmt.Errorf("parse %s: %w", path, fileErr)
+		}
+		found = found || fileFound
+	}
+
+	return settings, found, nil
+}
+
+func parseAWSConfigProfile(file *os.File, profile string, settings *awsProfileSettings) (bool, error) {
+	scanner := bufio.NewScanner(file)
+	targetSections := map[string]struct{}{"profile " + profile: {}}
+	if profile == "default" {
+		targetSections = map[string]struct{}{"default": {}}
+	}
+
+	found := false
+	inTarget := false
+
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") || strings.HasPrefix(line, ";") {
+			continue
+		}
+		if strings.HasPrefix(line, "[") && strings.HasSuffix(line, "]") {
+			section := strings.TrimSpace(line[1 : len(line)-1])
+			_, inTarget = targetSections[section]
+			found = found || inTarget
+			continue
+		}
+		if !inTarget {
+			continue
+		}
+
+		key, value, ok := strings.Cut(line, "=")
+		if !ok {
+			continue
+		}
+		key = strings.TrimSpace(strings.ToLower(key))
+		value = strings.TrimSpace(value)
+
+		switch key {
+		case "region":
+			settings.Region = value
+		case "role_arn":
+			settings.RoleARN = value
+		case "source_profile":
+			settings.SourceProfileName = value
+		case "external_id":
+			settings.ExternalID = value
+		case "role_session_name":
+			settings.RoleSessionName = value
+		case "mfa_serial":
+			settings.MFASerial = value
+		case "login_session":
+			settings.LoginSession = value
+		case "duration_seconds":
+			seconds, err := strconv.Atoi(value)
+			if err != nil {
+				return false, fmt.Errorf("invalid duration_seconds %q", value)
+			}
+			settings.Duration = time.Duration(seconds) * time.Second
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return false, err
+	}
+
+	return found, nil
+}
+
+func getService(c *cli.Context) (*route53.Client, error) {
+	cfg, err := getConfig(c)
 	if err != nil {
 		return nil, err
 	}
-	options := session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-		Config:            *config,
-		Profile:           c.String("profile"),
-	}
-	sess, err := session.NewSessionWithOptions(options)
-	if err != nil {
-		return nil, err
-	}
+
 	roleARN := c.String("role-arn")
 	if roleARN != "" {
-		roleCreds := stscreds.NewCredentials(sess, roleARN)
-		if err != nil {
-			return nil, err
-		}
-		config.Credentials = roleCreds
+		cfg.Credentials = aws.NewCredentialsCache(stscreds.NewAssumeRoleProvider(sts.NewFromConfig(cfg), roleARN))
 	}
-	return route53.New(sess, config), nil
+
+	return route53.NewFromConfig(cfg, func(o *route53.Options) {
+		if endpoint := c.String("endpoint-url"); endpoint != "" {
+			o.BaseEndpoint = aws.String(endpoint)
+		}
+	}), nil
 }
 
 func fatalIfErr(err error) {
@@ -115,7 +310,7 @@ func isZoneId(s string) bool {
 	return reZoneId.MatchString(s)
 }
 
-func lookupZone(ctx context.Context, nameOrId string) *route53.HostedZone {
+func lookupZone(ctx context.Context, nameOrId string) *route53types.HostedZone {
 	if isZoneId(nameOrId) {
 		// lookup by id
 		id := nameOrId
@@ -125,23 +320,24 @@ func lookupZone(ctx context.Context, nameOrId string) *route53.HostedZone {
 		req := route53.GetHostedZoneInput{
 			Id: aws.String(id),
 		}
-		resp, err := r53.GetHostedZoneWithContext(ctx, &req)
-		if err, ok := err.(awserr.Error); ok && err.Code() == "NoSuchHostedZone" {
+		resp, err := r53.GetHostedZone(ctx, &req)
+		var notFound *route53types.NoSuchHostedZone
+		if errors.As(err, &notFound) {
 			errorAndExit(fmt.Sprintf("Zone '%s' not found", nameOrId))
 		}
 		fatalIfErr(err)
 		return resp.HostedZone
 	} else {
 		// lookup by name
-		matches := []route53.HostedZone{}
+		matches := []route53types.HostedZone{}
 		req := route53.ListHostedZonesByNameInput{
 			DNSName: aws.String(nameOrId),
 		}
-		resp, err := r53.ListHostedZonesByNameWithContext(ctx, &req)
+		resp, err := r53.ListHostedZonesByName(ctx, &req)
 		fatalIfErr(err)
 		for _, zone := range resp.HostedZones {
 			if zoneName(*zone.Name) == zoneName(nameOrId) {
-				matches = append(matches, *zone)
+				matches = append(matches, zone)
 			}
 		}
 		switch len(matches) {
@@ -156,19 +352,19 @@ func lookupZone(ctx context.Context, nameOrId string) *route53.HostedZone {
 	return nil
 }
 
-func waitForChange(ctx context.Context, change *route53.ChangeInfo) {
+func waitForChange(ctx context.Context, change *route53types.ChangeInfo) {
 	fmt.Printf("Waiting for sync")
 	for {
 		req := route53.GetChangeInput{Id: change.Id}
-		resp, err := r53.GetChangeWithContext(ctx, &req)
+		resp, err := r53.GetChange(ctx, &req)
 		fatalIfErr(err)
-		if *resp.ChangeInfo.Status == "INSYNC" {
+		if resp.ChangeInfo.Status == route53types.ChangeStatusInsync {
 			fmt.Println("\nCompleted")
 			break
-		} else if *resp.ChangeInfo.Status == "PENDING" {
+		} else if resp.ChangeInfo.Status == route53types.ChangeStatusPending {
 			fmt.Printf(".")
 		} else {
-			fmt.Printf("\nFailed: %s\n", *resp.ChangeInfo.Status)
+			fmt.Printf("\nFailed: %s\n", resp.ChangeInfo.Status)
 			break
 		}
 		time.Sleep(1 * time.Second)
