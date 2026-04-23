@@ -16,23 +16,20 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/route53"
+	awsconfig "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/route53"
+	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/barnybug/cli53"
 
 	. "github.com/gucumber/gucumber"
 )
 
-func getService() *route53.Route53 {
-	config := aws.Config{
-		Logger: aws.LoggerFunc(func(args ...interface{}) {
-			fmt.Fprintln(os.Stderr, args...)
-		}),
+func getService() *route53.Client {
+	cfg, err := awsconfig.LoadDefaultConfig(context.Background())
+	if err != nil {
+		log.Fatalf("Failed to load AWS config: %s", err)
 	}
-	// ensures throttled requests are retried
-	config.MaxRetries = aws.Int(100)
-	return route53.New(session.New(), &config)
+	return route53.NewFromConfig(cfg)
 }
 
 func fatalIfErr(err error) {
@@ -51,22 +48,24 @@ func domainExists(name string) bool {
 	return domainId(name) != ""
 }
 
-func domainZone(name string) *route53.HostedZone {
+func domainZone(name string) *types.HostedZone {
 	r53 := getService()
-	zones, err := r53.ListHostedZones(nil)
+	ctx := context.Background()
+	resp, err := r53.ListHostedZones(ctx, &route53.ListHostedZonesInput{})
 	fatalIfErr(err)
-	for _, zone := range zones.HostedZones {
-		if *zone.Name == name+"." {
-			return zone
+	for i := range resp.HostedZones {
+		if *resp.HostedZones[i].Name == name+"." {
+			return &resp.HostedZones[i]
 		}
 	}
 	return nil
 }
 
-func reusableDelegationSet(id string) *route53.DelegationSet {
+func reusableDelegationSet(id string) *types.DelegationSet {
 	r53 := getService()
+	ctx := context.Background()
 	req := route53.GetReusableDelegationSetInput{Id: &id}
-	resp, err := r53.GetReusableDelegationSet(&req)
+	resp, err := r53.GetReusableDelegationSet(ctx, &req)
 	if err == nil {
 		return resp.DelegationSet
 	}
@@ -89,17 +88,17 @@ func uniqueReference() string {
 	return fmt.Sprintf("%0x", rand.Int())
 }
 
-func cleanupDomain(r53 *route53.Route53, id string) {
+func cleanupDomain(r53 *route53.Client, id string) {
 	// delete all non-default SOA/NS records
 	ctx := context.Background()
 	rrsets, err := cli53.ListAllRecordSets(ctx, r53, id)
 	fatalIfErr(err)
-	changes := []*route53.Change{}
-	for _, rrset := range rrsets {
-		if *rrset.Type != "NS" && *rrset.Type != "SOA" {
-			change := &route53.Change{
-				Action:            aws.String("DELETE"),
-				ResourceRecordSet: rrset,
+	changes := []types.Change{}
+	for i := range rrsets {
+		if rrsets[i].Type != types.RRTypeNs && rrsets[i].Type != types.RRTypeSoa {
+			change := types.Change{
+				Action:            types.ChangeActionDelete,
+				ResourceRecordSet: &rrsets[i],
 			}
 			changes = append(changes, change)
 		}
@@ -108,26 +107,27 @@ func cleanupDomain(r53 *route53.Route53, id string) {
 	if len(changes) > 0 {
 		req2 := route53.ChangeResourceRecordSetsInput{
 			HostedZoneId: &id,
-			ChangeBatch: &route53.ChangeBatch{
+			ChangeBatch: &types.ChangeBatch{
 				Changes: changes,
 			},
 		}
-		_, err = r53.ChangeResourceRecordSets(&req2)
+		_, err = r53.ChangeResourceRecordSets(ctx, &req2)
 		if err != nil {
 			fmt.Printf("Warning: cleanup failed - %s\n", err)
 		}
 	}
 
 	req3 := route53.DeleteHostedZoneInput{Id: &id}
-	_, err = r53.DeleteHostedZone(&req3)
+	_, err = r53.DeleteHostedZone(ctx, &req3)
 	if err != nil {
 		fmt.Printf("Warning: cleanup failed - %s\n", err)
 	}
 }
 
-func cleanupReusableDelegationSet(r53 *route53.Route53, id string) {
+func cleanupReusableDelegationSet(r53 *route53.Client, id string) {
+	ctx := context.Background()
 	req := route53.DeleteReusableDelegationSetInput{Id: &id}
-	_, err := r53.DeleteReusableDelegationSet(&req)
+	_, err := r53.DeleteReusableDelegationSet(ctx, &req)
 	if err != nil {
 		fmt.Printf("Warning: cleanup failed - %s\n", err)
 	}
@@ -239,23 +239,25 @@ func init() {
 		name = domain(name)
 		// create a test domain
 		r53 := getService()
+		ctx := context.Background()
 		callerReference := uniqueReference()
 		req := route53.CreateHostedZoneInput{
 			CallerReference: &callerReference,
 			Name:            &name,
 		}
-		resp, err := r53.CreateHostedZone(&req)
+		resp, err := r53.CreateHostedZone(ctx, &req)
 		fatalIfErr(err)
 		cleanupIds = append(cleanupIds, *resp.HostedZone.Id)
 	})
 
 	Given(`^I have a delegation set$`, func() {
 		r53 := getService()
+		ctx := context.Background()
 		callerReference := uniqueReference()
 		req := route53.CreateReusableDelegationSetInput{
 			CallerReference: &callerReference,
 		}
-		resp, err := r53.CreateReusableDelegationSet(&req)
+		resp, err := r53.CreateReusableDelegationSet(ctx, &req)
 		fatalIfErr(err)
 		id := *resp.DelegationSet.Id
 		World["$delegationSet"] = id
@@ -422,8 +424,8 @@ func hasRecord(name, record string) bool {
 	rrsets, err := cli53.ListAllRecordSets(ctx, r53, *zone.Id)
 	fatalIfErr(err)
 
-	for _, rrset := range rrsets {
-		rrs := cli53.ConvertRRSetToBind(rrset)
+	for i := range rrsets {
+		rrs := cli53.ConvertRRSetToBind(&rrsets[i])
 		cli53.UnexpandSelfAliases(rrs, zone, false)
 		for _, rr := range rrs {
 			line := rr.String()

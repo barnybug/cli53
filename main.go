@@ -5,12 +5,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/route53"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/urfave/cli/v2"
 )
 
-var r53 *route53.Route53
+var r53 *route53.Client
 var version = "main"
 
 func theContext(c *cli.Context) (context.Context, func()) {
@@ -31,7 +31,7 @@ func Main(args []string) int {
 		},
 		&cli.StringFlag{
 			Name:  "profile",
-			Usage: "profile to use from credentials file",
+			Usage: "profile to use from credentials file (supports SSO profiles)",
 		},
 		&cli.StringFlag{
 			Name:  "role-arn",
@@ -282,7 +282,7 @@ func Main(args []string) int {
 				},
 			),
 			Action: func(c *cli.Context) (err error) {
-				config, err := getConfig(c)
+				cfg, err := getAWSConfig(c)
 				if err != nil {
 					return err
 				}
@@ -307,7 +307,7 @@ func Main(args []string) int {
 				}
 				ctx, cancel := theContext(c)
 				defer cancel()
-				instances(ctx, args, config)
+				instances(ctx, args, cfg)
 				return nil
 			},
 		},

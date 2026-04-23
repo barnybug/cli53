@@ -7,28 +7,29 @@ import (
 	"io"
 	"text/tabwriter"
 
-	"github.com/aws/aws-sdk-go/service/route53"
+	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/urfave/cli/v2"
 )
 
 type Formatter interface {
-	formatZoneList(zones <-chan *route53.HostedZone, w io.Writer)
+	formatZoneList(zones <-chan *types.HostedZone, w io.Writer)
 }
 
 type TextFormatter struct {
 }
 
-func (self *TextFormatter) formatZoneList(zones <-chan *route53.HostedZone, w io.Writer) {
+func (self *TextFormatter) formatZoneList(zones <-chan *types.HostedZone, w io.Writer) {
 	for zone := range zones {
-		fmt.Fprintf(w, "%+v\n", zone)
+		b, _ := json.MarshalIndent(zone, "", "  ")
+		fmt.Fprintf(w, "%s\n", b)
 	}
 }
 
 type JsonFormatter struct {
 }
 
-func (self *JsonFormatter) formatZoneList(zones <-chan *route53.HostedZone, w io.Writer) {
-	var all []*route53.HostedZone
+func (self *JsonFormatter) formatZoneList(zones <-chan *types.HostedZone, w io.Writer) {
+	var all []*types.HostedZone
 	for zone := range zones {
 		all = append(all, zone)
 	}
@@ -40,7 +41,7 @@ func (self *JsonFormatter) formatZoneList(zones <-chan *route53.HostedZone, w io
 type JlFormatter struct {
 }
 
-func (self *JlFormatter) formatZoneList(zones <-chan *route53.HostedZone, w io.Writer) {
+func (self *JlFormatter) formatZoneList(zones <-chan *types.HostedZone, w io.Writer) {
 	for zone := range zones {
 		if err := json.NewEncoder(w).Encode(zone); err != nil {
 			fatalIfErr(err)
@@ -51,7 +52,7 @@ func (self *JlFormatter) formatZoneList(zones <-chan *route53.HostedZone, w io.W
 type TableFormatter struct {
 }
 
-func zoneComment(zone *route53.HostedZone) string {
+func zoneComment(zone *types.HostedZone) string {
 	var ret string
 	if zone.Config != nil && zone.Config.Comment != nil {
 		ret = *zone.Config.Comment
@@ -59,7 +60,7 @@ func zoneComment(zone *route53.HostedZone) string {
 	return ret
 }
 
-func (self *TableFormatter) formatZoneList(zones <-chan *route53.HostedZone, w io.Writer) {
+func (self *TableFormatter) formatZoneList(zones <-chan *types.HostedZone, w io.Writer) {
 	wr := tabwriter.NewWriter(w, 0, 0, 1, ' ', 0)
 	fmt.Fprintln(wr, "ID\tName\tRecord count\tComment")
 	for zone := range zones {
@@ -71,7 +72,7 @@ func (self *TableFormatter) formatZoneList(zones <-chan *route53.HostedZone, w i
 type CSVFormatter struct {
 }
 
-func (self *CSVFormatter) formatZoneList(zones <-chan *route53.HostedZone, w io.Writer) {
+func (self *CSVFormatter) formatZoneList(zones <-chan *types.HostedZone, w io.Writer) {
 	wr := csv.NewWriter(w)
 	wr.Write([]string{"id", "name", "record count", "comment"})
 	for zone := range zones {

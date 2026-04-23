@@ -2,23 +2,25 @@ package cli53
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 	"unicode"
 
 	"github.com/urfave/cli/v2"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/route53"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	awsconfig "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
+	"github.com/aws/aws-sdk-go-v2/service/route53"
+	"github.com/aws/aws-sdk-go-v2/service/route53/types"
+	"github.com/aws/aws-sdk-go-v2/service/sts"
+	"github.com/aws/smithy-go/logging"
 )
 
 // Qualify names, if relative
@@ -35,52 +37,47 @@ func qualifyName(name, origin string) string {
 	}
 }
 
-func getConfig(c *cli.Context) (*aws.Config, error) {
-	debug := c.Bool("debug")
-	endpoint := c.String("endpoint-url")
-	region := os.Getenv("AWS_REGION")
-	// SDK requires region to be set when endpoint-url is set
-	if endpoint != "" && region == "" {
-		return nil, cli.NewExitError("AWS_REGION must be set when using --endpoint-url", 1)
+func getAWSConfig(c *cli.Context) (aws.Config, error) {
+	opts := []func(*awsconfig.LoadOptions) error{}
+
+	if profile := c.String("profile"); profile != "" {
+		opts = append(opts, awsconfig.WithSharedConfigProfile(profile))
 	}
-	config := aws.Config{
-		Endpoint: &endpoint,
-		Region:   &region,
-		Logger: aws.LoggerFunc(func(args ...interface{}) {
-			fmt.Fprintln(os.Stderr, args...)
-		}),
+
+	if c.Bool("debug") {
+		opts = append(opts, awsconfig.WithClientLogMode(aws.LogRequestWithBody|aws.LogResponseWithBody))
+		opts = append(opts, awsconfig.WithLogger(logging.NewStandardLogger(os.Stderr)))
 	}
-	// ensures throttled requests are retried
-	config.MaxRetries = aws.Int(100)
-	if debug {
-		config.LogLevel = aws.LogLevel(aws.LogDebug)
-	}
-	return &config, nil
+
+	return awsconfig.LoadDefaultConfig(context.Background(), opts...)
 }
 
-func getService(c *cli.Context) (*route53.Route53, error) {
-	config, err := getConfig(c)
+func getService(c *cli.Context) (*route53.Client, error) {
+	cfg, err := getAWSConfig(c)
 	if err != nil {
 		return nil, err
 	}
-	options := session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-		Config:            *config,
-		Profile:           c.String("profile"),
-	}
-	sess, err := session.NewSessionWithOptions(options)
-	if err != nil {
-		return nil, err
-	}
+
 	roleARN := c.String("role-arn")
 	if roleARN != "" {
-		roleCreds := stscreds.NewCredentials(sess, roleARN)
-		if err != nil {
-			return nil, err
-		}
-		config.Credentials = roleCreds
+		stsClient := sts.NewFromConfig(cfg)
+		cfg.Credentials = aws.NewCredentialsCache(
+			stscreds.NewAssumeRoleProvider(stsClient, roleARN),
+		)
 	}
-	return route53.New(sess, config), nil
+
+	r53opts := []func(*route53.Options){}
+	if endpoint := c.String("endpoint-url"); endpoint != "" {
+		region := os.Getenv("AWS_REGION")
+		if region == "" {
+			return nil, cli.NewExitError("AWS_REGION must be set when using --endpoint-url", 1)
+		}
+		r53opts = append(r53opts, func(o *route53.Options) {
+			o.BaseEndpoint = aws.String(endpoint)
+		})
+	}
+
+	return route53.NewFromConfig(cfg, r53opts...), nil
 }
 
 func fatalIfErr(err error) {
@@ -94,12 +91,7 @@ func errorAndExit(msg string) {
 	os.Exit(1)
 }
 
-var seeded sync.Once
-
 func uniqueReference() string {
-	seeded.Do(func() {
-		rand.Seed(time.Now().UnixNano())
-	})
 	return fmt.Sprintf("%0x", rand.Int())
 }
 
@@ -115,7 +107,7 @@ func isZoneId(s string) bool {
 	return reZoneId.MatchString(s)
 }
 
-func lookupZone(ctx context.Context, nameOrId string) *route53.HostedZone {
+func lookupZone(ctx context.Context, nameOrId string) *types.HostedZone {
 	if isZoneId(nameOrId) {
 		// lookup by id
 		id := nameOrId
@@ -125,23 +117,24 @@ func lookupZone(ctx context.Context, nameOrId string) *route53.HostedZone {
 		req := route53.GetHostedZoneInput{
 			Id: aws.String(id),
 		}
-		resp, err := r53.GetHostedZoneWithContext(ctx, &req)
-		if err, ok := err.(awserr.Error); ok && err.Code() == "NoSuchHostedZone" {
+		resp, err := r53.GetHostedZone(ctx, &req)
+		var nsz *types.NoSuchHostedZone
+		if errors.As(err, &nsz) {
 			errorAndExit(fmt.Sprintf("Zone '%s' not found", nameOrId))
 		}
 		fatalIfErr(err)
 		return resp.HostedZone
 	} else {
 		// lookup by name
-		matches := []route53.HostedZone{}
+		matches := []types.HostedZone{}
 		req := route53.ListHostedZonesByNameInput{
 			DNSName: aws.String(nameOrId),
 		}
-		resp, err := r53.ListHostedZonesByNameWithContext(ctx, &req)
+		resp, err := r53.ListHostedZonesByName(ctx, &req)
 		fatalIfErr(err)
 		for _, zone := range resp.HostedZones {
 			if zoneName(*zone.Name) == zoneName(nameOrId) {
-				matches = append(matches, *zone)
+				matches = append(matches, zone)
 			}
 		}
 		switch len(matches) {
@@ -156,19 +149,19 @@ func lookupZone(ctx context.Context, nameOrId string) *route53.HostedZone {
 	return nil
 }
 
-func waitForChange(ctx context.Context, change *route53.ChangeInfo) {
+func waitForChange(ctx context.Context, change *types.ChangeInfo) {
 	fmt.Printf("Waiting for sync")
 	for {
 		req := route53.GetChangeInput{Id: change.Id}
-		resp, err := r53.GetChangeWithContext(ctx, &req)
+		resp, err := r53.GetChange(ctx, &req)
 		fatalIfErr(err)
-		if *resp.ChangeInfo.Status == "INSYNC" {
+		if resp.ChangeInfo.Status == types.ChangeStatusInsync {
 			fmt.Println("\nCompleted")
 			break
-		} else if *resp.ChangeInfo.Status == "PENDING" {
+		} else if resp.ChangeInfo.Status == types.ChangeStatusPending {
 			fmt.Printf(".")
 		} else {
-			fmt.Printf("\nFailed: %s\n", *resp.ChangeInfo.Status)
+			fmt.Printf("\nFailed: %s\n", resp.ChangeInfo.Status)
 			break
 		}
 		time.Sleep(1 * time.Second)

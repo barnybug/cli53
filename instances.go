@@ -6,10 +6,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ec2"
-	"github.com/aws/aws-sdk-go/service/route53"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/ec2"
+	ec2types "github.com/aws/aws-sdk-go-v2/service/ec2/types"
+	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 )
 
 type instancesArgs struct {
@@ -29,17 +29,17 @@ type InstanceRecord struct {
 	value string
 }
 
-func instances(ctx context.Context, args instancesArgs, config *aws.Config) {
+func instances(ctx context.Context, args instancesArgs, cfg aws.Config) {
 	zone := lookupZone(ctx, args.name)
 	fmt.Println("Getting DNS records")
 
 	describeInstancesInput := ec2.DescribeInstancesInput{}
 	if args.off == "" {
-		filter := ec2.Filter{
+		filter := ec2types.Filter{
 			Name:   aws.String("instance-state-name"),
-			Values: []*string{aws.String("running")},
+			Values: []string{"running"},
 		}
-		describeInstancesInput.Filters = []*ec2.Filter{&filter}
+		describeInstancesInput.Filters = []ec2types.Filter{filter}
 	}
 
 	var reMatch *regexp.Regexp
@@ -51,12 +51,14 @@ func instances(ctx context.Context, args instancesArgs, config *aws.Config) {
 		}
 	}
 
-	insts := map[string]*ec2.Instance{}
+	insts := map[string]ec2types.Instance{}
 	for _, region := range args.regions {
-		ec2conn := ec2.New(session.New(), config.WithRegion(region))
+		ec2conn := ec2.NewFromConfig(cfg, func(o *ec2.Options) {
+			o.Region = region
+		})
 		for {
 			// paginated
-			output, err := ec2conn.DescribeInstances(&describeInstancesInput)
+			output, err := ec2conn.DescribeInstances(ctx, &describeInstancesInput)
 			fatalIfErr(err)
 			for _, r := range output.Reservations {
 				for _, i := range r.Instances {
@@ -94,10 +96,10 @@ func instances(ctx context.Context, args instancesArgs, config *aws.Config) {
 	suffix := "." + *zone.Name
 	suffix = strings.TrimSuffix(suffix, ".")
 
-	upserts := []*route53.Change{}
+	upserts := []types.Change{}
 	for name, instance := range insts {
 		var value *string
-		if *instance.State.Name != "running" {
+		if instance.State.Name != ec2types.InstanceStateNameRunning {
 			value = &args.off
 		} else if args.aRecord {
 			if args.internal {
@@ -118,30 +120,30 @@ func instances(ctx context.Context, args instancesArgs, config *aws.Config) {
 		if !strings.HasSuffix(dnsname, suffix) {
 			dnsname += suffix
 		}
-		rr := route53.ResourceRecord{
+		rr := types.ResourceRecord{
 			Value: value,
 		}
-		rrset := route53.ResourceRecordSet{
+		rrset := types.ResourceRecordSet{
 			Name:            &dnsname,
 			TTL:             aws.Int64(int64(args.ttl)),
-			Type:            &rtype,
-			ResourceRecords: []*route53.ResourceRecord{&rr},
+			Type:            types.RRType(rtype),
+			ResourceRecords: []types.ResourceRecord{rr},
 		}
-		change := route53.Change{
-			Action:            aws.String("UPSERT"),
+		change := types.Change{
+			Action:            types.ChangeActionUpsert,
 			ResourceRecordSet: &rrset,
 		}
-		upserts = append(upserts, &change)
+		upserts = append(upserts, change)
 	}
 
 	if args.dryRun {
 		fmt.Println("Dry-run, upserts that would be made:")
 		for _, upsert := range upserts {
 			rr := upsert.ResourceRecordSet
-			fmt.Printf("+ %s %s %v\n", *rr.Name, *rr.Type, *rr.ResourceRecords[0].Value)
+			fmt.Printf("+ %s %s %v\n", *rr.Name, string(rr.Type), *rr.ResourceRecords[0].Value)
 		}
 	} else {
-		resp := batchChanges(ctx, upserts, []*route53.Change{}, zone)
+		resp := batchChanges(ctx, upserts, []types.Change{}, zone)
 		fmt.Printf("%d records upserted\n", len(upserts))
 
 		if args.wait && resp != nil {
