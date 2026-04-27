@@ -68,6 +68,68 @@ To build yourself from source (you will need golang >= 1.21 installed):
 
 This will produce a binary `cli53` in `$GOPATH/bin` (`~/go/bin` by default), after this follow the steps as above.
 
+## IAM permissions
+
+Attach the following policy to the IAM user or role that cli53 runs as.
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Cli53AccountLevelRead",
+      "Effect": "Allow",
+      "Action": [
+        "route53:ListHostedZones",
+        "route53:ListHostedZonesByName",
+        "route53:ListReusableDelegationSets"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "Cli53Create",
+      "Effect": "Allow",
+      "Action": [
+        "route53:CreateHostedZone",
+        "route53:CreateReusableDelegationSet"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "Cli53ManageZones",
+      "Effect": "Allow",
+      "Action": [
+        "route53:GetHostedZone",
+        "route53:ListResourceRecordSets",
+        "route53:ChangeResourceRecordSets",
+        "route53:DeleteHostedZone"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "Cli53ManageDelegationSets",
+      "Effect": "Allow",
+      "Action": [
+        "route53:DeleteReusableDelegationSet"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+> [!WARNING]
+> **Security note:** The `Cli53ManageZones` and `Cli53ManageDelegationSets` statements use `"Resource": "*"`, which lets
+> cli53 modify and delete **any** hosted zone or reusable delegation set in the account. These actions should ideally be
+> scoped to the specific ARNs cli53 is allowed to manage, for example:
+>
+> ```json
+> "Resource": [
+>   "arn:aws:route53:::delegationset/Z123ABC",
+>   "arn:aws:route53:::hostedzone/Z456DEF"
+> ]
+> ```
+
 ## Getting Started
 
 Create a hosted zone:
