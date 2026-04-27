@@ -29,6 +29,7 @@ test-integration: build
 	cd $$tmp_gopath/src/github.com/barnybug/cli53 && \
 	GOPATH=$$tmp_gopath $$tmp_gopath/bin/gucumber; \
 	status=$$?; \
+	chmod -R +w $$tmp_gopath; \
 	rm -rf $$tmp_gopath; \
 	exit $$status
 
@@ -44,6 +45,7 @@ test-coverage: test-deps
 	cd $$tmp_gopath/src/github.com/barnybug/cli53 && \
 	COVERAGE=1 GOPATH=$$tmp_gopath $$tmp_gopath/bin/gucumber; \
 	status=$$?; \
+	chmod -R +w $$tmp_gopath; \
 	rm -rf $$tmp_gopath; \
 	exit $$status
 	gocovmerge coverage/*.txt > coverage.txt
