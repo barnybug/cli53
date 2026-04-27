@@ -2,15 +2,16 @@ package cli53
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/route53"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/urfave/cli/v2"
 )
 
-var r53 *route53.Route53
+var r53 *route53.Client
 var version = "main"
 
 func theContext(c *cli.Context) (context.Context, func()) {
@@ -567,6 +568,7 @@ func Main(args []string) int {
 	}
 	err := app.Run(args)
 	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		return 1
 	}
 	return 0

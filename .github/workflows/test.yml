@@ -5,18 +5,13 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.23
-
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
-      - name: Download Go dependencies
-        env:
-          GOPROXY: "https://proxy.golang.org"
-        run: go mod download
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: 1.24
 
       - name: Run unit tests
         run: make test-unit

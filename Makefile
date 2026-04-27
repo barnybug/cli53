@@ -13,7 +13,7 @@ test-deps:
 	go install github.com/gucumber/gucumber/cmd/gucumber
 
 build:
-	go build -i -v $(exe)
+	go build -v $(exe)
 
 install:
 	go install $(exe)
@@ -22,14 +22,32 @@ test-unit:
 	go test
 
 test-integration: build
-	gucumber
+	@tmp_gopath=$$(mktemp -d /tmp/cli53-gucumber.XXXXXX); \
+	GOBIN=$$tmp_gopath/bin go install github.com/gucumber/gucumber/cmd/gucumber@v0.0.0-20180127021336-7d5c79e832a2; \
+	mkdir -p $$tmp_gopath/src/github.com/barnybug; \
+	ln -s $$(pwd) $$tmp_gopath/src/github.com/barnybug/cli53; \
+	cd $$tmp_gopath/src/github.com/barnybug/cli53 && \
+	GOPATH=$$tmp_gopath $$tmp_gopath/bin/gucumber; \
+	status=$$?; \
+	chmod -R +w $$tmp_gopath; \
+	rm -rf $$tmp_gopath; \
+	exit $$status
 
 # run unit and system tests, then recombine coverage output
 test-coverage: test-deps
 	rm -rf coverage && mkdir coverage
 	go test -covermode=count -coverprofile=coverage/unit.txt
 	go test -c -covermode=count -coverpkg . -o ./cli53 ./cmd/cli53
-	COVERAGE=1 gucumber
+	@tmp_gopath=$$(mktemp -d /tmp/cli53-gucumber.XXXXXX); \
+	GOBIN=$$tmp_gopath/bin go install github.com/gucumber/gucumber/cmd/gucumber@v0.0.0-20180127021336-7d5c79e832a2; \
+	mkdir -p $$tmp_gopath/src/github.com/barnybug; \
+	ln -s $$(pwd) $$tmp_gopath/src/github.com/barnybug/cli53; \
+	cd $$tmp_gopath/src/github.com/barnybug/cli53 && \
+	COVERAGE=1 GOPATH=$$tmp_gopath $$tmp_gopath/bin/gucumber; \
+	status=$$?; \
+	chmod -R +w $$tmp_gopath; \
+	rm -rf $$tmp_gopath; \
+	exit $$status
 	gocovmerge coverage/*.txt > coverage.txt
 
 test: test-unit test-integration

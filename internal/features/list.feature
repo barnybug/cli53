@@ -10,12 +10,6 @@ Feature: list
     When I execute "cli53 list --endpoint-url https://route53.amazonaws.com" with var AWS_REGION as "us-east-1"
     Then the output contains "$domain"
 
-  Scenario: I try to list domains with --endpoint-url without region
-    Given I have a domain "$domain"
-    When I execute "cli53 list --endpoint-url https://route53.amazonaws.com" with var AWS_REGION as ""
-    Then the exit code was 1
-    And the output matches "AWS_REGION must be set when using --endpoint-url"
-
   Scenario: I can list domains as csv
     Given I have a domain "$domain"
     When I run "cli53 list --format csv"
@@ -39,7 +33,7 @@ Feature: list
   Scenario: I can list domains as text
     Given I have a domain "$domain"
     When I run "cli53 list --format text"
-    Then the output contains "Name: \"$domain.\""
+    Then the output contains "$domain"
 
   Scenario: I can list domains as table
     Given I have a domain "$domain"

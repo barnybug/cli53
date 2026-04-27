@@ -8,8 +8,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/route53"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/route53"
+	route53types "github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/miekg/dns"
 )
 
@@ -20,22 +21,22 @@ func createZone(ctx context.Context, name, comment, vpcId, vpcRegion, delegation
 	req := route53.CreateHostedZoneInput{
 		CallerReference: &callerReference,
 		Name:            &name,
-		HostedZoneConfig: &route53.HostedZoneConfig{
+		HostedZoneConfig: &route53types.HostedZoneConfig{
 			Comment: &comment,
 		},
 	}
 
 	if vpcId != "" && vpcRegion != "" {
-		req.VPC = &route53.VPC{
+		req.VPC = &route53types.VPC{
 			VPCId:     aws.String(vpcId),
-			VPCRegion: aws.String(vpcRegion),
+			VPCRegion: route53types.VPCRegion(vpcRegion),
 		}
 	}
 	if delegationSetId != "" {
 		delegationSetId = strings.Replace(delegationSetId, "/delegationset/", "", 1)
 		req.DelegationSetId = aws.String(delegationSetId)
 	}
-	resp, err := r53.CreateHostedZoneWithContext(ctx, &req)
+	resp, err := r53.CreateHostedZone(ctx, &req)
 	fatalIfErr(err)
 	fmt.Printf("Created zone: '%s' ID: '%s'\n", *resp.HostedZone.Name, *resp.HostedZone.Id)
 }
@@ -48,18 +49,18 @@ func createReusableDelegationSet(ctx context.Context, zoneId string) {
 	if zoneId != "" {
 		req.HostedZoneId = &zoneId
 	}
-	resp, err := r53.CreateReusableDelegationSetWithContext(ctx, &req)
+	resp, err := r53.CreateReusableDelegationSet(ctx, &req)
 	fatalIfErr(err)
 	ds := resp.DelegationSet
 	fmt.Printf("Created reusable delegation set ID: '%s'\n", *ds.Id)
 	for _, ns := range ds.NameServers {
-		fmt.Printf("Nameserver: %s\n", *ns)
+		fmt.Printf("Nameserver: %s\n", ns)
 	}
 }
 
 func listReusableDelegationSets(ctx context.Context) {
 	req := route53.ListReusableDelegationSetsInput{}
-	resp, err := r53.ListReusableDelegationSetsWithContext(ctx, &req)
+	resp, err := r53.ListReusableDelegationSets(ctx, &req)
 	fatalIfErr(err)
 	fmt.Printf("Reusable delegation sets:\n")
 	if len(resp.DelegationSets) == 0 {
@@ -67,11 +68,7 @@ func listReusableDelegationSets(ctx context.Context) {
 		return
 	}
 	for _, ds := range resp.DelegationSets {
-		var nameservers []string
-		for _, ns := range ds.NameServers {
-			nameservers = append(nameservers, *ns)
-		}
-		fmt.Printf("- ID: %s Nameservers: %s\n", *ds.Id, strings.Join(nameservers, ", "))
+		fmt.Printf("- ID: %s Nameservers: %s\n", *ds.Id, strings.Join(ds.NameServers, ", "))
 	}
 }
 
@@ -82,18 +79,18 @@ func deleteReusableDelegationSet(ctx context.Context, id string) {
 	req := route53.DeleteReusableDelegationSetInput{
 		Id: &id,
 	}
-	_, err := r53.DeleteReusableDelegationSetWithContext(ctx, &req)
+	_, err := r53.DeleteReusableDelegationSet(ctx, &req)
 	fatalIfErr(err)
 	fmt.Printf("Deleted reusable delegation set\n")
 }
 
-func deleteRecordSets(ctx context.Context, zone *route53.HostedZone, rrsets []*route53.ResourceRecordSet, wait bool) (int, error) {
+func deleteRecordSets(ctx context.Context, zone *route53types.HostedZone, rrsets []*route53types.ResourceRecordSet, wait bool) (int, error) {
 	// delete all non-default SOA/NS records
-	changes := []*route53.Change{}
+	changes := []route53types.Change{}
 	for _, rrset := range rrsets {
 		if !isAuthRecord(zone, rrset) {
-			change := &route53.Change{
-				Action:            aws.String("DELETE"),
+			change := route53types.Change{
+				Action:            route53types.ChangeActionDelete,
 				ResourceRecordSet: rrset,
 			}
 			changes = append(changes, change)
@@ -103,11 +100,11 @@ func deleteRecordSets(ctx context.Context, zone *route53.HostedZone, rrsets []*r
 	if len(changes) > 0 {
 		req := route53.ChangeResourceRecordSetsInput{
 			HostedZoneId: zone.Id,
-			ChangeBatch: &route53.ChangeBatch{
+			ChangeBatch: &route53types.ChangeBatch{
 				Changes: changes,
 			},
 		}
-		resp, err := r53.ChangeResourceRecordSetsWithContext(ctx, &req)
+		resp, err := r53.ChangeResourceRecordSets(ctx, &req)
 		if err != nil {
 			return 0, err
 		}
@@ -118,9 +115,9 @@ func deleteRecordSets(ctx context.Context, zone *route53.HostedZone, rrsets []*r
 	return len(changes), nil
 }
 
-func purgeZoneRecords(ctx context.Context, zone *route53.HostedZone, wait bool) {
+func purgeZoneRecords(ctx context.Context, zone *route53types.HostedZone, wait bool) {
 	total := 0
-	err := batchListAllRecordSets(ctx, r53, *zone.Id, func(rrsets []*route53.ResourceRecordSet) {
+	err := batchListAllRecordSets(ctx, r53, *zone.Id, func(rrsets []*route53types.ResourceRecordSet) {
 		n, err := deleteRecordSets(ctx, zone, rrsets, wait)
 		fatalIfErr(err)
 		total += n
@@ -136,26 +133,21 @@ func deleteZone(ctx context.Context, name string, purge bool) {
 		purgeZoneRecords(ctx, zone, false)
 	}
 	req := route53.DeleteHostedZoneInput{Id: zone.Id}
-	_, err := r53.DeleteHostedZoneWithContext(ctx, &req)
+	_, err := r53.DeleteHostedZone(ctx, &req)
 	fatalIfErr(err)
 	fmt.Printf("Deleted zone: '%s' ID: '%s'\n", *zone.Name, *zone.Id)
 }
 
 func listZones(ctx context.Context, formatter Formatter) {
-	zones := make(chan *route53.HostedZone)
+	zones := make(chan *route53types.HostedZone)
 	go func() {
-		req := route53.ListHostedZonesInput{}
-		for {
-			// paginated
-			resp, err := r53.ListHostedZonesWithContext(ctx, &req)
+		paginator := route53.NewListHostedZonesPaginator(r53, &route53.ListHostedZonesInput{})
+		for paginator.HasMorePages() {
+			resp, err := paginator.NextPage(ctx)
 			fatalIfErr(err)
 			for _, zone := range resp.HostedZones {
-				zones <- zone
-			}
-			if *resp.IsTruncated {
-				req.Marker = resp.NextMarker
-			} else {
-				break
+				zone := zone
+				zones <- &zone
 			}
 		}
 		close(zones)
@@ -163,17 +155,17 @@ func listZones(ctx context.Context, formatter Formatter) {
 	formatter.formatZoneList(zones, os.Stdout)
 }
 
-func isAuthRecord(zone *route53.HostedZone, rrset *route53.ResourceRecordSet) bool {
-	return (*rrset.Type == "SOA" || *rrset.Type == "NS") && *rrset.Name == *zone.Name
+func isAuthRecord(zone *route53types.HostedZone, rrset *route53types.ResourceRecordSet) bool {
+	return (rrset.Type == route53types.RRTypeSoa || rrset.Type == route53types.RRTypeNs) && *rrset.Name == *zone.Name
 }
 
-func expandSelfAliases(records []dns.RR, zone *route53.HostedZone) {
+func expandSelfAliases(records []dns.RR, zone *route53types.HostedZone) {
 	for _, record := range records {
 		expandSelfAlias(record, zone)
 	}
 }
 
-func expandSelfAlias(record dns.RR, zone *route53.HostedZone) {
+func expandSelfAlias(record dns.RR, zone *route53types.HostedZone) {
 	if awsrr, ok := record.(*AWSRR); ok {
 		record = awsrr.RR
 	}
@@ -193,7 +185,7 @@ type Key struct {
 }
 
 type changeSorter struct {
-	changes []*route53.Change
+	changes []route53types.Change
 }
 
 func (r changeSorter) Len() int {
@@ -244,17 +236,17 @@ type importArgs struct {
 	dryrun   bool
 }
 
-func rrsetKey(rrset *route53.ResourceRecordSet) string {
-	key := fmt.Sprintf("%s %s", *rrset.Type, *rrset.Name)
+func rrsetKey(rrset *route53types.ResourceRecordSet) string {
+	key := fmt.Sprintf("%s %s", rrset.Type, *rrset.Name)
 	if rrset.TTL != nil {
 		key += fmt.Sprintf(" %d", *rrset.TTL)
 	}
 	var rrs []string
 	for _, rr := range rrset.ResourceRecords {
-		rrs = append(rrs, rr.String())
+		rrs = append(rrs, aws.ToString(rr.Value))
 	}
 	if rrset.AliasTarget != nil {
-		rrs = append(rrs, rrset.AliasTarget.String())
+		rrs = append(rrs, fmt.Sprintf("%s %s %t", aws.ToString(rrset.AliasTarget.DNSName), aws.ToString(rrset.AliasTarget.HostedZoneId), rrset.AliasTarget.EvaluateTargetHealth))
 	}
 	sort.Strings(rrs)
 	for _, rr := range rrs {
@@ -294,7 +286,7 @@ func importBind(ctx context.Context, args importArgs) {
 	expandSelfAliases(records, zone)
 
 	grouped := groupRecords(records)
-	existing := map[string]*route53.ResourceRecordSet{}
+	existing := map[string]*route53types.ResourceRecordSet{}
 	if args.replace || args.upsert {
 		rrsets, err := ListAllRecordSets(ctx, r53, *zone.Id)
 		fatalIfErr(err)
@@ -306,7 +298,7 @@ func importBind(ctx context.Context, args importArgs) {
 		}
 	}
 
-	additions := []*route53.Change{}
+	additions := []route53types.Change{}
 	for _, values := range grouped {
 		rrset := ConvertBindToRRSet(values)
 		if rrset != nil && (args.editauth || !isAuthRecord(zone, rrset)) {
@@ -317,31 +309,31 @@ func importBind(ctx context.Context, args importArgs) {
 			} else {
 				// new record, add or upsert
 				if args.upsert {
-					change := route53.Change{
-						Action:            aws.String("UPSERT"),
+					change := route53types.Change{
+						Action:            route53types.ChangeActionUpsert,
 						ResourceRecordSet: rrset,
 					}
-					additions = append(additions, &change)
+					additions = append(additions, change)
 				} else {
-					change := route53.Change{
-						Action:            aws.String("CREATE"),
+					change := route53types.Change{
+						Action:            route53types.ChangeActionCreate,
 						ResourceRecordSet: rrset,
 					}
-					additions = append(additions, &change)
+					additions = append(additions, change)
 				}
 			}
 		}
 	}
 
 	// remaining records in existing should be deleted
-	deletions := []*route53.Change{}
+	deletions := []route53types.Change{}
 	if !args.upsert {
 		for _, rrset := range existing {
-			change := route53.Change{
-				Action:            aws.String("DELETE"),
+			change := route53types.Change{
+				Action:            route53types.ChangeActionDelete,
 				ResourceRecordSet: rrset,
 			}
-			deletions = append(deletions, &change)
+			deletions = append(deletions, change)
 		}
 	}
 
@@ -373,7 +365,7 @@ func importBind(ctx context.Context, args importArgs) {
 	}
 }
 
-func batchChanges(ctx context.Context, additions, deletions []*route53.Change, zone *route53.HostedZone) *route53.ChangeResourceRecordSetsOutput {
+func batchChanges(ctx context.Context, additions, deletions []route53types.Change, zone *route53types.HostedZone) *route53.ChangeResourceRecordSetsOutput {
 	// sort additions so aliases are last
 	sort.Sort(changeSorter{additions})
 
@@ -385,7 +377,7 @@ func batchChanges(ctx context.Context, additions, deletions []*route53.Change, z
 		if end > len(changes) {
 			end = len(changes)
 		}
-		batch := route53.ChangeBatch{
+		batch := route53types.ChangeBatch{
 			Changes: changes[i:end],
 		}
 		req := route53.ChangeResourceRecordSetsInput{
@@ -393,13 +385,13 @@ func batchChanges(ctx context.Context, additions, deletions []*route53.Change, z
 			ChangeBatch:  &batch,
 		}
 		var err error
-		resp, err = r53.ChangeResourceRecordSetsWithContext(ctx, &req)
+		resp, err = r53.ChangeResourceRecordSets(ctx, &req)
 		fatalIfErr(err)
 	}
 	return resp
 }
 
-func UnexpandSelfAliases(records []dns.RR, zone *route53.HostedZone, full bool) {
+func UnexpandSelfAliases(records []dns.RR, zone *route53types.HostedZone, full bool) {
 	id := strings.Replace(*zone.Id, "/hostedzone/", "", 1)
 	for _, rr := range records {
 		if awsrr, ok := rr.(*AWSRR); ok {
@@ -423,7 +415,7 @@ func exportBind(ctx context.Context, name string, full bool, writer io.Writer) {
 }
 
 type exportSorter struct {
-	rrsets []*route53.ResourceRecordSet
+	rrsets []*route53types.ResourceRecordSet
 	zone   string
 }
 
@@ -437,10 +429,10 @@ func (r exportSorter) Swap(i, j int) {
 
 func (r exportSorter) Less(i, j int) bool {
 	if *r.rrsets[i].Name == *r.rrsets[j].Name {
-		if *r.rrsets[i].Type == "SOA" {
+		if r.rrsets[i].Type == route53types.RRTypeSoa {
 			return true
 		}
-		return *r.rrsets[i].Type < *r.rrsets[j].Type
+		return r.rrsets[i].Type < r.rrsets[j].Type
 	}
 	if *r.rrsets[i].Name == r.zone {
 		return true
@@ -451,7 +443,7 @@ func (r exportSorter) Less(i, j int) bool {
 	return *r.rrsets[i].Name < *r.rrsets[j].Name
 }
 
-func ExportBindToWriter(ctx context.Context, r53 *route53.Route53, zone *route53.HostedZone, full bool, out io.Writer) {
+func ExportBindToWriter(ctx context.Context, r53 *route53.Client, zone *route53types.HostedZone, full bool, out io.Writer) {
 	rrsets, err := ListAllRecordSets(ctx, r53, *zone.Id)
 	fatalIfErr(err)
 
@@ -540,12 +532,12 @@ func (args createArgs) validate() bool {
 	return true
 }
 
-func (args createArgs) applyRRSetParams(rrset *route53.ResourceRecordSet) {
+func (args createArgs) applyRRSetParams(rrset *route53types.ResourceRecordSet) {
 	if args.identifier != "" {
 		rrset.SetIdentifier = aws.String(args.identifier)
 	}
 	if args.failover != "" {
-		rrset.Failover = aws.String(args.failover)
+		rrset.Failover = route53types.ResourceRecordSetFailover(args.failover)
 	}
 	if args.healthCheckId != "" {
 		rrset.HealthCheckId = aws.String(args.healthCheckId)
@@ -554,20 +546,20 @@ func (args createArgs) applyRRSetParams(rrset *route53.ResourceRecordSet) {
 		rrset.Weight = aws.Int64(int64(*args.weight))
 	}
 	if args.region != "" {
-		rrset.Region = aws.String(args.region)
+		rrset.Region = route53types.ResourceRecordSetRegion(args.region)
 	}
 	if args.continentCode != "" {
-		rrset.GeoLocation = &route53.GeoLocation{
+		rrset.GeoLocation = &route53types.GeoLocation{
 			ContinentCode: aws.String(args.continentCode),
 		}
 	}
 	if args.countryCode != "" {
-		rrset.GeoLocation = &route53.GeoLocation{
+		rrset.GeoLocation = &route53types.GeoLocation{
 			CountryCode: aws.String(args.countryCode),
 		}
 	}
 	if args.countryCode != "" && args.subdivisionCode != "" {
-		rrset.GeoLocation = &route53.GeoLocation{
+		rrset.GeoLocation = &route53types.GeoLocation{
 			CountryCode:     aws.String(args.countryCode),
 			SubdivisionCode: aws.String(args.subdivisionCode),
 		}
@@ -597,7 +589,7 @@ func equalCaseInsensitiveStringPtrs(a, b *string) bool {
 	}
 }
 
-func parseRecordList(args []string, zone *route53.HostedZone) []dns.RR {
+func parseRecordList(args []string, zone *route53types.HostedZone) []dns.RR {
 	records := []dns.RR{}
 	origin := fmt.Sprintf("$ORIGIN %s\n", *zone.Name)
 	for _, text := range args {
@@ -615,21 +607,21 @@ func createRecords(ctx context.Context, args createArgs) {
 
 	grouped := groupRecords(records)
 
-	var existing []*route53.ResourceRecordSet
+	var existing []*route53types.ResourceRecordSet
 	if args.replace || args.append {
 		var err error
 		existing, err = ListAllRecordSets(ctx, r53, *zone.Id)
 		fatalIfErr(err)
 	}
 
-	additions := []*route53.Change{}
-	deletions := []*route53.Change{}
+	additions := []route53types.Change{}
+	deletions := []route53types.Change{}
 	for _, values := range grouped {
 		rrset := ConvertBindToRRSet(values)
 		args.applyRRSetParams(rrset)
 
-		addChange := &route53.Change{
-			Action:            aws.String("CREATE"),
+		addChange := route53types.Change{
+			Action:            route53types.ChangeActionCreate,
 			ResourceRecordSet: rrset,
 		}
 		additions = append(additions, addChange)
@@ -638,16 +630,16 @@ func createRecords(ctx context.Context, args createArgs) {
 			// add DELETE if there is an existing record
 			for _, candidate := range existing {
 				if equalCaseInsensitiveStringPtrs(rrset.Name, candidate.Name) &&
-					equalStringPtrs(rrset.Type, candidate.Type) &&
+					rrset.Type == candidate.Type &&
 					equalStringPtrs(rrset.SetIdentifier, candidate.SetIdentifier) {
-					change := route53.Change{
-						Action:            aws.String("DELETE"),
+					change := route53types.Change{
+						Action:            route53types.ChangeActionDelete,
 						ResourceRecordSet: candidate,
 					}
-					deletions = append(deletions, &change)
+					deletions = append(deletions, change)
 
 					if args.append {
-						addChange.ResourceRecordSet.ResourceRecords = append(addChange.ResourceRecordSet.ResourceRecords, candidate.ResourceRecords...)
+						additions[len(additions)-1].ResourceRecordSet.ResourceRecords = append(additions[len(additions)-1].ResourceRecordSet.ResourceRecords, candidate.ResourceRecords...)
 					}
 					break
 				}
@@ -667,32 +659,29 @@ func createRecords(ctx context.Context, args createArgs) {
 	}
 }
 
-func batchListAllRecordSets(ctx context.Context, r53 *route53.Route53, id string, callback func(rrsets []*route53.ResourceRecordSet)) error {
-	req := route53.ListResourceRecordSetsInput{
+func batchListAllRecordSets(ctx context.Context, r53 *route53.Client, id string, callback func(rrsets []*route53types.ResourceRecordSet)) error {
+	paginator := route53.NewListResourceRecordSetsPaginator(r53, &route53.ListResourceRecordSetsInput{
 		HostedZoneId: &id,
-	}
+	})
 
-	for {
-		resp, err := r53.ListResourceRecordSetsWithContext(ctx, &req)
+	for paginator.HasMorePages() {
+		resp, err := paginator.NextPage(ctx)
 		if err != nil {
 			return err
-		} else {
-			callback(resp.ResourceRecordSets)
-			if *resp.IsTruncated {
-				req.StartRecordName = resp.NextRecordName
-				req.StartRecordType = resp.NextRecordType
-				req.StartRecordIdentifier = resp.NextRecordIdentifier
-			} else {
-				break
-			}
 		}
+		rrsets := make([]*route53types.ResourceRecordSet, 0, len(resp.ResourceRecordSets))
+		for _, rrset := range resp.ResourceRecordSets {
+			rrset := rrset
+			rrsets = append(rrsets, &rrset)
+		}
+		callback(rrsets)
 	}
 	return nil
 }
 
 // Paginate request to get all record sets.
-func ListAllRecordSets(ctx context.Context, r53 *route53.Route53, id string) (rrsets []*route53.ResourceRecordSet, err error) {
-	err = batchListAllRecordSets(ctx, r53, id, func(results []*route53.ResourceRecordSet) {
+func ListAllRecordSets(ctx context.Context, r53 *route53.Client, id string) (rrsets []*route53types.ResourceRecordSet, err error) {
+	err = batchListAllRecordSets(ctx, r53, id, func(results []*route53types.ResourceRecordSet) {
 		rrsets = append(rrsets, results...)
 	})
 
@@ -710,11 +699,11 @@ func deleteRecord(ctx context.Context, name string, match string, rtype string, 
 	fatalIfErr(err)
 
 	match = qualifyName(match, *zone.Name)
-	changes := []*route53.Change{}
+	changes := []route53types.Change{}
 	for _, rrset := range rrsets {
-		if *rrset.Name == match && *rrset.Type == rtype && (identifier == "" || *rrset.SetIdentifier == identifier) {
-			change := &route53.Change{
-				Action:            aws.String("DELETE"),
+		if *rrset.Name == match && rrset.Type == route53types.RRType(rtype) && (identifier == "" || (rrset.SetIdentifier != nil && *rrset.SetIdentifier == identifier)) {
+			change := route53types.Change{
+				Action:            route53types.ChangeActionDelete,
 				ResourceRecordSet: rrset,
 			}
 			changes = append(changes, change)
@@ -724,11 +713,11 @@ func deleteRecord(ctx context.Context, name string, match string, rtype string, 
 	if len(changes) > 0 {
 		req2 := route53.ChangeResourceRecordSetsInput{
 			HostedZoneId: zone.Id,
-			ChangeBatch: &route53.ChangeBatch{
+			ChangeBatch: &route53types.ChangeBatch{
 				Changes: changes,
 			},
 		}
-		resp, err := r53.ChangeResourceRecordSetsWithContext(ctx, &req2)
+		resp, err := r53.ChangeResourceRecordSets(ctx, &req2)
 		fatalIfErr(err)
 		fmt.Printf("%d record sets deleted\n", len(changes))
 		if wait {
