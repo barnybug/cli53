@@ -62,7 +62,7 @@ Note: for Alpine on Docker, the pre-built binaries do not work, so either use De
 
 ## Building from source
 
-To build yourself from source (you will need golang >= 1.21 installed):
+To build yourself from source (you will need golang >= 1.26 installed):
 
     $ go install github.com/barnybug/cli53/cmd/cli53@latest
 
