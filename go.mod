@@ -1,8 +1,8 @@
 module github.com/barnybug/cli53
 
-go 1.24
+go 1.26.0
 
-toolchain go1.24.4
+toolchain go1.26.10
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.41.5
@@ -35,9 +35,9 @@ require (
 	github.com/shiena/ansicolor v0.0.0-20230509054315-a9deabde6e02 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	golang.org/x/mod v0.24.0 // indirect
-	golang.org/x/net v0.39.0 // indirect
+	golang.org/x/net v0.62.0 // indirect
 	golang.org/x/sync v0.13.0 // indirect
-	golang.org/x/sys v0.32.0 // indirect
+	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/tools v0.32.0 // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )
